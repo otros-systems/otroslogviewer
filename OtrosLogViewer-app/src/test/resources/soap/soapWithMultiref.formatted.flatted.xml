@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <ns1:driveTimeDisResponse xmlns:ns1="http://routing.soap.geosolutions.be" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <driveTimeDisReturn xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns2="http://beans.soap.geosolutions.be" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:SoapReturnDriveTime">
+        <errorCode xsi:type="soapenc:string"/>
+        <errorMessage xsi:type="soapenc:string"/>
+        <routesInfo soapenc:arrayType="ns2:GenRouteInfo[1]" xsi:type="soapenc:Array">
+          <routesInfo xmlns:ns3="http://beans.soap.geosolutions.be" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns3:GenRouteInfo" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+            <distance soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="xsd:long" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">73770</distance>
+            <time soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="xsd:long" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">2884</time>
+          </routesInfo>
+        </routesInfo>
+        <token xsi:type="soapenc:string">XXX</token>
+      </driveTimeDisReturn>
+    </ns1:driveTimeDisResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

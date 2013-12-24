@@ -1,0 +1,12 @@
+2011-01-11 00:00:26,048 L1  [T1] message1
+2011-01-11 00:02:30,541 L2  [T2] some message 1
+with multiline!
+2011-01-11 00:03:30,547 L3  [T2] some message 2
+second with multiline
+2011-01-11 00:06:30,553 L4  [T3] some message 3 with empty line
+2011-01-11 00:10:30,559 L5  [T2] some message 4
+2011-01-11 00:10:30,565 L1  [T1] some message 5
+2011-01-11 00:20:30,571 L2  [T2] some message 6
+2011-01-11 00:20:30,571 L3  [T2] some message 6
+2011-01-11 00:20:30,577 L4  [T1] some message 7
+2011-01-11 01:00:30,585 L5  [T2] some message 8

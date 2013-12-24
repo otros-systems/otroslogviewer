@@ -1,0 +1,5 @@
+Nov 23 2013 21:50:45.7558 DEBUG (                           :?    ) - CMDBInstance.findObjects()-Done
+Nov 23 2013 21:50:45.7913 ERROR (                          ?:     ) - <TID: 000000029> : Number of instances found in this chunk: <5>, Instances per thread: <2>
+Nov 23 2013 21:50:45.7982 FATAL (             AISFilter.java:135  ) - <TID: 000000029> : Thread Task = <2>
+Nov 23 2013 21:50:45.8051 INFO  (                           :     ) - User blaine, <TID: 000000030> : <null>:doBatchNormalization()-Begin
+Nov 23 2013 21:50:45.8174 WARN  (                          ?:?    ) - User <No Context>, <TID: 000000031> : <null>:doBatchNormalization()-Begin

@@ -1,0 +1,50 @@
+type=MessageColorizer
+version=1
+#Enter the name of your editor
+name= New message colorizer
+
+#Enter the description of your editor
+description=
+
+#Enter pattern used to colorize i.e. (\\d+)(\\s?)(ms)
+# This is standard java.util.regex.Pattern
+# "\" have to be escaped with "\"
+#Groups are used to colorize 
+pattern=Execution time is: (\\d+)(\\s?)(ms)
+#java.util.regex.Pattern flags
+pattern.canon_eq=false
+pattern.case_insensitive=true
+pattern.comments=false
+pattern.dotall=false
+pattern.literal=false
+pattern.multiline=true
+pattern.unicode_case=false
+pattern.unix_lines=false
+
+#Styles -
+#property without group id = all pattern (group 0) 
+#property key with group id (i.e. font.family.1) = colorize group n from regular expression  
+font.family=courier
+font.size=
+font.bold=true
+font.italic=
+font.underline=
+background=#000000
+foreground=#FFDDAA
+
+font.size.1=15
+font.bold.1=true
+font.italic.1=true
+background.1=#000000
+foreground.1=#FF0000
+
+font.underline.2=true 
+background.2=#00FF00
+foreground.2=#AAA000
+
+font.size.3=18
+font.underline.3=true
+background.3=#FF3FF0
+foreground.3=#000000
+
+testMessage=Running task, execution time is: 2323ms, expected execution time is: 34 ms

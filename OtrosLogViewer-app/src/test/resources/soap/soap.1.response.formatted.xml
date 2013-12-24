@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope">
+    <env:Header>
+        <ca:CacheControl xmlns:ca="http://example.org/2001/06/cache">
+            <ca:CacheKey>ABC-1234</ca:CacheKey>
+            <ca:Expires>2001-03-09T08:00:00Z</ca:Expires>
+        </ca:CacheControl>
+    </env:Header>
+    <env:Body>
+        <c:CatalogPriceResponse xmlns:c="http://example.org/2001/06/catalog">
+            <c:PartNumber>ABC-1234</c:PartNumber>
+            <c:PartPrice c:currency="USD">120.37</c:PartPrice>
+        </c:CatalogPriceResponse>
+    </env:Body>
+</env:Envelope>

@@ -1,0 +1,212 @@
+### Section for authentication and authorization customizations.
+[auth]
+
+### Section for configuring external helper applications.
+[helpers]
+
+### Section for configuring tunnel agents.
+[tunnels]
+
+### Section for configuring miscelleneous Subversion options.
+[miscellany]
+global-ignores = *.o *.lo *.la *.class *.local .*~ *~ *.bak *.old *.orig *.tmp tmp .*sw? *.pyc
+enable-auto-props = yes
+
+### Section for configuring automatic properties.
+[auto-props]
+### The format of the entries is:
+###   file-name-pattern = propname[=value][;propname[=value]...]
+### The file-name-pattern can contain wildcards (such as '*' and
+### '?').  All entries which match will be applied to the file.
+### Note that auto-props functionality must be enabled, which
+### is typically done by setting the 'enable-auto-props' option.
+# *.c = svn:eol-style=native
+# *.txt = svn:eol-style=native
+
+# So people can address questions or blame to the right source,
+# I'm marking my comment blocks with  "--b" or "--blaine...".  The other
+# comments were provided by Subversion distribution.
+# Syntax of this file is intuitive, except that # comment delimiters must
+# be placed in the first column (i.e. first character on the line).
+# Wed Jun 11 11:07:39 EDT 2008
+# The long-standing Subversion bug with svn:keywords value parsing seems to
+# be fixed with recent Subversion builds.  No more need to quote the value!
+# As noted in the Subversion docs, multiple patterns may be matched and
+# applied to a single candidate file.  However,
+# THE SAME PATTERN (EVEN DIFFERING IN CASE) CAN'T BE USED MORE THAN ONE TIME!
+# If you use this, for example:
+#     *.mytype = svn:mime-type=application/mt1
+#     *.MYTYPE = svn:executable
+# I also find that patterns can't begin with "[".  "*.[Mm]ake" works, but not
+#  "[Mm]akefile".
+# The first entry will be completely, and silently, ignored.
+# Workaround is to permit all case-combinations with a single pattern, like
+#     *.[Mm][Yy][Tt][Yy][Pp][Ee] = *.mytype = svn:mime-type=application/mt1;
+#                                             svn:executable
+# (Note the leading white space on the continuation line).
+#
+# Due to Subversion bug, we cannot set mime-types automatically for files
+# with mime-type other than text/*.  Therefore, we just set the eol-style
+# here and let the user set these mime types manually.
+#
+# I would like to use continuation lines, and more whitespace below, but
+# the following constraints are imposed by terrible Subversive plugin
+# Properties config importer parser.
+#   + No continuation lines
+#   + No white space between each property name and the following = char
+#   + No white space after each ; separator
+#                               -- blaine.simpson@admc.com
+
+# Using Mime Type definitions from
+# http://en.wikipedia.org/wiki/Mime_type#List_of_common_media_types ,
+# for consistency.
+
+# STRAIGHT BINARY TYPES
+# I believe that all mime types other than text/* are treated as binary.
+# (This means that you can't use script mime types like
+# application/x-shellscript).  application/octet-stream pretty much means
+# "binary without specific standard mime type"              --b
+*.[Pp][Nn][Gg] = svn:mime-type=image/png
+*.jpg = svn:mime-type=image/jpeg
+*.gif = svn:mime-type=image/gif
+*.bmp = svn:mime-type=image/bmp
+*.ico = svn:mime-type=image/x-icon
+*.pdf = svn:mime-type=application/pdf
+*.zip = svn:mime-type=application/zip
+*.tar = svn:mime-type=application/x-tar
+*.rar = svn:mime-type=application/x-rar-compressed
+*.jar = svn:mime-type=application/jar-archive
+*.so = svn:mime-type=application/x-sharedlib
+*.3[Dd][Ss] = svn:mime-type=image/x-3ds
+*.class = svn:mime-type=application/x-java
+*.tga = svn:mime-type=image/x-tga
+*.xcf = svn:mime-type=image/x-xcf
+*.xcf.gz = svn:mime-type=image/x-compressed-xcf
+*.xcf.bz2 = svn:mime-type=image/x-compressed-xcf
+*.ogg = svn:mime-type=application/ogg
+*.mp3 = svn:mime-type=audio/mpeg
+*.wav = svn:mime-type=audio/x-wav
+# Subversion would normally detect that the following are binary, and would
+# set the mimetype to octet-stream by default.  Only setting here explicitly
+# so it will work even for commits of 0-length stubs or if file happens to
+# contain only low-order characters.  --b
+*.dds = svn:mime-type=application/octet-stream
+*.dll = svn:mime-type=application/octet-stream
+*.dylib = svn:mime-type=application/octet-stream
+*.jbf = svn:mime-type=application/octet-stream
+*.jme = svn:mime-type=application/octet-stream
+*.bin = svn:mime-type=application/octet-stream
+*.ser = svn:mime-type=application/octet-stream
+*.jnilib = svn:mime-type=application/octet-stream
+*.md[0-9] = svn:mime-type=application/octet-stream
+*.ms3d = svn:mime-type=application/octet-stream
+*.raw = svn:mime-type=application/octet-stream
+
+# SCRIPTS
+# There's no perfect EOL solution for scripts.
+# Some UNIXes can only read the interpreter specification line if it
+# is terminated with just \n, but it's also very convenient for non-UNIX
+# users to be able to use native editors on these scripts.
+# Also no perfect solution for setting Executability, since env-setup
+# scripts should be "sourced", and "included" PHP libraries, etc.,
+# should not be executable.  Since for the first case we usually want them
+# to be executable, and the last not, these are the defaults I'm setting.
+# Users can then override the executable property manually for exceptions.
+# As noted above, can't set mime type unless the mime type
+# begins with "text/", or Subversion will treat them as binaries.  --b
+*.sh = svn:eol-style=LF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+*.bash = svn:eol-style=LF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+*.[Bb][Aa][Tt] = svn:eol-style=CRLF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+*.[Cd][Mm][Dd] = svn:eol-style=CRLF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+*.bat = svn:eol-style=CRLF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+*.cmd = svn:eol-style=CRLF;svn:executable  ;svn:keywords=Id Date Author URL Rev
+
+# NON-SCRIPT TEXT FILES
+# It could well be that some consumer of these files (e.g. a 3D modeller
+# program, or a Java loader program) may require a certain EOL style.
+# When that is the case, the type should have eol-style set to LF or CRLF
+# accordingly.  Otherwise, it's best to set text files to native, so that
+# everybody can use native editors and viewers with them.
+# As noted above, can't set mime type unless the mime type
+# begins with "text/", or Subversion will treat them as binaries.  --b
+*.txt = svn:mime-type=text/plain  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.text = svn:mime-type=text/plain  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.dsv = svn:mime-type=text/plain  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.html = svn:mime-type=text/html  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.ent = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.xhtml = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# SET mime-type for *.dtd to "application/xhtml-xml" MANUALLY, due to Svn bug!
+*.java = svn:mime-type=text/x-java  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.groovy = svn:mime-type=text/x-groovy  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.gradle = svn:mime-type=text/x-java  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.jsp = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# No Mime-type for .jsp files,
+# but still need to mark as ASCII and allow keywords.
+*.ase = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.cfg = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+.cvsignore = svn:eol-style=native
+*.css = svn:mime-type=text/css  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.dae = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.[vf]p = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.jnlp = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.mtl = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.obj = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.material = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# I think the 3D variety is different fromthe application/x-tgif .obj.  --b
+*.php = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.properties = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.vert = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.frag = svn:mime-type=text/x-csrc  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# .vert and .frag are video shader programs, which use C syntax
+*.x3d = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.xml = svn:mime-type=text/xml  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.svg = svn:mime-type=text/xml  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.ac = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.am = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.def = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.m4 = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.rc = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.dsp = svn:eol-style=CRLF;  ;svn:keywords=Id Date Author URL Rev
+*.sln = svn:eol-style=CRLF;  ;svn:keywords=Id Date Author URL Rev
+*.vcproj = svn:eol-style=CRLF;  ;svn:keywords=Id Date Author URL Rev
+*.reg = svn:eol-style=CRLF;  ;svn:keywords=Id Date Author URL Rev
+*.wxs = svn:mime-type=text/xml  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+
+
+# Some common suffixes not used by jME.
+# Developers may well use Subversion with non-jME projects which use these
+# suffixes.  If so, enable them by removing the leading #.      -- b
+Makefile = svn:mime-type=text/x-makefile  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+makefile = svn:mime-type=text/x-makefile  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.mf = svn:mime-type=text/x-makefile  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.mak = svn:mime-type=text/x-makefile  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# See note above about why "[Mm]akefile" won't work.  --b
+*.c = svn:mime-type=text/x-csrc  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.cpp = svn:mime-type=text/x-c++src  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.pl = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev svn:executable
+*.pm = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.csv = svn:mime-type=text/x-comma-separated-values  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.shtml = svn:mime-type=text/html  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.htm = svn:mime-type=text/html  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.js = svn:mime-type=text/javascript  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# The REAL mime-type for this is application/javascript.
+# Unfortunately, Subversion assumes non text/* mime types are BINARY!,
+# so we use Microsoft and Apache's mime-type for Javascript.
+# Seems that Apache and Microsoft work against the spcs and use
+*.sql = svn:mime-type=text/x-sql  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.[in]sql = svn:mime-type=text/x-sql  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.kshrc = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.bsh = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.ini = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.lst = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.py = svn:mime-type=text/x-python  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.style = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.xsd = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.rng = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.xsl = svn:mime-type=text/x-xslt  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.xslt = svn:mime-type=text/x-xslt  ;svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+*.dtd = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# SET mime-type for *.dtd to "application/xml-dtd" MANUALLY, due to Svn bug!
+*.json = svn:eol-style=native  ;svn:keywords=Id Date Author URL Rev
+# SET mime-type for *.json to "application/json" MANUALLY, due to Svn bug!
+*.pem = svn:eol-style=LF

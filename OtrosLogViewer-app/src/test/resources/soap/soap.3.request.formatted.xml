@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope">
+    <env:Body>
+        <s:StockNotificationSubscription xmlns:s="http://example.org/2001/06/subscribe">
+            <s:Notify>PRICE</s:Notify>
+            <s:Notify>VOLUME</s:Notfy>
+            <s:Notify>TIMESTAMP</s:Notfy>
+            <s:When>
+                <s:Company>BigCo</s:Company>
+                <s:Price range="GreaterThan">100</s:Price>
+            </s:When>
+        </s:StockNotificationSubscription>
+    </env:Body>
+</env:Envelope>

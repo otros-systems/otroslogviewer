@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Body>
+        <ns1:responseObject xmlns:ns1="http://some.com/" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">            
+            <arg xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns2="http://some.com/package/class/" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:SomeArg">
+                <errorListArray/>
+                <objectVersion/>
+                <successful/>
+                <intTag xsi:type="xsd:int">30</intTag>
+                <session xsi:type="xsd:string">asddfjlsdjflsdjflsjdflskdjflksdjf</session>
+                <emptyTag/>
+                <emptyTagA/>
+                <notEmpty xsi:type="xsd:int">1</notEmpty>
+            </arg>
+        </ns1:responseObject>
+    </soapenv:Body>
+</soapenv:Envelope>

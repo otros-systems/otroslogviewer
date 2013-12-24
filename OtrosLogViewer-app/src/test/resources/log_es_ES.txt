@@ -1,0 +1,20 @@
+09-oct-2010 12:46:55 log.test.LogTest main
+LA MÁS FINA: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+MÁS FINA: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+FINA: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+CONFIG: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+INFO: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+INFO: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+ADVERTENCIA: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+ADVERTENCIA: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+GRAVE: Message in locales es_ES
+09-oct-2010 12:46:56 log.test.LogTest main
+GRAVE: Message in locales es_ES

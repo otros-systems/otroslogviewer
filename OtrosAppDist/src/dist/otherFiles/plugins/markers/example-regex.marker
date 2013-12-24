@@ -1,0 +1,16 @@
+#File genereated using GUI editor
+#Tue Feb 08 22:56:15 CET 2011
+test2=sadf return 
+precondition=return
+test1=afds return 4 sd
+name=Regex marker example
+include=true
+groups=Example
+condition=.*return\\s[1-9]\\d*.*
+file=example-regex.marker
+color=Brown
+ignoreCase=true
+type=regex
+description=Regex marker example
+preconditionInclude=true
+test3=retrun -9

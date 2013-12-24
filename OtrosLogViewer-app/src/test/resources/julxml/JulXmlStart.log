@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="US-ASCII" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2011-11-16T00:06:32</date>
+  <millis>1321398392025</millis>
+  <sequence>1960</sequence>
+  <logger>hudson.plugins.jabber.im.transport.JabberIMConnection</logger>
+  <level>INFO</level>
+  <class>hudson.plugins.jabber.im.transport.JabberIMConnection</class>
+  <method>createConnection</method>
+  <thread>13</thread>
+  <message>Trying to connect to XMPP on jabberpl.org:5222/gmail.com</message>
+</record>
+<record>
+  <date>2011-11-16T00:06:33</date>
+  <millis>1321398392025</millis>
+  <sequence>1960</sequence>
+  <logger>hudson.plugins.jabber.im.transport.JabberIMConnection</logger>
+  <level>INFO</level>
+  <class>hudson.plugins.jabber.im.transport.JabberIMConnection</class>
+  <method>createConnection</method>
+  <thread>13</thread>
+  <message></message>
+</record>
+<record>
+  <date>2011-11-16T00:06:34</date>
+  <millis>1321398392025</millis>
+  <sequence>1960</sequence>
+  <logger>hudson.plugins.jabber.im.transport.JabberIMConnection</logger>
+  <level>INFO</level>
+  <class>hudson.plugins.jabber.im.transport.JabberIMConnection</class>
+  <method>createConnection</method>
+  <thread>13</thread>
+</record>
+
+
+<record>
+  <date>2011-11-16T00:07:52</date>
+  <millis>1321398472184</millis>
+  <sequence>1961</sequence>
+  <logger>hudson.plugins.jabber.im.transport.JabberIMConnection</logger>
+  <level>WARNING</level>
+  <class>hudson.plugins.jabber.im.transport.JabberIMConnection</class>
+  <method>connect</method>
+  <thread>13</thread>
+  <message>No response from the server.: 
+	at org.jivesoftware.smack.NonSASLAuthentication.authenticate(NonSASLAuthentication.java:73)
+	at org.jivesoftware.smack.XMPPConnection.login(XMPPConnection.java:212)
+	at hudson.plugins.jabber.im.transport.JabberIMConnection.createConnection(JabberIMConnection.java:307)
+	at hudson.plugins.jabber.im.transport.JabberIMConnecti

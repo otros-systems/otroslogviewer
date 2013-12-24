@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-01-20T07:07:23</date>
+  <millis>1327039643864</millis>
+  <sequence>0</sequence>
+  <logger>pl.otros.logview.gui.LogViewMainFrame</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.gui.LogViewMainFrame</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>Starting application</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644242</millis>
+  <sequence>1</sequence>
+  <logger>pl.otros.logview.gui.LogViewMainFrame</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.gui.LogViewMainFrame</class>
+  <method>getConfiguration</method>
+  <thread>10</thread>
+  <message>Common configuration file do not exist</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644522</millis>
+  <sequence>2</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/icon.png for field LOGO_SMALL loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644527</millis>
+  <sequence>3</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/otros/logo16.png for field LOGO_OTROS_16 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644533</millis>
+  <sequence>4</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/otros/logo32.png for field LOGO_OTROS_32 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644538</millis>
+  <sequence>5</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/otros/logo64.png for field LOGO_OTROS_64 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644542</millis>
+  <sequence>6</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/control-double-270.png for field FOLLOW_ON loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644544</millis>
+  <sequence>7</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/control-skip-270.png for field FOLLOW_OFF loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644545</millis>
+  <sequence>8</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/control.png for field TAILING_LIVE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644547</millis>
+  <sequence>9</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/control-stop.png for field TAILING_PAUSE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644549</millis>
+  <sequence>10</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/class.png for field CLASS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644552</millis>
+  <sequence>11</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/class_ignore.png for field CLASS_IGNORED loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644554</millis>
+  <sequence>12</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/package_open.png for field PACKAGE_OPEN loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644556</millis>
+  <sequence>13</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/package_open_ignore.png for field PACKAGE_OPEN_IGNORED loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644557</millis>
+  <sequence>14</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/package_closed.png for field PACKAGE_CLOSE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644559</millis>
+  <sequence>15</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/package_closed_ignore.png for field PACKAGE_CLOSE_IGNORED loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644562</millis>
+  <sequence>16</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/note_empty.png for field NOTE_EMPTY loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644567</millis>
+  <sequence>17</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/note_exist.png for field NOTE_EXIST loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644569</millis>
+  <sequence>18</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/magnifier.png for field MAGNIFIER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644571</millis>
+  <sequence>19</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-270-medium.png for field ARROW_DOWN loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644572</millis>
+  <sequence>20</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-090-medium.png for field ARROW_UP loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644575</millis>
+  <sequence>21</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/navigation-270-button.png for field ARROW_DOWN_IN_BOX loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644577</millis>
+  <sequence>22</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/navigation-090-button.png for field ARROW_UP_IN_BOX loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644579</millis>
+  <sequence>23</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-turn-090.png for field ARROW_TURN_090 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644581</millis>
+  <sequence>24</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-turn-270.png for field ARROW_TURN_270 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644583</millis>
+  <sequence>25</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-branch-270-left.png for field ARROW_BRANCH_270 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644584</millis>
+  <sequence>26</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/broom.png for field CLEAR loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644588</millis>
+  <sequence>27</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/beans.png for field LEVEL_FINEST loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644590</millis>
+  <sequence>28</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/bean.png for field LEVEL_FINER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644592</millis>
+  <sequence>29</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/bean-green.png for field LEVEL_FINE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644594</millis>
+  <sequence>30</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/hammer.png for field LEVEL_CONFIG loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644596</millis>
+  <sequence>31</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/information-button.png for field LEVEL_INFO loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644598</millis>
+  <sequence>32</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/exclamation-button.png for field LEVEL_WARNING loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644600</millis>
+  <sequence>33</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/exclamation-red.png for field LEVEL_SEVERE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644601</millis>
+  <sequence>34</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/clipboard--plus.png for field AUTOMATIC_MARKERS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644604</millis>
+  <sequence>35</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/clipboard--minus.png for field AUTOMATIC_UNMARKERS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644606</millis>
+  <sequence>36</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/clipboard.png for field MARKINGS_CLEAR loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644608</millis>
+  <sequence>37</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue24/wand-hat.png for field WIZARD loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644611</millis>
+  <sequence>38</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/application-export.png for field EXPORT loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644612</millis>
+  <sequence>39</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/application-import.png for field IMPORT loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644615</millis>
+  <sequence>40</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue24/application-import.png for field IMPORT_24 loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644617</millis>
+  <sequence>41</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/funnel--arrow.png for field FILTER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644619</millis>
+  <sequence>42</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/table-insert-column.png for field TABLE_COLUMN loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644622</millis>
+  <sequence>43</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/layer-resize-replicate.png for field TABLE_RESIZE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644625</millis>
+  <sequence>44</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/control-power.png for field TURN_OFF loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644627</millis>
+  <sequence>45</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-continue-180.png for field TAIL loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644630</millis>
+  <sequence>46</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/minus-white.png for field TAB_HEADER_NORMAL loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644632</millis>
+  <sequence>47</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/minus-circle.png for field TAB_HEADER_HOVER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644635</millis>
+  <sequence>48</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/category.png for field MARKER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644638</millis>
+  <sequence>49</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile.png for field NEXT_LEVEL_INFO loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644640</millis>
+  <sequence>50</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile-warning.png for field NEXT_LEVEL_WARNING loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644642</millis>
+  <sequence>51</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile-error.png for field NEXT_LEVEL_ERROR loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644645</millis>
+  <sequence>52</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile-flip.png for field PREV_LEVEL_INFO loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644647</millis>
+  <sequence>53</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile-warning-flip.png for field PREV_LEVEL_WARNING loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644650</millis>
+  <sequence>54</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/compile-error-flip.png for field PREV_LEVEL_ERROR loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644652</millis>
+  <sequence>55</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/question-button.png for field HELP loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644667</millis>
+  <sequence>56</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/wrench.png for field WRENCH loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644671</millis>
+  <sequence>57</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/wrench--arrow.png for field WRENCH_ARROW loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644675</millis>
+  <sequence>58</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/disk.png for field DISK loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644677</millis>
+  <sequence>59</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/disk--plus.png for field DISK_PLUS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644679</millis>
+  <sequence>60</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/folder-open.png for field FOLDER_OPEN loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644681</millis>
+  <sequence>61</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/arrow-repeat.png for field ARROW_REPEAT loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644682</millis>
+  <sequence>62</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/plug.png for field PLUGIN loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644684</millis>
+  <sequence>63</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/plug-connect.png for field PLUGIN_CONNECT loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644686</millis>
+  <sequence>64</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/plug-disconnect.png for field PLUGIN_DISCONNECT loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644688</millis>
+  <sequence>65</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/plug--plus.png for field PLUGIN_PLUS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644690</millis>
+  <sequence>66</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/color.png for field MESSAGE_COLORIZER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644691</millis>
+  <sequence>67</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/edit-alignment-center.png for field MESSAGE_FORMATTER loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644694</millis>
+  <sequence>68</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/minus-button.png for field DELETE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644695</millis>
+  <sequence>69</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/plus-button.png for field ADD loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644697</millis>
+  <sequence>70</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/table-select-row.png for field TABLE_SELECT_ROW loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644702</millis>
+  <sequence>71</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/fugue/credit-cards.png for field CREDIT_CARDS loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644720</millis>
+  <sequence>72</sequence>
+  <logger>pl.otros.logview.loader.IconsLoader</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.loader.IconsLoader</class>
+  <method>loadIcons</method>
+  <thread>10</thread>
+  <message>Icon /img/btn_donateCC_LG.gif for field DONATE loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:24</date>
+  <millis>1327039644802</millis>
+  <sequence>73</sequence>
+  <logger>pl.otros.logview.gui.LogViewMainFrame</logger>
+  <level>CONFIG</level>
+  <class>pl.otros.logview.gui.LogViewMainFrame$1</class>
+  <method>run</method>
+  <thread>11</thread>
+  <message>Initializing look and feelL: com.jgoodies.looks.plastic.PlasticXPLookAndFeel</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645298</millis>
+  <sequence>74</sequence>
+  <logger>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</class>
+  <method>initializePatterns</method>
+  <thread>11</thread>
+  <message>regexp is (\S+-\S+-\S+T\S+:\S+:\S+\.\S+)[ ]+\|[ ]+(.*?)[ ]+\|[ ]+(.*?)[ ]+\|[ ]+(.*?)[ ]+\|[ ]+(\S*\s*?)[ ]+\|[ ]+(.*?)[ ]+\|[ ]+(.*)</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645308</millis>
+  <sequence>75</sequence>
+  <logger>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</class>
+  <method>initializePatterns</method>
+  <thread>11</thread>
+  <message>regexp is (\S+-\S+-\S+ \S+:\S+:\S+,\S+)[ ]+(\S*\s*?)[ ]+\[(.*?)\][ ]+(.*)</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645310</millis>
+  <sequence>76</sequence>
+  <logger>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</logger>
+  <level>FINE</level>
+  <class>pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser</class>
+  <method>initializePatterns</method>
+  <thread>11</thread>
+  <message>regexp is (\S+:\S+:\S+\.\S+)[ ]+(\S*\s*?)[ ]+\[(.*?)\][ ]+(.*?)[ ]+\-[ ]+(.*)</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645322</millis>
+  <sequence>77</sequence>
+  <logger>pl.otros.logview.importer.UtilLoggingXmlLogImporter</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.importer.UtilLoggingXmlLogImporter</class>
+  <method>init</method>
+  <thread>11</thread>
+  <message>icon loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645337</millis>
+  <sequence>78</sequence>
+  <logger>pl.otros.logview.parser.JulSimpleFormmaterParser</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.parser.JulSimpleFormmaterParser</class>
+  <method>&lt;init&gt;</method>
+  <thread>11</thread>
+  <message>icon loaded</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645525</millis>
+  <sequence>79</sequence>
+  <logger>pl.otros.logview.gui.LogViewMainFrame</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.gui.LogViewMainFrame</class>
+  <method>initVFSJFilChooserOptions</method>
+  <thread>11</thread>
+  <message>Enabling ssh compression</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645588</millis>
+  <sequence>80</sequence>
+  <logger>pl.otros.logview.gui.LogViewMainFrame</logger>
+  <level>INFO</level>
+  <class>pl.otros.logview.gui.LogViewMainFrame</class>
+  <method>initVFSJFilChooserOptions</method>
+  <thread>11</thread>
+  <message>Disabling ssh strict host key checking</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:25</date>
+  <millis>1327039645616</millis>
+  <sequence>81</sequence>
+  <logger>net.sf.vfsjfilechooser.utils.VFSResources</logger>
+  <level>INFO</level>
+  <class>net.sf.vfsjfilechooser.utils.VFSResources</class>
+  <method>&lt;clinit&gt;</method>
+  <thread>11</thread>
+  <message>Loaded i18n resources</message>
+</record>
+<record>
+  <date>2012-01-20T07:07:33</date>
+  <millis>1327039653380</millis>
+  <sequence>82</sequence>
+  <logger>pl.otros.logview.gui.actions.read.LogFileInNewTabOpener</logger>
+  <level>SEVERE</level>
+  <class>pl.otros.logview.gui.actions.read.LogFileInNewTabOpener</class>
+  <method>open</method>
+  <thread>11</thread>
+  <message>Error loading log (file:///var/logsolv.out.txt): null</message>
+</record>
+</log>

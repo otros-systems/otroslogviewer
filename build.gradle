@@ -1,0 +1,165 @@
+/*
+ * Copyright 2012 Krzysztof Otrebski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+project.ext.set('sharedVersion', '1.1.0-SNAPSHOT')
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: "jacoco"
+
+
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    dependencies {
+        testCompile 'junit:junit:4.10'
+        testCompile 'org.mockito:mockito-core:1.9.0'
+    }
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+
+    }
+}
+
+
+project(':Common-libs') {
+    dependencies {
+        compile fileTree(dir: 'lib', include: '*.jar')
+        compile 'com.beust:jcommander:1.29'
+        compile 'com.github.insubstantial:trident:7.1'
+        compile 'com.google.guava:guava:11.0.2'
+        compile 'com.jcraft:jsch:0.1.+'
+        compile 'com.jcraft:jzlib:1.+'
+        compile 'com.jgoodies:looks:2.+'
+        compile 'com.miglayout:miglayout-swing:4.2'
+        compile 'commons-beanutils:commons-beanutils-bean-collections:1.+'
+        compile 'commons-beanutils:commons-beanutils-core:1.+'
+        compile 'commons-beanutils:commons-beanutils:1.+'
+        compile 'commons-codec:commons-codec:1.+'
+        compile 'commons-collections:commons-collections:3.2.1'
+        compile 'commons-configuration:commons-configuration:1.+'
+        compile 'commons-digester:commons-digester:2.1'
+        compile 'commons-httpclient:commons-httpclient:3.1'
+        compile 'commons-io:commons-io:2.+'
+        compile 'commons-lang:commons-lang:2.+'
+        compile 'commons-logging:commons-logging:1.1.1'
+        compile 'jcifs:jcifs:1.+'
+        compile 'log4j:log4j:1.+'
+        compile 'org.apache.commons:commons-compress:1.3'
+        compile 'org.apache.commons:commons-vfs2:2.0'
+        compile 'org.slf4j:slf4j-api:1.6.6'
+        compile 'org.slf4j:slf4j-jdk14:1.6.6'
+        compile 'org.swinglabs.swingx:swingx-all:1.+'
+        compile 'org.swinglabs:jxlayer:3.0.4'
+        compile 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
+    }
+}
+
+
+project(':OtrosStarter') {
+    def today = new Date().format("yyyy-MM-dd")
+
+    manifest.mainAttributes(
+            'Main-Class': "pl.otros.starter.StartApp",
+            'Build-day': today,
+            'Build-date': new Date(),
+            'SplashScreen-Image': "img/otros/splash.png",
+            'Implementation-Version': sharedVersion,
+    )
+}
+
+project(':OtrosSwing') {
+    dependencies {
+        compile project(':Common-libs')
+    }
+    version = sharedVersion
+}
+
+project(':OtrosLogViewer-app') {
+    def today = new Date().format("yyyy-MM-dd");
+    dependencies {
+        compile project(':Common-libs')
+        compile project(':OtrosSwing')
+    }
+    version = sharedVersion
+
+
+    manifest.mainAttributes(
+            'Implementation-Title': 'OtrosLogViewer',
+            'Implementation-Version': sharedVersion,
+            'Main-Class': "pl.otros.logview.gui.LogViewMainFrame",
+            'Build-day': today,
+            'Build-date': new Date(),
+            'SplashScreen-Image': "img/otros/splash.png"
+    )
+}
+project(':OtrosAppDist') {
+    dependencies {
+        compile project(':Common-libs')
+        compile project(':OtrosStarter')
+        compile project(':OtrosLogViewer-app')
+    }
+
+
+    version = sharedVersion
+
+    def classpathList = configurations.runtime.collect { "./lib/" + it.getName() }.join('\n')
+    File f = new File("classpath.txt")
+    f.write(classpathList)
+
+
+    task dist(type: Zip, dependsOn: ':OtrosLogViewer-app:jar') {
+        baseName = "olv"
+        def baseDir = { baseName + "-" + version }
+        into(baseDir) {
+            from(f.getAbsolutePath())
+            from(project.file('src/dist/otherFiles'))
+            from(project.file('src/dist/scriptsWin'))
+            into("lib") {
+                from(project.configurations.runtime)
+            }
+        }
+        into(baseDir) {
+            from(project.file('src/dist/scriptsUnix'), fileMode = 0755)
+        }
+
+    }
+}
+
+
+def allProcessResouresTasks() {
+    println "allProcessResourcesTasks"
+    project('OtrosLogViewer-app').sourceSets.processResourcesTaskName.collect { tasks[it] }
+}
+
+// This task only for SCM administrator.
+// Execute external 'gradle' (of the desired version) and execute this task.
+task upgradeWrapper(type: Wrapper) { doFirst {
+    assert project.hasProperty('newVersion') :
+        '''Property 'newVersion' is required for task 'upgradeWrapper'.'''
+    assert project.newVersion == gradle.gradleVersion :
+        "You invoked Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
+} }
+upgradeWrapper << {
+    gradleVersion = project['newVersion']
+    println 'WARNING:  Merge our customizations into the newly-generated wrapper scripts'
+}
+upgradeWrapper.description = 'Upgrade Gradle version.  For SCM Administrators.'

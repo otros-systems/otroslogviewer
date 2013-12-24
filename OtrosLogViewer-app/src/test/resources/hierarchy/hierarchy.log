@@ -1,0 +1,2600 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935826</millis>
+  <sequence>0</sequence>
+  <logger>logging.CallHierarchy</logger>
+  <level>FINER</level>
+  <class>logging.CallHierarchy</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>1</sequence>
+  <logger>logging.CallHierarchy</logger>
+  <level>INFO</level>
+  <class>logging.CallHierarchy</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>Starting thread</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>2</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>10</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>3</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>4</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>5</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>6</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>10</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>7</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>10</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>8</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>10</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>9</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>10</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>11</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>12</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>13</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>11</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>14</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>12</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>15</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>13</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>19</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>14</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>18</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>16</sequence>
+  <logger>logging.CallHierarchy</logger>
+  <level>INFO</level>
+  <class>logging.CallHierarchy</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>Waiting</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>20</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>17</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>22</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>21</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>23</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>25</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>28</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>24</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>27</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>30</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>26</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>29</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>34</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>32</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>31</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>33</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>36</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>37</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935873</millis>
+  <sequence>35</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>38</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>39</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>40</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>44</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>41</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>42</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>47</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>45</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>43</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>46</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>48</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>49</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>50</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>51</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>54</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>52</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>53</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>55</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>56</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935889</millis>
+  <sequence>57</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>58</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>13</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>59</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>60</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>61</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>62</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>63</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>64</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>65</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>66</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>67</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935920</millis>
+  <sequence>68</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>69</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>13</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>70</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>71</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>72</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>73</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>74</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>75</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>76</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>77</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>78</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>79</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>80</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>13</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>81</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>82</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>83</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>84</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>85</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>86</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>87</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>88</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>89</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935936</millis>
+  <sequence>90</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>91</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>11</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>92</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>93</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>94</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>95</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>96</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>97</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>98</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>99</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>100</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>101</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>102</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>14</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>103</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>104</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>105</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>106</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>107</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>108</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>109</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>110</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>111</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>112</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>113</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>12</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>114</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>115</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>116</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>117</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>118</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>119</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>120</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>121</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>122</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935951</millis>
+  <sequence>123</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935983</millis>
+  <sequence>124</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>14</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935983</millis>
+  <sequence>125</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935983</millis>
+  <sequence>126</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>127</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>128</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>129</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>130</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>131</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>132</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>133</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:55</date>
+  <millis>1324052935998</millis>
+  <sequence>134</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>135</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>13</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>136</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>137</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>138</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>139</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>140</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>141</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>142</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>143</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>144</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936014</millis>
+  <sequence>145</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>13</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>146</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>11</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>147</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>148</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>149</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>150</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>151</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>152</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>153</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>154</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>155</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>156</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>157</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>12</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>158</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>159</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>160</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>161</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>162</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>163</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>164</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>165</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>166</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936030</millis>
+  <sequence>167</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936045</millis>
+  <sequence>168</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>12</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936045</millis>
+  <sequence>169</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936045</millis>
+  <sequence>170</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936045</millis>
+  <sequence>171</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>172</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>173</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>174</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>175</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>176</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>177</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936061</millis>
+  <sequence>178</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>179</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>14</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>180</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>181</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>182</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>183</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>184</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>185</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>186</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>187</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>188</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936076</millis>
+  <sequence>189</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>190</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>11</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>191</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>192</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>193</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>194</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>195</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>196</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>197</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>198</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>199</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936092</millis>
+  <sequence>200</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>201</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>12</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>202</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>203</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>204</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>205</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>206</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>207</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>208</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>209</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>210</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936123</millis>
+  <sequence>211</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>12</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>212</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>11</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>213</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>214</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>215</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>216</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>217</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>218</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>219</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>220</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>221</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936139</millis>
+  <sequence>222</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>11</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>223</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>a</method>
+  <thread>14</thread>
+  <message>Processing a()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>224</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>225</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>226</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>227</sequence>
+  <logger>logging.layer1.Layer1</logger>
+  <level>INFO</level>
+  <class>logging.layer1.Layer1</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>228</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>ENTRY arguments</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>229</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>Processing b(arguments)</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>230</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>231</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>INFO</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>Processing c()</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>232</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>c</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936155</millis>
+  <sequence>233</sequence>
+  <logger>logging.layer2.Layer2</logger>
+  <level>FINER</level>
+  <class>logging.layer2.Layer2</class>
+  <method>b</method>
+  <thread>14</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936373</millis>
+  <sequence>234</sequence>
+  <logger>logging.CallHierarchy</logger>
+  <level>INFO</level>
+  <class>logging.CallHierarchy</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>Exit</message>
+</record>
+<record>
+  <date>2011-12-16T17:28:56</date>
+  <millis>1324052936373</millis>
+  <sequence>235</sequence>
+  <logger>logging.CallHierarchy</logger>
+  <level>FINER</level>
+  <class>logging.CallHierarchy</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+</log>

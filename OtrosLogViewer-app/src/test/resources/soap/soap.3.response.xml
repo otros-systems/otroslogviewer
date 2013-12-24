@@ -1,0 +1,1 @@
+<?xml version="1.0" ?><env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope"><env:Body><s:StockNotificationSubscriptionAck xmlns:s="http://example.org/2001/06/subscribe"><s:SubscriptionId> uuid:40195729-sj20-pso3-1092-p20dj28rk104</s:SubscriptionId></s:StockNotificationSubscriptionAck></env:Body></env:Envelope>

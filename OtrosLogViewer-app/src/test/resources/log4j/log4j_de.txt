@@ -1,0 +1,9 @@
+2011-01-11 00:00:26,048 INFO  [T1] message1 with euro: €
+2011-01-11 00:02:30,541 WARN  [T2] some message ‡†‰
+with multiline!
+2011-01-11 00:03:30,547 WARN  [T2] some ummlauts:ÀÁë	øûü
+second with multiline
+2011-01-11 00:06:30,553 WARN  [T3] Application laden Fehler. Es ist nicht möglich zu verarbeiten.
+
+2011-01-11 00:10:30,559 WARN  [T2] some message 4
+2011-01-11 00:10:30,565 DBUG  [T1] some message 5

@@ -1,0 +1,8 @@
+<?xml version="1.0" ?><env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope"><env:Header><sec:Encryption xmlns:sec="http://schemas.xmlsoap.org/soap/security/2000-12"
+                        env:actor="some-URI"
+                        env:mustUnderstand="true"><sec:EncryptedDataList><sec:EncryptedDataReference URI="#encrypted-body-entry"/></sec:EncryptedDataList><xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+                               Id="EK"
+                               CarriedKeyName="Symmetric Key"
+                               Recipient="John Smith"><xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/><ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:KeyName>John Smith's RSA Key</ds:KeyName></ds:KeyInfo><xenc:CipherData><xenc:CipherValue>ENCRYPTED 3DES KEY......</xenc:CipherValue></xenc:CipherData><xenc:ReferenceList><xenc:DataReference URI="#encrypted-body-entry"/></xenc:ReferenceList></xenc:EncryptedKey></sec:Encryption></env:Header><env:Body><xenc:EncryptedData xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+                            Id="encrypted-body-entry"
+                            Type="http://www.w3.org/2001/04/xmlenc#Element"><xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#tripledes-cbc"/><ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:RetrievalMethod URI="#EK" Type="http://www.w3.org/2001/04/xmlenc#EncryptedKey"/><ds:KeyName>Symmetric Key</ds:KeyName></ds:KeyInfo><xenc:CipherData><xenc:CipherValue>ENCRYPTED BODY ENTRY......</xenc:CipherValue></xenc:CipherData></xenc:EncryptedData></env:Body></env:Envelope>

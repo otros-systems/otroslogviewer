@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope">
+    <env:Body>
+        <c:CatalogPriceRequest xmlns:c="http://example.org/2001/06/catalog">
+            <c:PartNumber>ABC-1234</c:PartNumber>
+        </c:CatalogPriceRequest>
+    </env:Body>
+</env:Envelope>

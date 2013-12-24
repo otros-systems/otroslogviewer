@@ -1,0 +1,20 @@
+09-Oct-2010 12:46:42 log.test.LogTest main
+FINEST: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+FINER: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+FINE: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+CONFIG: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+INFO: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+INFO: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+WARNING: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+WARNING: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+SEVERE: Message in locales en_GB
+09-Oct-2010 12:46:42 log.test.LogTest main
+SEVERE: Message in locales en_GB

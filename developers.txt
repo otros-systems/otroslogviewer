@@ -1,0 +1,9 @@
+Conventions for Developers
+
+Gradle
+------
+You do not need to install Gradle.  Just execute "gradlew" from this directory.
+
+Subversion Setup
+----------------
+Create, overwrite, or merge the file $HOME/.subversion/config or $HOMEPATH%\subversion\config with the file config.subversion that is provided here.  Some Windows Subversion clients use the file from a directory under %HOMEPATH%\AppData or %HOMEPATH%\Local or similar (you will have to search for it after running Subversion at least once).  Without a good Subversion config file in place, files will not be configured between UNIX and Windows correctly and the Subversion ignore facility will not work right.

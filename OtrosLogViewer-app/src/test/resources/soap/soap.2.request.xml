@@ -1,0 +1,1 @@
+<?xml version="1.0" ?><env:Envelope xmlns:env="http://www.w3.org/2002/06/soap-envelope"><env:Body><m:PurchaseTicket xmln:m="some-URI"><m:PNR>ABCDEFGH</m:PNR><m:CreditCard>4500123456789abc</m:CreditCard></m:PurchaseTicket></env:Body></env:Envelope>

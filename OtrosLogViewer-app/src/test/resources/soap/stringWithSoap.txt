@@ -1,0 +1,13 @@
+ faslfj asl fjaslfj lsjf lasjf lasj fl<?xml version="1.0"?><SoAp:Envelope xmlns:SoAp="http://schemas.xmlsoap.org/soap/envelope/"><SoAp:Header></SoAp:Header><SoAp:Body><m:GetStockPrice xmlns:m="http://www.example.org/stock"><m:StockName>aaa</m:StockName></m:GetStockPrice></SoAp:Body></SoAp:Envelope> flasjfl sjafl sjafl jasl fjasl;j
+ asdasdasd
+   ala ma kota       
+<SoAp:Envelope xmlns:SoAp="http://schemas.xmlsoap.org/soap/envelope/">
+  <SoAp:Header>
+  </SoAp:Header>
+  <SoAp:Body>
+    <m:GetStockPrice xmlns:m="http://www.example.org/stock">
+      <m:StockName>2</m:StockName>
+    </m:GetStockPrice>
+  </SoAp:Body>
+</SoAp:Envelope>
+sdfsd

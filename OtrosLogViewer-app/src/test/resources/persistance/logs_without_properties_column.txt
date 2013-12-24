@@ -1,0 +1,41 @@
+ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|
+0|1295522102689|Starting application|pl.otros.logview.gui.LogViewMainFrame|main|INFO|pl.otros.logview.gui.LogViewMainFrame|10|
+1|1295522103548|Icon /img/fugue/control-double-270.png for field FOLLOW_ON loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+2|1295522103564|Icon /img/fugue/control-skip-270.png for field FOLLOW_OFF loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+3|1295522103564|Icon /img/fugue/control.png for field TAILING_LIVE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+4|1295522103579|Icon /img/fugue/control-stop.png for field TAILING_PAUSE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+5|1295522103579|Icon /img/class.png for field CLASS loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+6|1295522103595|Icon /img/class_ignore.png for field CLASS_IGNORED loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+7|1295522103626|Icon /img/package_open.png for field PACKAGE_OPEN loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+8|1295522103626|Icon /img/package_open_ignore.png for field PACKAGE_OPEN_IGNORED loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+9|1295522103642|Icon /img/package_closed.png for field PACKAGE_CLOSE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+10|1295522103642|Icon /img/package_closed_ignore.png for field PACKAGE_CLOSE_IGNORED loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+11|1295522103642|Icon /img/note_empty.png for field NOTE_EMPTY loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+12|1295522103658|Icon /img/note_exist.png for field NOTE_EXIST loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+13|1295522103658|Icon /img/magnifier.png for field MAGNIFIER loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+14|1295522103673|Icon /img/fugue/arrow-270-medium.png for field ARROW_DOWN loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+15|1295522103673|Icon /img/fugue/arrow-090-medium.png for field ARROW_UP loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+16|1295522103720|Icon /img/fugue/navigation-270-button.png for field ARROW_DOWN_IN_BOX loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+17|1295522103720|Icon /img/fugue/navigation-090-button.png for field ARROW_UP_IN_BOX loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+18|1295522103736|Icon /img/fugue/broom.png for field CLEAR loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+19|1295522103736|Icon /img/fugue/beans.png for field LEVEL_FINEST loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+20|1295522103751|Icon /img/fugue/bean.png for field LEVEL_FINER loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+21|1295522103751|Icon /img/fugue/bean-green.png for field LEVEL_FINE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+22|1295522103767|Icon /img/fugue/hammer.png for field LEVEL_CONFIG loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+23|1295522103767|Icon /img/fugue/information-button.png for field LEVEL_INFO loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+24|1295522103783|Icon /img/fugue/exclamation-button.png for field LEVEL_WARNING loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+25|1295522103783|Icon /img/fugue/exclamation-red.png for field LEVEL_SEVERE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+26|1295522103783|Icon /img/fugue/clipboard--plus.png for field AUTOMATIC_MARKERS loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+27|1295522103798|Icon /img/fugue/clipboard--minus.png for field AUTOMATIC_UNMARKERS loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+28|1295522103798|Icon /img/fugue24/wand-hat.png for field WIZARD loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+29|1295522103814|Icon /img/fugue/application-export.png for field EXPORT loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+30|1295522103814|Icon /img/fugue/application-import.png for field IMPORT loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+31|1295522103829|Icon /img/fugue/funnel--arrow.png for field FILTER loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+32|1295522103829|Icon /img/fugue/table-insert-column.png for field TABLE_COLUMN loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+33|1295522103829|Icon /img/fugue/layer-resize-replicate.png for field TABLE_RESIZE loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+34|1295522103845|Icon /img/fugue/control-power.png for field TURN_OFF loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+35|1295522103845|Icon /img/fugue/arrow-continue-180.png for field TAIL loaded|pl.otros.logview.loader.IconsLoader|loadIcons|FINE|pl.otros.logview.loader.IconsLoader|10|
+36|1295522103908|Initializing look and feelL: com.jgoodies.looks.plastic.PlasticXPLookAndFeel|pl.otros.logview.gui.LogViewMainFrame$1|run|CONFIG|pl.otros.logview.gui.LogViewMainFrame|11|
+37|1295522105407|icon loaded|pl.otros.logview.importer.XMLLogImporter|init|INFO|pl.otros.logview.importer.XMLLogImporter|11|
+38|1295522105439|icon loaded|pl.otros.logview.parser.JulSimpleFormmaterParser|<init>|INFO|pl.otros.logview.parser.JulSimpleFormmaterParser|11|
+39|1295522105439|Initializing|pl.otros.logview.parser.log4j.Log4jPatternIsoDate5pTMNLogParser|<init>|FINE|pl.otros.logview.parser.log4j.Log4jPatternIsoDate5pTMNLogParser|11|
