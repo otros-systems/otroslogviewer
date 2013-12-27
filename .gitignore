@@ -7,3 +7,4 @@
 .~*
 /local*
 build
+/gradle-app.setting
