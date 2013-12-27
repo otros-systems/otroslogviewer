@@ -1,0 +1,9 @@
+/classpath.txt
+.gradle
+.*.sw?
+*~
+*.bak
+~*
+.~*
+/local*
+build
