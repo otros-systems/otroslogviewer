@@ -7,13 +7,10 @@ import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
 import pl.otros.logview.gui.actions.search.SearchResult;
 import pl.otros.logview.store.LogDataStore;
-import pl.otros.logview.store.MemoryLogDataStore;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
@@ -60,19 +57,12 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public LogData getLogData(int row) {
-    try {
-      return service.submit(new OperationGetLogData(logDataStore, row)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return runCallableInDedicatedThread(new OperationGetLogData(logDataStore, row));
   }
 
   @Override
   public Integer getLogDataIdInRow(int row) {
-    return logDataStore.getLogDataIdInRow(row);
+    return runCallableInDedicatedThread(new OperationGetDataIdInRow(logDataStore,row));
   }
 
   @Override
@@ -123,56 +113,96 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public void addNoteToRow(int row, Note note) {
-    logDataStore.addNoteToRow(row, note);
+    runCallableInDedicatedThread(new OpeartionAddNoteToRow(logDataStore,row,note));
   }
 
   @Override
   public Note getNote(int row) {
-    return logDataStore.getNote(row);
+    return runCallableInDedicatedThread(new OperationGetNote(logDataStore, row));
   }
 
   @Override
   public Note removeNote(int row) {
-    return logDataStore.removeNote(row);
+    return runCallableInDedicatedThread(new OperationRemoveNote(logDataStore, row));
   }
 
 
   @Override
   public void clearNotes() {
-    logDataStore.clearNotes();
+    try {
+      service.submit(new OperationClearNotes(logDataStore)).get();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
 
   }
 
   @Override
   public TreeMap<Integer, Note> getAllNotes() {
-    return logDataStore.getAllNotes();
+    Callable<TreeMap<Integer, Note>> task = new OperationGetAllNotes(logDataStore);
+    return runCallableInDedicatedThread(task);
+  }
+
+  private <T> T runCallableInDedicatedThread(Callable<T> task) {
+    try {
+      T t = service.submit(task).get();
+      return t;
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
   public Iterator<LogData> iterator() {
-    return logDataStore.iterator();
+    try {
+      return service.submit(new OperationGetIterator(logDataStore)).get();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
   public boolean isMarked(int row) {
     //TODO filter support
-    return logDataStore.isMarked(row);
+    try {
+      return service.submit(new OperationIsMarked(logDataStore, row)).get();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   @Override
   public MarkerColors getMarkerColors(int row) {
     //TODO filter support
-    return logDataStore.getMarkerColors(row);
+    try {
+      return service.submit(new OperationGetMarkerColors(logDataStore, row)).get();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
   public void markRows(MarkerColors markerColors, int... rows) {
-    logDataStore.markRows(markerColors, rows);
+    runCallableInDedicatedThread(new OperationMarkRows(logDataStore,markerColors,rows));
   }
 
   @Override
   public void unmarkRows(int... rows) {
-    logDataStore.unmarkRows(rows);
+    runCallableInDedicatedThread(new OperationUnMarkRows(logDataStore,rows));
 
   }
 
