@@ -18,11 +18,9 @@ package pl.otros.logview.gui.renderers;
 import java.awt.*;
 
 public class DefaultColors {
-
-  public static Color FOREGROUND = Color.BLACK;
-  public static Color BACKGROUND = Color.WHITE;
-  public static Color SELECTED = Color.LIGHT_GRAY;
-  public static Color MARKED = new Color(0, 255, 255);
-  public static Color MARKED_SELECTED = new Color(0, 180, 247);
+  public static Color FOREGROUND = javax.swing.UIManager.getDefaults().getColor("Table.foreground");
+  public static Color BACKGROUND = javax.swing.UIManager.getDefaults().getColor("Table.background");
+  public static Color SELECTED = javax.swing.UIManager.getDefaults().getColor("Table.selectionBackground");
+  public static Color SELECTED_FOREGROUND = javax.swing.UIManager.getDefaults().getColor("Table.selectionForeground");
 
 }

@@ -62,6 +62,7 @@ public class TableMarkDecoratorRenderer implements TableCellRenderer {
       bg = DefaultColors.BACKGROUND;
     } else if (isSelected && !marked) {
       bg = DefaultColors.SELECTED;
+      fg = DefaultColors.SELECTED_FOREGROUND;
     } else if (marked && !isSelected) {
       // bg = DefaultColors.MARKED;
       bg = markerColors.getBackground();
