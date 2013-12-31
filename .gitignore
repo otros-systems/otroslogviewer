@@ -1,0 +1,10 @@
+/classpath.txt
+.gradle
+.*.sw?
+*~
+*.bak
+~*
+.~*
+/local*
+build
+/gradle-app.setting
