@@ -536,7 +536,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     messageDetailToolbar.add(new JLabel("Maximum message size for format"));
 
     final DataConfiguration configuration = otrosApplication.getConfiguration();
-    final DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel(new String[]{});
+    final DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(new String[]{});
     String[] values = new String[]{
         "10kB", "100kB", "200kB", "300kB", "400kB", "500kB", "600kB", "700kB", "800kB", "900kB", "1MB", "2MB", "3MB", "4MB", "5MB"
     };
@@ -547,7 +547,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     messageMaximumSize.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String max = defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
+        String max = (String)defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
         configuration.setProperty(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, max);
         messageDetailListener.setMaximumMessageSize((int) new FileSize(max).getBytes());
 
@@ -559,7 +559,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     AutoCompleteDecorator.decorate(messageMaximumSize);
     messageMaximumSize.setMaximumSize(new Dimension(100, 50));
     messageDetailToolbar.add(messageMaximumSize);
-    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
+    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, (String)defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
     if (defaultComboBoxModel.getIndexOf(messageMaxSize) >= 0) {
       messageMaximumSize.setSelectedItem(messageMaxSize);
     }
