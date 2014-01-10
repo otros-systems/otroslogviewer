@@ -1,5 +1,6 @@
 package pl.otros.logview.store.async;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
@@ -9,6 +10,7 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Ignore
 public class MemoryLogDataStore2Test {
   @Test
   public void testFilter() throws Exception {
