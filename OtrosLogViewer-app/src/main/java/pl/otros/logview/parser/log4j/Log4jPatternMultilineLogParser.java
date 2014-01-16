@@ -757,7 +757,14 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
           // doPost(event);
           logData = Log4jUtil.translateLog4j(event);
       }
-      logEventParsingProperties.putAll(processEvent(eventMatcher.toMatchResult()));
+      // Allow for optional capture fields.
+      // This is used by rePattern now, but traditional patterns could be
+      // enhanced to support optional fields too.
+      for (Map.Entry<String, Object> entry :
+              (Set<Map.Entry<String, Object>>)
+              processEvent(eventMatcher.toMatchResult()).entrySet())
+          if (entry.getValue() != null)  // We never write null key
+              logEventParsingProperties.put(entry.getKey(), entry.getValue());
     } else if (exceptionMatcher.matches()) {
       // an exception line
       if (parsingContext.getUnmatchedLog().length() > 0)
