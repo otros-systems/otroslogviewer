@@ -108,7 +108,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   private LogData displayedLogData;
 
-  public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, OtrosApplication otrosApplication) {
+  public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, final OtrosApplication otrosApplication) {
     super();
     this.dataTableModel = dataTableModel;
     this.otrosApplication = otrosApplication;
@@ -139,6 +139,9 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     leftPanel = new JPanel(new MigLayout());
     logDetailTextArea = new JTextPane();
     logDetailTextArea.setEditable(false);
+    MouseAdapter locationInfo = new LocationClickMouseAdapter(otrosApplication, logDetailTextArea);
+    logDetailTextArea.addMouseMotionListener(locationInfo);
+    logDetailTextArea.addMouseListener(locationInfo);
     logDetailTextArea.setBorder(BorderFactory.createTitledBorder("Details"));
     logDetailWithRulerScrollPane = RulerBarHelper.wrapTextComponent(logDetailTextArea);
     table = new JTableWith2RowHighliting(dataTableModel);

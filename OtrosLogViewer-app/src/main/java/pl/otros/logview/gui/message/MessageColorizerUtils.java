@@ -60,6 +60,6 @@ public class MessageColorizerUtils {
 			messageFragmentStyle.setOffset(messageFragmentStyle.getOffset()+offset);
 		}
 		return list;
-
 	}
+
 }
