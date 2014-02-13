@@ -27,6 +27,7 @@ import pl.otros.logview.store.LogDataStore;
 
 import javax.swing.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public final class ImportLogRunnable implements Runnable {
 
@@ -58,10 +59,10 @@ public final class ImportLogRunnable implements Runnable {
     importer.initParsingContext(parsingContext);
     try {
       importer.importLogs(openFileObject.getContentInputStream(), logDataStore, parsingContext);
+      LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
     } catch (Exception e) {
-      LOGGER.severe("Error when importing log: " + e.getMessage());
+      LOGGER.log(Level.SEVERE, "Error when importing log", e);
     }
-    LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
     SwingUtilities.invokeLater(new Runnable() {
 
       @Override
