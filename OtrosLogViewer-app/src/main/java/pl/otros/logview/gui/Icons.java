@@ -240,7 +240,4 @@ public class Icons {
    @Path(path = "/img/fugue/document-copy.png")
    public static ImageIcon DOCUMENT_COPY;
 
-  @Path(path = "/img/retrospective/retrospective-banner.png")
-  public static ImageIcon retrospective;
-
 }
