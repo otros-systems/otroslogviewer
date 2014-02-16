@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pl.otros.logview.gui;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.MarkerColors;
+import pl.otros.logview.gui.services.Services;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
@@ -34,18 +34,24 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class OtrosApplication {
-	private DataConfiguration configuration = null;
-	private AllPluginables allPluginables;
-	private StatusObserver statusObserver;
-	private JFrame applicationJFrame;
-	private JTabbedPane jTabbedPane;
-	private JXComboBox searchField;
-	private MarkerColors selectedMarkColors;
-	private JMenu pluginsMenu;
+  private DataConfiguration configuration = null;
+  private AllPluginables allPluginables;
+  private StatusObserver statusObserver;
+  private JFrame applicationJFrame;
+  private JTabbedPane jTabbedPane;
+  private JXComboBox searchField;
+  private MarkerColors selectedMarkColors;
+  private JMenu pluginsMenu;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private AppProperties appProperties = new AppProperties();
 
 
+
+  private Services services;
+
+  public OtrosApplication(){
+
+  }
 
   public AppProperties getAppProperties() {
     return appProperties;
@@ -68,117 +74,118 @@ public class OtrosApplication {
   }
 
   public JMenu getPluginsMenu() {
-		return pluginsMenu;
-	}
+    return pluginsMenu;
+  }
 
-	public void setPluginsMenu(JMenu pluginsMenu) {
-		this.pluginsMenu = pluginsMenu;
-	}
+  public void setPluginsMenu(JMenu pluginsMenu) {
+    this.pluginsMenu = pluginsMenu;
+  }
 
-	public JXComboBox getSearchField() {
-		return searchField;
-	}
+  public JXComboBox getSearchField() {
+    return searchField;
+  }
 
+  public JTabbedPane getJTabbedPane() {
+    return jTabbedPane;
+  }
 
-	public JTabbedPane getJTabbedPane() {
-		return jTabbedPane;
-	}
-
-	public LogViewPanel getSelectedLogViewPanel(){
-		int selectedIndex = jTabbedPane.getSelectedIndex();
-		Component componentAt = jTabbedPane.getComponentAt(selectedIndex);
-		if (componentAt instanceof LogViewPanelWrapper) {
-			LogViewPanelWrapper  logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
-			return logViewPanelWrapper.getLogViewPanel();
-		} else if (componentAt instanceof Log4jPatternParserEditor) {
-			Log4jPatternParserEditor patternParserEditor = (Log4jPatternParserEditor) componentAt;
-			LogViewPanel logViewPanel = patternParserEditor.getLogViewPanel();
-			return logViewPanel;
-		}
-		return null;
-	}
-
-	public LogDataTableModel getSelectedPaneLogDataTableModel() {
-		LogViewPanel selectedLogViewPanel = getSelectedLogViewPanel();
-		if (selectedLogViewPanel != null){
-			return selectedLogViewPanel.getDataTableModel();
-		}
-		return null;
-	}
-
-	public JXTable getSelectPaneJXTable() {
-		LogViewPanel selectedLogViewPanel = getSelectedLogViewPanel();
-		if (selectedLogViewPanel != null){
-			return selectedLogViewPanel.getTable();
-		}
-		return null;
-	}
-
-
-    public void addClosableTab(String name, String tooltip, Icon icon, JComponent component, boolean show) {
-        JTabbedPane tabbedPane = getJTabbedPane();
-        if (tabbedPane.indexOfComponent(component) == -1) {
-            int tabCount = tabbedPane.getTabCount();
-            tabbedPane.addTab(name, icon, component);
-            tabbedPane.setTabComponentAt(tabCount, new TabHeader(tabbedPane, name, icon, tooltip));
-            tabbedPane.setSelectedIndex(tabCount);
-        }
-        if (show){
-            tabbedPane.setSelectedComponent(component);
-        }
-
+  public LogViewPanel getSelectedLogViewPanel() {
+    int selectedIndex = jTabbedPane.getSelectedIndex();
+    Component componentAt = jTabbedPane.getComponentAt(selectedIndex);
+    if (componentAt instanceof LogViewPanelWrapper) {
+      LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
+      return logViewPanelWrapper.getLogViewPanel();
+    } else if (componentAt instanceof Log4jPatternParserEditor) {
+      Log4jPatternParserEditor patternParserEditor = (Log4jPatternParserEditor) componentAt;
+      LogViewPanel logViewPanel = patternParserEditor.getLogViewPanel();
+      return logViewPanel;
     }
+    return null;
+  }
 
+  public LogDataTableModel getSelectedPaneLogDataTableModel() {
+    LogViewPanel selectedLogViewPanel = getSelectedLogViewPanel();
+    if (selectedLogViewPanel != null) {
+      return selectedLogViewPanel.getDataTableModel();
+    }
+    return null;
+  }
 
-    public JFrame getApplicationJFrame() {
-		return applicationJFrame;
-	}
+  public JXTable getSelectPaneJXTable() {
+    LogViewPanel selectedLogViewPanel = getSelectedLogViewPanel();
+    if (selectedLogViewPanel != null) {
+      return selectedLogViewPanel.getTable();
+    }
+    return null;
+  }
 
-	public DataConfiguration getConfiguration() {
-		return configuration;
-	}
+  public void addClosableTab(String name, String tooltip, Icon icon, JComponent component, boolean show) {
+    JTabbedPane tabbedPane = getJTabbedPane();
+    if (tabbedPane.indexOfComponent(component) == -1) {
+      int tabCount = tabbedPane.getTabCount();
+      tabbedPane.addTab(name, icon, component);
+      tabbedPane.setTabComponentAt(tabCount, new TabHeader(tabbedPane, name, icon, tooltip));
+      tabbedPane.setSelectedIndex(tabCount);
+    }
+    if (show) {
+      tabbedPane.setSelectedComponent(component);
+    }
+  }
 
-	public AllPluginables getAllPluginables() {
-		return allPluginables;
-	}
+  public JFrame getApplicationJFrame() {
+    return applicationJFrame;
+  }
 
-	public StatusObserver getStatusObserver() {
-		return statusObserver;
-	}
+  public DataConfiguration getConfiguration() {
+    return configuration;
+  }
 
+  public AllPluginables getAllPluginables() {
+    return allPluginables;
+  }
 
-	public void setAllPluginables(AllPluginables allPluginables) {
-		this.allPluginables = allPluginables;
-	}
+  public StatusObserver getStatusObserver() {
+    return statusObserver;
+  }
 
-	public void setApplicationJFrame(JFrame applicationJFrame) {
-		this.applicationJFrame = applicationJFrame;
-	}
+  public void setAllPluginables(AllPluginables allPluginables) {
+    this.allPluginables = allPluginables;
+  }
 
-	public void setConfiguration(DataConfiguration configuration) {
-		this.configuration = configuration;
-	}
+  public void setApplicationJFrame(JFrame applicationJFrame) {
+    this.applicationJFrame = applicationJFrame;
+  }
 
+  public void setConfiguration(DataConfiguration configuration) {
+    this.configuration = configuration;
+  }
 
-	public void setjTabbedPane(JTabbedPane jTabbedPane) {
-		this.jTabbedPane = jTabbedPane;
-	}
+  public void setjTabbedPane(JTabbedPane jTabbedPane) {
+    this.jTabbedPane = jTabbedPane;
+  }
 
-	public void setSearchField(JXComboBox searchField) {
-		this.searchField = searchField;
-	}
+  public void setSearchField(JXComboBox searchField) {
+    this.searchField = searchField;
+  }
 
-	public void setStatusObserver(StatusObserver statusObserver) {
-		this.statusObserver = statusObserver;
-	}
+  public void setStatusObserver(StatusObserver statusObserver) {
+    this.statusObserver = statusObserver;
+  }
 
+  public MarkerColors getSelectedMarkColors() {
+    return selectedMarkColors;
+  }
 
-	public MarkerColors getSelectedMarkColors() {
-		return selectedMarkColors;
-	}
+  public void setSelectedMarkColors(MarkerColors selectedMarkColors) {
+    this.selectedMarkColors = selectedMarkColors;
+  }
 
-	public void setSelectedMarkColors(MarkerColors selectedMarkColors) {
-		this.selectedMarkColors = selectedMarkColors;
-	}
+  public Services getServices() {
+    return services;
+  }
+
+  public void setServices(Services services) {
+    this.services = services;
+  }
 }
 

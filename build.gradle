@@ -45,7 +45,7 @@ project(':Common-libs') {
         compile fileTree(dir: 'lib', include: '*.jar')
         compile 'com.beust:jcommander:1.29'
         compile 'com.github.insubstantial:trident:7.1'
-        compile 'com.google.guava:guava:11.0.2'
+        compile 'com.google.guava:guava:16.0.1'
         compile 'com.jcraft:jsch:0.1.+'
         compile 'com.jcraft:jzlib:1.+'
         compile 'com.jgoodies:looks:2.+'

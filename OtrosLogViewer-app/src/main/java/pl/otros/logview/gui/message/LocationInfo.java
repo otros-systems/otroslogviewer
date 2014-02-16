@@ -101,27 +101,8 @@ public class LocationInfo {
     return lineNumber;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    LocationInfo that = (LocationInfo) o;
-    if (lineNumber != that.lineNumber) return false;
-    if (className != null ? !className.equals(that.className) : that.className != null) return false;
-    if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
-    if (method != null ? !method.equals(that.method) : that.method != null) return false;
-    return true;
-  }
 
-  @Override
-  public int hashCode() {
-    int result;
-    result = (className != null ? className.hashCode() : 0);
-    result = 31 * result + (method != null ? method.hashCode() : 0);
-    result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-    result = 31 * result + lineNumber;
-    return result;
-  }
+
 
   @Override
   public String toString() {
@@ -185,7 +166,30 @@ public class LocationInfo {
         fileName,
         lineNumber);
   }
-// -------------------------- PRIVATE METHODS --------------------------
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof LocationInfo)) return false;
+    LocationInfo that = (LocationInfo) o;
+    if (lineNumber != that.lineNumber) return false;
+    if (className != null ? !className.equals(that.className) : that.className != null) return false;
+    if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
+    if (method != null ? !method.equals(that.method) : that.method != null) return false;
+    if (packageName != null ? !packageName.equals(that.packageName) : that.packageName != null) return false;
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = packageName != null ? packageName.hashCode() : 0;
+    result = 31 * result + (className != null ? className.hashCode() : 0);
+    result = 31 * result + (method != null ? method.hashCode() : 0);
+    result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+    result = 31 * result + lineNumber;
+    return result;
+  }
+  // -------------------------- PRIVATE METHODS --------------------------
 
   private String parsePackageName(String className) {
     String result;

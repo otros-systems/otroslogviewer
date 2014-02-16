@@ -240,4 +240,16 @@ public class Icons {
    @Path(path = "/img/fugue/document-copy.png")
    public static ImageIcon DOCUMENT_COPY;
 
+  @Path(path = "/img/ide/eclipse-disconnected.png")
+   public static ImageIcon IDE_ECLIPSE_DISCONNCTED;
+
+  @Path(path = "/img/ide/idea-disconnected.png")
+   public static ImageIcon IDE_IDEA_DISCONNCTED;
+
+  @Path(path = "/img/ide/eclipse.gif")
+   public static ImageIcon IDE_ECLIPSE;
+
+  @Path(path = "/img/ide/idea.png")
+   public static ImageIcon IDE_IDEA;
+
 }

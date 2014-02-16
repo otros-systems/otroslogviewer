@@ -17,6 +17,7 @@
 package pl.otros.logview.gui.message.update;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.MessageFragmentStyle;
@@ -24,6 +25,7 @@ import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.pluginable.PluginableElementsContainer;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
+import pl.otros.vfs.browser.ExceptionsUtils;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -104,8 +106,9 @@ public class MessageUpdateUtils {
             list.addAll(colorize);
           }
         } catch (Throwable e) {
-          LOGGER.severe(String.format("Error occurred when using message colorizer %s: %s", messageColorizer.getName(), e.getMessage()));
+          LOGGER.log(Level.SEVERE,String.format("Error occurred when using message colorizer %s: %s%n%s", messageColorizer.getName(), e.getMessage()),e);
           LOGGER.fine(String.format("Error occurred when using message colorizer %s with message\"%s\"", messageColorizer.getName(), StringUtils.left(message, 1500)));
+          e.printStackTrace();
         } finally {
           Thread.currentThread().setContextClassLoader(contextClassLoader);
         }

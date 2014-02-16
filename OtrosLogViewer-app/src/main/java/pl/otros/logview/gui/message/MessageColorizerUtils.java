@@ -50,6 +50,7 @@ public class MessageColorizerUtils {
 		return  list;
   }
 
+
 	public static Collection<MessageFragmentStyle> colorizeRegex(Style style, String text,int offset, Pattern regex, int group) {
 		Collection<MessageFragmentStyle> messageFragmentStyles = colorizeRegex(style, text.substring(offset), regex, group);
 		return increaseOffset(messageFragmentStyles,offset);

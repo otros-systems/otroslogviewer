@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package pl.otros.logview.gui;
 
 import com.google.common.base.Throwables;
+import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.negusoft.singleinstance.SingleInstance;
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
@@ -50,6 +53,8 @@ import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
+import pl.otros.logview.gui.services.jumptocdoe.JumpToCodeService;
+import pl.otros.logview.gui.services.jumptocdoe.ServicesImpl;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
@@ -84,23 +89,19 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static pl.otros.logview.gui.ConfKeys.FORMATTER_SOAP_REMOVE_XSI_FOR_NIL;
 
 public class LogViewMainFrame extends JFrame {
-
   private static final Logger LOGGER = Logger.getLogger(LogViewMainFrame.class.getName());
-
   public static final String VFS_IDENTITIES = "vfs.Identities";
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
-
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
   private static SingleInstance singleInstance;
-
   private JToolBar toolBar;
-
   private JButton buttonSearch;
   private JLabelStatusObserver observer;
   private JTabbedPane logsTabbedPane;
@@ -108,11 +109,8 @@ public class LogViewMainFrame extends JFrame {
   private DataConfiguration configuration;
   private CardLayout cardLayout;
   private JPanel cardLayoutPanel;
-
   private JXComboBox searchField;
-
   private AllPluginables allPluginables;
-
   private PluginableElementsContainer<LogImporter> logImportersContainer;
   private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
   private SearchResultColorizer searchResultColorizer;
@@ -142,14 +140,12 @@ public class LogViewMainFrame extends JFrame {
       return;
     }
     SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
-
     singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
-        singleInstanceRequestResponseDelegate,args);
+        singleInstanceRequestResponseDelegate, args);
     if (singleInstance == null) {
       LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
       System.exit(0);
     }
-
     GuiJulHandler handler = new GuiJulHandler();
     handler.setLevel(Level.ALL);
     Logger olvLogger = Logger.getLogger("pl.otros.logview");
@@ -162,11 +158,9 @@ public class LogViewMainFrame extends JFrame {
     if (!c.containsKey(ConfKeys.UUID)) {
       c.setProperty(ConfKeys.UUID, UUID.randomUUID().toString());
     }
-
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(new Runnable() {
-
       @Override
       public void run() {
         try {
@@ -179,19 +173,17 @@ public class LogViewMainFrame extends JFrame {
           LOGGER.warning("Cannot initialize LookAndFeel: " + e1.getMessage());
         }
         try {
-
           final LogViewMainFrame mf = new LogViewMainFrame(new DataConfiguration(c));
           // mf.exitAction was instantiated in the constructor (previous line)
           // Not sure retrieving this from most appropriate Apache config
           // object.
           mf.exitAction.setConfirm(
-                  c.getBoolean("generalBehavior.confirmExit", true));
+              c.getBoolean("generalBehavior.confirmExit", true));
           /* TODO:  Implement User Preferences screen or checkbox on exit widget
            * that will update the same config object something like:
            *     c.setProperty("generalBehavior.confirmExit", newValue);
            */
           mf.addComponentListener(new ComponentAdapter() {
-
             @Override
             public void componentResized(ComponentEvent e) {
               c.setProperty("gui.state", mf.getExtendedState());
@@ -206,7 +198,6 @@ public class LogViewMainFrame extends JFrame {
               c.setProperty("gui.location.x", mf.getLocation().x);
               c.setProperty("gui.location.y", mf.getLocation().y);
             }
-
           });
           mf.addWindowListener(mf.exitAction);
           SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
@@ -214,7 +205,6 @@ public class LogViewMainFrame extends JFrame {
         } catch (InitializationException e) {
           LOGGER.log(Level.SEVERE, "Cannot initialize main frame", e);
         }
-
       }
     });
   }
@@ -230,7 +220,6 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.warning("Can't load version of running OLV");
     }
     this.setTitle(title);
-
     try {
       String iconPath = "img/otros/logo16.png";
       if (System.getProperty("os.name").contains("Linux")) {
@@ -241,11 +230,9 @@ public class LogViewMainFrame extends JFrame {
     } catch (Exception e1) {
       LOGGER.warning("Can't load icon: " + e1.getMessage());
     }
-
     Exception modalDisplayException = null;
     // If non-terminal load problem occurs, queue to display for user on
     // top of the app UI.
-
     try {
       OtrosSplash.setMessage("Loading plugins");
       LvDynamicLoader.getInstance().setStatusObserver(OtrosSplash.getSplashStatusObserver());
@@ -258,18 +245,13 @@ public class LogViewMainFrame extends JFrame {
       // Details should have been logged at lower level
       modalDisplayException = ie;
     }
-
     OtrosSplash.setMessage("Initializing GUI");
-
-
     allPluginables = AllPluginables.getInstance();
     logImportersContainer = allPluginables.getLogImportersContainer();
     messageColorizercontainer = allPluginables.getMessageColorizers();
     searchResultColorizer = (SearchResultColorizer) messageColorizercontainer.getElement(SearchResultColorizer.class.getName());
-
     cardLayout = new CardLayout();
     cardLayoutPanel = new JPanel(cardLayout);
-
     JLabel statusLabel = new JLabel(" ");
     observer = new JLabelStatusObserver(statusLabel);
     logsTabbedPane = new JTabbedPane();
@@ -278,10 +260,11 @@ public class LogViewMainFrame extends JFrame {
     JProgressBar heapBar = new JProgressBar();
     heapBar.setPreferredSize(new Dimension(190, 15));
     new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
-    JPanel statusPanel = new JPanel(new BorderLayout());
+    JPanel statusPanel = new JPanel(new MigLayout("fill","[fill]push[][]",""));
     statusPanel.add(statusLabel);
-    statusPanel.add(heapBar, BorderLayout.EAST);
-
+    JLabel ideConnectedLabel = new JLabel(JumpToCodeService.IDE.IDEA.getIconDiscounted());
+    statusPanel.add(ideConnectedLabel);
+    statusPanel.add(heapBar);
     otrosApplication = new OtrosApplication();
     otrosApplication.setAllPluginables(AllPluginables.getInstance());
     otrosApplication.setApplicationJFrame(this);
@@ -289,16 +272,14 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setjTabbedPane(logsTabbedPane);
     otrosApplication.setStatusObserver(observer);
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration()));
+    otrosApplication.setServices(new ServicesImpl(otrosApplication));
     SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
-
     ToolTipManager.sharedInstance().setDismissDelay(5000);
     initMenu();
     initToolbar();
     addEmptyViewListener();
     addMenuBarReloadListener();
-
     otrosApplication.setSearchField(searchField);
-
     cardLayoutPanel.add(logsTabbedPane, CARD_LAYOUT_LOGS_TABLE);
     EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication);
     final JScrollPane jScrollPane = new JScrollPane(emptyViewPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -316,24 +297,20 @@ public class LogViewMainFrame extends JFrame {
     cp.add(toolBar, BorderLayout.NORTH);
     cp.add(cardLayoutPanel, BorderLayout.CENTER);
     cp.add(statusPanel, BorderLayout.SOUTH);
-
-
     initGlobalHotKeys();
     initPosition();
     if (configuration.getBoolean(ConfKeys.LOAD_EXPERIMENTAL_FEATURES, false)) {
       initExperimental();
     }
     setTransferHandler(new DragAndDropFilesHandler(otrosApplication));
-
     initPlugins();
-
     OtrosSplash.hide();
     setVisible(true);
     if (modalDisplayException != null)
       JOptionPane.showMessageDialog(this,
-              "Problem with loading automatic markers,"
-              + "filter or log importers:\n"
-              + modalDisplayException.getMessage(), "Initialization Error",
+          "Problem with loading automatic markers,"
+          + "filter or log importers:\n"
+          + modalDisplayException.getMessage(), "Initialization Error",
           JOptionPane.ERROR_MESSAGE);
     // Check new version on start
     if (c.getBoolean(ConfKeys.CHECK_NEW_VERSION_ON_START, true)) {
@@ -347,6 +324,10 @@ public class LogViewMainFrame extends JFrame {
         new StatusObserverExceptionHandler(observer)
     );
     Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
+    ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
+    listeningScheduledExecutorService.scheduleAtFixedRate(
+        new IdeAvailabilityCheck(ideConnectedLabel,otrosApplication.getServices().getJumpToCodeService()),
+        5,5,TimeUnit.SECONDS);
   }
 
   private void initPlugins() {
@@ -360,14 +341,11 @@ public class LogViewMainFrame extends JFrame {
       } catch (Exception e) {
         LOGGER.severe("Can't initialize plugins " + ppi.getName() + "\n" + Throwables.getStackTraceAsString(e));
       }
-
     }
-
   }
 
   private void addEmptyViewListener() {
     logsTabbedPane.addContainerListener(new ContainerListener() {
-
       @Override
       public void componentRemoved(ContainerEvent e) {
         setCard();
@@ -396,7 +374,6 @@ public class LogViewMainFrame extends JFrame {
         reloadMenuBar();
       }
 
-
       @Override
       public void elementRemoved(LogImporter element) {
         reloadMenuBar();
@@ -421,12 +398,10 @@ public class LogViewMainFrame extends JFrame {
       }
     };
     otrosApplication.getAllPluginables().getLogImportersContainer().addListener(l);
-
   }
 
   private void initToolbar() {
     toolBar = new JToolBar();
-
     final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
     final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD);
     final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE);
@@ -437,8 +412,7 @@ public class LogViewMainFrame extends JFrame {
     searchField.setMinimumSize(new Dimension(150, 10));
     searchField.setPreferredSize(new Dimension(250, 10));
     searchField.setToolTipText("<HTML>Enter text to search.<BR/>" + "Enter - search next,<BR/>Alt+Enter search previous,<BR/>"
-        + "Ctrl+Enter - mark all found</HTML>");
-
+                               + "Ctrl+Enter - mark all found</HTML>");
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
@@ -447,7 +421,6 @@ public class LogViewMainFrame extends JFrame {
         if (stringEnd < 0) {
           stringEnd = editorComponent.getText().length();
         }
-
         try {
           String selectedText = editorComponent.getText(0, stringEnd);
           if (StringUtils.isBlank(selectedText)) {
@@ -459,7 +432,6 @@ public class LogViewMainFrame extends JFrame {
         } catch (BadLocationException e) {
           LOGGER.log(Level.SEVERE, "Can't update search highlight", e);
         }
-
       }
     };
     JTextComponent searchFieldTextComponent = (JTextComponent) searchField.getEditor().getEditorComponent();
@@ -469,15 +441,11 @@ public class LogViewMainFrame extends JFrame {
         delayedSearchResultUpdate.performAction();
       }
     });
-
     final MarkAllFoundAction markAllFoundAction = new MarkAllFoundAction(otrosApplication);
-
     final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener((JTextField) searchField.getEditor().getEditorComponent(), observer,
         SearchMode.STRING_CONTAINS);
-
     SearchMode searchModeFromConfig = configuration.get(SearchMode.class, "gui.searchMode", SearchMode.STRING_CONTAINS);
     final String lastSearchString;
-
     int selectedSearchMode = 0;
     if (searchModeFromConfig.equals(SearchMode.STRING_CONTAINS)) {
       selectedSearchMode = 0;
@@ -492,7 +460,6 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.warning("Unknown search mode " + searchModeFromConfig);
       lastSearchString = "";
     }
-
     Component editorComponent = searchField.getEditor().getEditorComponent();
     if (editorComponent instanceof JTextField) {
       final JTextField sfTf = (JTextField) editorComponent;
@@ -509,15 +476,11 @@ public class LogViewMainFrame extends JFrame {
             LOGGER.log(Level.SEVERE, "Error: ", e1);
           }
         }
-
       });
       sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
       sfTf.setText(lastSearchString);
-
     }
-
     searchMode.addActionListener(new ActionListener() {
-
       @Override
       public void actionPerformed(ActionEvent e) {
         SearchMode mode = null;
@@ -539,10 +502,10 @@ public class LogViewMainFrame extends JFrame {
           mode = SearchMode.QUERY;
           validationEnabled = true;
           String querySearchTooltip = "<HTML>" + //
-              "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
-              "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
-              "See wiki for more info<BR/>" + //
-              "</HTML>";
+                                      "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
+                                      "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
+                                      "See wiki for more info<BR/>" + //
+                                      "</HTML>";
           searchMode.setToolTipText(querySearchTooltip);
           confKey = ConfKeys.SEARCH_LAST_QUERY;
         }
@@ -561,19 +524,15 @@ public class LogViewMainFrame extends JFrame {
         searchField.setSelectedItem(lastSearch);
       }
     });
-
     searchMode.setSelectedIndex(selectedSearchMode);
-
     final JCheckBox markFound = new JCheckBox("Mark search result");
     markFound.setMnemonic(KeyEvent.VK_M);
     searchField.addKeyListener(markAllFoundAction);
     configuration.addConfigurationListener(markAllFoundAction);
     JButton markAllFoundButton = new JButton(markAllFoundAction);
-
     final JComboBox markColor = new JComboBox(MarkerColors.values());
     markFound.setSelected(configuration.getBoolean("gui.markFound", true));
     markFound.addChangeListener(new ChangeListener() {
-
       @Override
       public void stateChanged(ChangeEvent e) {
         boolean selected = markFound.isSelected();
@@ -582,7 +541,6 @@ public class LogViewMainFrame extends JFrame {
         configuration.setProperty("gui.markFound", markFound.isSelected());
       }
     });
-
     markColor.setRenderer(new MarkerColorsComboBoxRenderer());
 //		markColor.addActionListener(new ActionListener() {
 //
@@ -608,13 +566,10 @@ public class LogViewMainFrame extends JFrame {
       }
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
-
-
     buttonSearch = new JButton(searchActionForward);
     buttonSearch.setMnemonic(KeyEvent.VK_N);
     JButton buttonSearchPrev = new JButton(searchActionBackward);
     buttonSearchPrev.setMnemonic(KeyEvent.VK_P);
-
     enableDisableComponetsForTabs.addComponet(buttonSearch);
     enableDisableComponetsForTabs.addComponet(buttonSearchPrev);
     enableDisableComponetsForTabs.addComponet(searchField);
@@ -622,7 +577,6 @@ public class LogViewMainFrame extends JFrame {
     enableDisableComponetsForTabs.addComponet(markAllFoundButton);
     enableDisableComponetsForTabs.addComponet(searchMode);
     enableDisableComponetsForTabs.addComponet(markColor);
-
     toolBar.add(searchMode);
     toolBar.add(searchField);
     toolBar.add(buttonSearch);
@@ -630,7 +584,6 @@ public class LogViewMainFrame extends JFrame {
     toolBar.add(markFound);
     toolBar.add(markAllFoundButton);
     toolBar.add(markColor);
-
     JButton nextMarked = new JButton(new JumpToMarkedAction(otrosApplication, Direction.FORWARD));
     nextMarked.setToolTipText(nextMarked.getText());
     nextMarked.setText("");
@@ -643,14 +596,12 @@ public class LogViewMainFrame extends JFrame {
     prevMarked.setMnemonic(KeyEvent.VK_R);
     enableDisableComponetsForTabs.addComponet(prevMarked);
     toolBar.add(prevMarked);
-
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.INFO)));
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.WARNING)));
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.SEVERE)));
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.INFO)));
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.WARNING)));
     enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.SEVERE)));
-
   }
 
   private void initMenu() {
@@ -660,30 +611,24 @@ public class LogViewMainFrame extends JFrame {
       setJMenuBar(menuBar);
     }
     menuBar.removeAll();
-
     JMenu fileMenu = new JMenu("File");
     fileMenu.setMnemonic(KeyEvent.VK_F);
-
     JLabel labelOpenLog = new JLabel("Open log", Icons.FOLDER_OPEN, SwingConstants.LEFT);
     Font menuGroupFont = labelOpenLog.getFont().deriveFont(13f).deriveFont(Font.BOLD);
     labelOpenLog.setFont(menuGroupFont);
     fileMenu.add(labelOpenLog);
-
     JMenuItem openAutoDetectLog = new JMenuItem("Open log with autodetect type");
     openAutoDetectLog.addActionListener(new ImportLogWithAutoDetectedImporterActionListener(otrosApplication));
     openAutoDetectLog.setMnemonic(KeyEvent.VK_O);
     openAutoDetectLog.setIcon(Icons.WIZARD);
     fileMenu.add(openAutoDetectLog);
-
     JMenuItem tailAutoDetectLog = new JMenuItem("Tail log with autodetect type");
     tailAutoDetectLog.addActionListener(new TailLogWithAutoDetectActionListener(otrosApplication));
     tailAutoDetectLog.setMnemonic(KeyEvent.VK_T);
     tailAutoDetectLog.setIcon(Icons.ARROW_REPEAT);
     fileMenu.add(tailAutoDetectLog);
-
     fileMenu.add(new TailMultipleFilesIntoOneView(otrosApplication));
     fileMenu.add(new ConnectToSocketHubAppenderAction(otrosApplication));
-
     fileMenu.add(new JSeparator());
     JLabel labelLogInvestigation = new JLabel("Log investigation", SwingConstants.LEFT);
     labelLogInvestigation.setFont(menuGroupFont);
@@ -693,8 +638,6 @@ public class LogViewMainFrame extends JFrame {
     enableDisableComponetsForTabs.addComponet(saveLogsInvest);
     fileMenu.add(saveLogsInvest);
     fileMenu.add(new JSeparator());
-
-
     LogImporter[] importers = new LogImporter[0];
     importers = logImportersContainer.getElements().toArray(importers);
     for (LogImporter logImporter : importers) {
@@ -712,7 +655,6 @@ public class LogViewMainFrame extends JFrame {
       }
       fileMenu.add(openLog);
     }
-
     fileMenu.add(new JSeparator());
     JLabel labelTailLog = new JLabel("Tail log [from begging of file]", Icons.ARROW_REPEAT, SwingConstants.LEFT);
     labelTailLog.setFont(menuGroupFont);
@@ -732,22 +674,17 @@ public class LogViewMainFrame extends JFrame {
       }
       fileMenu.add(openLog);
     }
-
-
     JMenuItem exitMenuItem = new JMenuItem("Exit", 'e');
     exitMenuItem.setIcon(Icons.TURN_OFF);
     exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("control F4"));
     exitAction = new ExitAction(this);
     exitMenuItem.addActionListener(exitAction);
-
     fileMenu.add(new JSeparator());
     fileMenu.add(exitMenuItem);
-
     JMenu toolsMenu = new JMenu("Tools");
     toolsMenu.setMnemonic(KeyEvent.VK_T);
     JMenuItem closeAll = new JMenuItem(new CloseAllTabsAction(otrosApplication));
     enableDisableComponetsForTabs.addComponet(closeAll);
-
     ArrayList<SocketLogReader> logReaders = new ArrayList<SocketLogReader>();
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
@@ -757,10 +694,8 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowLoadedComponets(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
     toolsMenu.add(closeAll);
-
     JMenu pluginsMenu = new JMenu("Plugins");
     otrosApplication.setPluginsMenu(pluginsMenu);
-
     JMenu helpMenu = new JMenu("Help");
     JMenuItem about = new JMenuItem("About");
     AboutAction action = new AboutAction(otrosApplication);
@@ -768,11 +703,9 @@ public class LogViewMainFrame extends JFrame {
     about.setAction(action);
     helpMenu.add(about);
     helpMenu.add(new GoToDonatePageAction(otrosApplication));
-
     JMenuItem checkForNewVersion = new JMenuItem(new CheckForNewVersionAction(otrosApplication));
     helpMenu.add(checkForNewVersion);
     helpMenu.add(new GettingStartedAction(otrosApplication));
-
     menuBar.add(fileMenu);
     menuBar.add(toolsMenu);
     menuBar.add(pluginsMenu);
@@ -783,11 +716,9 @@ public class LogViewMainFrame extends JFrame {
     JMenu menu = new JMenu("Experimental");
     menu.add(new JLabel("Experimental features, can have bugs", Icons.LEVEL_WARNING, SwingConstants.LEADING));
     menu.add(new JSeparator());
-
     boolean storeOnDisk = StringUtils.equalsIgnoreCase(System.getProperty("cacheEvents"), "true");
     JRadioButtonMenuItem radioButtonMemory = new JRadioButtonMenuItem("Memory - faster, more memory required", !storeOnDisk);
     radioButtonMemory.addActionListener(new ActionListener() {
-
       @Override
       public void actionPerformed(ActionEvent e) {
         System.setProperty("cacheEvents", Boolean.FALSE.toString());
@@ -795,7 +726,6 @@ public class LogViewMainFrame extends JFrame {
     });
     JRadioButtonMenuItem radioButtonDisk = new JRadioButtonMenuItem("Disk with caching - slower, less memory required", storeOnDisk);
     radioButtonDisk.addActionListener(new ActionListener() {
-
       @Override
       public void actionPerformed(ActionEvent e) {
         System.setProperty("cacheEvents", Boolean.TRUE.toString());
@@ -808,7 +738,6 @@ public class LogViewMainFrame extends JFrame {
     menu.add(new JLabel("Keep parsed log events store:"));
     menu.add(radioButtonMemory);
     menu.add(radioButtonDisk);
-
     final JCheckBox soapFormatterRemoveMultirefsCbx = new JCheckBox();
     soapFormatterRemoveMultirefsCbx.setSelected(configuration.getBoolean(ConfKeys.FORMATTER_SOAP_REMOVE_MULTIREFS, false));
     AbstractAction enableMultiRefRemoveFeature = new AbstractAction() {
@@ -822,13 +751,11 @@ public class LogViewMainFrame extends JFrame {
     enableMultiRefRemoveFeature.putValue(Action.NAME, "Remove mulitRefs from SOAP messages");
     soapFormatterRemoveMultirefsCbx.setAction(enableMultiRefRemoveFeature);
     enableMultiRefRemoveFeature.actionPerformed(null);
-
     final JCheckBox soapFormatterRemoveXsiForNilElementsCbx = new JCheckBox();
     soapFormatterRemoveXsiForNilElementsCbx.setSelected(configuration.getBoolean(FORMATTER_SOAP_REMOVE_XSI_FOR_NIL, false));
     AbstractAction soapFormatterRemoveXsiFromNilAction = new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
         SoapMessageFormatter soapMessageFormatter = (SoapMessageFormatter) AllPluginables.getInstance().getMessageFormatters().getElement(SoapMessageFormatter.class.getName());
         soapMessageFormatter.setRemoveXsiForNilElements(soapFormatterRemoveXsiForNilElementsCbx.isSelected());
         configuration.setProperty(FORMATTER_SOAP_REMOVE_XSI_FOR_NIL, soapFormatterRemoveXsiForNilElementsCbx.isSelected());
@@ -837,14 +764,11 @@ public class LogViewMainFrame extends JFrame {
     soapFormatterRemoveXsiFromNilAction.putValue(Action.NAME, "Remove xsi for for NIL elements from SOAP messages");
     soapFormatterRemoveXsiForNilElementsCbx.setAction(soapFormatterRemoveXsiFromNilAction);
     soapFormatterRemoveXsiFromNilAction.actionPerformed(null);
-
     menu.add(soapFormatterRemoveMultirefsCbx);
     menu.add(soapFormatterRemoveXsiForNilElementsCbx);
     getJMenuBar().add(menu);
     QueryFilter queryFilter = new QueryFilter();
     allPluginables.getLogFiltersContainer().addElement(queryFilter);
-
-
     JButton b = new JButton("Throw exception");
     b.addActionListener(new ActionListener() {
       @Override
@@ -852,7 +776,6 @@ public class LogViewMainFrame extends JFrame {
         if (System.currentTimeMillis() % 2 == 0) {
           throw new RuntimeException("Exception swing action!");
         } else {
-
           new Thread(new Runnable() {
             @Override
             public void run() {
@@ -889,11 +812,9 @@ public class LogViewMainFrame extends JFrame {
     this.setExtendedState(state);
   }
 
-
   private static XMLConfiguration getConfiguration(String file) {
     XMLConfiguration commonConfiguration = new XMLConfiguration();
     File commonConfigurationFile = new File(file);
-
     // load common configuration
     if (commonConfigurationFile.exists()) {
       LOGGER.info("Loading common configuration from " + commonConfigurationFile.getAbsolutePath());
@@ -905,7 +826,6 @@ public class LogViewMainFrame extends JFrame {
     } else {
       LOGGER.info("Common configuration file do not exist");
     }
-
     // load user specific configuration
     if (!AllPluginables.USER_CONFIGURATION_DIRECTORY.exists()) {
       LOGGER.info("Creating user specific OtrosLogViewer configuration directory " + AllPluginables.USER_CONFIGURATION_DIRECTORY.getAbsolutePath());
@@ -914,7 +834,6 @@ public class LogViewMainFrame extends JFrame {
       AllPluginables.USER_LOG_IMPORTERS.mkdirs();
       AllPluginables.USER_MARKERS.mkdirs();
       AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS.mkdirs();
-
     }
     XMLConfiguration userConfiguration = new XMLConfiguration();
     File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + file);
@@ -934,7 +853,6 @@ public class LogViewMainFrame extends JFrame {
       }
     }
     userConfiguration.setAutoSave(true);
-
     return userConfiguration;
   }
 
@@ -951,6 +869,5 @@ public class LogViewMainFrame extends JFrame {
     }
     configuration.setAutoSave(true);
     return configuration;
-
   }
 }

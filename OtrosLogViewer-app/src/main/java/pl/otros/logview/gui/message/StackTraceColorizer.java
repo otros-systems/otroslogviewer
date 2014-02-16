@@ -30,7 +30,7 @@ import static pl.otros.logview.gui.message.MessageColorizerUtils.increaseOffset;
 
 public class StackTraceColorizer implements MessageColorizer {
   private static final String NANE = "Java stack trace";
-	protected static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
+  protected static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
   protected static final int EXCEPTION_LINE_GROUP_PACKAGE = 2;
   protected static final int EXCEPTION_LINE_GROUP_CLASS = 3;
   protected static final int EXCEPTION_LINE_GROUP_METHOD = 4;
@@ -46,7 +46,6 @@ public class StackTraceColorizer implements MessageColorizer {
 
   public StackTraceColorizer() {
     stackTraceFinder = new StackTraceFinder();
-
   }
 
   protected void initStyles() {
@@ -85,36 +84,42 @@ public class StackTraceColorizer implements MessageColorizer {
       Matcher matcher = exceptionLine.matcher(subTextFragment);
       while (matcher.find()) {
         int newOffset = subText.start;
-        LocationInfo locationInfo = getLocationInfo(matcher.group(0));
-        list.addAll(addLocation(increaseOffset(MessageColorizerUtils.colorizeRegex(stylePackage, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_PACKAGE), newOffset), locationInfo));
-        list.addAll(addLocation(increaseOffset(MessageColorizerUtils.colorizeRegex(styleClass, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_CLASS), newOffset), locationInfo));
-        list.addAll(addLocation(increaseOffset(MessageColorizerUtils.colorizeRegex(styleMethod, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_METHOD), newOffset), locationInfo));
-        list.addAll(addLocation(increaseOffset(MessageColorizerUtils.colorizeRegex(styleFile, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_FILE), newOffset), locationInfo));
+        list.addAll(increaseOffset(colorizeStackTraceRegex(stylePackage, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_PACKAGE), newOffset));
+        list.addAll(increaseOffset(colorizeStackTraceRegex(styleClass, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_CLASS), newOffset));
+        list.addAll(increaseOffset(colorizeStackTraceRegex(styleMethod, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_METHOD), newOffset));
+        list.addAll(increaseOffset(colorizeStackTraceRegex(styleFile, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_FILE), newOffset));
       }
     }
     return list;
   }
-  public Collection<MessageFragmentStyle> addLocation(Collection<MessageFragmentStyle> list, LocationInfo locationInfo){
-    if (locationInfo == null ){
-      return list;
-    }
-    for (MessageFragmentStyle messageFragmentStyle : list) {
-      Style oldStyle = messageFragmentStyle.getStyle();
-      String name = oldStyle.getName();
-      Style style = styleContext.addStyle(name + "-" + locationInfo.toString(), oldStyle);
-      style.addAttribute("locationInfo",locationInfo);
-      StyleConstants.setForeground(style,StyleConstants.getForeground(oldStyle));
-      StyleConstants.setBold(style,StyleConstants.isBold(oldStyle));
-      StyleConstants.setItalic(style,StyleConstants.isItalic(oldStyle));
-      messageFragmentStyle.setStyle(style);
+
+  public Collection<MessageFragmentStyle> colorizeStackTraceRegex(Style style, String text, Pattern regex, int group) {
+    ArrayList<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+    Matcher matcher = regex.matcher(text);
+    while (matcher.find()) {
+      LocationInfo locationInfo = LocationInfo.parse(matcher.group(0));
+      if (locationInfo != null) {
+        String name = style.getName();
+        Style newStyle = styleContext.addStyle(name + "-" + locationInfo.toString(), style);
+        newStyle.addAttribute("locationInfo", locationInfo);
+        StyleConstants.setForeground(newStyle, StyleConstants.getForeground(style));
+        StyleConstants.setBold(newStyle, StyleConstants.isBold(style));
+        StyleConstants.setItalic(newStyle, StyleConstants.isItalic(style));
+        style = newStyle;
+      }
+      int start = matcher.start(group);
+      int end = matcher.end(group);
+      if (end - start > 0) {
+        MessageFragmentStyle messageFragmentStyle = new MessageFragmentStyle(start, end - start, style, false);
+        list.add(messageFragmentStyle);
+      }
     }
     return list;
   }
+
   protected LocationInfo getLocationInfo(String stackTraceLine) {
     return pl.otros.logview.gui.message.LocationInfo.parse(stackTraceLine);
   }
-
-
 
   @Override
   public String getName() {
