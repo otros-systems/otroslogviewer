@@ -14,10 +14,16 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   public JumpToCodeServiceImpl(Configuration configuration){
     jumpToCodeClient = new JumpToCodeClient(configuration);
   }
-  
+
+  @Override
+  public void clearLocationCaches() {
+    jumpToCodeClient.clearLocationCaches();
+  }
+
   @Override
   public boolean isIdeAvailable() {
-    return jumpToCodeClient.getIde()!=null;
+    IDE ide = jumpToCodeClient.getIde();
+    return ide !=null && !IDE.DISONECTED.equals(ide);
   }
 
   @Override
@@ -36,6 +42,13 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
 
   @Override
   public boolean isJumpable(LocationInfo locationInfo) throws IOException {
-    return jumpToCodeClient.isJumpable(locationInfo);
+    boolean jumpable = jumpToCodeClient.isJumpable(locationInfo);
+    LOGGER.finest("Checking if location " + locationInfo + " is jumpable: " + jumpable);
+    return jumpable;
+  }
+
+  @Override
+  public String getContent(LocationInfo locationInfo) throws IOException {
+    return jumpToCodeClient.getContent(locationInfo);
   }
 }

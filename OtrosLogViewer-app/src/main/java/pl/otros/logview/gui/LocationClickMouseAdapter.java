@@ -29,9 +29,14 @@ class LocationClickMouseAdapter extends MouseAdapter {
     textPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     textPane.setToolTipText("");
     try {
-      if (locationInfo != null && otrosApplication.getServices().getJumpToCodeService().isJumpable(locationInfo)) {
+      JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
+      if (locationInfo != null && jumpToCodeService.isJumpable(locationInfo)) {
+
         textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        textPane.setToolTipText("On click will open " + locationInfo.toString() + " in IDEA using JumpToCode plugin");
+        String toolTipText = "<HTML>On click will open " + locationInfo.toString() + " in IDEA using JumpToCode plugin<BR/>";
+        toolTipText+=jumpToCodeService.getContent(locationInfo).replace("\n","<BR/>").replaceAll("\t","  ").replaceAll(" ","&nbsp;")+"</HTML>";
+        LOGGER.info("Tooltip text: " + toolTipText);
+        textPane.setToolTipText(toolTipText);
       }
     } catch (IOException e1) {
       //TODO

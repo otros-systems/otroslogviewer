@@ -7,10 +7,13 @@ import javax.swing.*;
 import java.io.IOException;
 
 public interface JumpToCodeService {
-  
+  void clearLocationCaches();
+
+
   public enum IDE {
     Eclipse(Icons.IDE_ECLIPSE,Icons.IDE_ECLIPSE_DISCONNCTED),
-    IDEA(Icons.IDE_IDEA,Icons.IDE_IDEA_DISCONNCTED);
+    IDEA(Icons.IDE_IDEA,Icons.IDE_IDEA_DISCONNCTED),
+    DISONECTED(null,null);
     Icon iconConnected, iconDiscounted;
 
     IDE(Icon iconConnected, Icon iconDiscounted) {
@@ -34,5 +37,7 @@ public interface JumpToCodeService {
   public void jump(LocationInfo locationInfo) throws IOException;
 
   public boolean isJumpable(LocationInfo locationInfo) throws IOException;
+
+  String getContent(LocationInfo locationInfo) throws IOException;
 
 }
