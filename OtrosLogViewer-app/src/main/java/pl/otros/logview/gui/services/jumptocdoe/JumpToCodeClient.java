@@ -2,7 +2,6 @@ package pl.otros.logview.gui.services.jumptocdoe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.sun.deploy.net.HttpResponse;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -34,7 +33,7 @@ public class JumpToCodeClient {
         @Override
         public String call() throws Exception {
           HttpMethod httpMethod = buildMethod(locationInfo, HttpOperation.GET_SOURCE);
-          String content = executeAndGetContent(httpMethod);;
+          String content = executeAndGetContent(httpMethod);
           return content;
         }
       }) ;
@@ -156,7 +155,7 @@ public class JumpToCodeClient {
       // we don't even read the response body
       // the statusCode is enough information
       int status = client.executeMethod(method);
-      if (status != 200){
+      if (status != HttpStatus.SC_OK){
         return "";
       }
       return method.getResponseBodyAsString();
@@ -196,9 +195,6 @@ public class JumpToCodeClient {
           String value = responseHeader.getValue();
           if (StringUtils.equalsIgnoreCase(value, "eclipse")) {
             ide = JumpToCodeService.IDE.Eclipse;
-          } else if (StringUtils.equalsIgnoreCase(value, "netbeans")) {
-            //TODO netbeans support
-//          ide = JumpToCodeService.IDE.Netbeans;
           } else {
             ide = JumpToCodeService.IDE.IDEA;
           }
