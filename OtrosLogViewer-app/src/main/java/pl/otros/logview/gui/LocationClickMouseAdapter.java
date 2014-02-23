@@ -31,12 +31,23 @@ class LocationClickMouseAdapter extends MouseAdapter {
     try {
       JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
       if (locationInfo != null && jumpToCodeService.isJumpable(locationInfo)) {
-
+        int lineNumber = locationInfo.getLineNumber();
         textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        String toolTipText = "<HTML>On click will open " + locationInfo.toString() + " in IDEA using JumpToCode plugin<BR/>";
-        toolTipText+=jumpToCodeService.getContent(locationInfo).replace("\n","<BR/>").replaceAll("\t","  ").replaceAll(" ","&nbsp;")+"</HTML>";
-        LOGGER.info("Tooltip text: " + toolTipText);
-        textPane.setToolTipText(toolTipText);
+        StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append( locationInfo.toString()).append(" in IDEA using JumpToCode plugin<BR/>");
+        String content = jumpToCodeService.getContent(locationInfo);
+        String[] split = content.split("\n");
+        for (String s : split) {
+          String sHtml = s.replaceAll("\t","  ").replaceAll(" ","&nbsp;");
+          if (s.startsWith(Integer.toString(lineNumber))){
+            toolTipText.append("<B>").append(sHtml).append("</B>");
+          } else {
+            toolTipText.append(sHtml);
+          }
+          toolTipText.append("<BR/>\n");
+        }
+        toolTipText.append("</HTML>");
+        LOGGER.info("Tooltip text: " + toolTipText.toString());
+        textPane.setToolTipText(toolTipText.toString());
       }
     } catch (IOException e1) {
       //TODO
