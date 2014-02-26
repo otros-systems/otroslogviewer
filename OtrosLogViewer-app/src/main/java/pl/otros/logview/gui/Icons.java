@@ -241,7 +241,7 @@ public class Icons {
    public static ImageIcon DOCUMENT_COPY;
 
   @Path(path = "/img/ide/eclipse-disconnected.png")
-   public static ImageIcon IDE_ECLIPSE_DISCONNCTED;
+   public static ImageIcon ICE_ECLIPSE_DISCONNECTED;
 
   @Path(path = "/img/ide/idea-disconnected.png")
    public static ImageIcon IDE_IDEA_DISCONNCTED;
@@ -251,5 +251,15 @@ public class Icons {
 
   @Path(path = "/img/ide/idea.png")
    public static ImageIcon IDE_IDEA;
+
+  @Path(path = "/img/fugue/tick-button.png")
+   public static ImageIcon STATUS_OK;
+
+   @Path(path = "/img/fugue/cross-button.png")
+   public static ImageIcon STATUS_ERROR;
+
+   @Path(path = "/img/fugue/question-button.png")
+   public static ImageIcon STATUS_UNKNOWN;
+
 
 }
