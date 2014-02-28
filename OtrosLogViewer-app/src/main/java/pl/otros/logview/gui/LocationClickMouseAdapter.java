@@ -1,7 +1,7 @@
 package pl.otros.logview.gui;
 
 import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.gui.services.jumptocdoe.JumpToCodeService;
+import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;

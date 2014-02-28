@@ -1,4 +1,4 @@
-package pl.otros.logview.gui.services.jumptocdoe;
+package pl.otros.logview.gui.services.jumptocode;
 
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.services.Services;

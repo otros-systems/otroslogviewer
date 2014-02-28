@@ -20,8 +20,6 @@ import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.negusoft.singleinstance.SingleInstance;
-import net.miginfocom.layout.AC;
-import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -53,11 +51,13 @@ import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
-import pl.otros.logview.gui.services.jumptocdoe.JumpToCodeService;
-import pl.otros.logview.gui.services.jumptocdoe.ServicesImpl;
+import pl.otros.logview.gui.services.jumptocode.ServicesImpl;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
+import pl.otros.logview.ide.Ide;
+import pl.otros.logview.ide.IdeAvailabilityCheck;
+import pl.otros.logview.ide.IdeIntegrationConfigAction;
 import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.loader.IconsLoader;
@@ -260,9 +260,9 @@ public class LogViewMainFrame extends JFrame {
     JProgressBar heapBar = new JProgressBar();
     heapBar.setPreferredSize(new Dimension(190, 15));
     new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
-    JPanel statusPanel = new JPanel(new MigLayout("fill","[fill]push[][]",""));
+    JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill]push[][]", ""));
     statusPanel.add(statusLabel);
-    JLabel ideConnectedLabel = new JLabel(JumpToCodeService.IDE.IDEA.getIconDiscounted());
+    final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
     statusPanel.add(ideConnectedLabel);
     statusPanel.add(heapBar);
     otrosApplication = new OtrosApplication();
@@ -309,8 +309,8 @@ public class LogViewMainFrame extends JFrame {
     if (modalDisplayException != null)
       JOptionPane.showMessageDialog(this,
           "Problem with loading automatic markers,"
-          + "filter or log importers:\n"
-          + modalDisplayException.getMessage(), "Initialization Error",
+              + "filter or log importers:\n"
+              + modalDisplayException.getMessage(), "Initialization Error",
           JOptionPane.ERROR_MESSAGE);
     // Check new version on start
     if (c.getBoolean(ConfKeys.CHECK_NEW_VERSION_ON_START, true)) {
@@ -326,8 +326,9 @@ public class LogViewMainFrame extends JFrame {
     Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
     ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
     listeningScheduledExecutorService.scheduleAtFixedRate(
-        new IdeAvailabilityCheck(ideConnectedLabel,otrosApplication.getServices().getJumpToCodeService()),
-        5,5,TimeUnit.SECONDS);
+        new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
+        5, 5, TimeUnit.SECONDS);
+    ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
   }
 
   private void initPlugins() {
@@ -412,7 +413,7 @@ public class LogViewMainFrame extends JFrame {
     searchField.setMinimumSize(new Dimension(150, 10));
     searchField.setPreferredSize(new Dimension(250, 10));
     searchField.setToolTipText("<HTML>Enter text to search.<BR/>" + "Enter - search next,<BR/>Alt+Enter search previous,<BR/>"
-                               + "Ctrl+Enter - mark all found</HTML>");
+        + "Ctrl+Enter - mark all found</HTML>");
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
@@ -502,10 +503,10 @@ public class LogViewMainFrame extends JFrame {
           mode = SearchMode.QUERY;
           validationEnabled = true;
           String querySearchTooltip = "<HTML>" + //
-                                      "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
-                                      "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
-                                      "See wiki for more info<BR/>" + //
-                                      "</HTML>";
+              "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
+              "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
+              "See wiki for more info<BR/>" + //
+              "</HTML>";
           searchMode.setToolTipText(querySearchTooltip);
           confKey = ConfKeys.SEARCH_LAST_QUERY;
         }

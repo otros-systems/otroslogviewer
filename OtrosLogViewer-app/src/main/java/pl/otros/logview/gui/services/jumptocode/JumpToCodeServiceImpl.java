@@ -1,7 +1,8 @@
-package pl.otros.logview.gui.services.jumptocdoe;
+package pl.otros.logview.gui.services.jumptocode;
 
 import org.apache.commons.configuration.Configuration;
 import pl.otros.logview.gui.message.LocationInfo;
+import pl.otros.logview.ide.Ide;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -11,7 +12,8 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   private static final Logger LOGGER = Logger.getLogger(JumpToCodeServiceImpl.class.getName());
 
   public JumpToCodeClient jumpToCodeClient;
-  public JumpToCodeServiceImpl(Configuration configuration){
+
+  public JumpToCodeServiceImpl(Configuration configuration) {
     jumpToCodeClient = new JumpToCodeClient(configuration);
   }
 
@@ -22,12 +24,18 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
 
   @Override
   public boolean isIdeAvailable() {
-    IDE ide = jumpToCodeClient.getIde();
-    return ide !=null && !IDE.DISONECTED.equals(ide);
+    Ide ide = jumpToCodeClient.getIde();
+    return ide != null && !Ide.DISCONNECTED.equals(ide);
   }
 
   @Override
-  public IDE getIde() {
+  public boolean isIdeAvailable(String host, int port) {
+    Ide ide = jumpToCodeClient.getIde(host, port);
+    return ide != null && !Ide.DISCONNECTED.equals(ide);
+  }
+
+  @Override
+  public Ide getIde() {
     return jumpToCodeClient.getIde();
   }
 
@@ -37,7 +45,7 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
     String url = jumpToCodeClient.getUrl(locationInfo);
     LOGGER.finest("Jumping to location " + locationInfo + " by opening URL: " + url);
     jumpToCodeClient.jumpTo(url);
-    
+
   }
 
   @Override
