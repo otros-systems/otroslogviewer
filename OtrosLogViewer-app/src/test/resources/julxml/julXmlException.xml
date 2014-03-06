@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+
+    <record>
+        <date>2014-03-05T14:20:06</date>
+        <millis>1394025606050</millis>
+        <sequence>0</sequence>
+        <logger>ThrowAndLog</logger>
+        <level>WARNING</level>
+        <class>ThrowAndLog</class>
+        <method>main</method>
+        <thread>1</thread>
+        <message>msg</message>
+        <exception>
+            <message>java.util.UnknownFormatConversionException: Conversion = 'i'</message>
+            <frame>
+                <class>java.util.Formatter$FormatSpecifier</class>
+                <method>conversion</method>
+                <line>2646</line>
+            </frame>
+            <frame>
+                <class>java.util.Formatter$FormatSpecifier</class>
+                <method>&lt;init&gt;</method>
+                <line>2675</line>
+            </frame>
+            <frame>
+                <class>java.util.Formatter</class>
+                <method>parse</method>
+                <line>2528</line>
+            </frame>
+            <frame>
+                <class>java.util.Formatter</class>
+                <method>format</method>
+                <line>2469</line>
+            </frame>
+            <frame>
+                <class>java.util.Formatter</class>
+                <method>format</method>
+                <line>2423</line>
+            </frame>
+            <frame>
+                <class>java.lang.String</class>
+                <method>format</method>
+                <line>2797</line>
+            </frame>
+            <frame>
+                <class>ThrowAndLog</class>
+                <method>main</method>
+                <line>23</line>
+            </frame>
+        </exception>
+    </record>
+
+</log>
