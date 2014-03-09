@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,8 @@ import org.xml.sax.InputSource;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.importer.InitializationException;
+import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
 import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
 import pl.otros.logview.parser.ParsingContext;
@@ -46,7 +48,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   private static final String DOC_BUILDER = "DOC_BUILDER";
   private static final String PARTIAL_EVENT = "PARTIAL_EVENT";
   private static final Logger LOGGER = Logger.getLogger(UtilLoggingXmlLogImporter.class.getName());
-  private static final String NAME = "java.util.logging XMLFormatter";
+  private static final String NAME = "Improved XMLFormatter";
   private Icon icon;
   private static final String ICON_PATH = "img/java.png";
 
@@ -116,7 +118,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   /**
    * Converts the LoggingEvent data in XML string format into an actual XML Document class instance.
-   * 
+   *
    * @param data
    *          XML fragment
    * @return dom document
@@ -162,7 +164,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   /**
    * Decodes a String representing a number of events into a Vector of LoggingEvents.
-   * 
+   *
    * @param document
    *          to decode events from
    * @return Vector of LoggingEvents
@@ -212,7 +214,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   /**
    * Given a Document, converts the XML into a Vector of LoggingEvents.
-   * 
+   *
    * @param document
    *          XML document
    * @return Vector of LoggingEvents
@@ -231,6 +233,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       Object message = null;
       String className = null;
       String methodName = null;
+      String exceptionStackTrace=null;
 
       // format of date: 2003-05-04T11:04:52
       // ignore date or set as a property? using millis in constructor instead
@@ -242,38 +245,46 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       }
 
       for (int y = 0; y < listLength; y++) {
-        String tagName = list.item(y).getNodeName();
+        Node logEventNode = list.item(y);
+        String tagName = logEventNode.getNodeName();
 
         if (tagName.equalsIgnoreCase("logger")) {
           logger = Logger.getLogger(getCData(list.item(y)));
-        }
-
+        } else
         if (tagName.equalsIgnoreCase("millis")) {
           timeStamp = Long.parseLong(getCData(list.item(y)));
-        }
+        } else
 
         if (tagName.equalsIgnoreCase("level")) {
           level = Level.parse(getCData(list.item(y)));
-        }
+        } else
 
         if (tagName.equalsIgnoreCase("thread")) {
           threadName = getCData(list.item(y));
-        }
+        } else
 
         if (tagName.equalsIgnoreCase("message")) {
           message = getCData(list.item(y));
-        }
+        } else
 
         if (tagName.equalsIgnoreCase("class")) {
           className = getCData(list.item(y));
-        }
+        } else
 
         if (tagName.equalsIgnoreCase("method")) {
           methodName = getCData(list.item(y));
+        }  else if (tagName.equalsIgnoreCase("exception")){
+          exceptionStackTrace = getExceptionStackTrace(list.item(y));
+
         }
 
-      }
 
+      }
+      if (message !=null && exceptionStackTrace!=null){
+        message = message + "\n"+exceptionStackTrace;
+      } else if (exceptionStackTrace!=null){
+        message = exceptionStackTrace;
+      }
       LogData logData = new LogData();
       logData.setLevel(level);
       logData.setClazz(className);
@@ -289,9 +300,76 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
     }
   }
 
+  String getExceptionStackTrace(Node eventNode) {
+    StringBuilder sb = new StringBuilder();
+    NodeList childNodes = eventNode.getChildNodes();
+    for (int i = 0; i < childNodes.getLength(); i++) {
+      Node childNode = childNodes.item(i);
+      String tagName=childNode.getNodeName();
+      if (tagName.equalsIgnoreCase("message")){
+        sb.append(getCData(childNodes.item(i)));
+      }  else if (tagName.equalsIgnoreCase("frame")){
+        getStackTraceFrame(childNodes.item(i),sb);
+      }
+    }
+
+    return sb.toString();
+
+  }
+
+  void getStackTraceFrame(Node item, StringBuilder sb) {
+    NodeList childNodes = item.getChildNodes();
+
+    String clazz=null;
+    String method = null;
+    String line = null;
+    for (int i = 0; i < childNodes.getLength(); i++) {
+      Node childNode = childNodes.item(i);
+      String tagName = childNode.getNodeName();
+      if (tagName.equalsIgnoreCase("class")){
+        clazz = getCData(childNode);
+      }  else if (tagName.equalsIgnoreCase("method")){
+        method = getCData(childNode);
+      }  else if (tagName.equalsIgnoreCase("line")){
+        line = getCData(childNode);
+      }
+    }
+
+    //default string if clazz does not contain package
+    String fileName = extractFileName(clazz);
+
+    appendStackFrame(sb, clazz, method, line, fileName);
+
+  }
+
+  StringBuilder appendStackFrame(StringBuilder sb, String clazz, String method, String line, String fileName) {
+    sb.append("\n\tat ");
+    sb.append(clazz).append(".").append(method);
+    if (fileName!=null){
+      sb.append("(");
+      sb.append(fileName).append(".java");
+      if (line!=null){
+        sb.append(":").append(line);
+      }
+      sb.append(")");
+    }
+    return sb;
+  }
+
+  String extractFileName(String clazz) {
+    int clazzStart = StringUtils.lastIndexOf(clazz, '.')+1;
+    clazzStart = Math.max(0, clazzStart);
+    int clazzEnd = StringUtils.indexOf(clazz, '$');
+    if (clazzEnd<0){
+      clazzEnd=clazz.length();
+    }
+    String fileName = StringUtils.substring(clazz, clazzStart, clazzEnd);
+    return fileName;
+  }
+
   /**
    * Get contents of CDATASection.
-   * 
+   *
    * @param n
    *          CDATASection
    * @return text content of all text or CDATA children of node.
@@ -341,6 +419,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       docBuilder.setErrorHandler(new SAXErrorHandler());
       docBuilder.setEntityResolver(new UtilLoggingEntityResolver());
       parsingContext.getCustomConextProperties().put(DOC_BUILDER, docBuilder);
+      parsingContext.getCustomConextProperties().put(PARTIAL_EVENT, "");
     } catch (ParserConfigurationException pce) {
       System.err.println("Unable to get document builder");
     }

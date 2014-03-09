@@ -18,6 +18,7 @@ REM ****************************************************************************
 :: Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 set OLV_HOME=%~dp0
+IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
 set MEMORY=-Xmx1024m
