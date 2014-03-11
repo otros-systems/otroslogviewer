@@ -8,3 +8,5 @@
 /local*
 build
 /gradle-app.setting
+**/*.iml
+**/.idea
