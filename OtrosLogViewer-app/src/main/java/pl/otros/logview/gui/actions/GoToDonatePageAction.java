@@ -36,7 +36,7 @@ public class GoToDonatePageAction extends OtrosAction {
 
   public GoToDonatePageAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
-    this.putValue(NAME, "Support us by donation");
+    this.putValue(NAME, "Support us by donation using PayPal or Bitcoin");
     this.putValue(SHORT_DESCRIPTION, "Go to the donation page");
     this.putValue(SMALL_ICON, Icons.CREDIT_CARDS);
   }

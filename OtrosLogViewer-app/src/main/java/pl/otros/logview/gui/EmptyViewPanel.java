@@ -16,6 +16,7 @@
 
 package pl.otros.logview.gui;
 
+import org.jdesktop.swingx.JXHyperlink;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterActionListener;
 import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
@@ -27,12 +28,8 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.net.URI;
 import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EmptyViewPanel extends JPanel {
@@ -192,15 +189,13 @@ public class EmptyViewPanel extends JPanel {
 		this.add(visitTf, bagConstraints);
 
 		GoToDonatePageAction goToDonatePageAction = new GoToDonatePageAction(otrosApplication);
-		goToDonatePageAction.putValue(Action.SMALL_ICON, Icons.DONATE);
-		goToDonatePageAction.putValue(Action.NAME, null);
-		JButton donateButton = new JButton(goToDonatePageAction);
+    JXHyperlink jxHyperlink = new JXHyperlink(goToDonatePageAction);
 		bagConstraints.gridy++;
 		bagConstraints.gridwidth = 2;
 		bagConstraints.anchor = GridBagConstraints.EAST;
 		bagConstraints.fill = GridBagConstraints.NONE;
 
-		this.add(donateButton, bagConstraints);
+		this.add(jxHyperlink, bagConstraints);
 	}
 
 }
