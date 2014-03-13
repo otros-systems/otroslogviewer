@@ -15,7 +15,7 @@
  */
 
 
-project.ext.set('sharedVersion', '1.2.0')
+project.ext.set('sharedVersion', '1.3.0-SNAPSHOT')
 
 subprojects {
     apply plugin: 'java'
