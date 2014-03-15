@@ -8,15 +8,11 @@ import java.util.logging.Logger;
 
 public class IdeAvailabilityCheck implements Runnable {
   private static final Logger LOGGER = Logger.getLogger(IdeAvailabilityCheck.class.getName());
-  private static final String ICE_DISCONNECTED_TOOLTIP = "<HTML>You can connect OtrosLogViewer with your IDE. <BR/> After clicking on stack trace element in OtrosLogViewer " +
-                                                        "your IDE will open these class at selected location<BR/>" +
-                                                        "<B>Introduction how to configure IDE you can find at OtrosLogViewer Wiki: //TODO URL</HTML>";
-  private static final String IDE_CONNECTED_TOOLTIP ="<HTML>Your IDE is connected with OtrosLogViewer.</br> After clicking on stack trace element in OtrosLogViewer " +
-                                                     "your IDE will open these class at selected location</HTML>" ;
+  private static final String ICE_DISCONNECTED_TOOLTIP = "<HTML>OtrosLogViewer can't connect with your IDE.<BR/>Click to configure</HTML>";
+  private static final String IDE_CONNECTED_TOOLTIP ="<HTML>OtrosLogViewer is connected with your IDE.<BR/>Click to configure</HTML>";
   private JButton iconLabel;
   private JumpToCodeService jumpToCodeService;
   private volatile Ide lastIde = Ide.IDEA;
-  private volatile Icon lastUnavailableIcon = lastIde.getIconDiscounted();
   private boolean lastTimeIdeAvailable = false;
 
   public IdeAvailabilityCheck(JButton iconLabel, JumpToCodeService jumpToCodeService) {

@@ -260,7 +260,7 @@ public class LogViewMainFrame extends JFrame {
     JProgressBar heapBar = new JProgressBar();
     heapBar.setPreferredSize(new Dimension(190, 15));
     new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
-    JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill]push[][]", ""));
+    JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill, push, grow][right][right]", "[]"));
     statusPanel.add(statusLabel);
     final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
     statusPanel.add(ideConnectedLabel);
