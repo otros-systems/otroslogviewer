@@ -40,7 +40,12 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
 
   private ParserDescription pd;
 
-  private LevelParser[] levelParser = new LevelParser[] { new LevelParser(Locale.ENGLISH), new LevelParser(Locale.GERMAN), new LevelParser(new Locale("es")) };
+  private LevelParser[] levelParser = new LevelParser[] { 
+    new LevelParser(Locale.ENGLISH), 
+    new LevelParser(Locale.GERMAN), 
+    new LevelParser(new Locale("es")),
+    new LevelParser(new Locale("fr"))
+};
 
   public JulSimpleFormmaterParser() {
     pd = new ParserDescription();
@@ -172,7 +177,9 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
   public void initParsingContext(ParsingContext parsingContext) {
     SimpleDateFormat[] datePatterns = new SimpleDateFormat[] { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
         new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
-        new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")) };
+        new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
+        new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))
+};
     parsingContext.getCustomConextProperties().put(DATE_PATTERNS, datePatterns);
 
   }
