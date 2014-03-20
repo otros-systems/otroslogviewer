@@ -109,7 +109,7 @@ public class IdeIntegrationConfigAction extends OtrosAction {
 
 
 
-    int confirmDialog = JOptionPane.showConfirmDialog(null, jxPanel, "IDE integration configuration", JOptionPane.OK_CANCEL_OPTION);
+    int confirmDialog = JOptionPane.showConfirmDialog(otrosApplication.getApplicationJFrame(), jxPanel, "IDE integration configuration", JOptionPane.OK_CANCEL_OPTION);
     if (confirmDialog == JOptionPane.YES_OPTION){
       configuration.setProperty(ConfKeys.JUMP_TO_CODE_HOST , StringUtils.defaultIfBlank(hostNameTextField.getText(), null));
       configuration.setProperty(ConfKeys.JUMP_TO_CODE_PORT ,spinnerNumberModel.getNumber());
