@@ -15,8 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.store;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
@@ -24,17 +26,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public abstract class LogDataStoreTestBase {
 
   protected LogDataStore logDataStore;
 
   public abstract LogDataStore getLogDataStore() throws Exception;
 
-  @Before
-  public void prepare() throws Exception {
+  @BeforeMethod
+public void prepare() throws Exception {
     logDataStore = getLogDataStore();
   }
 

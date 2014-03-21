@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.accept;
 
-import org.junit.Before;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.LogDataTableModel;
 
@@ -31,8 +31,8 @@ public class SelectionAwareAcceptConditionTestBase {
     super();
   }
 
-  @Before
-  public void setup() {
+  @BeforeMethod
+public void setup() {
     dataTableModel = new LogDataTableModel();
     table = new JTable(dataTableModel);
     for (int i = 0; i < 5; i++) {

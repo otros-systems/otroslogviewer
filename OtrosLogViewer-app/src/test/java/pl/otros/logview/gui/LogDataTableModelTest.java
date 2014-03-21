@@ -15,8 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.MarkerColors;
@@ -31,8 +32,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import static org.junit.Assert.*;
-
 public class LogDataTableModelTest {
 
   public LogDataTableModel dataTableModel;
@@ -40,8 +39,8 @@ public class LogDataTableModelTest {
   private static final String NOTE_4 = "Note row 4";
   private static final String NOTE_9 = "Note row 9";
 
-  @Before
-  public void prepareModel() {
+  @BeforeMethod
+public void prepareModel() {
     dataTableModel = new LogDataTableModel();
     logDatas = new LogData[10];
     for (int i = 0; i < logDatas.length; i++) {
@@ -69,22 +68,22 @@ public class LogDataTableModelTest {
 
   @Test
   public void testInitalized() {
-    assertEquals(logDatas.length, dataTableModel.getRowCount());
+    AssertJUnit.assertEquals(logDatas.length, dataTableModel.getRowCount());
   }
 
   @Test
   public void testGetRowCount() {
-    assertEquals(logDatas.length, dataTableModel.getRowCount());
+    AssertJUnit.assertEquals(logDatas.length, dataTableModel.getRowCount());
   }
 
   @Test
   public void testGetValueAt() {
     for (int i = 0; i < logDatas.length; i++) {
       Level level = (Level) dataTableModel.getValueAt(i, TableColumns.LEVEL.getColumn());
-      assertEquals(logDatas[i].getLevel(), level);
+      AssertJUnit.assertEquals(logDatas[i].getLevel(), level);
 
       String thread = (String) dataTableModel.getValueAt(i, TableColumns.THREAD.getColumn());
-      assertEquals(logDatas[i].getThread(), thread);
+      AssertJUnit.assertEquals(logDatas[i].getThread(), thread);
     }
   }
 
@@ -97,7 +96,7 @@ public class LogDataTableModelTest {
     int count = dataTableModel.getRowCount();
     dataTableModel.add(lds);
     int count2 = dataTableModel.getRowCount();
-    assertEquals(count + lds.length, count2);
+    AssertJUnit.assertEquals(count + lds.length, count2);
   }
 
   @Test
@@ -107,7 +106,7 @@ public class LogDataTableModelTest {
       int before = dataTableModel.getRowCount();
       dataTableModel.add(ld1);
       int after = dataTableModel.getRowCount();
-      assertEquals(before + 1, after);
+      AssertJUnit.assertEquals(before + 1, after);
     }
 
   }
@@ -116,7 +115,7 @@ public class LogDataTableModelTest {
   public void testRemoveRowsAcceptCondition() {
     AcceptCondition acceptCondition = new LowLevelAcceptCondition();
     dataTableModel.removeRows(acceptCondition);
-    assertEquals(8, dataTableModel.getRowCount());
+    AssertJUnit.assertEquals(8, dataTableModel.getRowCount());
     for (int i = 0; i < dataTableModel.getRowCount(); i++) {
       LogData logData = dataTableModel.getLogData(i);
       int row = i;
@@ -126,7 +125,7 @@ public class LogDataTableModelTest {
         row = i + 1;
       }
       LogData expected = logDatas[row];
-      assertEquals(expected, logData);
+      AssertJUnit.assertEquals(expected, logData);
     }
 
     // fail("Not yet implemented");
@@ -134,10 +133,10 @@ public class LogDataTableModelTest {
 
   @Test
   public void testGetColumnClassInt() {
-    assertEquals(Level.class, dataTableModel.getColumnClass(TableColumns.LEVEL.getColumn()));
-    assertEquals(String.class, dataTableModel.getColumnClass(TableColumns.MESSAGE.getColumn()));
-    assertEquals(Note.class, dataTableModel.getColumnClass(TableColumns.NOTE.getColumn()));
-    assertEquals(Date.class, dataTableModel.getColumnClass(TableColumns.TIME.getColumn()));
+    AssertJUnit.assertEquals(Level.class, dataTableModel.getColumnClass(TableColumns.LEVEL.getColumn()));
+    AssertJUnit.assertEquals(String.class, dataTableModel.getColumnClass(TableColumns.MESSAGE.getColumn()));
+    AssertJUnit.assertEquals(Note.class, dataTableModel.getColumnClass(TableColumns.NOTE.getColumn()));
+    AssertJUnit.assertEquals(Date.class, dataTableModel.getColumnClass(TableColumns.TIME.getColumn()));
 
   }
 
@@ -145,7 +144,7 @@ public class LogDataTableModelTest {
   public void testGetLogDataInt() {
     for (int i = 0; i < logDatas.length; i++) {
       LogData logData = dataTableModel.getLogData(i);
-      assertEquals(logDatas[i], logData);
+      AssertJUnit.assertEquals(logDatas[i], logData);
     }
   }
 
@@ -153,98 +152,98 @@ public class LogDataTableModelTest {
   public void testGetLogData() {
     LogData[] logData2 = dataTableModel.getLogData();
     for (int i = 0; i < logDatas.length; i++) {
-      assertEquals(logDatas[i], logData2[i]);
+      AssertJUnit.assertEquals(logDatas[i], logData2[i]);
     }
   }
 
   @Test
   public void testGetMarkerColors() {
-    assertEquals(MarkerColors.Brown, dataTableModel.getMarkerColors(4));
-    assertEquals(MarkerColors.Orange, dataTableModel.getMarkerColors(6));
+    AssertJUnit.assertEquals(MarkerColors.Brown, dataTableModel.getMarkerColors(4));
+    AssertJUnit.assertEquals(MarkerColors.Orange, dataTableModel.getMarkerColors(6));
   }
 
   @Test
   public void testMarkRowsIntArrayMarkerColors() {
     dataTableModel.markRows(MarkerColors.Black, 1, 3);
-    assertEquals(MarkerColors.Black, dataTableModel.getMarkerColors(1));
-    assertEquals(MarkerColors.Black, dataTableModel.getMarkerColors(3));
+    AssertJUnit.assertEquals(MarkerColors.Black, dataTableModel.getMarkerColors(1));
+    AssertJUnit.assertEquals(MarkerColors.Black, dataTableModel.getMarkerColors(3));
 
     dataTableModel.markRows(MarkerColors.Yellow, 2, 3, 4);
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(2));
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(3));
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(4));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(2));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(3));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(4));
 
   }
 
   @Test
   public void testMarkRowsIntMarkerColors() {
-    assertFalse(dataTableModel.isMarked(2));
-    assertFalse(dataTableModel.isMarked(3));
-    assertTrue(dataTableModel.isMarked(4));
+    AssertJUnit.assertFalse(dataTableModel.isMarked(2));
+    AssertJUnit.assertFalse(dataTableModel.isMarked(3));
+    AssertJUnit.assertTrue(dataTableModel.isMarked(4));
     dataTableModel.markRows(MarkerColors.Yellow, 2, 3, 4);
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(2));
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(3));
-    assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(4));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(2));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(3));
+    AssertJUnit.assertEquals(MarkerColors.Yellow, dataTableModel.getMarkerColors(4));
     dataTableModel.markRows(MarkerColors.Aqua, 2);
-    assertEquals(MarkerColors.Aqua, dataTableModel.getMarkerColors(2));
+    AssertJUnit.assertEquals(MarkerColors.Aqua, dataTableModel.getMarkerColors(2));
   }
 
   @Test
   public void testUnmarkRowsIntArray() {
-    assertTrue(dataTableModel.isMarked(4));
-    assertTrue(dataTableModel.isMarked(6));
+    AssertJUnit.assertTrue(dataTableModel.isMarked(4));
+    AssertJUnit.assertTrue(dataTableModel.isMarked(6));
     dataTableModel.unmarkRows(new int[] { 4, 6 });
-    assertFalse(dataTableModel.isMarked(4));
-    assertFalse(dataTableModel.isMarked(6));
+    AssertJUnit.assertFalse(dataTableModel.isMarked(4));
+    AssertJUnit.assertFalse(dataTableModel.isMarked(6));
   }
 
   @Test
   public void testUnmarkRowsInt() {
-    assertTrue(dataTableModel.isMarked(4));
+    AssertJUnit.assertTrue(dataTableModel.isMarked(4));
     dataTableModel.unmarkRows(new int[] { 4 });
     boolean marked = dataTableModel.isMarked(4);
-    assertFalse(marked);
+    AssertJUnit.assertFalse(marked);
   }
 
   @Test
   public void testAddNoteToRow() {
     dataTableModel.addNoteToRow(1, new Note("a"));
     String note = dataTableModel.getNote(1).getNote();
-    assertEquals("a", note);
+    AssertJUnit.assertEquals("a", note);
   }
 
   @Test
   public void testClearNotes() {
     dataTableModel.clearNotes();
-    assertEquals(0, dataTableModel.getAllNotes().size());
+    AssertJUnit.assertEquals(0, dataTableModel.getAllNotes().size());
   }
 
   @Test
   public void testGetAllNotes() {
     TreeMap<Integer, Note> allNotes = dataTableModel.getAllNotes();
-    assertEquals(2, allNotes.size());
+    AssertJUnit.assertEquals(2, allNotes.size());
     Set<Integer> keySet = allNotes.keySet();
     Integer[] keys = new Integer[2];
     keys = keySet.toArray(keys);
     Arrays.sort(keys);
-    assertEquals(4, keys[0].intValue());
-    assertEquals(9, keys[1].intValue());
+    AssertJUnit.assertEquals(4, keys[0].intValue());
+    AssertJUnit.assertEquals(9, keys[1].intValue());
   }
 
   @Test
   public void testGetNote() {
-    assertEquals(NOTE_4, dataTableModel.getNote(4).getNote());
-    assertEquals(NOTE_9, dataTableModel.getNote(9).getNote());
-    assertEquals("", dataTableModel.getNote(2).getNote());
-    assertEquals("", dataTableModel.getNote(3).getNote());
+    AssertJUnit.assertEquals(NOTE_4, dataTableModel.getNote(4).getNote());
+    AssertJUnit.assertEquals(NOTE_9, dataTableModel.getNote(9).getNote());
+    AssertJUnit.assertEquals("", dataTableModel.getNote(2).getNote());
+    AssertJUnit.assertEquals("", dataTableModel.getNote(3).getNote());
 
   }
 
   @Test
   public void testRemoveNote() {
-    assertEquals(NOTE_4, dataTableModel.getNote(4).getNote());
+    AssertJUnit.assertEquals(NOTE_4, dataTableModel.getNote(4).getNote());
     dataTableModel.removeNote(4);
-    assertEquals("", dataTableModel.getNote(4).getNote());
+    AssertJUnit.assertEquals("", dataTableModel.getNote(4).getNote());
   }
 
   @Test
@@ -253,7 +252,7 @@ public class LogDataTableModelTest {
     for (int i = 0; i < dataTableModel.getRowCount(); i++) {
       LogData logData = dataTableModel.getLogData(i);
       LogData expected = logDatas[i >= 4 ? i + 1 : i];
-      assertEquals(expected, logData);
+      AssertJUnit.assertEquals(expected, logData);
     }
   }
 
@@ -263,10 +262,10 @@ public class LogDataTableModelTest {
     dataTableModel.setDataLimit(10);
     dataTableModel.add(generateLogData(id));
 
-    assertEquals(10, dataTableModel.getRowCount());
-    assertTrue(dataTableModel.isMarked(3));
-    assertTrue(dataTableModel.isMarked(5));
-    assertEquals(NOTE_4, dataTableModel.getNote(3).getNote());
+    AssertJUnit.assertEquals(10, dataTableModel.getRowCount());
+    AssertJUnit.assertTrue(dataTableModel.isMarked(3));
+    AssertJUnit.assertTrue(dataTableModel.isMarked(5));
+    AssertJUnit.assertEquals(NOTE_4, dataTableModel.getNote(3).getNote());
   }
 
 }

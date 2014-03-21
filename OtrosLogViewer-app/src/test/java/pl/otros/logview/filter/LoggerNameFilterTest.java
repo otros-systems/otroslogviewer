@@ -15,20 +15,19 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class LoggerNameFilterTest {
 
   private LoggerNameFilter filter = new LoggerNameFilter();
 
-  @Before
-  public void before() {
+  @BeforeMethod
+public void before() {
     filter.setEnable(true);
 
   }

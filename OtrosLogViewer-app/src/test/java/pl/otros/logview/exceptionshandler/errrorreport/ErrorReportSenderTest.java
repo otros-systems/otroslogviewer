@@ -1,12 +1,11 @@
 package pl.otros.logview.exceptionshandler.errrorreport;
 
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
 
 /**
  */
@@ -27,8 +26,8 @@ public class ErrorReportSenderTest {
         sender.addHttpPostParams(values, method);
 
         //then
-        assertEquals("value1", method.getParameter("key1").getValue());
-        assertEquals("value2", method.getParameter("key2").getValue());
+        assertEquals("value1", (String)method.getParameter("key1").getValue());
+        assertEquals("value2",(String) method.getParameter("key2").getValue());
     }
 
     @Test

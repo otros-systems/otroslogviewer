@@ -16,12 +16,14 @@
 
 package pl.otros.starter;
 
-import org.junit.Assert;
-import org.junit.Test;
+
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.List;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,6 +41,6 @@ public class FlatFileClassLoaderReoslverTest {
 
         URL[] classPathUrls = flatFileClassLoaderResolver.getClassPathUrls(new ByteArrayInputStream(cp.getBytes()));
 
-        Assert.assertEquals(2, classPathUrls.length);
+        Assert.assertEquals(classPathUrls.length,2);
     }
 }

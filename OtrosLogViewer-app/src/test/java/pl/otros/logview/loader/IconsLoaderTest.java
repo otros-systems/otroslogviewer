@@ -1,11 +1,10 @@
 package pl.otros.logview.loader;
 
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.annotations.Test;
 import pl.otros.logview.gui.Icons;
 
 import java.lang.reflect.Field;
-
-import static org.junit.Assert.assertNotNull;
 
 public class IconsLoaderTest {
 

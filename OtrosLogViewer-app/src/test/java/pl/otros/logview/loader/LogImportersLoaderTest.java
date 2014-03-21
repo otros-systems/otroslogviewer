@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.importer.InitializationException;
 
@@ -29,6 +29,6 @@ public class LogImportersLoaderTest {
   public void testLoadPropertyFileBased() throws InitializationException {
     LogImportersLoader importersLoader = new LogImportersLoader();
     Collection<LogImporter> loadPropertyFileBased = importersLoader.loadPropertyPatternFileFromDir(new File("./src/test/resources/plugins/logimporters"));
-    Assert.assertEquals(2, loadPropertyFileBased.size());
+    AssertJUnit.assertEquals(2, loadPropertyFileBased.size());
   }
 }

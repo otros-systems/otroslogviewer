@@ -15,11 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
-
-import static org.junit.Assert.assertEquals;
 
 public class StringContainsSearchMatcherTest {
 
@@ -27,8 +26,8 @@ public class StringContainsSearchMatcherTest {
   private LogData logDataUpperCase;
   private StringContainsSearchMatcher matcher = new StringContainsSearchMatcher("ala");
 
-  @Before
-  public void setup() {
+  @BeforeMethod
+public void setup() {
     logData = new LogData();
     logData.setMessage("ala ma kota");
 

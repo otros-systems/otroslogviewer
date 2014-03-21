@@ -16,9 +16,11 @@
 
 package pl.otros.logview.gui.actions;
 
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.Assert;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
-import org.junit.Test;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.OtrosApplication;
 
@@ -27,8 +29,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -71,7 +71,7 @@ public class ConnectToSocketHubAppenderActionTest {
 
 		try {
 			action.tryToConnectToSocket(dc, hostAndPort, socketFactory);
-			fail();
+			Assert.fail();
 		} catch (UnknownHostException e){
 			//success
 		}

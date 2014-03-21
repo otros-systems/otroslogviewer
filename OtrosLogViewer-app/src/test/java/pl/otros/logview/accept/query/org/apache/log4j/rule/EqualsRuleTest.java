@@ -17,10 +17,12 @@
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.Test;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
@@ -28,8 +30,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Stack;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for EqualsRule.
@@ -45,7 +45,7 @@ public class EqualsRuleTest  {
         stack.push("Hello");
         try {
             EqualsRule.getRule(stack);
-            fail("Should have thrown IllegalArgumentException");
+            Assert.fail("Should have thrown IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
         }
     }
@@ -59,7 +59,7 @@ public class EqualsRuleTest  {
         stack.push("World");
         try {
             EqualsRule.getRule(stack);
-            fail("Should have thrown IllegalArgumentException");
+            Assert.fail("Should have thrown IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
         }
     }
@@ -72,12 +72,12 @@ public class EqualsRuleTest  {
         stack.push("level");
         stack.push("info");
         Rule rule = EqualsRule.getRule(stack);
-        assertEquals(0, stack.size());
-        assertTrue(rule instanceof LevelEqualsRule);
+        AssertJUnit.assertEquals(0, stack.size());
+        AssertJUnit.assertTrue(rule instanceof LevelEqualsRule);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -88,13 +88,13 @@ public class EqualsRuleTest  {
         stack.push("timestamp");
         stack.push("2008-05-21 00:45:44");
         Rule rule = EqualsRule.getRule(stack);
-        assertEquals(0, stack.size());
-        assertTrue(rule instanceof TimestampEqualsRule);
+        AssertJUnit.assertEquals(0, stack.size());
+        AssertJUnit.assertTrue(rule instanceof TimestampEqualsRule);
         Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -105,11 +105,11 @@ public class EqualsRuleTest  {
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = EqualsRule.getRule(stack);
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -120,11 +120,11 @@ public class EqualsRuleTest  {
         stack.push("msg");
         stack.push("Bonjour, Monde");
         Rule rule = EqualsRule.getRule(stack);
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
                 "Hello, World", null);
-        assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -135,11 +135,11 @@ public class EqualsRuleTest  {
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = (Rule) SerializationTestHelper.serializeClone(EqualsRule.getRule(stack));
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
 }

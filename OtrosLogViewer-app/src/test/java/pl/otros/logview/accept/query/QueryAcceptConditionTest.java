@@ -16,8 +16,10 @@
 
 package pl.otros.logview.accept.query;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.MarkerColors;
@@ -26,9 +28,6 @@ import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
 
 import java.util.*;
 import java.util.logging.Level;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class QueryAcceptConditionTest {
 
@@ -39,7 +38,7 @@ public class QueryAcceptConditionTest {
 	private LogData ldClassMethod;
 	private LogData ldMarkedNoted;
 
-	@Before
+	@BeforeMethod
 	public void prepare() throws RuleException {
 		ldCurrentTimeLevelInfo = new LogDataBuilder().withMessage("ab")
 				.withId(2).withDate(new Date()).withLevel(Level.INFO).build();
@@ -181,13 +180,14 @@ public class QueryAcceptConditionTest {
 	public void testInvalidMarked() throws RuleException {
 		try {
 			testRule("tralala==false", ldMarkedNoted, false);
-			fail();
+			Assert.fail();
 		} catch (RuleException e) {
 			// s
 		}
 
 	}
 
+	
 	public void testRule(String expression, LogData ld, boolean expectedResult)
 			throws RuleException {
 		QueryAcceptCondition condition = new QueryAcceptCondition(expression);

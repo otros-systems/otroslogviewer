@@ -15,8 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.importer;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.parser.JulSimpleFormmaterParser;
@@ -31,14 +32,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
-
 public class DetectOnTheFlyLogImporterTest {
 
   private ArrayList<LogImporter> logImporters;
 
-  @Before
-  public void initialize() throws InitializationException, IOException {
+  @BeforeMethod
+public void initialize() throws InitializationException, IOException {
     logImporters = new ArrayList<LogImporter>();
     logImporters.add(new LogImporterUsingParser(new JulSimpleFormmaterParser()));
     logImporters.add(new UtilLoggingXmlLogImporter());
@@ -80,10 +79,10 @@ public class DetectOnTheFlyLogImporterTest {
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     // then
-    assertFalse(context.getCustomConextProperties().containsKey(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertFalse(context.getCustomConextProperties().containsKey(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
     ByteArrayOutputStream bout = (ByteArrayOutputStream) context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_BYTE_BUFFER);
     System.out.println("DetectInTheFlyLogImporterTest.testImportLogsStopAddingIfMaxSizeIsReached() " + bout.size());
-    assertTrue(importer.detectTryMaximum >= bout.size());
+    AssertJUnit.assertTrue(importer.detectTryMaximum >= bout.size());
   }
 
   @Test
@@ -121,11 +120,12 @@ public class DetectOnTheFlyLogImporterTest {
     importer.importLogs(inputStream, collector, context);
 
     // then
-    assertNull("Log importer detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
-    assertEquals(0, collector.getLogData().length);
+    AssertJUnit.assertNull("Log importer detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertEquals(0, collector.getLogData().length);
   }
 
-  public void testImport(String resourceName, int logDataCount) throws IOException, InitializationException {
+  @Test
+public void testImport(String resourceName, int logDataCount) throws IOException, InitializationException {
     // given
     InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);
@@ -138,8 +138,8 @@ public class DetectOnTheFlyLogImporterTest {
     importer.importLogs(inputStream, collector, context);
 
     // then
-    assertNotNull("Log importer not detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
-    assertEquals(logDataCount, collector.getLogData().length);
+    AssertJUnit.assertNotNull("Log importer not detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertEquals(logDataCount, collector.getLogData().length);
 
   }
 }

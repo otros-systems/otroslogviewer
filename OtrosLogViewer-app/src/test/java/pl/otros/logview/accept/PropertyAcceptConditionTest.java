@@ -1,14 +1,13 @@
 package pl.otros.logview.accept;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  */
@@ -16,8 +15,8 @@ public class PropertyAcceptConditionTest {
 
     private LogData logData;
 
-    @Before
-    public void before(){
+    @BeforeMethod
+	public void before(){
         Map<String,String> map = new HashMap<String, String>();
         map.put("key","value");
         logData = new LogDataBuilder().withProperties(map).build();
@@ -26,14 +25,14 @@ public class PropertyAcceptConditionTest {
 
     @Test
     public void testAccept() throws Exception {
-        assertTrue(new PropertyAcceptCondition("key","value").accept(logData));
+        AssertJUnit.assertTrue(new PropertyAcceptCondition("key","value").accept(logData));
     }
     @Test
     public void testRejectKey() throws Exception {
-        assertFalse(new PropertyAcceptCondition("key1","value").accept(logData));
+        AssertJUnit.assertFalse(new PropertyAcceptCondition("key1","value").accept(logData));
     }
     @Test
     public void testRejectValue() throws Exception {
-        assertFalse(new PropertyAcceptCondition("key","value1").accept(logData));
+        AssertJUnit.assertFalse(new PropertyAcceptCondition("key","value1").accept(logData));
     }
 }

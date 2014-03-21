@@ -1,15 +1,14 @@
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.MarkerColors;
 
 import java.util.HashMap;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class MarkEqualsRuleTest {
 
@@ -17,8 +16,8 @@ public class MarkEqualsRuleTest {
     private LogData ldBlack;
     private LogData ldBrown;
 
-    @Before
-    public void prepare() {
+    @BeforeMethod
+	public void prepare() {
 	ldBrown = new LogDataBuilder().withMarkerColors(MarkerColors.Brown).build();
 	ldBrown.setMarked(true);
 	ldBlack = new LogDataBuilder().withMarkerColors(MarkerColors.Black).build();

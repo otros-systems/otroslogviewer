@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import pl.otros.logview.gui.LogDataTableModel.Memento;
 
 import java.io.ByteArrayInputStream;
@@ -53,23 +53,23 @@ public class LogInvestiagionPersitanceUtilTest {
     ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
     Memento restored = LogInvestiagionPersitanceUtil.loadMemento(bin);
 
-    Assert.assertEquals(source.getName(), restored.getName());
-    Assert.assertEquals(source.getAddIndex(), restored.getAddIndex());
+    AssertJUnit.assertEquals(source.getName(), restored.getName());
+    AssertJUnit.assertEquals(source.getAddIndex(), restored.getAddIndex());
 
-    Assert.assertEquals(source.getShift(), restored.getShift());
+    AssertJUnit.assertEquals(source.getShift(), restored.getShift());
     TreeMap<Integer, Boolean> sourceMarks = source.getMarks();
     for (Integer indx : sourceMarks.keySet()) {
-      Assert.assertEquals(sourceMarks.get(indx), restored.getMarks().get(indx));
+      AssertJUnit.assertEquals(sourceMarks.get(indx), restored.getMarks().get(indx));
     }
     TreeMap<Integer, Note> sourceNotes = source.getNotes();
     for (Integer indx : sourceNotes.keySet()) {
-      Assert.assertEquals(sourceNotes.get(indx).getNote(), restored.getNotes().get(indx).getNote());
+      AssertJUnit.assertEquals(sourceNotes.get(indx).getNote(), restored.getNotes().get(indx).getNote());
     }
 
     Set<Integer> visibleColumns = source.getVisibleColumns();
-    Assert.assertEquals(source.getVisibleColumns().size(), restored.getVisibleColumns().size());
+    AssertJUnit.assertEquals(source.getVisibleColumns().size(), restored.getVisibleColumns().size());
     for (Integer integer : visibleColumns) {
-      Assert.assertTrue(restored.getVisibleColumns().contains(integer));
+      AssertJUnit.assertTrue(restored.getVisibleColumns().contains(integer));
     }
   }
 

@@ -15,14 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.SortedSet;
-
-import static org.junit.Assert.assertEquals;
 
 public class StackTraceFinderTest {
 

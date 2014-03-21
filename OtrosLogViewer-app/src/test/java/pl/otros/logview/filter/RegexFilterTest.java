@@ -1,10 +1,9 @@
 package pl.otros.logview.filter;
 
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertFalse;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
-
-import static org.junit.Assert.assertFalse;
 
 public class RegexFilterTest {
 

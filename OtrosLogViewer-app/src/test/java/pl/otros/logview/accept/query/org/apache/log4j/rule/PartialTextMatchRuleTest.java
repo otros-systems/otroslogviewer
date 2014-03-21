@@ -16,17 +16,17 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.Test;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
 import java.io.IOException;
 import java.util.Stack;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for PartialTextMatchRule.
@@ -42,7 +42,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("Hello");
 	try {
 	    PartialTextMatchRule.getRule(stack);
-	    fail("Should have thrown IllegalArgumentException");
+	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
 	}
     }
@@ -57,7 +57,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("World");
 	try {
 	    PartialTextMatchRule.getRule(stack);
-	    fail("Should have thrown IllegalArgumentException");
+	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
 	}
     }
@@ -71,10 +71,10 @@ public class PartialTextMatchRuleTest {
 	stack.push("level");
 	stack.push("nfo");
 	Rule rule = PartialTextMatchRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
-	assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -86,10 +86,10 @@ public class PartialTextMatchRuleTest {
 	stack.push("msg");
 	stack.push("World");
 	Rule rule = PartialTextMatchRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
-	assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -101,10 +101,10 @@ public class PartialTextMatchRuleTest {
 	stack.push("msg");
 	stack.push("Bonjour, Monde");
 	Rule rule = PartialTextMatchRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
-	assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+	AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -116,10 +116,10 @@ public class PartialTextMatchRuleTest {
 	stack.push("msg");
 	stack.push("World");
 	Rule rule = (Rule) SerializationTestHelper.serializeClone(PartialTextMatchRule.getRule(stack));
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
-	assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
 }

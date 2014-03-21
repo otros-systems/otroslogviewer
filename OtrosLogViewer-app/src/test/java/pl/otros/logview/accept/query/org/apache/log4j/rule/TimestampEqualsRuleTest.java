@@ -16,8 +16,10 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Logger;
-import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
@@ -25,8 +27,6 @@ import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelp
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for TimestampEqualsRule.
@@ -51,7 +51,7 @@ public class TimestampEqualsRuleTest {
     for (int i = 0; i < timeFormats.length; i++) {
       TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
       LogData event = createLogData();
-      assertTrue(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertTrue(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
     }
   }
 
@@ -74,7 +74,7 @@ public class TimestampEqualsRuleTest {
     for (int i = 0; i < timeFormats.length; i++) {
       TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
       LogData event = createLogData();
-      assertFalse(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertFalse(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
     }
 
   }
@@ -86,7 +86,7 @@ public class TimestampEqualsRuleTest {
   public void test3() throws IOException, ClassNotFoundException {
     TimestampEqualsRule rule = (TimestampEqualsRule) SerializationTestHelper.serializeClone(TimestampEqualsRule.getRule("2008-05-21 00:45:44"));
     LogData event = createLogData();
-    assertTrue(rule.evaluate(event, null));
+    AssertJUnit.assertTrue(rule.evaluate(event, null));
   }
 
   /**
@@ -96,7 +96,7 @@ public class TimestampEqualsRuleTest {
   public void test4() throws IOException, ClassNotFoundException {
     TimestampEqualsRule rule = (TimestampEqualsRule) SerializationTestHelper.serializeClone(TimestampEqualsRule.getRule("2008-05-21 00:46:44"));
     LogData event = createLogData();
-    assertFalse(rule.evaluate(event, null));
+    AssertJUnit.assertFalse(rule.evaluate(event, null));
   }
 
   /**
@@ -106,7 +106,7 @@ public class TimestampEqualsRuleTest {
   public void test5() {
     try {
       TimestampEqualsRule.getRule("2008/May/21");
-      fail("IllegalArgumentException expected to be thrown");
+      Assert.fail("IllegalArgumentException expected to be thrown");
     } catch (IllegalArgumentException ex) {
     }
   }

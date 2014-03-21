@@ -15,9 +15,11 @@
  ******************************************************************************/
 package pl.otros.logview.persistance;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
@@ -30,9 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-
-import static org.junit.Assert.assertEquals;
-
+//TODO check assert order
 public class PersistanceVer2Test {
 
   private LogData[] datas;
@@ -47,8 +47,8 @@ public class PersistanceVer2Test {
   private static final String EMPTY_RESULT = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n";
   private LogDataListPersistanceVer2 p;
 
-  @Before
-  public void prepare() {
+  @BeforeMethod
+public void prepare() {
     p = new LogDataListPersistanceVer2();
     datas = new LogData[5];
     list = new ArrayList<LogData>();

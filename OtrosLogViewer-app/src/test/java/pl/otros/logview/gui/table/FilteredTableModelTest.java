@@ -15,16 +15,15 @@
  ******************************************************************************/
 package pl.otros.logview.gui.table;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
 import pl.otros.logview.filter.AbstractLogFilter;
 import pl.otros.logview.gui.LogDataTableModel;
 
 import java.awt.*;
 import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
 
 public class FilteredTableModelTest {
 
@@ -55,8 +54,8 @@ public class FilteredTableModelTest {
   LogDataTableModel dataTableModel;
   FilteredTableModel filteredTableModel;
 
-  @Before
-  public void prepare() {
+  @BeforeMethod
+public void prepare() {
     dataTableModel = new LogDataTableModel();
     for (int i = 0; i < 100; i++) {
       LogData ld = new LogData();

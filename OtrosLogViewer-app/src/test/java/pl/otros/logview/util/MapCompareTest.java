@@ -16,20 +16,18 @@
 
 package pl.otros.logview.util;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import java.util.HashMap;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class MapCompareTest {
 
 	private HashMap<String, String> m1 = null;
 	private HashMap<String, String> m2 = null;
 
-	@Before
+	@BeforeMethod
 	public void prepare() {
 		m1 = new HashMap<String, String>();
 		m2 = new HashMap<String, String>();

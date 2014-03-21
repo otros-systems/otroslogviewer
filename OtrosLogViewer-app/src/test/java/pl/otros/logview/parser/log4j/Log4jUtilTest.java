@@ -15,11 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.parser.log4j;
 
-import org.junit.Test;
-
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
 import java.util.logging.Level;
-
-import static org.junit.Assert.assertEquals;
 
 public class Log4jUtilTest {
 

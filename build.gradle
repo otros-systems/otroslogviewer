@@ -27,7 +27,7 @@ subprojects {
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
     dependencies {
-        testCompile 'junit:junit:4.10'
+        testCompile 'org.testng:testng:6.8.8'
         testCompile 'org.mockito:mockito-core:1.9.0'
     }
     repositories {
@@ -71,6 +71,7 @@ project(':Common-libs') {
         compile 'org.swinglabs:jxlayer:3.0.4'
         compile 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
         compile 'com.github.insubstantial:substance:7.2.1'
+ 
     }
 }
 
@@ -111,6 +112,10 @@ project(':OtrosLogViewer-app') {
             'Build-date': new Date(),
             'SplashScreen-Image': "img/otros/splash.png"
     )
+    
+test {
+   useTestNG()
+}
 }
 project(':OtrosAppDist') {
     dependencies {

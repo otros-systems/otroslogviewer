@@ -16,10 +16,11 @@
 
 package pl.otros.logview.importer;
 
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.reader.ProxyLogDataCollector;
@@ -29,8 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
 
 public class Log4jSerilizedLogImporterTest {
 

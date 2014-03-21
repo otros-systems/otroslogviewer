@@ -16,7 +16,9 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
@@ -26,8 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Stack;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for AndRule.
@@ -43,7 +43,7 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	try {
 	    AndRule.getRule(stack);
-	    fail("Should have thrown IllegalArgumentException");
+	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
 	}
     }
@@ -58,7 +58,7 @@ public class AndRuleTest {
 	stack.push("World");
 	try {
 	    AndRule.getRule(stack);
-	    fail("Should have thrown IllegalArgumentException");
+	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
 	}
     }
@@ -72,14 +72,14 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
 	Rule rule = AndRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
 	// LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
 	// Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
 	// "Hello, World", null);
 	LogData ld = new LogDataBuilder().withClass("org.apache.log4j.Logger").withLoggerName("").withDate(new Date(cal.getTimeInMillis()))
 		.withLevel(java.util.logging.Level.INFO).withMessage("Hello, World").build();
-	assertTrue(rule.evaluate(ld, null));
+	AssertJUnit.assertTrue(rule.evaluate(ld, null));
     }
 
     /**
@@ -91,13 +91,13 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
 	Rule rule = AndRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
 	// LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
 	// "Hello, World", null);
 	LogData event = new LogDataBuilder().withClass("org.apache.log4j.Logger").withLoggerName("")
 		.withDate(new Date(cal.getTimeInMillis())).withLevel(java.util.logging.Level.WARNING).withMessage("Hello, World").build();
-	assertFalse(rule.evaluate(event, null));
+	AssertJUnit.assertFalse(rule.evaluate(event, null));
     }
 
     /**
@@ -109,13 +109,13 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	stack.push(TimestampInequalityRule.getRule(">=", "2009-05-21 00:44:45"));
 	Rule rule = AndRule.getRule(stack);
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
 	// LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
 	// "Hello, World", null);
 	LogData event = new LogDataBuilder().withClass("org.apache.log4j.Logger").withLoggerName("")
 		.withDate(new Date(cal.getTimeInMillis())).withLevel(java.util.logging.Level.INFO).withMessage("Hello, World").build();
-	assertFalse(rule.evaluate(event, null));
+	AssertJUnit.assertFalse(rule.evaluate(event, null));
     }
 
     /**
@@ -127,13 +127,13 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
 	Rule rule = (Rule) SerializationTestHelper.serializeClone(AndRule.getRule(stack));
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
 	// LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
 	// "Hello, World", null);
 	LogData event = new LogDataBuilder().withClass("org.apache.log4j.Logger").withLoggerName("")
 		.withDate(new Date(cal.getTimeInMillis())).withLevel(java.util.logging.Level.INFO).withMessage("Hello, World").build();
-	assertTrue(rule.evaluate(event, null));
+	AssertJUnit.assertTrue(rule.evaluate(event, null));
     }
 
     /**
@@ -145,13 +145,13 @@ public class AndRuleTest {
 	stack.push(LevelEqualsRule.getRule("INFO"));
 	stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
 	Rule rule = (Rule) SerializationTestHelper.serializeClone(AndRule.getRule(stack));
-	assertEquals(0, stack.size());
+	AssertJUnit.assertEquals(0, stack.size());
 	Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
 	// LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
 	// "Hello, World", null);
 	LogData event = new LogDataBuilder().withClass("org.apache.log4j.Logger").withLoggerName("")
 		.withDate(new Date(cal.getTimeInMillis())).withLevel(java.util.logging.Level.WARNING).withMessage("Hello, World").build();
-	assertFalse(rule.evaluate(event, null));
+	AssertJUnit.assertFalse(rule.evaluate(event, null));
     }
 
 }
