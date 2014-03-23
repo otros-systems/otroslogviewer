@@ -692,7 +692,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
     toolsMenu.add(new ShowLog4jPatternParserEditor(otrosApplication));
     toolsMenu.add(new ShowMessageColorizerEditor(otrosApplication));
-    toolsMenu.add(new ShowLoadedComponets(otrosApplication));
+    toolsMenu.add(new ShowLoadedPlugins(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
     toolsMenu.add(closeAll);
     JMenu pluginsMenu = new JMenu("Plugins");
