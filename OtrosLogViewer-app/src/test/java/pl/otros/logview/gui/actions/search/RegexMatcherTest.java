@@ -15,20 +15,19 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import pl.otros.logview.LogData;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class RegexMatcherTest {
 
   private LogData ld1;
   private LogData ld2;
 
-  @Before
-  public void setup() {
+  @BeforeMethod
+public void setup() {
     ld1 = new LogData();
     ld1.setMessage("Ala ma kota, a kot ma ale 12");
 

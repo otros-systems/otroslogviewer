@@ -16,8 +16,10 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Logger;
-import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
@@ -26,8 +28,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for TimestampInequalityRule.
@@ -41,7 +41,7 @@ public class TimestampInequalityRuleTest {
   public void testFail1() {
     try {
       TimestampInequalityRule.getRule(">", "now");
-      fail("Expected IllegalArgumentException");
+      Assert.fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException ex) {
     }
   }
@@ -53,7 +53,7 @@ public class TimestampInequalityRuleTest {
   public void testFail2() {
     try {
       TimestampInequalityRule.getRule(">", "2008/May/20");
-      fail("Expected IllegalArgumentException");
+      Assert.fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException ex) {
     }
   }
@@ -77,7 +77,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   /**
@@ -88,7 +88,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(TimestampInequalityRule.getRule("<", "2008-05-21 00:44:44"));
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -96,7 +96,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00:44:45");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -104,7 +104,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00:44:44");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -112,7 +112,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00:44");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -120,7 +120,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00:44");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -128,7 +128,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 01, 45, 44);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -136,7 +136,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -145,7 +145,7 @@ public class TimestampInequalityRuleTest {
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 23, 45, 44);
     LogData logData = new LogDataBuilder().withClass("a.B").withLoggerName(Logger.getRootLogger().getName()).withDate(cal.getTime()).withMessage("Hi")
         .withLevel(java.util.logging.Level.INFO).build();
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -153,7 +153,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 23, 45, 44);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -161,7 +161,7 @@ public class TimestampInequalityRuleTest {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-22");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 23, 45, 44);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -171,7 +171,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 10);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -181,7 +181,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 18);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -191,7 +191,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 18);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -201,7 +201,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 10);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -211,7 +211,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 18);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -221,7 +221,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.set(Calendar.HOUR_OF_DAY, 18);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -231,7 +231,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -5);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -241,7 +241,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -15);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -251,7 +251,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -15);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -261,7 +261,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -15);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -271,7 +271,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -15);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -281,7 +281,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.HOUR_OF_DAY, -1);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -291,7 +291,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.HOUR_OF_DAY, -3);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -301,7 +301,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.HOUR_OF_DAY, -1);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -311,7 +311,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.MINUTE, -30);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -321,7 +321,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.HOUR_OF_DAY, -1);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   private LogData createLogData(Calendar cal) {
@@ -336,7 +336,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.DATE, -3);
     LogData logData = createLogData(cal);
-    assertFalse(rule.evaluate(logData, null));
+    AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
 
   @Test
@@ -346,7 +346,7 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.DATE, -1);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 
   @Test
@@ -356,6 +356,6 @@ public class TimestampInequalityRuleTest {
     cal.setTime(new Date(System.currentTimeMillis()));
     cal.add(Calendar.HOUR, -10);
     LogData logData = createLogData(cal);
-    assertTrue(rule.evaluate(logData, null));
+    AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
 }

@@ -15,8 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.persistance;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
@@ -25,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
-
-import static org.junit.Assert.*;
 
 public class LogDataListPersistanceVer2Test {
 
@@ -45,11 +44,11 @@ public class LogDataListPersistanceVer2Test {
     ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
     List<LogData> loadLogsList = ver2.loadLogsList(in);
 
-    assertEquals(2, loadLogsList.size());
-    assertEquals(ld1.getMessage(), loadLogsList.get(0).getMessage());
-    assertEquals(ld2.getMessage(), loadLogsList.get(1).getMessage());
-    assertEquals(ld1, loadLogsList.get(0));
-    assertEquals(ld2, loadLogsList.get(1));
+    AssertJUnit.assertEquals(2, loadLogsList.size());
+    AssertJUnit.assertEquals(ld1.getMessage(), loadLogsList.get(0).getMessage());
+    AssertJUnit.assertEquals(ld2.getMessage(), loadLogsList.get(1).getMessage());
+    AssertJUnit.assertEquals(ld1, loadLogsList.get(0));
+    AssertJUnit.assertEquals(ld2, loadLogsList.get(1));
   }
 
   @Test
@@ -65,11 +64,11 @@ public class LogDataListPersistanceVer2Test {
     ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
     List<LogData> loadLogsList = ver2.loadLogsList(in);
 
-    assertEquals(2, loadLogsList.size());
-    assertEquals(ld1.getMessage(), loadLogsList.get(0).getMessage());
-    assertEquals(ld2.getMessage(), loadLogsList.get(1).getMessage());
-    assertEquals(ld1, loadLogsList.get(0));
-    assertEquals(ld2, loadLogsList.get(1));
+    AssertJUnit.assertEquals(2, loadLogsList.size());
+    AssertJUnit.assertEquals(ld1.getMessage(), loadLogsList.get(0).getMessage());
+    AssertJUnit.assertEquals(ld2.getMessage(), loadLogsList.get(1).getMessage());
+    AssertJUnit.assertEquals(ld1, loadLogsList.get(0));
+    AssertJUnit.assertEquals(ld2, loadLogsList.get(1));
   }
 
   @Test
@@ -88,12 +87,12 @@ public class LogDataListPersistanceVer2Test {
     ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
     List<LogData> loadLogsList = ver2.loadLogsList(in);
 
-    assertEquals(1, loadLogsList.size());
+    AssertJUnit.assertEquals(1, loadLogsList.size());
     Map<String, String> propertiesRead = loadLogsList.get(0).getProperties();
-    assertNotNull(propertiesRead);
-    assertEquals(2, propertiesRead.size());
-    assertEquals("value1", propertiesRead.get("key1"));
-    assertEquals("value2", propertiesRead.get("key2"));
+    AssertJUnit.assertNotNull(propertiesRead);
+    AssertJUnit.assertEquals(2, propertiesRead.size());
+    AssertJUnit.assertEquals("value1", propertiesRead.get("key1"));
+    AssertJUnit.assertEquals("value2", propertiesRead.get("key2"));
   }
 
   @Test
@@ -109,9 +108,9 @@ public class LogDataListPersistanceVer2Test {
     ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
     List<LogData> loadLogsList = ver2.loadLogsList(in);
 
-    assertEquals(1, loadLogsList.size());
+    AssertJUnit.assertEquals(1, loadLogsList.size());
     Map<String, String> propertiesRead = loadLogsList.get(0).getProperties();
-    assertNull(propertiesRead);
+    AssertJUnit.assertNull(propertiesRead);
   }
 
   @Test
@@ -119,26 +118,26 @@ public class LogDataListPersistanceVer2Test {
     InputStream in = this.getClass().getClassLoader().getResourceAsStream("persistance/logs_without_properties_column.txt");
     List<LogData> loadLogsList = ver2.loadLogsList(in);
 
-    assertEquals(40, loadLogsList.size());
+    AssertJUnit.assertEquals(40, loadLogsList.size());
     Map<String, String> propertiesRead = loadLogsList.get(0).getProperties();
-    assertNull(propertiesRead);
+    AssertJUnit.assertNull(propertiesRead);
   }
 
   @Test
   public void testEscpageStringPipes() {
     String escpageString = ver2.escpageString("String|with|pipe");
-    assertEquals("String\\Pwith\\Ppipe", escpageString);
+    AssertJUnit.assertEquals("String\\Pwith\\Ppipe", escpageString);
   }
 
   @Test
   public void testEscpageStringBackslash() {
     String escpageString = ver2.escpageString("String\\with\\backslash");
-    assertEquals("String\\Swith\\Sbackslash", escpageString);
+    AssertJUnit.assertEquals("String\\Swith\\Sbackslash", escpageString);
   }
 
   @Test
   public void testEscpageStringNewLine() {
     String escpageString = ver2.escpageString("String\nwith\nnewline");
-    assertEquals("String\\nwith\\nnewline", escpageString);
+    AssertJUnit.assertEquals("String\\nwith\\nnewline", escpageString);
   }
 }

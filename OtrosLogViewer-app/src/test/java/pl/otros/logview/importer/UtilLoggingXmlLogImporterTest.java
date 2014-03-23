@@ -1,8 +1,9 @@
 package pl.otros.logview.importer;
 
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.reader.ProxyLogDataCollector;
@@ -11,14 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-
 public class UtilLoggingXmlLogImporterTest {
 
   private UtilLoggingXmlLogImporter importer;
 
-  @Before
-  public void init() throws InitializationException {
+  @BeforeMethod
+public void init() throws InitializationException {
     importer = new UtilLoggingXmlLogImporter();
     importer.init(new Properties());
   }

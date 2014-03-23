@@ -16,10 +16,12 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.Test;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
@@ -27,8 +29,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Stack;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for NotRule.
@@ -43,7 +43,7 @@ public class NotRuleTest  {
         Stack<Object> stack = new Stack<Object>();
         try {
             NotRule.getRule(stack);
-            fail("Should have thrown IllegalArgumentException");
+            Assert.fail("Should have thrown IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
         }
     }
@@ -56,7 +56,7 @@ public class NotRuleTest  {
         stack.push("Hello");
         try {
             NotRule.getRule(stack);
-            fail("Should have thrown IllegalArgumentException");
+            Assert.fail("Should have thrown IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
         }
     }
@@ -68,12 +68,12 @@ public class NotRuleTest  {
         Stack<Object> stack = new Stack<Object>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = NotRule.getRule(stack);
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
-        assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
     /**
@@ -83,12 +83,12 @@ public class NotRuleTest  {
         Stack<Object> stack = new Stack<Object>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = NotRule.getRule(stack);
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
 
@@ -99,12 +99,12 @@ public class NotRuleTest  {
         Stack<Object> stack = new Stack<Object>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(NotRule.getRule(stack));
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
-        assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
 
@@ -115,12 +115,12 @@ public class NotRuleTest  {
         Stack<Object> stack = new Stack<Object>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(NotRule.getRule(stack));
-        assertEquals(0, stack.size());
+        AssertJUnit.assertEquals(0, stack.size());
         Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);
-        assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+        AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
 
 }

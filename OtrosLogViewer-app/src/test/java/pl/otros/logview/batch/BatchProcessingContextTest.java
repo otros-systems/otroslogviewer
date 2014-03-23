@@ -1,7 +1,8 @@
 package pl.otros.logview.batch;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.LogInvestiagionPersitanceUtil;
@@ -19,14 +20,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 
-import static org.junit.Assert.*;
-
 public class BatchProcessingContextTest {
 
   private BatchProcessingContext batchProcessingContext;
 
-  @Before
-  public void prepare() {
+  @BeforeMethod
+public void prepare() {
     batchProcessingContext = new BatchProcessingContext();
   }
 
@@ -34,16 +33,16 @@ public class BatchProcessingContextTest {
   public void testCreateLogDataStoreMemory() throws IOException {
     LogDataStore createLogDataStore = batchProcessingContext.createLogDataStore(LogDataStoreType.MEMORY);
 
-    assertEquals(MemoryLogDataStore.class.getName(), createLogDataStore.getClass().getName());
-    assertEquals(createLogDataStore, batchProcessingContext.getDataStore());
+    AssertJUnit.assertEquals(MemoryLogDataStore.class.getName(), createLogDataStore.getClass().getName());
+    AssertJUnit.assertEquals(createLogDataStore, batchProcessingContext.getDataStore());
   }
 
   @Test
   public void testCreateLogDataStoreFile() throws IOException {
     LogDataStore createLogDataStore = batchProcessingContext.createLogDataStore(LogDataStoreType.FILE);
 
-    assertEquals(FileLogDataStore.class.getName(), createLogDataStore.getClass().getName());
-    assertEquals(createLogDataStore, batchProcessingContext.getDataStore());
+    AssertJUnit.assertEquals(FileLogDataStore.class.getName(), createLogDataStore.getClass().getName());
+    AssertJUnit.assertEquals(createLogDataStore, batchProcessingContext.getDataStore());
   }
 
   @Test
@@ -61,31 +60,31 @@ public class BatchProcessingContextTest {
     InputStream in = new ByteArrayInputStream(bout.toByteArray());
     Memento loadMemento = LogInvestiagionPersitanceUtil.loadMemento(in);
     ArrayList<LogData> list = loadMemento.getList();
-    assertEquals(2, list.size());
-    assertEquals(logDataStore.getLogData(0), list.get(0));
-    assertEquals(logDataStore.getLogData(1), list.get(1));
+    AssertJUnit.assertEquals(2, list.size());
+    AssertJUnit.assertEquals(logDataStore.getLogData(0), list.get(0));
+    AssertJUnit.assertEquals(logDataStore.getLogData(1), list.get(1));
   }
 
   @Test
   public void testGetAttributeStringClassOfT() {
     batchProcessingContext.setAttribute("A", "C");
 
-    assertEquals("C", batchProcessingContext.getAttribute("A", String.class));
+    AssertJUnit.assertEquals("C", batchProcessingContext.getAttribute("A", String.class));
   }
 
   @Test
   public void testGetAttributeStringClassOfTT() {
 
-    assertFalse(batchProcessingContext.containsAttribute("A"));
-    assertEquals("D", batchProcessingContext.getAttribute("A", String.class, "D"));
+    AssertJUnit.assertFalse(batchProcessingContext.containsAttribute("A"));
+    AssertJUnit.assertEquals("D", batchProcessingContext.getAttribute("A", String.class, "D"));
   }
 
   @Test
   public void testContainsAttribute() {
     batchProcessingContext.setAttribute("A", "C");
 
-    assertTrue(batchProcessingContext.containsAttribute("A"));
-    assertFalse(batchProcessingContext.containsAttribute("B"));
+    AssertJUnit.assertTrue(batchProcessingContext.containsAttribute("A"));
+    AssertJUnit.assertFalse(batchProcessingContext.containsAttribute("B"));
   }
 
 }

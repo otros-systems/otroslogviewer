@@ -15,9 +15,11 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.pattern;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 import org.apache.commons.configuration.ConfigurationException;
-import org.junit.Before;
-import org.junit.Test;
 import pl.otros.logview.gui.message.MessageFragmentStyle;
 
 import javax.swing.text.BadLocationException;
@@ -30,15 +32,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class PropertyPatternMessageColorizerTest {
 
 	Properties p = new Properties();
 	PropertyPatternMessageColorizer colorizer;
 
-	@Before
+	@BeforeMethod
 	public void setUp() throws ConfigurationException, IOException {
 		p.put(PropertyPatternMessageColorizer.PROP_NAME, "Test");
 		p.put(PropertyPatternMessageColorizer.PROP_DESCRIPTION, "D");
@@ -99,8 +98,8 @@ public class PropertyPatternMessageColorizerTest {
 		Style style = messageFragmentStyle.getStyle();
 		assertEquals(StyleConstants.getBackground(style), new Color(0, 255, 255));
 		assertEquals(StyleConstants.getForeground(style), new Color(255, 255, 0));
-		assertEquals(StyleConstants.isBold(style), Boolean.FALSE);
-		assertEquals(StyleConstants.isItalic(style), Boolean.TRUE);
+		assertEquals((Boolean)StyleConstants.isBold(style), Boolean.FALSE);
+		assertEquals((Boolean)StyleConstants.isItalic(style), Boolean.TRUE);
 
 		assertEquals(messageFragmentStyle1.isReplace(), false);
 		assertEquals(messageFragmentStyle1.getOffset(), 1);
@@ -108,8 +107,8 @@ public class PropertyPatternMessageColorizerTest {
 		Style style1 = messageFragmentStyle1.getStyle();
 		assertEquals(StyleConstants.getBackground(style1), new Color(0, 0, 255));
 		assertEquals(StyleConstants.getForeground(style1), new Color(255, 0, 0));
-		assertEquals(StyleConstants.isBold(style1), Boolean.TRUE);
-		assertEquals(StyleConstants.isItalic(style1), Boolean.FALSE);
+		assertEquals((Boolean)StyleConstants.isBold(style1), Boolean.TRUE);
+		assertEquals((Boolean)StyleConstants.isItalic(style1), Boolean.FALSE);
 
 
 	}

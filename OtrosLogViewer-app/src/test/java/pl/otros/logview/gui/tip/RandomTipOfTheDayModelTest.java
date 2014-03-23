@@ -1,22 +1,20 @@
 package pl.otros.logview.gui.tip;
 
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import org.jdesktop.swingx.tips.DefaultTip;
 import org.jdesktop.swingx.tips.DefaultTipOfTheDayModel;
 import org.jdesktop.swingx.tips.TipOfTheDayModel;
 import org.jdesktop.swingx.tips.TipOfTheDayModel.Tip;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class RandomTipOfTheDayModelTest {
 
 	private static final int TIPS_SIZE = 1000;
 	RandomTipOfTheDayModel tipsModel = null;
 
-	@Before
+	@BeforeMethod
 	public void prepare() {
 		ArrayList<Tip> tips = new ArrayList<TipOfTheDayModel.Tip>();
 		for (int i = 0; i < TIPS_SIZE; i++) {
@@ -30,7 +28,7 @@ public class RandomTipOfTheDayModelTest {
 	@Test
 	public void testGetTipAtNotNull() {
 		for (int i = 0; i < tipsModel.getTipCount(); i++) {
-			assertNotNull(tipsModel.getTipAt(i));
+			AssertJUnit.assertNotNull(tipsModel.getTipAt(i));
 		}
 	}
 
@@ -42,12 +40,12 @@ public class RandomTipOfTheDayModelTest {
 				diffrence=true;
 			}			
 		}
-		assertTrue(diffrence);
+		AssertJUnit.assertTrue(diffrence);
 	}
 
 	@Test
 	public void testGetTipCount() {
-		assertEquals(TIPS_SIZE, tipsModel.getTipCount());
+		AssertJUnit.assertEquals(TIPS_SIZE, tipsModel.getTipCount());
 	}
 
 }

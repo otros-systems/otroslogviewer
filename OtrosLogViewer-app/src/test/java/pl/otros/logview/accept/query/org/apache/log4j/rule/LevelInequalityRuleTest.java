@@ -16,16 +16,16 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.junit.Test;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for LevelInequalityRule.
@@ -39,7 +39,7 @@ public class LevelInequalityRuleTest {
   public void test1() {
     try {
       LevelInequalityRule.getRule(">", "emergency");
-      fail("Expected IllegalArgumentException");
+      Assert.fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException ex) {
     }
   }
@@ -50,7 +50,7 @@ public class LevelInequalityRuleTest {
   @Test
   public void test2() {
     Rule rule = LevelInequalityRule.getRule("~", "iNfO");
-    assertNull(rule);
+    AssertJUnit.assertNull(rule);
   }
 
   /**
@@ -60,7 +60,7 @@ public class LevelInequalityRuleTest {
   public void test3() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(LevelInequalityRule.getRule(">=", "info"));
     LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
-    assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+    AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
   /**
@@ -70,7 +70,7 @@ public class LevelInequalityRuleTest {
   public void test4() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(LevelInequalityRule.getRule("<", "info"));
     LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
-    assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
+    AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
 }

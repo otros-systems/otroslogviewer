@@ -15,18 +15,17 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import java.util.Collection;
 
 public class PluginableElementsContainerTest {
 
   public PluginableElementsContainer<PluginableClass> container;
 
-  @Before
-  public void setup() {
+  @BeforeMethod
+public void setup() {
     container = new PluginableElementsContainer<PluginableElementsContainerTest.PluginableClass>();
   }
 
@@ -35,7 +34,7 @@ public class PluginableElementsContainerTest {
     PluginableClass p = new PluginableClass();
     container.addElement(p);
     Collection<PluginableClass> elements = container.getElements();
-    Assert.assertEquals(1, elements.size());
+    AssertJUnit.assertEquals(1, elements.size());
 
   }
 
@@ -46,13 +45,13 @@ public class PluginableElementsContainerTest {
 
     PluginableClass p1 = new PluginableClass();
     container.addElement(p1);
-    Assert.assertTrue(listener.added);
+    AssertJUnit.assertTrue(listener.added);
 
     container.addElement(p1);
-    Assert.assertTrue(listener.changed);
+    AssertJUnit.assertTrue(listener.changed);
 
     Collection<PluginableClass> elements = container.getElements();
-    Assert.assertEquals(1, elements.size());
+    AssertJUnit.assertEquals(1, elements.size());
   }
 
   @Test
@@ -62,14 +61,14 @@ public class PluginableElementsContainerTest {
 
     PluginableClass p1 = new PluginableClass();
     container.addElement(p1);
-    Assert.assertTrue(listener.added);
+    AssertJUnit.assertTrue(listener.added);
     Collection<PluginableClass> elements = container.getElements();
-    Assert.assertEquals(1, elements.size());
+    AssertJUnit.assertEquals(1, elements.size());
 
     container.removeElement(p1);
-    Assert.assertTrue(listener.removed);
+    AssertJUnit.assertTrue(listener.removed);
     elements = container.getElements();
-    Assert.assertEquals(0, elements.size());
+    AssertJUnit.assertEquals(0, elements.size());
   }
 
   static class PluginableListener implements PluginableElementEventListener<PluginableClass> {

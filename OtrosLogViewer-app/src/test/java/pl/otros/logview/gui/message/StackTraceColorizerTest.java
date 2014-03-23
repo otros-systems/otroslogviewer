@@ -15,10 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
-
 import javax.swing.text.BadLocationException;
 import java.io.IOException;
 import java.util.Collection;
@@ -33,7 +32,7 @@ public class StackTraceColorizerTest {
     //when
     boolean colorizingNeeded = colorizer.colorizingNeeded(string);
     //then
-    Assert.assertTrue(colorizingNeeded);
+    AssertJUnit.assertTrue(colorizingNeeded);
   }
 
   @Test

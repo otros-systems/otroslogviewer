@@ -15,7 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.importer;
 
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.TestUtils;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
@@ -27,9 +29,6 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class Log4jXmlLogImporterTest {
 

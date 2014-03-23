@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.parser.ParsingContext;
 

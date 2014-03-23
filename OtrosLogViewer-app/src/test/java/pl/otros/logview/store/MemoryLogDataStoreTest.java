@@ -15,13 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.store;
 
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogDataBuilder;
 
 import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MemoryLogDataStoreTest extends LogDataStoreTestBase {
 

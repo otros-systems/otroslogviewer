@@ -16,9 +16,9 @@
 
 package pl.otros.logview.gui.message;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class SoapMessageFormatterTest {
 
@@ -35,7 +35,7 @@ public class SoapMessageFormatterTest {
 		String format = formatter.format(soap).trim();
     System.out.println(format);
     //then
-		Assert.assertEquals(expected.replaceAll("\r",""), format.replaceAll("\r",""));
+		AssertJUnit.assertEquals(expected.replaceAll("\r",""), format.replaceAll("\r",""));
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class SoapMessageFormatterTest {
 		String format = formatter.format(soap).trim();
 
 		//then
-		Assert.assertEquals(expected.replaceAll("\r", ""), format.replaceAll("\r",""));
+		AssertJUnit.assertEquals(expected.replaceAll("\r", ""), format.replaceAll("\r",""));
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class SoapMessageFormatterTest {
 		String removeMultiRefs = formatter.removeMultiRefs(soap);
 
 		//then
-		Assert.assertEquals(expected, removeMultiRefs);
+		AssertJUnit.assertEquals(expected, removeMultiRefs);
 	}
 
   @Test
@@ -76,7 +76,7 @@ public class SoapMessageFormatterTest {
 
     //then
     System.out.println(removeMultiRefs);
-    Assert.assertEquals(expected, removeMultiRefs);
+    AssertJUnit.assertEquals(expected, removeMultiRefs);
   }
 
   @Test
@@ -84,7 +84,7 @@ public class SoapMessageFormatterTest {
     String s = formatter.removeXsiFromNulls("<errorListArray xmlns:ns3=\"http://some.com/class/a/\" xsi:type=\"ns3:Error\" xsi:nil=\"true\"/>");
     System.out.println(s);
     System.out.flush();
-    Assert.assertEquals("<errorListArray/>", s);
+    AssertJUnit.assertEquals("<errorListArray/>", s);
   }
 
 }

@@ -1,16 +1,14 @@
 package pl.otros.logview.store.async;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.Assert;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-@Ignore
+@Test(enabled=false)
 public class MemoryLogDataStore2Test {
   @Test
   public void testFilter() throws Exception {
@@ -32,8 +30,8 @@ public class MemoryLogDataStore2Test {
     assertEquals(20000,filteredCount);
   }
 
-  @Test
+  
   public void testSearch() throws Exception {
-    fail("No implemented");
+    Assert.fail("No implemented");
   }
 }

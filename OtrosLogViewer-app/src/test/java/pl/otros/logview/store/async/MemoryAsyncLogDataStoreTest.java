@@ -1,15 +1,5 @@
 package pl.otros.logview.store.async;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import org.junit.*;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
-import pl.otros.logview.store.LogDataStore;
-import pl.otros.logview.store.MemoryLogDataStore;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -21,9 +11,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
-import static org.junit.Assert.*;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
-@Ignore
+import pl.otros.logview.LogData;
+import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.MarkerColors;
+import pl.otros.logview.Note;
+import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.store.MemoryLogDataStore;
+
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
+
 public class MemoryAsyncLogDataStoreTest {
 
   public static final int LOG_EVENT_COUNT = 1000;
@@ -44,7 +48,7 @@ public class MemoryAsyncLogDataStoreTest {
       "tsf",
   };
 
-  @Before
+  @BeforeMethod
   public void setUp() throws Exception {
     ExecutorService executorService =
         Executors.newSingleThreadExecutor(new ThreadFactory() {
@@ -60,7 +64,7 @@ public class MemoryAsyncLogDataStoreTest {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String logStoreThreadName = Thread.currentThread().getName();
-        Assert.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
+        AssertJUnit.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
         return method.invoke(memorylogDataStore, args);
       }
     });
@@ -84,18 +88,14 @@ public class MemoryAsyncLogDataStoreTest {
 
   }
 
-  @After
-  public void tearDown() throws Exception {
-
-  }
 
   @Test
   public void testGetCount() throws Exception {
-    Assert.assertEquals(LOG_EVENT_COUNT, store.getCount());
+    AssertJUnit.assertEquals(LOG_EVENT_COUNT, store.getCount());
 
   }
 
-  @Test
+  @Test(enabled=false)
   public void testRemove() throws Exception {
     //given
     LogData logDataRow1 = store.getLogData(11);
@@ -104,29 +104,29 @@ public class MemoryAsyncLogDataStoreTest {
     store.remove(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 22, 23).get();
 
     //then
-//    Assert.assertEquals(logDataRow1, store.getLogData(0));
-    Assert.assertEquals(10, store.getLogData(0).getId());
-    Assert.assertEquals(24, store.getLogData(10).getId());
-    Assert.assertEquals(986, store.getCount());
+    //    Assert.assertEquals(logDataRow1, store.getLogData(0));
+    AssertJUnit.assertEquals(10, store.getLogData(0).getId());
+    AssertJUnit.assertEquals(24, store.getLogData(10).getId());
+    AssertJUnit.assertEquals(986, store.getCount());
 
   }
 
-  @Test
+  @Test(enabled=false)
   public void testFilter() throws Exception {
-    fail("not implemented");
+    Assert.fail("not implemented");
   }
 
-  @Test
+  @Test(enabled=false)
   public void testSearch() throws Exception {
-    fail("not implemented");
+    Assert.fail("not implemented");
   }
 
   @Test
   public void testGetLogData() throws Exception {
     LogData logData = store.getLogData(0);
 
-    Assert.assertEquals(0, logData.getDate().getTime());
-    Assert.assertEquals(classes[0], logData.getClazz());
+    AssertJUnit.assertEquals(0, logData.getDate().getTime());
+    AssertJUnit.assertEquals(classes[0], logData.getClazz());
   }
 
   @Test
@@ -135,20 +135,20 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     //then
     for (int i = 0; i < LOG_EVENT_COUNT; i++) {
-      assertEquals(Integer.valueOf(i), store.getLogDataIdInRow(i));
+      AssertJUnit.assertEquals(Integer.valueOf(i), store.getLogDataIdInRow(i));
     }
   }
 
   @Test
   public void testGetLimit() throws Exception {
     store.setLimit(100);
-    Assert.assertEquals(100, store.getLimit());
+    AssertJUnit.assertEquals(100, store.getLimit());
   }
 
   @Test
   public void testSetLimit() throws Exception {
     store.setLimit(100);
-    Assert.assertEquals(100, store.getCount());
+    AssertJUnit.assertEquals(100, store.getCount());
   }
 
   @Test
@@ -156,13 +156,13 @@ public class MemoryAsyncLogDataStoreTest {
     String testMessage = "testAdd";
     LogData ld = new LogDataBuilder().withDate(new Date()).withMessage(testMessage).build();
     store.add(ld);
-    Assert.assertEquals(LOG_EVENT_COUNT + 1, store.getCount());
-    Assert.assertEquals(testMessage, store.getLogData(store.getCount() - 1).getMessage());
+    AssertJUnit.assertEquals(LOG_EVENT_COUNT + 1, store.getCount());
+    AssertJUnit.assertEquals(testMessage, store.getLogData(store.getCount() - 1).getMessage());
   }
 
-  @Test
+  @Test(enabled=false)
   public void testGetLogData1() throws Exception {
-    fail("not implemented");
+    Assert.fail("not implemented");
   }
 
   @Test
@@ -171,8 +171,8 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     int size = store.clear();
     ///then
-    Assert.assertEquals(LOG_EVENT_COUNT, size);
-    Assert.assertEquals(0, store.getCount());
+    AssertJUnit.assertEquals(LOG_EVENT_COUNT, size);
+    AssertJUnit.assertEquals(0, store.getCount());
 
   }
 
@@ -182,20 +182,20 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     store.addNoteToRow(10, new Note("A"));
     //then
-    assertEquals("A", store.getNote(10).getNote());
+    AssertJUnit.assertEquals("A", store.getNote(10).getNote());
   }
 
   @Test
   public void testGetNote() throws Exception {
     for (int i = 0; i < LOG_EVENT_COUNT; i++) {
-      Assert.assertEquals("Note" + i, store.getNote(i).getNote());
+      AssertJUnit.assertEquals("Note" + i, store.getNote(i).getNote());
     }
   }
 
   @Test
   public void testRemoveNote() throws Exception {
     store.removeNote(10);
-    Assert.assertEquals(null, store.getNote(10));
+    AssertJUnit.assertEquals(null, store.getNote(10));
 
   }
 
@@ -205,7 +205,7 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     store.clearNotes();
     //then
-    assertEquals(0, store.getAllNotes().size());
+    AssertJUnit.assertEquals(0, store.getAllNotes().size());
   }
 
   @Test
@@ -214,8 +214,8 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     TreeMap<Integer, Note> allNotes = store.getAllNotes();
     //then
-    assertEquals(LOG_EVENT_COUNT, allNotes.size());
-    assertEquals("Note100", allNotes.get(Integer.valueOf(100)).getNote());
+    AssertJUnit.assertEquals(LOG_EVENT_COUNT, allNotes.size());
+    AssertJUnit.assertEquals("Note100", allNotes.get(Integer.valueOf(100)).getNote());
   }
 
   @Test
@@ -223,42 +223,42 @@ public class MemoryAsyncLogDataStoreTest {
     Iterator<LogData> iterator = store.iterator();
 
     int count = 0;
-    Assert.assertNotNull(iterator);
+    AssertJUnit.assertNotNull(iterator);
     while (iterator.hasNext()) {
       LogData next = iterator.next();
-      Assert.assertEquals(next.getId(), count);
+      AssertJUnit.assertEquals(next.getId(), count);
       count++;
     }
-    Assert.assertEquals(LOG_EVENT_COUNT, count);
+    AssertJUnit.assertEquals(LOG_EVENT_COUNT, count);
   }
 
   @Test
   public void testIsMarked() throws Exception {
-    Assert.assertTrue(store.isMarked(10));
-    Assert.assertTrue(store.isMarked(20));
-    Assert.assertTrue(store.isMarked(300));
-    assertFalse(store.isMarked(11));
-    assertFalse(store.isMarked(21));
-    assertFalse(store.isMarked(301));
+    AssertJUnit.assertTrue(store.isMarked(10));
+    AssertJUnit.assertTrue(store.isMarked(20));
+    AssertJUnit.assertTrue(store.isMarked(300));
+    AssertJUnit.assertFalse(store.isMarked(11));
+    AssertJUnit.assertFalse(store.isMarked(21));
+    AssertJUnit.assertFalse(store.isMarked(301));
   }
 
   @Test
   public void testGetMarkerColors() throws Exception {
-    assertEquals(MarkerColors.Aqua, store.getMarkerColors(10));
-    assertEquals(MarkerColors.Aqua, store.getMarkerColors(20));
-    assertEquals(MarkerColors.Aqua, store.getMarkerColors(30));
-    assertEquals(null, store.getMarkerColors(31));
+    AssertJUnit.assertEquals(MarkerColors.Aqua, store.getMarkerColors(10));
+    AssertJUnit.assertEquals(MarkerColors.Aqua, store.getMarkerColors(20));
+    AssertJUnit.assertEquals(MarkerColors.Aqua, store.getMarkerColors(30));
+    AssertJUnit.assertEquals(null, store.getMarkerColors(31));
   }
 
   @Test
   public void testMarkRows() throws Exception {
-    //give
+    //given
     //when
     store.markRows(MarkerColors.Black, 10);
     store.markRows(MarkerColors.Brown, 12);
     //then
-    assertEquals(MarkerColors.Black, store.getMarkerColors(10));
-    assertEquals(MarkerColors.Brown, store.getMarkerColors(12));
+    AssertJUnit.assertEquals(MarkerColors.Black, store.getMarkerColors(10));
+    AssertJUnit.assertEquals(MarkerColors.Brown, store.getMarkerColors(12));
 
   }
 
@@ -268,7 +268,7 @@ public class MemoryAsyncLogDataStoreTest {
     //when
     store.unmarkRows(10, 20);
     //then
-    assertFalse(store.isMarked(10));
-    assertFalse(store.isMarked(20));
+    AssertJUnit.assertFalse(store.isMarked(10));
+    AssertJUnit.assertFalse(store.isMarked(20));
   }
 }

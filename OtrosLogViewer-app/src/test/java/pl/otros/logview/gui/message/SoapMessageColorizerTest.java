@@ -16,11 +16,9 @@
 
 package pl.otros.logview.gui.message;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -45,10 +43,10 @@ public class SoapMessageColorizerTest {
 			map.put(Integer.valueOf(messageFragmentStyle.getOffset()), messageFragmentStyle);
 		}
 
-		assertEquals(map.get(Integer.valueOf(88)).getStyle(), colorizer.styleOperator);
-		assertEquals(map.get(Integer.valueOf(89)).getStyle(), colorizer.styleElementName);
-		assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttribtuteName);
-		assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttribtuteValue);
-		assertEquals(map.get(Integer.valueOf(180)).getStyle(), colorizer.styleContent);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(88)).getStyle(), colorizer.styleOperator);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(89)).getStyle(), colorizer.styleElementName);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttribtuteName);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttribtuteValue);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(180)).getStyle(), colorizer.styleContent);
 	}
 }

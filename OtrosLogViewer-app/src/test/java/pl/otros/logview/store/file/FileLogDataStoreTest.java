@@ -15,7 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.store.file;
 
-import org.junit.Test;
+import static org.testng.AssertJUnit.assertArrayEquals;
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.Note;
 import pl.otros.logview.store.LogDataStore;
@@ -27,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 public class FileLogDataStoreTest extends LogDataStoreTestBase {
 

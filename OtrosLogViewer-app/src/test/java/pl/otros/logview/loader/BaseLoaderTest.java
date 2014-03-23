@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import pl.otros.logview.filter.LogFilter;
 
 import java.io.File;
@@ -31,19 +31,19 @@ public class BaseLoaderTest {
   public void testLoad() throws URISyntaxException {
     File dir = getFile("plugins/filters/");
     Collection<LogFilter> load = baseLoader.load(dir, LogFilter.class);
-    Assert.assertEquals(2, load.size());
+    AssertJUnit.assertEquals(2, load.size());
   }
 
   @Test
   public void testLoadFromDir() throws URISyntaxException {
     Collection<LogFilter> load = baseLoader.loadFromDir(getFile("plugins/filters/"), LogFilter.class);
-    Assert.assertEquals(1, load.size());
+    AssertJUnit.assertEquals(1, load.size());
   }
 
   @Test
   public void testLoadFromJar() throws URISyntaxException {
     Collection<LogFilter> load = baseLoader.loadFromJar(getFile("plugins/filters/filters.jar"), LogFilter.class);
-    Assert.assertEquals(1, load.size());
+    AssertJUnit.assertEquals(1, load.size());
   }
 
   private File getFile(String name) throws URISyntaxException {
