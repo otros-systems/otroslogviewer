@@ -124,8 +124,8 @@ public void initialize() throws InitializationException, IOException {
     AssertJUnit.assertEquals(0, collector.getLogData().length);
   }
 
-  @Test
-public void testImport(String resourceName, int logDataCount) throws IOException, InitializationException {
+
+ public void testImport(String resourceName, int logDataCount) throws IOException, InitializationException {
     // given
     InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);
