@@ -22,22 +22,28 @@ public class ConfigComponent extends JPanel {
   private ConfigView[] configViews;
   private JXList list;
   private ConfigurationProvider configurationProvider;
+  private Action actionAfterSave;
+  private Action actionAfterCancel;
+
+  public ConfigComponent(final ConfigurationProvider configurationProvider, final ConfigView... configViews) {
+    this(configurationProvider,null,null,configViews);
+  }
 
   @SuppressWarnings("serial")
-  public ConfigComponent(final ConfigurationProvider configurationProvider, final ConfigView... configViews) {
+  public ConfigComponent(final ConfigurationProvider configurationProvider, Action actionAfterSave, Action actionAfterCancel, final ConfigView... configViews) {
     super();
     this.configurationProvider = configurationProvider;
+    this.actionAfterSave = actionAfterSave;
+    this.actionAfterCancel = actionAfterCancel;
     this.configViews = configViews;
     this.setLayout(new MigLayout());
     JPanel leftPanel = new JPanel(new BorderLayout());
     list = new JXList(this.configViews);
     list.setCellRenderer(new ConfigViewListRenderer());
     leftPanel.add(list);
-    // leftPanel.add(new JXTextArea("Search"), BorderLayout.NORTH);
     upLabel = new JLabel(" ");
     upLabel.setBounds(10, 10, 10, 10);
     upLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-    // upLabel.setBorder(BorderFactory.createLineBorder(upLabel.getForeground()));
     upLabel
         .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(upLabel.getForeground()), BorderFactory.createEmptyBorder(4, 10, 4, 10)));
     centralPanel = new JPanel(new BorderLayout());
@@ -52,7 +58,7 @@ public class ConfigComponent extends JPanel {
         centralPanel.removeAll();
         centralPanel.add(configView.getView());
         upLabel.setText(configView.getName());
-        upLabel.setToolTipText(configView.getDescirption());
+        upLabel.setToolTipText(configView.getDescription());
         centralPanel.revalidate();
         centralPanel.repaint();
       }
@@ -68,7 +74,7 @@ public class ConfigComponent extends JPanel {
             // TODO
           }
         }
-        configView.loadConfguration(configurationForView);
+        configView.loadConfiguration(configurationForView);
         centralPanel.add(configView.getView(), BorderLayout.CENTER);
         configView.getView().getComponents();
       } catch (ConfigurationException e1) {
@@ -99,7 +105,7 @@ public class ConfigComponent extends JPanel {
             if (configurationForView instanceof FileConfiguration) {
               FileConfiguration fc = (FileConfiguration) configurationForView;
               fc.reload();
-              configView.loadConfguration(fc);
+              configView.loadConfiguration(fc);
             }
           } catch (ConfigurationException e1) {
             e1.printStackTrace();
@@ -148,6 +154,9 @@ public class ConfigComponent extends JPanel {
         // TODO Auto-generated catch block
         e1.printStackTrace();
       }
+    }
+    if (actionAfterSave != null) {
+      actionAfterSave.actionPerformed(null);
     }
   }
 }

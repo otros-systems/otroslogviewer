@@ -22,7 +22,7 @@ public class ViewTable extends AbstractConfigView {
   }
 
   @Override
-  public void loadConfguration(Configuration configuration) {
+  public void loadConfiguration(Configuration configuration) {
   }
 
   @Override

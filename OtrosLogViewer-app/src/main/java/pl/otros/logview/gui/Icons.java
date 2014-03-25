@@ -261,5 +261,7 @@ public class Icons {
    @Path(path = "/img/fugue/question-button.png")
    public static ImageIcon STATUS_UNKNOWN;
 
+  @Path(path = "/img/fugue/gear.png")
+  public static ImageIcon GEAR;
 
 }

@@ -105,7 +105,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private Collection<LogFilter> filtersList;
   private final MessageDetailListener messageDetailListener;
 
-
+  private DataConfiguration configuration;
   private LogData displayedLogData;
 
   public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, final OtrosApplication otrosApplication) {
@@ -113,6 +113,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     this.dataTableModel = dataTableModel;
     this.otrosApplication = otrosApplication;
     this.statusObserver = otrosApplication.getStatusObserver();
+    configuration = otrosApplication.getConfiguration();
 
     AllPluginables allPluginable = AllPluginables.getInstance();
     markersContainer = allPluginable.getMarkersContainser();
@@ -164,8 +165,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
     table.setDefaultRenderer(Object.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
-    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(Mode.IconsOnly)));
-    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer()));
+    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(Mode.class,ConfKeys.LOG_DATA_FORMAT_LEVEL_RENDERER,Mode.IconsOnly))));
+    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_DATA_FORMAT_DATE_FORMAT,"HH:mm:ss.SSS"))));
     table.setDefaultRenderer(Boolean.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Boolean.class)));
     table.setDefaultRenderer(Note.class, new TableMarkDecoratorRenderer(new NoteRenderer()));
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
@@ -538,7 +539,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     messageDetailToolbar.add(new JLabel("Maximum message size for format"));
 
-    final DataConfiguration configuration = otrosApplication.getConfiguration();
+
     final DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(new String[]{});
     String[] values = new String[]{
         "10kB", "100kB", "200kB", "300kB", "400kB", "500kB", "600kB", "700kB", "800kB", "900kB", "1MB", "2MB", "3MB", "4MB", "5MB"

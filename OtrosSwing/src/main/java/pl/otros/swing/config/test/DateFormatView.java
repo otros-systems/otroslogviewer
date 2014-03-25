@@ -54,7 +54,7 @@ public class DateFormatView extends AbstractConfigView {
   }
 
   @Override
-  public void loadConfguration(Configuration configuration) {
+  public void loadConfiguration(Configuration configuration) {
     String string = configuration.getString("dateformat.df");
     if (!StringUtils.isBlank(string)) {
       combobox.setSelectedItem(string);

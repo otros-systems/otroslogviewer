@@ -27,7 +27,7 @@ public class ConfigurationProviderImpl implements ConfigurationProvider {
     if (configView instanceof InMainConfig) {
       c = mainConfiguration;
     } else {
-      c = new PropertiesConfiguration(new File(parent, configView.getViewId()));
+      c = new PropertiesConfiguration(new File(parent, "config-"+configView.getViewId() + ".properties"));
     }
     return c;
   }

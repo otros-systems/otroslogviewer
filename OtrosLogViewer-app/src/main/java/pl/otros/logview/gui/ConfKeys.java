@@ -45,4 +45,8 @@ public class ConfKeys {
   public static final String JUMP_TO_CODE_ENABLED = "services.jumpToCode.enabled";
   public static final String JUMP_TO_CODE_HOST = "services.jumpToCode.host";
   public static final String JUMP_TO_CODE_PORT = "services.jumpToCode.port";
+
+
+  public static final String LOG_DATA_FORMAT_LEVEL_RENDERER = "gui.LogDataFormat.levelRenderer";
+  public static final String LOG_DATA_FORMAT_DATE_FORMAT = "gui.LogDataFormat.dateFormat";
 }

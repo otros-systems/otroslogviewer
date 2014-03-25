@@ -31,7 +31,7 @@ public class View2 extends AbstractConfigView {
   }
 
   @Override
-  public void loadConfguration(Configuration configuration) {
+  public void loadConfiguration(Configuration configuration) {
     label.setText(configuration.getString("view2.label", "-"));
     textArea.setText(configuration.getString("view2.text", "-"));
     jCheckBox.setSelected(configuration.getBoolean("view2.boolean", false));

@@ -9,13 +9,13 @@ public interface ConfigView {
 
   String getName();
 
-  String getDescirption();
+  String getDescription();
 
   JComponent getView();
 
   ValidationResult validate();
 
-  void loadConfguration(Configuration configuration);
+  void loadConfiguration(Configuration configuration);
 
   void saveConfiguration(final Configuration c);
 }

@@ -52,7 +52,7 @@ public class ValidationView2 extends AbstractConfigView {
   }
 
   @Override
-  public void loadConfguration(Configuration configuration) {
+  public void loadConfiguration(Configuration configuration) {
     tfName.setText(configuration.getString(VALIDATION_NAME, ""));
   }
 

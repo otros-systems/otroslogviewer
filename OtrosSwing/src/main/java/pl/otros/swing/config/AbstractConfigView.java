@@ -23,7 +23,7 @@ public abstract class AbstractConfigView implements ConfigView {
   }
 
   @Override
-  public String getDescirption() {
+  public String getDescription() {
     return description;
   }
 }

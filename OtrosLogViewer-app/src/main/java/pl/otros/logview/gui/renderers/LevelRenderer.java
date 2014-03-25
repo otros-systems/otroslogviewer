@@ -37,7 +37,17 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
   private static Color colorFinest = new Color(136, 136, 136);
 
   public enum Mode {
-    IconsOnly, TextOnly, IconsAndText;
+    IconsOnly("Icons only"), TextOnly("Text"), IconsAndText("Icon and text");
+    String text;
+
+    Mode(String text) {
+      this.text = text;
+    }
+
+    @Override
+    public String toString() {
+      return text;
+    }
   }
 
   public LevelRenderer() {

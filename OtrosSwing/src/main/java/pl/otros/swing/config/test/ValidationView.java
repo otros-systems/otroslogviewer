@@ -40,7 +40,7 @@ public class ValidationView extends AbstractConfigView {
   }
 
   @Override
-  public void loadConfguration(Configuration configuration) {
+  public void loadConfiguration(Configuration configuration) {
     tf.setText(configuration.getString(VALIDATION_NAME, ""));
   }
 
