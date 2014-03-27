@@ -21,14 +21,23 @@ import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.importer.InitializationException;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 
 public class LogImportersLoaderTest {
 
   @Test
-  public void testLoadPropertyFileBased() throws InitializationException {
+  public void testLoadPropertyFileBased() throws InitializationException, URISyntaxException {
     LogImportersLoader importersLoader = new LogImportersLoader();
-    Collection<LogImporter> loadPropertyFileBased = importersLoader.loadPropertyPatternFileFromDir(new File("./src/test/resources/plugins/logimporters"));
+    Collection<LogImporter> loadPropertyFileBased = importersLoader.loadPropertyPatternFileFromDir(getFile(("plugins/logimporters/")));
     AssertJUnit.assertEquals(2, loadPropertyFileBased.size());
   }
+
+  private File getFile(String name) throws URISyntaxException {
+    URI uri = this.getClass().getClassLoader().getResource(name).toURI();
+    return new File(uri);
+  }
 }
+
+
