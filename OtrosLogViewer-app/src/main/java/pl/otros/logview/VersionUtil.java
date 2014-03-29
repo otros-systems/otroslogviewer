@@ -20,6 +20,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -39,8 +41,8 @@ public class VersionUtil {
    * @return Latest released version
    * @throws IOException
    */
-  public static String getCurrentVersion(String running) throws IOException {
-    String page = IOUtils.toString(new URL(CURRENT_VERSION_PAGE_URL + running).openStream());
+  public static String getCurrentVersion(String running, Proxy proxy) throws IOException {
+    String page = IOUtils.toString(new URL(CURRENT_VERSION_PAGE_URL + running).openConnection(proxy).getInputStream());
     ByteArrayInputStream bin = new ByteArrayInputStream(page.getBytes());
     Properties p = new Properties();
     p.load(bin);

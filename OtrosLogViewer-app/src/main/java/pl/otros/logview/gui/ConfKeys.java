@@ -19,9 +19,10 @@ public class ConfKeys {
 
   public static final String TAILING_PANEL_PLAY = "gui.tailingview.play";
   public static final String TAILING_PANEL_FOLLOW = "gui.tailingview.follow";
+  
   public static final String LOAD_EXPERIMENTAL_FEATURES = "loadExperimentalFeatures";
-  public static final String CHECK_NEW_VERSION_ON_START = "updateCheck.checkNewVersionOnStart";
-  public static final String DO_NOT_NOTIFY_THIS_VERSION_ON_START = "updateCheck.doNotNotifyThisVersionOnStart";
+  public static final String VERSION_CHECK_ON_STARTUP = "updateCheck.checkNewVersionOnStart";
+  public static final String VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION = "updateCheck.doNotNotifyThisVersionOnStart";
 
   public static final String SOCKET_HUB_APPENDER_ADDRESSES = "gui.actions.sockethub.addresses";
   public static final String SOCKET_HUB_APPENDER_ADDRESSES_MAX_COUNT = "gui.actions.sockethub.addressesMaxCount";
@@ -32,15 +33,14 @@ public class ConfKeys {
   public static final String SEARCH_LAST_COUNT = "gui.search.maxCount";
 
   public static final String FORMATTER_SOAP_REMOVE_MULTIREFS = "gui.formatter.soap.removeMultirefs";
-
   public static final String FORMATTER_SOAP_REMOVE_XSI_FOR_NIL = "gui.formatter.soap.removeXsiForNil";
 
   public static final String UUID = "uuid";
   public static final String HTTP_PROXY_USE = "http.proxy.use";
   public static final String HTTP_PROXY_HOST = "http.proxy.host";
   public static final String HTTP_PROXY_PORT = "http.proxy.port";
-
   public static final String HTTP_PROXY_USER = "http.proxy.user";
+
   public static final String MESSAGE_FORMATTER_MAX_SIZE = "gui.formatter.general.messageFormatMaximumSize";
   public static final String JUMP_TO_CODE_ENABLED = "services.jumpToCode.enabled";
   public static final String JUMP_TO_CODE_HOST = "services.jumpToCode.host";

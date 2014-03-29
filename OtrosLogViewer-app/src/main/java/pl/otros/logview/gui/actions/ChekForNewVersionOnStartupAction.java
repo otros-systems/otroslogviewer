@@ -46,7 +46,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
   protected void handleNewVersionIsAvailable(final String current, String running) {
     LOGGER.info(String.format("Running version is %s, current is %s", running, current));
 		DataConfiguration configuration = getOtrosApplication().getConfiguration();
-		String doNotNotifyThisVersion = configuration.getString(ConfKeys.DO_NOT_NOTIFY_THIS_VERSION_ON_START, "2000-01-01");
+		String doNotNotifyThisVersion = configuration.getString(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, "2000-01-01");
     if (current != null && doNotNotifyThisVersion.compareTo(current) > 0) {
       return;
     }
@@ -58,7 +58,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
       @Override
       public void actionPerformed(ActionEvent e) {
         try {
-          Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
+          Desktop.getDesktop().browse(new URI("https://sourceforge.net/projects/otroslogviewer/files/?source=app"));
         } catch (Exception e1) {
           String msg = "Can't open browser with download page: " + e1.getMessage();
           LOGGER.severe(msg);
@@ -91,11 +91,11 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
         dialog.dispose();
         if (chboxDoNotNotifyMeAboutVersion.isSelected()) {
           LOGGER.fine("Disabling new version notificiation for " + current);
-          getOtrosApplication().getConfiguration().setProperty(ConfKeys.DO_NOT_NOTIFY_THIS_VERSION_ON_START, current);
+          getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, current);
         }
         if (chboxDoNotCheckVersionOnStart.isSelected()) {
           LOGGER.fine("Disabling new version check on start");
-          getOtrosApplication().getConfiguration().setProperty(ConfKeys.CHECK_NEW_VERSION_ON_START, false);
+          getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_ON_STARTUP, false);
         }
       }
     }));

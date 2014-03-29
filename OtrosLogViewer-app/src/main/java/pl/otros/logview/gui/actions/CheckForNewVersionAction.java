@@ -60,9 +60,9 @@ public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
       @Override
       public void actionPerformed(ActionEvent e) {
         try {
-          Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured"));
+          Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
         } catch (Exception e1) {
-          String msg = "Can't open brower with download page: " + e1.getMessage();
+          String msg = "Can't open browser with download page: " + e1.getMessage();
           LOGGER.severe(msg);
           getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
         }

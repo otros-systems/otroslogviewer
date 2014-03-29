@@ -313,7 +313,7 @@ public class LogViewMainFrame extends JFrame {
               + modalDisplayException.getMessage(), "Initialization Error",
           JOptionPane.ERROR_MESSAGE);
     // Check new version on start
-    if (c.getBoolean(ConfKeys.CHECK_NEW_VERSION_ON_START, true)) {
+    if (c.getBoolean(ConfKeys.VERSION_CHECK_ON_STARTUP, true)) {
       new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
     }
     new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);

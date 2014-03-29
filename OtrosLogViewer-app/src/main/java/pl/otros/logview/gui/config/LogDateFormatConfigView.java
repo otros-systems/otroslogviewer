@@ -37,28 +37,25 @@ public class LogDateFormatConfigView extends AbstractConfigView implements InMai
         "MMM dd, HH:mm:ss",//
     };
     dateFormatRadio = new JXComboBox(dateFormats);
-//    dateFormatRadio.setLayoutAxis(BoxLayout.Y_AXIS);
-    addLabel("Date format", 'd', dateFormatRadio);
+    addLabel("Date format", 'd', dateFormatRadio, panel);
     final JTextField exampleTextField = new JTextField(20);
     exampleTextField.setEditable(false);
-    addLabel("Format example", 'e', exampleTextField);
+    addLabel("Format example", 'e', exampleTextField, panel);
     dateFormatRadio.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         exampleTextField.setText(new SimpleDateFormat(dateFormatRadio.getSelectedItem().toString()).format(new Date()));
       }
     });
+    dateFormatRadio.setSelectedIndex(0);
     radioGroup = new JXRadioGroup(LevelRenderer.Mode.values());
-    addLabel("Level display", 'l', radioGroup);
+    addLabel("Level display", 'l', radioGroup, panel);
+
   }
 
-  private void addLabel(String string, char c, JComponent jComponent) {
-    JLabel label = new JLabel(string);
-    panel.add(label);
-    label.setDisplayedMnemonic(c);
-    label.setLabelFor(jComponent);
-    panel.add(jComponent, "growx, wrap");
-  }
+
+
+
 
   @Override
   public JComponent getView() {
@@ -75,13 +72,13 @@ public class LogDateFormatConfigView extends AbstractConfigView implements InMai
     LevelRenderer.Mode mode = LevelRenderer.Mode.valueOf(configuration.getString(LOG_DATA_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly.name()));
     radioGroup.setSelectedValue(mode);
     String dateFormat = StringUtils.defaultIfBlank(configuration.getString(LOG_DATA_FORMAT_DATE_FORMAT), dateFormats[1]);
-
     dateFormatRadio.setSelectedItem(dateFormat);
+
   }
 
   @Override
   public void saveConfiguration(Configuration c) {
     c.setProperty(LOG_DATA_FORMAT_LEVEL_RENDERER, ((LevelRenderer.Mode) radioGroup.getSelectedValue()).name());
-    c.setProperty(LOG_DATA_FORMAT_DATE_FORMAT, radioGroup.getSelectedValue());
+    c.setProperty(LOG_DATA_FORMAT_DATE_FORMAT, dateFormatRadio.getSelectedItem());
   }
 }
