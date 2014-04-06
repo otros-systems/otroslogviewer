@@ -19,12 +19,15 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.gui.services.Services;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,14 +46,15 @@ public class OtrosApplication {
   private MarkerColors selectedMarkColors;
   private JMenu pluginsMenu;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
-  private AppProperties appProperties = new AppProperties();
-
+  private AppProperties appProperties;
+  private List<MenuActionProvider> menuActionProviders;
 
 
   private Services services;
 
   public OtrosApplication(){
-
+    menuActionProviders=new ArrayList<MenuActionProvider>();
+    appProperties = new AppProperties();
   }
 
   public AppProperties getAppProperties() {
@@ -186,6 +190,18 @@ public class OtrosApplication {
 
   public void setServices(Services services) {
     this.services = services;
+  }
+
+  public void addLogViewPanelMenuActionProvider(MenuActionProvider menuActionProviders) {
+    this.menuActionProviders.add(menuActionProviders);
+  }
+
+  /**
+   * Return menu action providers
+   * @return
+   */
+  public List<MenuActionProvider> getLogViewPanelMenuActionProvider(){
+    return new ArrayList<MenuActionProvider>(menuActionProviders);
   }
 }
 

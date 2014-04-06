@@ -26,6 +26,7 @@ import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
 import pl.otros.logview.accept.*;
+import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
@@ -165,8 +166,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
     table.setDefaultRenderer(Object.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
-    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(Mode.class,ConfKeys.LOG_DATA_FORMAT_LEVEL_RENDERER,Mode.IconsOnly))));
-    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_DATA_FORMAT_DATE_FORMAT,"HH:mm:ss.SSS"))));
+    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(Mode.class, ConfKeys.LOG_DATA_FORMAT_LEVEL_RENDERER, Mode.IconsOnly))));
+    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_DATA_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
     table.setDefaultRenderer(Boolean.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Boolean.class)));
     table.setDefaultRenderer(Note.class, new TableMarkDecoratorRenderer(new NoteRenderer()));
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
@@ -430,14 +431,39 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     menu.add(labelTableOptions);
     menu.add(new JSeparator());
     menu.add(autoResizeMenu);
+
+    menu.add(new JSeparator());
+    List<MenuActionProvider> menuActionProviders = otrosApplication.getLogViewPanelMenuActionProvider();
+    for (MenuActionProvider menuActionProvider : menuActionProviders) {
+      try {
+        List<OtrosAction> actions = menuActionProvider.getActions(otrosApplication,this);
+        if (actions == null) {
+          continue;
+        }
+        for (OtrosAction action : actions) {
+          menu.add(action);
+        }
+      } catch (Exception e) {
+         LOGGER.log(Level.SEVERE,"Cant get action from from provider " +menuActionProvider,e);
+      }
+    }
+
     return menu;
+  }
+
+  public int[] getSelectedRowsInModel() {
+    int[] selectedRows = table.getSelectedRows();
+    for (int index=0;index<selectedRows.length; index++) {
+      selectedRows[index] = table.convertColumnIndexToModel(selectedRows[index]);
+    }
+    return selectedRows;
   }
 
   private Map<String, Set<String>> getPropertiesOfSelectedLogEvents() {
     Map<String, Set<String>> result = new HashMap<String, Set<String>>();
-    int[] selectedRows = table.getSelectedRows();
+    int[] selectedRows = getSelectedRowsInModel();
     for (int i : selectedRows) {
-      LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(i));
+      LogData logData = dataTableModel.getLogData(i);
       Map<String, String> properties = logData.getProperties();
       if (properties == null) {
         continue;
@@ -551,7 +577,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     messageMaximumSize.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String max = (String)defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
+        String max = (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
         configuration.setProperty(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, max);
         messageDetailListener.setMaximumMessageSize((int) new FileSize(max).getBytes());
 
@@ -563,7 +589,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     AutoCompleteDecorator.decorate(messageMaximumSize);
     messageMaximumSize.setMaximumSize(new Dimension(100, 50));
     messageDetailToolbar.add(messageMaximumSize);
-    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, (String)defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
+    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
     if (defaultComboBoxModel.getIndexOf(messageMaxSize) >= 0) {
       messageMaximumSize.setSelectedItem(messageMaxSize);
     }
@@ -653,5 +679,17 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   public OtrosJTextWithRulerScrollPane<JTextPane> getLogDetailWithRulerScrollPane() {
     return logDetailWithRulerScrollPane;
+  }
+
+  public PluginableElementsContainer<MessageColorizer> getSelectedMessageColorizersContainer() {
+    return selectedMessageColorizersContainer;
+  }
+
+  public PluginableElementsContainer<MessageFormatter> getSelectedMessageFormattersContainer() {
+    return selectedMessageFormattersContainer;
+  }
+
+  public JToolBar getMessageDetailToolbar() {
+    return messageDetailToolbar;
   }
 }

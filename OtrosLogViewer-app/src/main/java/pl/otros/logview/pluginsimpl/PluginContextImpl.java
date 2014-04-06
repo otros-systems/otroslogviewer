@@ -17,6 +17,7 @@
 package pl.otros.logview.pluginsimpl;
 
 import pl.otros.logview.api.plugins.LogOpenHandler;
+import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.logview.gui.OtrosApplication;
 
@@ -52,6 +53,11 @@ public class PluginContextImpl implements PluginContext {
     return logOpenHandler;
   }
 
+
+  @Override
+  public void addLogViewPanelMenuActionProvider(MenuActionProvider menuActionProvider) {
+    application.addLogViewPanelMenuActionProvider(menuActionProvider);
+  }
 
 
 }
