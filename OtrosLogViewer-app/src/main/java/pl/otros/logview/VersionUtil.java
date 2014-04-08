@@ -16,13 +16,15 @@
 package pl.otros.logview;
 
 import org.apache.commons.io.IOUtils;
+import pl.otros.logview.gui.ConfKeys;
+import pl.otros.logview.gui.OtrosApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.Manifest;
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
 
 public class VersionUtil {
 
-  private static final String CURRENT_VERSION_PAGE_URL = "http://otroslogviewer.appspot.com/services/currentVersion?runningVersion=";
+  private static final String CURRENT_VERSION_PAGE_URL = "http://otroslogviewer.appspot.com/services/currentVersion?";
   private static final Logger LOGGER = Logger.getLogger(VersionUtil.class.getName());
   public static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
@@ -41,8 +43,16 @@ public class VersionUtil {
    * @return Latest released version
    * @throws IOException
    */
-  public static String getCurrentVersion(String running, Proxy proxy) throws IOException {
-    String page = IOUtils.toString(new URL(CURRENT_VERSION_PAGE_URL + running).openConnection(proxy).getInputStream());
+  public static String getCurrentVersion(String running, Proxy proxy,OtrosApplication  otrosApplication) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append("runningVersion=").append(running);
+    sb.append("&java.version=").append(URLEncoder.encode(System.getProperty("java.version"), "ISO-8859-1"));
+    sb.append("&os.name=").append(URLEncoder.encode(System.getProperty("os.name"), "ISO-8859-1"));
+    sb.append("&vm.vendor=").append(URLEncoder.encode(System.getProperty("java.vm.vendor"), "ISO-8859-1"));
+    String uuid = URLEncoder.encode(otrosApplication.getConfiguration().getString(ConfKeys.UUID, ""), "ISO-8859-1");
+    sb.append("&uuid=").append(uuid);
+    URL url = new URL(CURRENT_VERSION_PAGE_URL + sb.toString());
+    String page = IOUtils.toString(url.openConnection(proxy).getInputStream());
     ByteArrayInputStream bin = new ByteArrayInputStream(page.getBytes());
     Properties p = new Properties();
     p.load(bin);

@@ -33,16 +33,19 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
   SwingWorker<String, String> versionChecker = new SwingWorker<String, String>() {
     @Override
     protected String doInBackground() throws Exception {
-      String running = null;
+      String running;
       String current = null;
       final DataConfiguration c = getOtrosApplication().getConfiguration();
-      final boolean useProxy = c.getBoolean(HTTP_PROXY_USE, false);
-      Proxy.Type proxyType = useProxy ? Proxy.Type.HTTP : Proxy.Type.DIRECT;
-      final InetSocketAddress proxySocketAddress = useProxy ? new InetSocketAddress(c.getString(HTTP_PROXY_HOST, ""), c.getInt(HTTP_PROXY_PORT, 80)) : null;
-      Proxy proxy = new Proxy(proxyType, proxySocketAddress);
+
+      Proxy proxy = Proxy.NO_PROXY;
+      if (c.getBoolean(HTTP_PROXY_USE, false)) {
+        Proxy.Type proxyType = Proxy.Type.HTTP;
+        final InetSocketAddress proxySocketAddress = new InetSocketAddress(c.getString(HTTP_PROXY_HOST, ""), c.getInt(HTTP_PROXY_PORT, 80));
+        proxy = new Proxy(proxyType, proxySocketAddress);
+      }
       try {
         running = VersionUtil.getRunningVersion();
-        current = VersionUtil.getCurrentVersion(running, proxy);
+        current = VersionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
       } catch (Exception e) {
         LOGGER.severe("Error checking version: " + e.getMessage());
       }
