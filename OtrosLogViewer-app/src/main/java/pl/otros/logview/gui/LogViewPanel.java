@@ -454,7 +454,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   public int[] getSelectedRowsInModel() {
     int[] selectedRows = table.getSelectedRows();
     for (int index=0;index<selectedRows.length; index++) {
-      selectedRows[index] = table.convertColumnIndexToModel(selectedRows[index]);
+      selectedRows[index] = table.convertRowIndexToModel(selectedRows[index]);
     }
     return selectedRows;
   }

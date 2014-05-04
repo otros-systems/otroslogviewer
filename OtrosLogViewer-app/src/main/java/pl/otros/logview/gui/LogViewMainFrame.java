@@ -694,7 +694,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowMessageColorizerEditor(otrosApplication));
     toolsMenu.add(new ShowLoadedPlugins(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
-    toolsMenu.add(new OpenConfigurationAction(otrosApplication));
+    toolsMenu.add(new OpenPreferencesAction(otrosApplication));
     toolsMenu.add(closeAll);
     JMenu pluginsMenu = new JMenu("Plugins");
     otrosApplication.setPluginsMenu(pluginsMenu);

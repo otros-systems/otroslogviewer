@@ -16,8 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-public class OpenConfigurationAction extends OtrosAction {
-  public OpenConfigurationAction(OtrosApplication otrosApplication) {
+public class OpenPreferencesAction extends OtrosAction {
+  private ConfigComponent configComponent;
+
+  public OpenPreferencesAction(OtrosApplication otrosApplication) {
     super("Preferences", Icons.GEAR, otrosApplication);
     putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F12, InputEvent.CTRL_MASK));
     putValue(MNEMONIC_KEY, KeyEvent.VK_P);
@@ -37,7 +39,9 @@ public class OpenConfigurationAction extends OtrosAction {
         new IdeIntegrationConfigView(getOtrosApplication()),
         new VersionCheckConfigView()
     };
-    ConfigComponent configComponent = new ConfigComponent(configurationProvider, actionAfterSave, null, configViews);
+    if (configComponent == null) {
+      configComponent = new ConfigComponent(configurationProvider, actionAfterSave, null, configViews);
+    }
     getOtrosApplication().addClosableTab("Preferences", "OtrosLogViewerPreferences", Icons.GEAR, configComponent, true);
   }
 }
