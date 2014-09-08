@@ -50,12 +50,14 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   private static final Note EMPTY_NOTE = new Note("");
   private Set<NoteObserver> noteObservers;
-  private MarkerColors markerColors = MarkerColors.Aqua;
   private LogDataStore logDataStore;
+    private Map<String,ClassWrapper> classWrapperCache;
 
   private int maximumMessageLength = 2000;
 
   public LogDataTableModel() {
+      classWrapperCache = new HashMap<String, ClassWrapper>(100);
+
     String cached = System.getProperty("cacheEvents");
     if (StringUtils.equalsIgnoreCase(cached, "true")) {
       try {
@@ -113,7 +115,11 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         result = ld.getMessage();
         break;
       case CLASS:
-        result = ld.getClazz();
+        String clazz = ld.getClazz();
+          if (!classWrapperCache.containsKey(clazz)){
+              classWrapperCache.put(clazz,new ClassWrapper(clazz));
+          }
+          result = classWrapperCache.get(clazz);
         break;
       case METHOD:
         result = StringUtils.left(ld.getMethod(), maximumMessageLength);
@@ -249,6 +255,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       case MESSAGE:
         result = String.class;
         break;
+        case CLASS:
+          result = ClassWrapper.class;
+          break;
       case MARK:
         result = MarkerColors.class;
         break;

@@ -173,6 +173,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
     table.setDefaultEditor(Note.class, new NoteTableEditor());
     table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
+      table.setDefaultRenderer(ClassWrapper.class,new ClassWrapperRenderer(otrosApplication));
     sorter = new TableRowSorter<LogDataTableModel>(dataTableModel);
     for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
       sorter.setSortable(i, false);
