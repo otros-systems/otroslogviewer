@@ -3,7 +3,7 @@ package pl.otros.logview.gui.actions;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.config.IdeIntegrationConfigView;
-import pl.otros.logview.gui.config.LogDateFormatConfigView;
+import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.config.VersionCheckConfigView;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.swing.config.ConfigComponent;
@@ -35,7 +35,7 @@ public class OpenPreferencesAction extends OtrosAction {
       }
     };
     ConfigView[] configViews = new ConfigView[]{
-        new LogDateFormatConfigView(),
+        new LogTableFormatConfigView(),
         new IdeIntegrationConfigView(getOtrosApplication()),
         new VersionCheckConfigView()
     };

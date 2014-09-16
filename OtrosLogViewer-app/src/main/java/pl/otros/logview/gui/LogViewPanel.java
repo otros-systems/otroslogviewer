@@ -25,10 +25,42 @@ import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
-import pl.otros.logview.accept.*;
+import pl.otros.logview.accept.AcceptCondition;
+import pl.otros.logview.accept.FilteredAcceptCondition;
+import pl.otros.logview.accept.HigherIdAcceptCondition;
+import pl.otros.logview.accept.LevelLowerAcceptCondition;
+import pl.otros.logview.accept.LowerIdAcceptCondition;
+import pl.otros.logview.accept.PropertyAcceptCondition;
+import pl.otros.logview.accept.SelectedClassAcceptCondition;
+import pl.otros.logview.accept.SelectedEventsAcceptCondition;
+import pl.otros.logview.accept.SelectedThreadAcceptCondition;
 import pl.otros.logview.api.plugins.MenuActionProvider;
-import pl.otros.logview.filter.*;
-import pl.otros.logview.gui.actions.*;
+import pl.otros.logview.filter.CallHierarchyLogFilter;
+import pl.otros.logview.filter.ClassFilter;
+import pl.otros.logview.filter.FilterPanel;
+import pl.otros.logview.filter.LogFilter;
+import pl.otros.logview.filter.LogFilterValueChangeListener;
+import pl.otros.logview.filter.LoggerNameFilter;
+import pl.otros.logview.filter.PropertyFilter;
+import pl.otros.logview.filter.ThreadFilter;
+import pl.otros.logview.filter.TimeFilter;
+import pl.otros.logview.gui.actions.AutomaticMarkUnamrkActionListener;
+import pl.otros.logview.gui.actions.ClearMarkingsAction;
+import pl.otros.logview.gui.actions.CopySelectedText;
+import pl.otros.logview.gui.actions.CopyStyledMessageDetailAction;
+import pl.otros.logview.gui.actions.FocusOnEventsAfter;
+import pl.otros.logview.gui.actions.FocusOnEventsBefore;
+import pl.otros.logview.gui.actions.FocusOnSelectedClassesAction;
+import pl.otros.logview.gui.actions.FocusOnSelectedLoggerNameAction;
+import pl.otros.logview.gui.actions.FocusOnSelectedPropertyAction;
+import pl.otros.logview.gui.actions.FocusOnThisThreadAction;
+import pl.otros.logview.gui.actions.IgnoreSelectedEventsClasses;
+import pl.otros.logview.gui.actions.MarkRowAction;
+import pl.otros.logview.gui.actions.OtrosAction;
+import pl.otros.logview.gui.actions.RemoveByAcceptanceCriteria;
+import pl.otros.logview.gui.actions.ShowCallHierarchyAction;
+import pl.otros.logview.gui.actions.TableResizeActionListener;
+import pl.otros.logview.gui.actions.UnMarkRowAction;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
 import pl.otros.logview.gui.markers.AutomaticMarker;
 import pl.otros.logview.gui.message.MessageColorizer;
@@ -37,11 +69,20 @@ import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.note.NoteEvent;
 import pl.otros.logview.gui.note.NoteEvent.EventType;
 import pl.otros.logview.gui.note.NoteObserver;
-import pl.otros.logview.gui.renderers.*;
-import pl.otros.logview.gui.renderers.LevelRenderer.Mode;
+import pl.otros.logview.gui.renderers.MarkTableEditor;
+import pl.otros.logview.gui.renderers.MarkTableRenderer;
+import pl.otros.logview.gui.renderers.NoteRenderer;
+import pl.otros.logview.gui.renderers.NoteTableEditor;
+import pl.otros.logview.gui.renderers.Renderers;
+import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.pluginable.*;
+import pl.otros.logview.pluginable.AllPluginables;
+import pl.otros.logview.pluginable.PluginableElement;
+import pl.otros.logview.pluginable.PluginableElementEventListener;
+import pl.otros.logview.pluginable.PluginableElementNameComparator;
+import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.vfs.browser.table.FileSize;
@@ -57,8 +98,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,13 +116,12 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   private static final Logger LOGGER = Logger.getLogger(LogViewPanel.class.getName());
   private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
-
+  private final MessageDetailListener messageDetailListener;
   private Font menuLabelFont;
   private JPanel filtersPanel;
   private JPanel logsTablePanel;
   private JPanel logsMarkersPanel;
   private JPanel leftPanel;
-
   private JMenu automaticMarkersMenu;
   private JMenu automaticUnmarkersMenu;
   private LogDataTableModel dataTableModel;
@@ -104,8 +152,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private PropertyFilter propertyFilter;
   private FilterPanel propertyFilterPanel;
   private Collection<LogFilter> filtersList;
-  private final MessageDetailListener messageDetailListener;
-
   private DataConfiguration configuration;
   private LogData displayedLogData;
 
@@ -164,16 +210,17 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     updateColumnsSize();
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+    final Renderers renderers = Renderers.getInstance(otrosApplication);
     table.setDefaultRenderer(Object.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
-    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(Mode.class, ConfKeys.LOG_DATA_FORMAT_LEVEL_RENDERER, Mode.IconsOnly))));
-    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_DATA_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
+    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
+    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(renderers.getDateRenderer()));
     table.setDefaultRenderer(Boolean.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Boolean.class)));
     table.setDefaultRenderer(Note.class, new TableMarkDecoratorRenderer(new NoteRenderer()));
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
     table.setDefaultEditor(Note.class, new NoteTableEditor());
     table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
-      table.setDefaultRenderer(ClassWrapper.class,new ClassWrapperRenderer(otrosApplication));
+    table.setDefaultRenderer(ClassWrapper.class, renderers.getClassWrapperRenderer());
     sorter = new TableRowSorter<LogDataTableModel>(dataTableModel);
     for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
       sorter.setSortable(i, false);
@@ -437,7 +484,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     List<MenuActionProvider> menuActionProviders = otrosApplication.getLogViewPanelMenuActionProvider();
     for (MenuActionProvider menuActionProvider : menuActionProviders) {
       try {
-        List<OtrosAction> actions = menuActionProvider.getActions(otrosApplication,this);
+        List<OtrosAction> actions = menuActionProvider.getActions(otrosApplication, this);
         if (actions == null) {
           continue;
         }
@@ -445,7 +492,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
           menu.add(action);
         }
       } catch (Exception e) {
-         LOGGER.log(Level.SEVERE,"Cant get action from from provider " +menuActionProvider,e);
+        LOGGER.log(Level.SEVERE, "Cant get action from from provider " + menuActionProvider, e);
       }
     }
 
@@ -454,7 +501,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   public int[] getSelectedRowsInModel() {
     int[] selectedRows = table.getSelectedRows();
-    for (int index=0;index<selectedRows.length; index++) {
+    for (int index = 0; index < selectedRows.length; index++) {
       selectedRows[index] = table.convertRowIndexToModel(selectedRows[index]);
     }
     return selectedRows;
@@ -639,28 +686,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     return dataTableModel;
   }
 
-  private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {
-
-    PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
-
-    @Override
-    public void elementAdded(AutomaticMarker element) {
-      updateMarkerMenu(markersContainer.getElements());
-
-    }
-
-    @Override
-    public void elementRemoved(AutomaticMarker element) {
-      updateMarkerMenu(markersContainer.getElements());
-    }
-
-    @Override
-    public void elementChanged(AutomaticMarker element) {
-      updateMarkerMenu(markersContainer.getElements());
-    }
-
-  }
-
   public JPanel getLogsMarkersPanel() {
     return logsMarkersPanel;
   }
@@ -692,5 +717,27 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   public JToolBar getMessageDetailToolbar() {
     return messageDetailToolbar;
+  }
+
+  private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {
+
+    PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
+
+    @Override
+    public void elementAdded(AutomaticMarker element) {
+      updateMarkerMenu(markersContainer.getElements());
+
+    }
+
+    @Override
+    public void elementRemoved(AutomaticMarker element) {
+      updateMarkerMenu(markersContainer.getElements());
+    }
+
+    @Override
+    public void elementChanged(AutomaticMarker element) {
+      updateMarkerMenu(markersContainer.getElements());
+    }
+
   }
 }

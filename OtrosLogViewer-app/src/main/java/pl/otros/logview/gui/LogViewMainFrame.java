@@ -29,13 +29,41 @@ import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import pl.otros.logview.MarkerColors;
+import pl.otros.logview.OtrosConfiguration;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.api.plugins.Plugin;
 import pl.otros.logview.batch.BatchProcessor;
-import pl.otros.logview.exceptionshandler.*;
+import pl.otros.logview.exceptionshandler.EventQueueProxy;
+import pl.otros.logview.exceptionshandler.ListUncaughtExceptionHandlers;
+import pl.otros.logview.exceptionshandler.LoggingExceptionHandler;
+import pl.otros.logview.exceptionshandler.ShowErrorDialogExceptionHandler;
+import pl.otros.logview.exceptionshandler.StatusObserverExceptionHandler;
 import pl.otros.logview.filter.QueryFilter;
-import pl.otros.logview.gui.actions.*;
+import pl.otros.logview.gui.actions.AboutAction;
+import pl.otros.logview.gui.actions.CheckForNewVersionAction;
+import pl.otros.logview.gui.actions.ChekForNewVersionOnStartupAction;
+import pl.otros.logview.gui.actions.CloseAllTabsAction;
+import pl.otros.logview.gui.actions.ConnectToSocketHubAppenderAction;
+import pl.otros.logview.gui.actions.ExitAction;
+import pl.otros.logview.gui.actions.GettingStartedAction;
+import pl.otros.logview.gui.actions.GoToDonatePageAction;
+import pl.otros.logview.gui.actions.JumpToMarkedAction;
 import pl.otros.logview.gui.actions.JumpToMarkedAction.Direction;
+import pl.otros.logview.gui.actions.MarkAllFoundAction;
+import pl.otros.logview.gui.actions.OpenLogInvestigationAction;
+import pl.otros.logview.gui.actions.OpenPreferencesAction;
+import pl.otros.logview.gui.actions.SaveLogInvestigationAction;
+import pl.otros.logview.gui.actions.SearchByLevel;
+import pl.otros.logview.gui.actions.ShowLoadedPlugins;
+import pl.otros.logview.gui.actions.ShowLog4jPatternParserEditor;
+import pl.otros.logview.gui.actions.ShowMarkersEditor;
+import pl.otros.logview.gui.actions.ShowMessageColorizerEditor;
+import pl.otros.logview.gui.actions.ShowOlvLogs;
+import pl.otros.logview.gui.actions.StartSocketListener;
+import pl.otros.logview.gui.actions.StopAllSocketListeners;
+import pl.otros.logview.gui.actions.TailLogActionListener;
+import pl.otros.logview.gui.actions.TailLogWithAutoDetectActionListener;
+import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.logview.gui.actions.globalhotkeys.FocusComponentOnHotKey;
 import pl.otros.logview.gui.actions.globalhotkeys.KeyboardTabSwitcher;
 import pl.otros.logview.gui.actions.read.DragAndDropFilesHandler;
@@ -82,13 +110,24 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,8 +135,8 @@ import java.util.logging.Logger;
 import static pl.otros.logview.gui.ConfKeys.FORMATTER_SOAP_REMOVE_XSI_FOR_NIL;
 
 public class LogViewMainFrame extends JFrame {
-  private static final Logger LOGGER = Logger.getLogger(LogViewMainFrame.class.getName());
   public static final String VFS_IDENTITIES = "vfs.Identities";
+  private static final Logger LOGGER = Logger.getLogger(LogViewMainFrame.class.getName());
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
   private static SingleInstance singleInstance;
@@ -117,97 +156,6 @@ public class LogViewMainFrame extends JFrame {
   private OtrosApplication otrosApplication;
   private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
-
-  /**
-   * @param args porgram CLI arguments
-   * @throws InitializationException
-   * @throws InvocationTargetException
-   * @throws InterruptedException
-   */
-  public static void main(final String[] args) throws InitializationException, InterruptedException, InvocationTargetException {
-    if (args.length > 0 && "-batch".equals(args[0])) {
-      try {
-        String[] batchArgs = new String[args.length - 1];
-        System.arraycopy(args, 1, batchArgs, 0, batchArgs.length);
-        BatchProcessor.main(batchArgs);
-      } catch (IOException e) {
-        System.err.println("Error during batch processing: " + e.getMessage());
-        e.printStackTrace();
-      } catch (ConfigurationException e) {
-        System.err.println("Error during batch processing: " + e.getMessage());
-        e.printStackTrace();
-      }
-      return;
-    }
-    SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
-    singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
-        singleInstanceRequestResponseDelegate, args);
-    if (singleInstance == null) {
-      LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
-      System.exit(0);
-    }
-    GuiJulHandler handler = new GuiJulHandler();
-    handler.setLevel(Level.ALL);
-    Logger olvLogger = Logger.getLogger("pl.otros.logview");
-    olvLogger.setLevel(Level.ALL);
-    olvLogger.addHandler(handler);
-    LOGGER.info("Starting application");
-    OtrosSplash.setMessage("Starting application");
-    OtrosSplash.setMessage("Loading configuration");
-    final XMLConfiguration c = getConfiguration("config.xml");
-    if (!c.containsKey(ConfKeys.UUID)) {
-      c.setProperty(ConfKeys.UUID, UUID.randomUUID().toString());
-    }
-    IconsLoader.loadIcons();
-    OtrosSplash.setMessage("Loading icons");
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          OtrosSplash.setMessage("Loading L&F");
-          String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-          LOGGER.config("Initializing look and feelL: " + lookAndFeel);
-          PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
-          UIManager.setLookAndFeel(lookAndFeel);
-        } catch (Throwable e1) {
-          LOGGER.warning("Cannot initialize LookAndFeel: " + e1.getMessage());
-        }
-        try {
-          final LogViewMainFrame mf = new LogViewMainFrame(new DataConfiguration(c));
-          // mf.exitAction was instantiated in the constructor (previous line)
-          // Not sure retrieving this from most appropriate Apache config
-          // object.
-          mf.exitAction.setConfirm(
-              c.getBoolean("generalBehavior.confirmExit", true));
-          /* TODO:  Implement User Preferences screen or checkbox on exit widget
-           * that will update the same config object something like:
-           *     c.setProperty("generalBehavior.confirmExit", newValue);
-           */
-          mf.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-              c.setProperty("gui.state", mf.getExtendedState());
-              if (mf.getExtendedState() == Frame.NORMAL) {
-                c.setProperty("gui.width", mf.getWidth());
-                c.setProperty("gui.height", mf.getHeight());
-              }
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-              c.setProperty("gui.location.x", mf.getLocation().x);
-              c.setProperty("gui.location.y", mf.getLocation().y);
-            }
-          });
-          mf.addWindowListener(mf.exitAction);
-          SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-              mf.otrosApplication.getAppProperties().getCurrentDir());
-        } catch (InitializationException e) {
-          LOGGER.log(Level.SEVERE, "Cannot initialize main frame", e);
-        }
-      }
-    });
-  }
 
   public LogViewMainFrame(DataConfiguration c) throws InitializationException {
     super();
@@ -329,6 +277,157 @@ public class LogViewMainFrame extends JFrame {
         new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
         5, 5, TimeUnit.SECONDS);
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
+  }
+
+  /**
+   * @param args porgram CLI arguments
+   * @throws InitializationException
+   * @throws InvocationTargetException
+   * @throws InterruptedException
+   */
+  public static void main(final String[] args) throws InitializationException, InterruptedException, InvocationTargetException {
+    if (args.length > 0 && "-batch".equals(args[0])) {
+      try {
+        String[] batchArgs = new String[args.length - 1];
+        System.arraycopy(args, 1, batchArgs, 0, batchArgs.length);
+        BatchProcessor.main(batchArgs);
+      } catch (IOException e) {
+        System.err.println("Error during batch processing: " + e.getMessage());
+        e.printStackTrace();
+      } catch (ConfigurationException e) {
+        System.err.println("Error during batch processing: " + e.getMessage());
+        e.printStackTrace();
+      }
+      return;
+    }
+    SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
+    singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
+        singleInstanceRequestResponseDelegate, args);
+    if (singleInstance == null) {
+      LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
+      System.exit(0);
+    }
+    GuiJulHandler handler = new GuiJulHandler();
+    handler.setLevel(Level.ALL);
+    Logger olvLogger = Logger.getLogger("pl.otros.logview");
+    olvLogger.setLevel(Level.ALL);
+    olvLogger.addHandler(handler);
+    LOGGER.info("Starting application");
+    OtrosSplash.setMessage("Starting application");
+    OtrosSplash.setMessage("Loading configuration");
+    final XMLConfiguration c = getConfiguration("config.xml");
+    if (!c.containsKey(ConfKeys.UUID)) {
+      c.setProperty(ConfKeys.UUID, UUID.randomUUID().toString());
+    }
+    IconsLoader.loadIcons();
+    OtrosSplash.setMessage("Loading icons");
+    SwingUtilities.invokeAndWait(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          OtrosSplash.setMessage("Loading L&F");
+          String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+          LOGGER.config("Initializing look and feelL: " + lookAndFeel);
+          PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
+          UIManager.setLookAndFeel(lookAndFeel);
+        } catch (Throwable e1) {
+          LOGGER.warning("Cannot initialize LookAndFeel: " + e1.getMessage());
+        }
+        try {
+          final DataConfiguration c1 = new OtrosConfiguration(c);
+          final LogViewMainFrame mf = new LogViewMainFrame(c1);
+          // mf.exitAction was instantiated in the constructor (previous line)
+          // Not sure retrieving this from most appropriate Apache config
+          // object.
+          mf.exitAction.setConfirm(
+              c.getBoolean("generalBehavior.confirmExit", true));
+          /* TODO:  Implement User Preferences screen or checkbox on exit widget
+           * that will update the same config object something like:
+           *     c.setProperty("generalBehavior.confirmExit", newValue);
+           */
+          mf.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              c.setProperty("gui.state", mf.getExtendedState());
+              if (mf.getExtendedState() == Frame.NORMAL) {
+                c.setProperty("gui.width", mf.getWidth());
+                c.setProperty("gui.height", mf.getHeight());
+              }
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+              c.setProperty("gui.location.x", mf.getLocation().x);
+              c.setProperty("gui.location.y", mf.getLocation().y);
+            }
+          });
+          mf.addWindowListener(mf.exitAction);
+          SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
+              mf.otrosApplication.getAppProperties().getCurrentDir());
+        } catch (InitializationException e) {
+          LOGGER.log(Level.SEVERE, "Cannot initialize main frame", e);
+        }
+      }
+    });
+  }
+
+  private static XMLConfiguration getConfiguration(String file) {
+    XMLConfiguration commonConfiguration = new XMLConfiguration();
+    File commonConfigurationFile = new File(file);
+    // load common configuration
+    if (commonConfigurationFile.exists()) {
+      LOGGER.info("Loading common configuration from " + commonConfigurationFile.getAbsolutePath());
+      try {
+        commonConfiguration.load(commonConfigurationFile);
+      } catch (ConfigurationException e) {
+        LOGGER.severe("Can't load configuration, creating new " + e.getMessage());
+      }
+    } else {
+      LOGGER.info("Common configuration file do not exist");
+    }
+    // load user specific configuration
+    if (!AllPluginables.USER_CONFIGURATION_DIRECTORY.exists()) {
+      LOGGER.info("Creating user specific OtrosLogViewer configuration directory " + AllPluginables.USER_CONFIGURATION_DIRECTORY.getAbsolutePath());
+      AllPluginables.USER_CONFIGURATION_DIRECTORY.mkdirs();
+      AllPluginables.USER_FILTER.mkdirs();
+      AllPluginables.USER_LOG_IMPORTERS.mkdirs();
+      AllPluginables.USER_MARKERS.mkdirs();
+      AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS.mkdirs();
+    }
+    XMLConfiguration userConfiguration = new XMLConfiguration();
+    File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + file);
+    userConfiguration.setFile(userConfigurationFile);
+    if (userConfigurationFile.exists()) {
+      try {
+        userConfiguration.load();
+      } catch (ConfigurationException e) {
+        LOGGER.severe(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
+      }
+    }
+    Iterator<?> keys = commonConfiguration.getKeys();
+    while (keys.hasNext()) {
+      String key = (String) keys.next();
+      if (!userConfiguration.containsKey(key)) {
+        userConfiguration.setProperty(key, commonConfiguration.getProperty(key));
+      }
+    }
+    userConfiguration.setAutoSave(true);
+    return userConfiguration;
+  }
+
+  private static Configuration getVfsFavoritesConfiguration() {
+    File file = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + "vfsFavorites.xml");
+    XMLConfiguration configuration = new XMLConfiguration();
+    configuration.setFile(file);
+    if (file.exists()) {
+      try {
+        configuration.load();
+      } catch (ConfigurationException e) {
+        LOGGER.severe(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
+      }
+    }
+    configuration.setAutoSave(true);
+    return configuration;
   }
 
   private void initPlugins() {
@@ -812,64 +911,5 @@ public class LogViewMainFrame extends JFrame {
     this.setSize(size);
     this.setLocation(location);
     this.setExtendedState(state);
-  }
-
-  private static XMLConfiguration getConfiguration(String file) {
-    XMLConfiguration commonConfiguration = new XMLConfiguration();
-    File commonConfigurationFile = new File(file);
-    // load common configuration
-    if (commonConfigurationFile.exists()) {
-      LOGGER.info("Loading common configuration from " + commonConfigurationFile.getAbsolutePath());
-      try {
-        commonConfiguration.load(commonConfigurationFile);
-      } catch (ConfigurationException e) {
-        LOGGER.severe("Can't load configuration, creating new " + e.getMessage());
-      }
-    } else {
-      LOGGER.info("Common configuration file do not exist");
-    }
-    // load user specific configuration
-    if (!AllPluginables.USER_CONFIGURATION_DIRECTORY.exists()) {
-      LOGGER.info("Creating user specific OtrosLogViewer configuration directory " + AllPluginables.USER_CONFIGURATION_DIRECTORY.getAbsolutePath());
-      AllPluginables.USER_CONFIGURATION_DIRECTORY.mkdirs();
-      AllPluginables.USER_FILTER.mkdirs();
-      AllPluginables.USER_LOG_IMPORTERS.mkdirs();
-      AllPluginables.USER_MARKERS.mkdirs();
-      AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS.mkdirs();
-    }
-    XMLConfiguration userConfiguration = new XMLConfiguration();
-    File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + file);
-    userConfiguration.setFile(userConfigurationFile);
-    if (userConfigurationFile.exists()) {
-      try {
-        userConfiguration.load();
-      } catch (ConfigurationException e) {
-        LOGGER.severe(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
-      }
-    }
-    Iterator<?> keys = commonConfiguration.getKeys();
-    while (keys.hasNext()) {
-      String key = (String) keys.next();
-      if (!userConfiguration.containsKey(key)) {
-        userConfiguration.setProperty(key, commonConfiguration.getProperty(key));
-      }
-    }
-    userConfiguration.setAutoSave(true);
-    return userConfiguration;
-  }
-
-  private static Configuration getVfsFavoritesConfiguration() {
-    File file = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + "vfsFavorites.xml");
-    XMLConfiguration configuration = new XMLConfiguration();
-    configuration.setFile(file);
-    if (file.exists()) {
-      try {
-        configuration.load();
-      } catch (ConfigurationException e) {
-        LOGGER.severe(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
-      }
-    }
-    configuration.setAutoSave(true);
-    return configuration;
   }
 }

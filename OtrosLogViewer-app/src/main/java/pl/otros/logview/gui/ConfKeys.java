@@ -19,7 +19,7 @@ public class ConfKeys {
 
   public static final String TAILING_PANEL_PLAY = "gui.tailingview.play";
   public static final String TAILING_PANEL_FOLLOW = "gui.tailingview.follow";
-  
+
   public static final String LOAD_EXPERIMENTAL_FEATURES = "loadExperimentalFeatures";
   public static final String VERSION_CHECK_ON_STARTUP = "updateCheck.checkNewVersionOnStart";
   public static final String VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION = "updateCheck.doNotNotifyThisVersionOnStart";
@@ -47,6 +47,7 @@ public class ConfKeys {
   public static final String JUMP_TO_CODE_PORT = "services.jumpToCode.port";
 
 
-  public static final String LOG_DATA_FORMAT_LEVEL_RENDERER = "gui.LogDataFormat.levelRenderer";
-  public static final String LOG_DATA_FORMAT_DATE_FORMAT = "gui.LogDataFormat.dateFormat";
+  public static final String LOG_TABLE_FORMAT_LEVEL_RENDERER = "gui.LoTableFormat.levelRenderer";
+  public static final String LOG_TABLE_FORMAT_DATE_FORMAT = "gui.LogTableFormat.dateFormat";
+  public static final java.lang.String LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS = "gui.LogTableFormat.packageAbbreviations";
 }
