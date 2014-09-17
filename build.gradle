@@ -41,6 +41,7 @@ subprojects {
 
 
 project(':Common-libs') {
+
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
         compile 'com.beust:jcommander:1.29'
@@ -71,7 +72,7 @@ project(':Common-libs') {
         compile 'org.swinglabs:jxlayer:3.0.4'
         compile 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
         compile 'com.github.insubstantial:substance:7.2.1'
- 
+
     }
 }
 
@@ -79,13 +80,17 @@ project(':Common-libs') {
 project(':OtrosStarter') {
     def today = new Date().format("yyyy-MM-dd")
 
-    manifest.mainAttributes(
-            'Main-Class': "pl.otros.starter.StartApp",
-            'Build-day': today,
-            'Build-date': new Date(),
-            'SplashScreen-Image': "img/otros/splash.png",
-            'Implementation-Version': sharedVersion,
-    )
+    jar {
+        manifest {
+            attributes(
+                    'Main-Class': "pl.otros.starter.StartApp",
+                    'Build-day': today,
+                    'Build-date': new Date(),
+                    'SplashScreen-Image': "img/otros/splash.png",
+                    'Implementation-Version': sharedVersion,
+            )
+        }
+    }
 }
 
 project(':OtrosSwing') {
@@ -103,27 +108,31 @@ project(':OtrosLogViewer-app') {
     }
     version = sharedVersion
 
+    jar {
 
-    manifest.mainAttributes(
-            'Implementation-Title': 'OtrosLogViewer',
-            'Implementation-Version': sharedVersion,
-            'Main-Class': "pl.otros.logview.gui.LogViewMainFrame",
-            'Build-day': today,
-            'Build-date': new Date(),
-            'SplashScreen-Image': "img/otros/splash.png"
-    )
-    
-test {
-   useTestNG()
-}
+        manifest.mainAttributes(
+                'Implementation-Title': 'OtrosLogViewer',
+                'Implementation-Version': sharedVersion,
+                'Main-Class': "pl.otros.logview.gui.LogViewMainFrame",
+                'Build-day': today,
+                'Build-date': new Date(),
+                'SplashScreen-Image': "img/otros/splash.png"
+        )
+    }
+
+
+    test {
+        useTestNG()
+    }
+
 }
 project(':OtrosAppDist') {
+    println 'starting dist'
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosStarter')
         compile project(':OtrosLogViewer-app')
     }
-
 
     version = sharedVersion
 
@@ -135,18 +144,13 @@ project(':OtrosAppDist') {
     task dist(type: Zip, dependsOn: ':OtrosLogViewer-app:jar') {
         baseName = "olv"
         def baseDir = { baseName + "-" + version }
-        into(baseDir) {
-            from(f.getAbsolutePath())
-            from(project.file('src/dist/otherFiles'))
-            from(project.file('src/dist/scriptsWin'))
-            into("lib") {
-                from(project.configurations.runtime)
-            }
-        }
-        into(baseDir) {
-            from(project.file('src/dist/scriptsUnix'), fileMode = 0755)
-        }
-
+        from(f.getAbsolutePath())
+        from(project.file('src/dist/otherFiles'))
+        from(project.file('src/dist/scriptsWin'))
+        from(file("src/dist/scriptsUnix").toString()) { fileMode = 0755 }
+        into(baseDir)
+        from(project.configurations.runtime)
+        into("lib")
     }
 }
 
@@ -158,12 +162,14 @@ def allProcessResouresTasks() {
 
 // This task only for SCM administrator.
 // Execute external 'gradle' (of the desired version) and execute this task.
-task upgradeWrapper(type: Wrapper) { doFirst {
-    assert project.hasProperty('newVersion') :
-        '''Property 'newVersion' is required for task 'upgradeWrapper'.'''
-    assert project.newVersion == gradle.gradleVersion :
-        "You invoked Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
-} }
+task upgradeWrapper(type: Wrapper) {
+    doFirst {
+        assert project.hasProperty('newVersion'):
+                '''Property 'newVersion' is required for task 'upgradeWrapper'.'''
+        assert project.newVersion == gradle.gradleVersion:
+                "You invoked Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
+    }
+}
 upgradeWrapper << {
     gradleVersion = project['newVersion']
     println 'WARNING:  Merge our customizations into the newly-generated wrapper scripts'
