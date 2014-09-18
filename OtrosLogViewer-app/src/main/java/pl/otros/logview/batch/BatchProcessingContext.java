@@ -37,10 +37,6 @@ import java.util.List;
 
 public class BatchProcessingContext {
 
-  public enum LogDataStoreType {
-    FILE, MEMORY
-  }
-
   private FileObject currentFile;
   private List<FileObject> allFiles;
   private HashMap<String, Object> attributes = new HashMap<String, Object>();
@@ -83,14 +79,21 @@ public class BatchProcessingContext {
 
     Memento memento = new Memento();
     memento.setList(list);
-    memento.setName(String.format("%s on %s", logName, InetAddress.getLocalHost().getHostName()));
+    String hostName;
+    try {
+      hostName = InetAddress.getLocalHost().toString();
+    } catch (Exception e) {
+      hostName = "Unknown host";
+    }
+
+    memento.setName(String.format("%s on %s", logName, hostName));
     for (LogData logData : dataStore) {
       if (logData.isMarked()) {
-        memento.getMarks().put(Integer.valueOf(logData.getId()), Boolean.TRUE);
-        memento.getMarksColor().put(Integer.valueOf(logData.getId()), logData.getMarkerColors());
+        memento.getMarks().put(logData.getId(), Boolean.TRUE);
+        memento.getMarksColor().put(logData.getId(), logData.getMarkerColors());
       }
       if (logData.getNote() != null) {
-        memento.getNotes().put(Integer.valueOf(logData.getId()), logData.getNote());
+        memento.getNotes().put(logData.getId(), logData.getNote());
       }
     }
     LogInvestiagionPersitanceUtil.saveMemento(memento, out);
@@ -115,7 +118,7 @@ public class BatchProcessingContext {
   }
 
   public <T> T getAttribute(String key, Class<T> clazz, T defaultValue) {
-    T result = null;
+    T result;
     if (attributes.containsKey(key)) {
       result = getAttribute(key, clazz);
     } else {
@@ -166,6 +169,10 @@ public class BatchProcessingContext {
 
   public LogDataStore getDataStore() {
     return dataStore;
+  }
+
+  public enum LogDataStoreType {
+    FILE, MEMORY
   }
 
 }
