@@ -17,7 +17,14 @@ package pl.otros.logview.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TabHeader extends JPanel {
 
@@ -97,7 +104,7 @@ public class TabHeader extends JPanel {
     setOpaque(false);
     label.setOpaque(false);
     iconButton.setOpaque(false);
-
+    editing_idx = -1;
     editor = new JTextField();
     editor.setBorder(BorderFactory.createLineBorder(editor.getForeground()));
     editor.addFocusListener(new FocusAdapter() {
