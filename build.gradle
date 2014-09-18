@@ -149,8 +149,9 @@ project(':OtrosAppDist') {
         from(project.file('src/dist/scriptsWin'))
         from(file("src/dist/scriptsUnix").toString()) { fileMode = 0755 }
         into(baseDir)
-        from(project.configurations.runtime)
-        into("lib")
+        from(project.configurations.runtime) {
+            into("lib")
+        }
     }
 }
 
