@@ -61,6 +61,7 @@ import pl.otros.logview.gui.actions.ShowMessageColorizerEditor;
 import pl.otros.logview.gui.actions.ShowOlvLogs;
 import pl.otros.logview.gui.actions.StartSocketListener;
 import pl.otros.logview.gui.actions.StopAllSocketListeners;
+import pl.otros.logview.gui.actions.SwitchAutoJump;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.gui.actions.TailLogWithAutoDetectActionListener;
 import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
@@ -205,14 +206,7 @@ public class LogViewMainFrame extends JFrame {
     logsTabbedPane = new JTabbedPane();
     enableDisableComponetsForTabs = new EnableDisableComponetsForTabs(logsTabbedPane);
     logsTabbedPane.addChangeListener(enableDisableComponetsForTabs);
-    JProgressBar heapBar = new JProgressBar();
-    heapBar.setPreferredSize(new Dimension(190, 15));
-    new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
-    JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill, push, grow][right][right]", "[]"));
-    statusPanel.add(statusLabel);
-    final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
-    statusPanel.add(ideConnectedLabel);
-    statusPanel.add(heapBar);
+
     otrosApplication = new OtrosApplication();
     otrosApplication.setAllPluginables(AllPluginables.getInstance());
     otrosApplication.setApplicationJFrame(this);
@@ -223,6 +217,17 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
     ToolTipManager.sharedInstance().setDismissDelay(5000);
+
+    JProgressBar heapBar = new JProgressBar();
+    heapBar.setPreferredSize(new Dimension(190, 15));
+    new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
+    JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill, push, grow][right][right]", "[]"));
+    statusPanel.add(statusLabel);
+    final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
+    statusPanel.add(ideConnectedLabel);
+    statusPanel.add(new JButton(new SwitchAutoJump(otrosApplication)));
+    statusPanel.add(heapBar);
+
     initMenu();
     initToolbar();
     addEmptyViewListener();

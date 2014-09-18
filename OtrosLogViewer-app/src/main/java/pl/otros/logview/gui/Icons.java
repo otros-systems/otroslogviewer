@@ -93,11 +93,11 @@ public class Icons {
   @Path(path = "/img/fugue/arrow-branch-270-left.png")
   public static ImageIcon ARROW_BRANCH_270;
 
-    @Path(path = "/img/fugue/arrow-join.png")
-    public static ImageIcon ARROW_JOIN;
+  @Path(path = "/img/fugue/arrow-join.png")
+  public static ImageIcon ARROW_JOIN;
 
 
-    @Path(path = "/img/fugue/broom.png")
+  @Path(path = "/img/fugue/broom.png")
   public static ImageIcon CLEAR;
 
   @Path(path = "/img/fugue/beans.png")
@@ -231,37 +231,40 @@ public class Icons {
   @Path(path = "/img/btn_donateCC_LG.gif")
   public static ImageIcon DONATE;
 
-   @Path(path = "/img/fugue24/megaphone.png")
-   public static ImageIcon MEGAPHONE_24;
+  @Path(path = "/img/fugue24/megaphone.png")
+  public static ImageIcon MEGAPHONE_24;
 
-   @Path(path = "/img/fugue/bin.png")
-   public static ImageIcon BIN;
+  @Path(path = "/img/fugue/bin.png")
+  public static ImageIcon BIN;
 
-   @Path(path = "/img/fugue/document-copy.png")
-   public static ImageIcon DOCUMENT_COPY;
+  @Path(path = "/img/fugue/document-copy.png")
+  public static ImageIcon DOCUMENT_COPY;
 
   @Path(path = "/img/ide/eclipse-disconnected.png")
-   public static ImageIcon ICE_ECLIPSE_DISCONNECTED;
+  public static ImageIcon ICE_ECLIPSE_DISCONNECTED;
 
   @Path(path = "/img/ide/idea-disconnected.png")
-   public static ImageIcon IDE_IDEA_DISCONNCTED;
+  public static ImageIcon IDE_IDEA_DISCONNCTED;
 
   @Path(path = "/img/ide/eclipse.gif")
-   public static ImageIcon IDE_ECLIPSE;
+  public static ImageIcon IDE_ECLIPSE;
 
   @Path(path = "/img/ide/idea.png")
-   public static ImageIcon IDE_IDEA;
+  public static ImageIcon IDE_IDEA;
 
   @Path(path = "/img/fugue/tick-button.png")
-   public static ImageIcon STATUS_OK;
+  public static ImageIcon STATUS_OK;
 
-   @Path(path = "/img/fugue/cross-button.png")
-   public static ImageIcon STATUS_ERROR;
+  @Path(path = "/img/fugue/cross-button.png")
+  public static ImageIcon STATUS_ERROR;
 
-   @Path(path = "/img/fugue/question-button.png")
-   public static ImageIcon STATUS_UNKNOWN;
+  @Path(path = "/img/fugue/question-button.png")
+  public static ImageIcon STATUS_UNKNOWN;
 
   @Path(path = "/img/fugue/gear.png")
   public static ImageIcon GEAR;
+
+  @Path(path = "/img/fugue/arrow-step-over.png")
+  public static ImageIcon ARROW_STEP_OVER;
 
 }

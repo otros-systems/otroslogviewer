@@ -43,9 +43,12 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   @Override
   public void jump(LocationInfo locationInfo) throws IOException {
     String url = jumpToCodeClient.getUrl(locationInfo);
-    LOGGER.finest("Jumping to location " + locationInfo + " by opening URL: " + url);
-    jumpToCodeClient.jumpTo(url);
-
+    if (url != null) {
+      LOGGER.finest("Jumping to location " + locationInfo + " by opening URL: " + url);
+      jumpToCodeClient.jumpTo(url);
+    } else {
+      LOGGER.finest("Can't jump to " + locationInfo);
+    }
   }
 
   @Override

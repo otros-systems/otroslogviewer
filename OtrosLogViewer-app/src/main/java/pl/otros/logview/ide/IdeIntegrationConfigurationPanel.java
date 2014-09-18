@@ -25,6 +25,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
   private static final Logger LOGGER = Logger.getLogger(IdeIntegrationConfigurationPanel.class.getName());
   private SpinnerNumberModel spinnerNumberModel;
   private JXTextField hostNameTextField;
+  private JCheckBox enableAutoJumping;
 
   public IdeIntegrationConfigurationPanel(final OtrosApplication otrosApplication) {
     DataConfiguration configuration = otrosApplication.getConfiguration();
@@ -54,6 +55,12 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
         }
       }
     });
+
+    enableAutoJumping = new JCheckBox();
+    JLabel enableAutoJumpingLabel = new JLabel("Enable autojump", Icons.ARROW_STEP_OVER, SwingConstants.RIGHT);
+    enableAutoJumpingLabel.setLabelFor(enableAutoJumping);
+    enableAutoJumpingLabel.setDisplayedMnemonic('a');
+
     JXHyperlink setDefaults = new JXHyperlink(new AbstractAction("Set defaults") {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -84,6 +91,8 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
     add(portLabel, "alignx trailing");
     add(portSpinner, "wrap,growx");
     add(testConnectivityButton, "span, center, growx");
+    add(enableAutoJumpingLabel, "alignx trailing");
+    add(enableAutoJumping, "span,left, wrap");
     add(setDefaults, "left, span, growx");
     add(openHelp, "span, left, wrap");
   }
@@ -102,5 +111,13 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
 
   public void setSelectedPort(int port) {
     spinnerNumberModel.setValue(Integer.valueOf(port));
+  }
+
+  public boolean isAutoJumpEnabled() {
+    return enableAutoJumping.isSelected();
+  }
+
+  public void setAutoJumpEnabled(boolean enabled) {
+    enableAutoJumping.setSelected(enabled);
   }
 }

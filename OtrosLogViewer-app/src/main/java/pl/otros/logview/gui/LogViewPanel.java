@@ -63,6 +63,7 @@ import pl.otros.logview.gui.actions.TableResizeActionListener;
 import pl.otros.logview.gui.actions.UnMarkRowAction;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
 import pl.otros.logview.gui.markers.AutomaticMarker;
+import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
@@ -75,6 +76,7 @@ import pl.otros.logview.gui.renderers.NoteRenderer;
 import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
+import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -90,6 +92,8 @@ import pl.otros.vfs.browser.table.FileSize;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -233,6 +237,28 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         selectedMessageFormattersContainer, selectedMessageColorizersContainer);
     table.getSelectionModel().addListSelectionListener(messageDetailListener);
     dataTableModel.addNoteObserver(messageDetailListener);
+
+    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, false);
+        if (!e.getValueIsAdjusting() && enabled) {
+          try {
+            final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
+            LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
+            final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
+            final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
+            if (ideAvailable) {
+              LOGGER.fine("Jumping to " + li);
+              jumpToCodeService.jump(li);
+            }
+          } catch (Exception e1) {
+            LOGGER.warning("Can't perform jump to code " + e1.getMessage());
+          }
+
+        }
+      }
+    });
 
 
     notes = new JTextArea();
