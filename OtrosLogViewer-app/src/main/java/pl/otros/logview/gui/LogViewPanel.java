@@ -347,7 +347,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private void updateColumnsSize() {
     updateColumnSizeIfVisible(TableColumns.ID, 40, 100);
     updateColumnSizeIfVisible(TableColumns.TIME, 140, 240);
-    updateColumnSizeIfVisible(TableColumns.LEVEL, 16, 16);
+    updateColumnSizeIfVisible(TableColumns.LEVEL, 16, 110);
     updateColumnSizeIfVisible(TableColumns.THREAD, 100, 500);
     updateColumnSizeIfVisible(TableColumns.MARK, 30, 30);
     updateColumnSizeIfVisible(TableColumns.NOTE, 100, 1500);
@@ -356,6 +356,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private void updateColumnSizeIfVisible(TableColumns column, int width, int maxWidth) {
     table.getColumns(true).get(column.getColumn()).setMaxWidth(maxWidth);
     table.getColumns(true).get(column.getColumn()).setWidth(width);
+    table.getColumns(true).get(column.getColumn()).setPreferredWidth(width);
   }
 
   public JTextPane getLogDetailTextArea() {
