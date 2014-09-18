@@ -34,13 +34,13 @@ public class IdeIntegrationConfigView extends AbstractConfigView implements InMa
   public void loadConfiguration(Configuration configuration) {
     ideIntegrationConfigurationPanel.setSelectedHostname(configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, JumpToCodeService.DEFAULT_HOST));
     ideIntegrationConfigurationPanel.setSelectedPort(configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT));
-    ideIntegrationConfigurationPanel.setAutoJumpEnabled(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true));
+    ideIntegrationConfigurationPanel.setAutoJumpEnabled(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true));
   }
 
   @Override
   public void saveConfiguration(Configuration c) {
     c.setProperty(ConfKeys.JUMP_TO_CODE_PORT, ideIntegrationConfigurationPanel.getSelectedPort());
     c.setProperty(ConfKeys.JUMP_TO_CODE_HOST, ideIntegrationConfigurationPanel.getSelectedHostname());
-    c.setProperty(ConfKeys.JUMP_TO_CODE_ENABLED, ideIntegrationConfigurationPanel.isAutoJumpEnabled());
+    c.setProperty(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, ideIntegrationConfigurationPanel.isAutoJumpEnabled());
   }
 }

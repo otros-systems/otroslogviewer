@@ -241,7 +241,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, false);
+        final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
         if (!e.getValueIsAdjusting() && enabled) {
           try {
             final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));

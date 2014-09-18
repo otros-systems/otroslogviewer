@@ -15,7 +15,7 @@ public class SwitchAutoJump extends OtrosAction {
   public SwitchAutoJump(OtrosApplication otrosApplication) {
     super(otrosApplication);
     configuration = getOtrosApplication().getConfiguration();
-    final boolean enabled = configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true);
+    final boolean enabled = configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true);
     Icon icon = getIcon(enabled);
     putValue(SMALL_ICON, icon);
     putValue(SHORT_DESCRIPTION, "Turn on/off automatic jump to code during browsing logs.");
@@ -27,8 +27,8 @@ public class SwitchAutoJump extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final boolean newValue = !configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true);
-    configuration.setProperty(ConfKeys.JUMP_TO_CODE_ENABLED, newValue);
+    final boolean newValue = !configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true);
+    configuration.setProperty(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, newValue);
     putValue(SMALL_ICON, getIcon(newValue));
   }
 }

@@ -3,7 +3,11 @@ package pl.otros.logview.gui.services.jumptocode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.gui.ConfKeys;
@@ -28,42 +32,6 @@ public class JumpToCodeClient {
   private Cache<LocationInfo, String> locationSourceCache;
   private Cache<String, Ide> ideCache;
 
-  public String getContent(final LocationInfo locationInfo) throws IOException {
-    try {
-      return locationSourceCache.get(locationInfo,new Callable<String>() {
-        @Override
-        public String call() throws Exception {
-          HttpMethod httpMethod = buildMethod(getUrl(),locationInfo, HttpOperation.GET_SOURCE);
-          return executeAndGetContent(httpMethod);
-        }
-      }) ;
-    } catch (ExecutionException e) {
-      return "";
-    }
-  }
-
-  public Ide getIde(String host, int port) {
-    try {
-      return new GetIdeCallable(getCheckIdeUrl(host,port)).call() ;
-    } catch (Exception e) {
-      return Ide.DISCONNECTED;
-    }
-  }
-
-  private enum HttpOperation {
-    JUMP("jump"),TEST("test"),GET_SOURCE("content");
-    String operation;
-
-    HttpOperation(String operation) {
-      this.operation = operation;
-    }
-
-    public String getOperation() {
-      return operation;
-    }
-
-  }
-
   public JumpToCodeClient(Configuration configuration) {
     this.configuration = configuration;
     this.client = new HttpClient();
@@ -74,6 +42,28 @@ public class JumpToCodeClient {
     ideCache = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(10, TimeUnit.SECONDS).build();
   }
 
+  public String getContent(final LocationInfo locationInfo) throws IOException {
+    try {
+      return locationSourceCache.get(locationInfo, new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+          HttpMethod httpMethod = buildMethod(getUrl(), locationInfo, HttpOperation.GET_SOURCE);
+          return executeAndGetContent(httpMethod);
+        }
+      });
+    } catch (ExecutionException e) {
+      return "";
+    }
+  }
+
+  public Ide getIde(String host, int port) {
+    try {
+      return new GetIdeCallable(getCheckIdeUrl(host, port)).call();
+    } catch (Exception e) {
+      return Ide.DISCONNECTED;
+    }
+  }
+
   /**
    * get the URL for jumping to the given location
    *
@@ -81,8 +71,8 @@ public class JumpToCodeClient {
    * @return the JumpToCode url or null when location is unknown
    */
   public String getUrl(LocationInfo locationInfo) {
-    if (configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true) && isJumpable(locationInfo)) {
-      HttpMethod method = buildMethod(getUrl(),locationInfo, HttpOperation.JUMP);
+    if (configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true) && isJumpable(locationInfo)) {
+      HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.JUMP);
       return String.format("http://%s:%d/?%s",
           configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, "localhost"),
           configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT),
@@ -104,9 +94,9 @@ public class JumpToCodeClient {
     LOGGER.finest("Result status: " + execute);
   }
 
-  private HttpMethod buildMethod(String url,LocationInfo locationInfo, HttpOperation httpOperation) {
+  private HttpMethod buildMethod(String url, LocationInfo locationInfo, HttpOperation httpOperation) {
     HttpMethod method = new GetMethod(url);
-    NameValuePair[] pair =  new NameValuePair[4];
+    NameValuePair[] pair = new NameValuePair[4];
     String lineNumber = String.valueOf(locationInfo.getLineNumber());
     pair[0] = new NameValuePair("p", locationInfo.getPackageName());
     pair[1] = new NameValuePair("f", locationInfo.getFileName());
@@ -120,8 +110,9 @@ public class JumpToCodeClient {
   private String getUrl() {
     String host = configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, JumpToCodeService.DEFAULT_HOST);
     int port = configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT);
-    return getCheckIdeUrl(host,port);
+    return getCheckIdeUrl(host, port);
   }
+
   private String getCheckIdeUrl(String host, int port) {
     return String.format("http://%s:%d/",
         host,
@@ -137,7 +128,7 @@ public class JumpToCodeClient {
         @Override
         public Boolean call() throws Exception {
           LOGGER.finest("Checking if " + locationInfo + " is jumpable.");
-          HttpMethod method = buildMethod(getUrl(),locationInfo, HttpOperation.TEST);
+          HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.TEST);
           try {
             int execute = execute(method);
             LOGGER.finest("HTTP status line is " + execute);
@@ -166,12 +157,12 @@ public class JumpToCodeClient {
     }
   }
 
-  private String executeAndGetContent(HttpMethod method) throws  IOException {
+  private String executeAndGetContent(HttpMethod method) throws IOException {
     try {
       // we don't even read the response body
       // the statusCode is enough information
       int status = client.executeMethod(method);
-      if (status != HttpStatus.SC_OK){
+      if (status != HttpStatus.SC_OK) {
         return "";
       }
       return method.getResponseBodyAsString();
@@ -182,7 +173,6 @@ public class JumpToCodeClient {
       method.releaseConnection();
     }
   }
-
 
   public Ide getIde() {
     try {
@@ -195,6 +185,20 @@ public class JumpToCodeClient {
 
   public void clearLocationCaches() {
     locationInfoCache.invalidateAll();
+  }
+
+  private enum HttpOperation {
+    JUMP("jump"), TEST("test"), GET_SOURCE("content");
+    String operation;
+
+    HttpOperation(String operation) {
+      this.operation = operation;
+    }
+
+    public String getOperation() {
+      return operation;
+    }
+
   }
 
   private class GetIdeCallable implements Callable<Ide> {
