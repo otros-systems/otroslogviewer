@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,16 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import com.google.common.base.Splitter;
 import pl.otros.logview.gui.markers.AutomaticMarker;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;
 import pl.otros.logview.gui.markers.StringMarker;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -35,26 +39,22 @@ public class AutomaticMarkerLoader {
   public static ArrayList<AutomaticMarker> loadInternalMarkers() throws IOException {
 
 
-
     ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
-    BufferedReader in = new BufferedReader(new InputStreamReader(AutomaticMarkerLoader.class.getClassLoader().getResourceAsStream("markers.txt")));
-    String line;
-    while ((line = in.readLine()) != null) {
-      if (line.startsWith("#")) {
-        continue;
-      }
+    Properties p = new Properties();
+    p.load(AutomaticMarkerLoader.class.getClassLoader().getResourceAsStream("markers.properties"));
+    final Iterable<String> defaultMarkers = Splitter.on(',').split(p.getProperty("defaultMarkers"));
+    for (String line : defaultMarkers) {
       try {
         Class<?> c = AutomaticMarkerLoader.class.getClassLoader().loadClass(line);
         AutomaticMarker am = (AutomaticMarker) c.newInstance();
         markers.add(am);
       } catch (ClassNotFoundException e) {
-        LOGGER.log(Level.SEVERE,"Error loading class " + line,e);
+        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
       } catch (InstantiationException e) {
-        LOGGER.log(Level.SEVERE,"Error loading class " + line,e);
+        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
       } catch (IllegalAccessException e) {
-        LOGGER.log(Level.SEVERE,"Error loading class " + line,e);
+        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
       }
-
     }
 
     return markers;
@@ -63,7 +63,7 @@ public class AutomaticMarkerLoader {
 
   public static ArrayList<AutomaticMarker> load(File dir) {
     ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
-    markers.addAll( baseLoader.load(dir, AutomaticMarker.class));
+    markers.addAll(baseLoader.load(dir, AutomaticMarker.class));
     return markers;
   }
 
@@ -81,7 +81,7 @@ public class AutomaticMarkerLoader {
         try {
           markers.add(loadRegexMarkerFromProperties(file));
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE,"Cannot initialize RegexMarker from file " + file.getName(),e);
+          LOGGER.log(Level.SEVERE, "Cannot initialize RegexMarker from file " + file.getName(), e);
         }
       }
     }
@@ -102,7 +102,7 @@ public class AutomaticMarkerLoader {
         try {
           markers.add(loadStringMarkerFromProperties(file));
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE,"Cannot initialize StringMarker from file " + file.getName(),e);
+          LOGGER.log(Level.SEVERE, "Cannot initialize StringMarker from file " + file.getName(), e);
         }
       }
     }
@@ -157,7 +157,7 @@ public class AutomaticMarkerLoader {
           markers.add(loadPropertyBasedMarker(p));
           fin.close();
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE,"Cannot initialize RegexMarker from file " + file.getName(),e);
+          LOGGER.log(Level.SEVERE, "Cannot initialize RegexMarker from file " + file.getName(), e);
         }
       }
     }
