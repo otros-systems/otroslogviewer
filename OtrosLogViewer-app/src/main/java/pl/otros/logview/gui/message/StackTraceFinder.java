@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,17 +30,17 @@ public class StackTraceFinder {
   public SortedSet<SubText> findStackTraces(String text) {
     SortedSet<SubText> set = new TreeSet<SubText>();
     LinkedList<Integer> newLineIndexes = new LinkedList<Integer>();
-    newLineIndexes.add(Integer.valueOf(0));
+    newLineIndexes.add(0);
     int newLineIndex = -1;
     while ((newLineIndex = StringUtils.indexOf(text, '\n', newLineIndex + 1)) > -1) {
-      newLineIndexes.addLast(Integer.valueOf(newLineIndex));
+      newLineIndexes.addLast(newLineIndex);
     }
-    if (newLineIndexes.getLast().intValue() < text.length()) {
-      newLineIndexes.addLast(Integer.valueOf(text.length()));
+    if (newLineIndexes.getLast() < text.length()) {
+      newLineIndexes.addLast(text.length());
     }
 
-    int startLine = 0;
-    int endLine = 0;
+    int startLine;
+    int endLine;
     boolean found = false;
     int startedLineException = -1;
     for (int i = 0; i < newLineIndexes.size() - 1; i++) {
