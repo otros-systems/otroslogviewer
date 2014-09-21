@@ -25,7 +25,10 @@ class LocationClickMouseAdapter extends MouseAdapter {
   @Override
   public void mouseMoved(MouseEvent e) {
     LocationInfo locationInfo = getLocationInfoUnderCursor(e);
-
+    final boolean ideIntegrationEnabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true);
+    if (!ideIntegrationEnabled) {
+      return;
+    }
     textPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     textPane.setToolTipText("");
     try {
@@ -33,12 +36,12 @@ class LocationClickMouseAdapter extends MouseAdapter {
       if (locationInfo != null && jumpToCodeService.isJumpable(locationInfo)) {
         int lineNumber = locationInfo.getLineNumber();
         textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append( locationInfo.toString()).append(" in IDEA using JumpToCode plugin<BR/>");
+        StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append(locationInfo.toString()).append(" in IDEA using JumpToCode plugin<BR/>");
         String content = jumpToCodeService.getContent(locationInfo);
         String[] split = content.split("\n");
         for (String s : split) {
-          String sHtml = s.replaceAll("\t","  ").replaceAll(" ","&nbsp;");
-          if (s.startsWith(Integer.toString(lineNumber))){
+          String sHtml = s.replaceAll("\t", "  ").replaceAll(" ", "&nbsp;");
+          if (s.startsWith(Integer.toString(lineNumber))) {
             toolTipText.append("<B>").append(sHtml).append("</B>");
           } else {
             toolTipText.append(sHtml);
@@ -64,7 +67,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
   @Override
   public void mouseClicked(MouseEvent e) {
     LocationInfo locationInfo = getLocationInfoUnderCursor(e);
-    if (locationInfo != null) {
+    if (locationInfo != null && otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true)) {
       JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
       LOGGER.fine("Is jump available: " + jumpToCodeService.isIdeAvailable());
       try {

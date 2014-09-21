@@ -267,4 +267,7 @@ public class Icons {
   @Path(path = "/img/fugue/arrow-step-over.png")
   public static ImageIcon ARROW_STEP_OVER;
 
+  @Path(path = "/img/fugue/arrow-step-over.png", gray = true)
+  public static ImageIcon ARROW_STEP_OVER_GRAY;
+
 }

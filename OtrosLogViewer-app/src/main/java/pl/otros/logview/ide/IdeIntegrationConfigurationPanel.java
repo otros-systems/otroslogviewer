@@ -26,10 +26,17 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
   private SpinnerNumberModel spinnerNumberModel;
   private JXTextField hostNameTextField;
   private JCheckBox enableAutoJumping;
+  private JCheckBox enabledCheckBox;
 
   public IdeIntegrationConfigurationPanel(final OtrosApplication otrosApplication) {
     DataConfiguration configuration = otrosApplication.getConfiguration();
     setLayout(new MigLayout("left"));
+
+    enabledCheckBox = new JCheckBox("");
+    JLabel enabledLabel = new JLabel("Enabled jump from stack trace");
+    enabledLabel.setLabelFor(enabledCheckBox);
+    enabledLabel.setDisplayedMnemonic('e');
+
     hostNameTextField = new JXTextField("Enter host name");
     hostNameTextField.setText(configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, JumpToCodeService.DEFAULT_HOST));
     JLabel hostLabel = new JLabel("Host:");
@@ -91,6 +98,8 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
     add(portLabel, "alignx trailing");
     add(portSpinner, "wrap,growx");
     add(testConnectivityButton, "span, center, growx");
+    add(enabledLabel, "alignx, trailing");
+    add(enabledCheckBox, "span, left,wrap");
     add(enableAutoJumpingLabel, "alignx trailing");
     add(enableAutoJumping, "span,left, wrap");
     add(setDefaults, "left, span, growx");
@@ -120,4 +129,13 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
   public void setAutoJumpEnabled(boolean enabled) {
     enableAutoJumping.setSelected(enabled);
   }
+
+  public boolean isEnabledIdeIntegration() {
+    return enabledCheckBox.isSelected();
+  }
+
+  public void setEnabledIdeIntegration(boolean enabled) {
+    enabledCheckBox.setSelected(enabled);
+  }
+
 }

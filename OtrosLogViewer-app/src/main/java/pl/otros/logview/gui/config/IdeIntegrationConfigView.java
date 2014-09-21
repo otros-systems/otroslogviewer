@@ -16,7 +16,7 @@ public class IdeIntegrationConfigView extends AbstractConfigView implements InMa
   private final IdeIntegrationConfigurationPanel ideIntegrationConfigurationPanel;
 
   public IdeIntegrationConfigView(OtrosApplication otrosApplication) {
-    super("ideIntegration", "IDE integration", "Integration with IDE (IntelliJ or Eclipse)");
+    super("ideIntegration", "IDE integration", "Integration with IDE (IntellijJ or Eclipse)");
     ideIntegrationConfigurationPanel = new IdeIntegrationConfigurationPanel(otrosApplication);
   }
 
@@ -35,6 +35,7 @@ public class IdeIntegrationConfigView extends AbstractConfigView implements InMa
     ideIntegrationConfigurationPanel.setSelectedHostname(configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, JumpToCodeService.DEFAULT_HOST));
     ideIntegrationConfigurationPanel.setSelectedPort(configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT));
     ideIntegrationConfigurationPanel.setAutoJumpEnabled(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true));
+    ideIntegrationConfigurationPanel.setEnabledIdeIntegration(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true));
   }
 
   @Override
@@ -42,5 +43,6 @@ public class IdeIntegrationConfigView extends AbstractConfigView implements InMa
     c.setProperty(ConfKeys.JUMP_TO_CODE_PORT, ideIntegrationConfigurationPanel.getSelectedPort());
     c.setProperty(ConfKeys.JUMP_TO_CODE_HOST, ideIntegrationConfigurationPanel.getSelectedHostname());
     c.setProperty(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, ideIntegrationConfigurationPanel.isAutoJumpEnabled());
+    c.setProperty(ConfKeys.JUMP_TO_CODE_ENABLED, ideIntegrationConfigurationPanel.isEnabledIdeIntegration());
   }
 }
