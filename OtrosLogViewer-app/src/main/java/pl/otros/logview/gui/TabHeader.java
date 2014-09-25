@@ -34,13 +34,11 @@ public class TabHeader extends JPanel {
   private static final long serialVersionUID = 1L;
   private static final Icon NORMAL_ICON = Icons.TAB_HEADER_NORMAL;
   private static final Icon HOVER_ICON = Icons.TAB_HEADER_HOVER;
-  private JTabbedPane tabbedpane;
+  private JTabbedPane jTabbedPane;
 
   private JButton iconButton;
   private JLabel label;
   private JTextField editor;
-  private Component tabComponent;
-  private int editing_idx;
   private int len;
   private Dimension dim;
 
@@ -50,12 +48,9 @@ public class TabHeader extends JPanel {
 
   public TabHeader(JTabbedPane pane, String name, Icon icon, String tooltip) {
     super(new FlowLayout(FlowLayout.LEFT, 3, 0));
-    this.tabbedpane = pane;
-
-    this.tabbedpane = pane;
+    this.jTabbedPane = pane;
     iconButton = new JButton(NORMAL_ICON);
     iconButton.addMouseListener(new MouseAdapter() {
-
       @Override
       public void mouseEntered(MouseEvent e) {
         iconButton.setIcon(HOVER_ICON);
@@ -65,11 +60,9 @@ public class TabHeader extends JPanel {
       public void mouseExited(MouseEvent e) {
         iconButton.setIcon(NORMAL_ICON);
       }
-
     });
     iconButton.setToolTipText("Close tab");
     iconButton.addActionListener(new ActionListener() {
-
       @Override
       public void actionPerformed(ActionEvent e) {
         closeTab();
@@ -78,20 +71,21 @@ public class TabHeader extends JPanel {
     label = new JLabel(name, icon, SwingConstants.LEFT);
     label.setToolTipText(tooltip);
     label.addMouseListener(new MouseAdapter() {
-
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
-          TabHeader.this.tabbedpane.setSelectedIndex(TabHeader.this.tabbedpane.indexOfTabComponent(TabHeader.this));
+          TabHeader.this.jTabbedPane.setSelectedIndex(TabHeader.this.jTabbedPane.indexOfTabComponent(TabHeader.this));
+          TabHeader.this.requestFocusInWindow();
         }
-        Rectangle rect = tabbedpane.getUI().getTabBounds(tabbedpane, tabbedpane.getSelectedIndex());
+        Rectangle rect = jTabbedPane.getUI().getTabBounds(jTabbedPane, jTabbedPane.getSelectedIndex());
         if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
           startEditing();
         } else if (rect != null && !rect.contains(e.getPoint())) {
-          renameTabTitle();
+          if (editor.isVisible()) {
+            renameTabTitle();
+          }
         }
       }
-
     });
 
     Dimension d = new Dimension(16, 16);
@@ -104,13 +98,14 @@ public class TabHeader extends JPanel {
     setOpaque(false);
     label.setOpaque(false);
     iconButton.setOpaque(false);
-    editing_idx = -1;
     editor = new JTextField();
     editor.setBorder(BorderFactory.createLineBorder(editor.getForeground()));
     editor.addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
-        renameTabTitle();
+        if (editor.isVisible()) {
+          renameTabTitle();
+        }
       }
     });
 
@@ -122,15 +117,13 @@ public class TabHeader extends JPanel {
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           cancelEditing();
         } else {
-          editor.setPreferredSize(editor.getText().length() > len ? null
-              : dim);
-          tabbedpane.revalidate();
+          editor.setPreferredSize(editor.getText().length() > len ? null : dim);
+          jTabbedPane.revalidate();
         }
       }
     });
-    tabbedpane.getInputMap(JComponent.WHEN_FOCUSED).put(
-        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing");
-    tabbedpane.getActionMap().put("start-editing", new AbstractAction() {
+    jTabbedPane.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing");
+    jTabbedPane.getActionMap().put("start-editing", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         startEditing();
@@ -140,48 +133,44 @@ public class TabHeader extends JPanel {
   }
 
   protected void closeTab() {
-    int tabNumber = tabbedpane.indexOfTabComponent(TabHeader.this);
+    int tabNumber = jTabbedPane.indexOfTabComponent(TabHeader.this);
     if (tabNumber != -1) {
-      int showConfirmDialog = JOptionPane.showConfirmDialog(tabbedpane, "Do you really want to close \"" + label.getText() + "\"?", "Are you sure?",
+      int showConfirmDialog = JOptionPane.showConfirmDialog(jTabbedPane, "Do you really want to close \"" + label.getText() + "\"?", "Are you sure?",
           JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
       if (showConfirmDialog == JOptionPane.OK_OPTION) {
-        tabbedpane.remove(tabNumber);
+        jTabbedPane.remove(tabNumber);
       }
     }
 
   }
 
   private void startEditing() {
-    editing_idx = tabbedpane.getSelectedIndex();
-    tabComponent = tabbedpane.getTabComponentAt(editing_idx);
-    tabbedpane.setTabComponentAt(editing_idx, editor);
-
     editor.setVisible(true);
-    editor.setText(tabbedpane.getTitleAt(editing_idx));
+    editor.setText(label.getText());
     editor.selectAll();
-    editor.requestFocusInWindow();
     len = editor.getText().length();
     dim = editor.getPreferredSize();
     editor.setMinimumSize(dim);
+
+    remove(label);
+    add(editor, 0);
+    revalidate();
+
+    boolean focus = editor.requestFocusInWindow();
   }
 
   private void cancelEditing() {
-    if (editing_idx >= 0) {
-      tabbedpane.setTabComponentAt(editing_idx, tabComponent);
-      editor.setVisible(false);
-      editing_idx = -1;
-      len = -1;
-      tabComponent = null;
-      editor.setPreferredSize(null);
-      tabbedpane.requestFocusInWindow();
+    if (editor.isVisible()) {
+      remove(editor);
+      add(label, 0);
+      revalidate();
     }
   }
 
   private void renameTabTitle() {
     String title = editor.getText().trim();
-    if (editing_idx >= 0 && !title.isEmpty()) {
+    if (!title.isEmpty()) {
       label.setText(title);
-      tabbedpane.setTitleAt(editing_idx, title);
     }
     cancelEditing();
   }
