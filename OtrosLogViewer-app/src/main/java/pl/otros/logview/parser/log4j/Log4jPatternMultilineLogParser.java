@@ -143,6 +143,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
 
   public static final String PROPERTY_NAME = "name";
   public static final String PROPERTY_PATTERN = "pattern";
+  public static final String PROPERTY_REPATTERN = "rePattern";
   public static final String PROPERTY_DATE_FORMAT = "dateFormat";
   public static final String PROPERTY_CUSTOM_LEVELS = "customLevels";
   public static final String PROPERTY_DESCRIPTION = "description";
@@ -829,13 +830,13 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
 
   @Override
   public void init(Properties properties) throws InitializationException {
-    String rePattern = properties.getProperty("rePattern");
+    String rePattern = properties.getProperty(PROPERTY_REPATTERN);
     logFormat = properties.getProperty(PROPERTY_PATTERN);
     if (!StringUtils.isBlank(logFormat) && rePattern != null){
-      throw new InitializationException(String.format("Conflicting log patterns set (properties %s and %s)",PROPERTY_PATTERN, "rePattern"));
+      throw new InitializationException(String.format("Conflicting log patterns set (properties %s and %s)",PROPERTY_PATTERN, PROPERTY_REPATTERN));
     }
     if (StringUtils.isBlank(logFormat) && rePattern == null){
-      throw new InitializationException(String.format("Log pattern not set (property %s or %s)",PROPERTY_PATTERN, "rePattern"));
+      throw new InitializationException(String.format("Log pattern not set (property %s or %s)",PROPERTY_PATTERN, PROPERTY_REPATTERN));
     }
     timestampFormat = properties.getProperty(PROPERTY_DATE_FORMAT);
     if (StringUtils.isBlank(timestampFormat)){
@@ -858,8 +859,8 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
             regexpPattern = Pattern.compile(rePattern);
         } catch (PatternSyntaxException pse) {
             throw new InitializationException(String.format(
-                    "Malformatted regex pattern for 'rePattern' (%s): %s",
-                    rePattern, pse.getDescription()));
+                    "Malformatted regex pattern for '%s' (%s): %s",
+                    PROPERTY_REPATTERN, rePattern, pse.getDescription()));
         }
         // if custom level definitions exist, parse them
         updateCustomLevelDefinitionMap();
@@ -884,7 +885,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
         }
         if (groupMap.size() < 1)
             throw new InitializationException(
-                    "rePattern set but no group properties set.  "
+                    PROPERTY_REPATTERN +" set but no group properties set.  "
                     + "Set group indexes like 'TIMESTAMP.group=1', "
                     + "starting with index 1");
         for (int i = 1; i <= groupMap.size(); i++) {
