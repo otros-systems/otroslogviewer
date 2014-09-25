@@ -30,6 +30,14 @@ public class ClassWrapperRendererTest {
   }
 
   @Test
+  public void testToMapIfConfIsNull() throws Exception {
+    final Map<String, String> treeMap = underTest.toMap(null);
+
+    //then
+    assertEquals(treeMap.size(), 0);
+  }
+
+  @Test
   public void testAbbreviatePackage() throws Exception {
 
   }

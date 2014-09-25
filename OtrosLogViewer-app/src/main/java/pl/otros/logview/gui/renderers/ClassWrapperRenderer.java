@@ -43,6 +43,7 @@ public class ClassWrapperRenderer extends DefaultTableCellRenderer implements Ta
   }
 
   Map<String, String> toMap(String configuration) {
+    configuration = StringUtils.defaultString(configuration);
     Properties p = new Properties();
     Map<String, String> result = new HashMap<String, String>();
     try {

@@ -3,6 +3,7 @@ package pl.otros.logview.gui.renderers;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.OtrosApplication;
 
@@ -20,7 +21,7 @@ public class Renderers {
   public Renderers(OtrosApplication otrosApplication) {
     final DataConfiguration configuration = otrosApplication.getConfiguration();
     classWrapperRenderer = new ClassWrapperRenderer();
-    classWrapperRenderer.reloadConfiguration(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS));
+    classWrapperRenderer.reloadConfiguration(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, StringUtils.EMPTY));
     levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
     dateRenderer = new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
     configuration.addConfigurationListener(new ConfigurationListener() {
