@@ -26,15 +26,16 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
   private SpinnerNumberModel spinnerNumberModel;
   private JXTextField hostNameTextField;
   private JCheckBox enableAutoJumping;
-  private JCheckBox enabledCheckBox;
+  private JCheckBox enabledJumpFromStarckTraceCBox;
 
   public IdeIntegrationConfigurationPanel(final OtrosApplication otrosApplication) {
     DataConfiguration configuration = otrosApplication.getConfiguration();
     setLayout(new MigLayout("left"));
 
-    enabledCheckBox = new JCheckBox("");
+    enabledJumpFromStarckTraceCBox = new JCheckBox("");
+    enabledJumpFromStarckTraceCBox.setSelected(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true));
     JLabel enabledLabel = new JLabel("Enabled jump from stack trace");
-    enabledLabel.setLabelFor(enabledCheckBox);
+    enabledLabel.setLabelFor(enabledJumpFromStarckTraceCBox);
     enabledLabel.setDisplayedMnemonic('e');
 
     hostNameTextField = new JXTextField("Enter host name");
@@ -64,6 +65,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
     });
 
     enableAutoJumping = new JCheckBox();
+    enableAutoJumping.setSelected(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true));
     JLabel enableAutoJumpingLabel = new JLabel("Enable autojump", Icons.ARROW_STEP_OVER, SwingConstants.RIGHT);
     enableAutoJumpingLabel.setLabelFor(enableAutoJumping);
     enableAutoJumpingLabel.setDisplayedMnemonic('a');
@@ -99,7 +101,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
     add(portSpinner, "wrap,growx");
     add(testConnectivityButton, "span, center, growx");
     add(enabledLabel, "alignx, trailing");
-    add(enabledCheckBox, "span, left,wrap");
+    add(enabledJumpFromStarckTraceCBox, "span, left,wrap");
     add(enableAutoJumpingLabel, "alignx trailing");
     add(enableAutoJumping, "span,left, wrap");
     add(setDefaults, "left, span, growx");
@@ -131,11 +133,11 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
   }
 
   public boolean isEnabledIdeIntegration() {
-    return enabledCheckBox.isSelected();
+    return enabledJumpFromStarckTraceCBox.isSelected();
   }
 
   public void setEnabledIdeIntegration(boolean enabled) {
-    enabledCheckBox.setSelected(enabled);
+    enabledJumpFromStarckTraceCBox.setSelected(enabled);
   }
 
 }
