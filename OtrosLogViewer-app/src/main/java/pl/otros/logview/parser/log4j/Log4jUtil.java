@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pl.otros.logview.RenamedLevel;
 
 public class Log4jUtil {
 
@@ -77,17 +78,18 @@ public class Log4jUtil {
   public static Level parseLevel(String s) {
     if (s.equalsIgnoreCase("INFO")) {
       return Level.INFO;
-    } else if (s.equalsIgnoreCase("ERROR") || s.equalsIgnoreCase("FATAL")) {
-      return Level.SEVERE;
+    } else if (s.equalsIgnoreCase("ERROR")) {
+      return RenamedLevel.ERROR;
+    } else if (s.equalsIgnoreCase("FATAL")) {
+      return RenamedLevel.FATAL;
     } else if (s.equalsIgnoreCase("WARN")) {
-      return Level.WARNING;
+      return RenamedLevel.WARN;
     } else if (s.equalsIgnoreCase("DEBUG")) {
-      return Level.FINE;
+      return RenamedLevel.DEBUG;
     } else if (s.equalsIgnoreCase("TRACE")) {
-      return Level.FINEST;
+      return RenamedLevel.TRACE;
     }
     LOGGER.severe("Level \"" + s + "\" not parsed!");
     return null;
-
   }
 }

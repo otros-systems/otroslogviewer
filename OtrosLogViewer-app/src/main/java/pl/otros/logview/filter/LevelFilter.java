@@ -26,6 +26,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Properties;
 import java.util.logging.Level;
+import pl.otros.logview.RenamedLevel;
 
 public class LevelFilter extends AbstractLogFilter {
   private int passLevel = Level.ALL.intValue();
@@ -55,7 +56,16 @@ public class LevelFilter extends AbstractLogFilter {
 
   public LevelFilter() {
     super(NAME, DESCRIPTION);
-    levelJCombo = new JComboBox(new Level[]{Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING, Level.SEVERE});
+    Level[] levels = new Level[]{
+        RenamedLevel.FINEST_TRACE,
+        RenamedLevel.FINER,
+        RenamedLevel.FINE_DEBUG,
+        RenamedLevel.CONFIG,
+        RenamedLevel.INFO,
+        RenamedLevel.WARNING_WARN,
+        RenamedLevel.SEVERE_ERROR_FATAL
+    };
+    levelJCombo = new JComboBox(levels);
     levelJCombo.setRenderer(renderer);
     levelJCombo.setOpaque(true);
     levelJCombo.setEditable(false);

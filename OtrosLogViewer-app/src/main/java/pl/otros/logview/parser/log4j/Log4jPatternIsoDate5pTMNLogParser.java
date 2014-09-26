@@ -124,25 +124,10 @@ public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
     logData.setThread(thread);
     logData.setLoggerName("");
     logData.setMessage(sb.substring(threadEndIndex + 1).trim());
-    Level l = parseLevel(level);
+    Level l = Log4jUtil.parseLevel(level);
     logData.setLevel(l);
     sb.setLength(0);
     return logData;
-
-  }
-
-  protected Level parseLevel(String s) {
-    if (s.equalsIgnoreCase("INFO")) {
-      return Level.INFO;
-    } else if (s.equalsIgnoreCase("ERROR") || s.equalsIgnoreCase("FATAL")) {
-      return Level.SEVERE;
-    } else if (s.equalsIgnoreCase("WARN")) {
-      return Level.WARNING;
-    } else if (s.equalsIgnoreCase("DEBUG") || s.equalsIgnoreCase("TRACE")) {
-      return Level.FINE;
-    }
-    LOGGER.severe("Level \"" + s + "\" not parsed!");
-    return null;
 
   }
 
