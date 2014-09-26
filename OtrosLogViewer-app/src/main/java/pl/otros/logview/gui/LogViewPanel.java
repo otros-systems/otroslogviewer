@@ -75,6 +75,7 @@ import pl.otros.logview.gui.renderers.MarkTableRenderer;
 import pl.otros.logview.gui.renderers.NoteRenderer;
 import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
+import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
@@ -115,6 +116,11 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventSource;
+import pl.otros.logview.gui.renderers.DateRenderer;
 
 public class LogViewPanel extends JPanel implements LogDataCollector {
 
@@ -219,6 +225,22 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
     table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(renderers.getDateRenderer()));
+
+    ((EventSource) configuration.getConfiguration()).addConfigurationListener(new ConfigurationListener() {
+      @Override
+      public void configurationChanged(ConfigurationEvent ce) {
+        if (ce.getType() == AbstractConfiguration.EVENT_SET_PROPERTY && !ce.isBeforeUpdate()) {
+          if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT)) {
+            table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
+            updateTimeColumnSize();
+          } else if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
+            table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly))));
+            updateLevelColumnSize();
+          }
+        }
+      }
+    });
+
     table.setDefaultRenderer(Boolean.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Boolean.class)));
     table.setDefaultRenderer(Note.class, new TableMarkDecoratorRenderer(new NoteRenderer()));
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
@@ -345,17 +367,43 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   }
 
   private void updateColumnsSize() {
-    updateColumnSizeIfVisible(TableColumns.ID, 40, 100);
-    updateColumnSizeIfVisible(TableColumns.TIME, 140, 240);
-    updateColumnSizeIfVisible(TableColumns.LEVEL, 16, 110);
-    updateColumnSizeIfVisible(TableColumns.THREAD, 100, 500);
-    updateColumnSizeIfVisible(TableColumns.MARK, 30, 30);
+    FontMetrics fm = table.getFontMetrics(table.getFont());
+    updateColumnSizeIfVisible(TableColumns.ID, fm.stringWidth("0000000"), fm.stringWidth("000000000"));
+    updateTimeColumnSize();
+    updateLevelColumnSize();
+    updateColumnSizeIfVisible(TableColumns.CLASS, 100, 300);
+    updateColumnSizeIfVisible(TableColumns.THREAD, 100, 300);
+    updateColumnSizeIfVisible(TableColumns.METHOD, 100, 200);
+    updateColumnSizeIfVisible(TableColumns.LINE, fm.stringWidth("0000"), fm.stringWidth("000000"));
+    updateColumnSizeIfVisible(TableColumns.MARK, 16, 16);
     updateColumnSizeIfVisible(TableColumns.NOTE, 100, 1500);
+  }
+
+  private void updateTimeColumnSize() {
+    FontMetrics fm = table.getFontMetrics(table.getFont());
+    int dateWidth = fm.stringWidth(new SimpleDateFormat(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")).format(new Date()));
+    updateColumnSizeIfVisible(TableColumns.TIME, dateWidth + 1, dateWidth + 1);
+  }
+
+  private void updateLevelColumnSize() {
+    FontMetrics fm = table.getFontMetrics(table.getFont());
+    int levelWidth = fm.stringWidth(Level.WARNING.getName());
+
+    switch (configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly)) {
+      case IconsOnly:
+        updateColumnSizeIfVisible(TableColumns.LEVEL, 16 + 1, 16 + 1);
+        break;
+      case IconsAndText:
+        updateColumnSizeIfVisible(TableColumns.LEVEL, 16 + levelWidth + 5, 16 + levelWidth + 5);
+        break;
+      case TextOnly:
+        updateColumnSizeIfVisible(TableColumns.LEVEL, levelWidth + 1, levelWidth + 1);
+        break;
+    }
   }
 
   private void updateColumnSizeIfVisible(TableColumns column, int width, int maxWidth) {
     table.getColumns(true).get(column.getColumn()).setMaxWidth(maxWidth);
-    table.getColumns(true).get(column.getColumn()).setWidth(width);
     table.getColumns(true).get(column.getColumn()).setPreferredWidth(width);
   }
 

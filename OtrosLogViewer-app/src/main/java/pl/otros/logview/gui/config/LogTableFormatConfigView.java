@@ -44,7 +44,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         "dd-MM HH:mm:ss.SSS",//
         "E HH:mm:ss", //
         "E HH:mm:ss.SS", //
-        "MMM dd, HH:mm:ss",//
+        "MMM dd. HH:mm:ss",//
     };
     dateFormatRadio = new JXComboBox(dateFormats);
     addLabel("Date format", 'd', dateFormatRadio, panel);
