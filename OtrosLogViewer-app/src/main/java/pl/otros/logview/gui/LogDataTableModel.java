@@ -112,7 +112,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         result = ld.getLevel();
         break;
       case MESSAGE:
-        result = ld.getMessage();
+        result = ld.getMessage().replace("\t", "    ").replace("\n", "|");
         break;
       case CLASS:
         String clazz = ld.getClazz();
