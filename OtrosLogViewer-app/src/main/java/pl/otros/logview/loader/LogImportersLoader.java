@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import pl.otros.logview.parser.log4j.Log4jUtil;
 
 public class LogImportersLoader {
 
@@ -137,6 +138,14 @@ public class LogImportersLoader {
             LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);
             logImporter.init(p);
             logImporters.add(logImporter);
+          } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, "").equals("log4j-native")) {
+            parser.getParserDescription().setFile(file.getAbsolutePath());
+            Log4jUtil.parsePattern(p);
+            LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);
+            logImporter.init(p);
+            logImporters.add(logImporter);
+          } else {
+            LOGGER.log(Level.SEVERE, "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
           }
         } catch (Exception e) {
           LOGGER.log(Level.SEVERE,

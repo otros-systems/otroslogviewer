@@ -15,9 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.parser.log4j;
 
-import static org.testng.AssertJUnit.assertEquals;
 import org.testng.annotations.Test;
+import static org.testng.Assert.fail;
+import static org.testng.Assert.assertEquals;
+import java.util.Properties;
 import java.util.logging.Level;
+import pl.otros.logview.importer.InitializationException;
 
 public class Log4jUtilTest {
 
@@ -31,4 +34,18 @@ public class Log4jUtilTest {
     assertEquals(Level.SEVERE, Log4jUtil.parseLevel("FATAL"));
   }
 
+  @Test
+  public void testParsePattern() {
+    Properties p = new Properties();
+    p.setProperty(Log4jUtil.CONVERSION_PATTERN, "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%t] %c{2}: %m%n");
+
+    try {
+      Log4jUtil.parsePattern(p);
+    } catch (InitializationException ex) {
+      fail(ex.getMessage());
+    }
+
+    assertEquals("yyyy-MM-dd HH:mm:ss.SSS", p.getProperty("dateFormat"));
+    assertEquals("TIMESTAMP LEVEL [THREAD] CLASS: MESSAGE", p.getProperty("pattern"));
+  }
 }

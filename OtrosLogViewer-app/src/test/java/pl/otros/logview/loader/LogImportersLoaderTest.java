@@ -31,7 +31,7 @@ public class LogImportersLoaderTest {
   public void testLoadPropertyFileBased() throws InitializationException, URISyntaxException {
     LogImportersLoader importersLoader = new LogImportersLoader();
     Collection<LogImporter> loadPropertyFileBased = importersLoader.loadPropertyPatternFileFromDir(getFile(("plugins/logimporters/")));
-    AssertJUnit.assertEquals(2, loadPropertyFileBased.size());
+    AssertJUnit.assertEquals(3, loadPropertyFileBased.size());
   }
 
   private File getFile(String name) throws URISyntaxException {

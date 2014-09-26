@@ -19,21 +19,24 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.LogData;
-import pl.otros.logview.gui.table.TableColumns;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import pl.otros.logview.RenamedLevel;
+import pl.otros.logview.importer.InitializationException;
 
 public class Log4jUtil {
 
   private static final Logger LOGGER = Logger.getLogger(Log4jUtil.class.getName());
   private static final Map<String, String> IMMUTABLE_EMPTY_MAP = new ImmutableMap.Builder<String, String>().build();
-
+  public static final String CONVERSION_PATTERN = "conversionPattern";
+  
   public static LogData translateLog4j(LoggingEvent event) {
     LogData ld = new LogData();
     ld.setDate(new Date(event.getTimeStamp()));
@@ -91,5 +94,45 @@ public class Log4jUtil {
     }
     LOGGER.severe("Level \"" + s + "\" not parsed!");
     return null;
+  }
+
+  public static void parsePattern(Properties p) throws InitializationException {
+    String conversionPattern = p.getProperty(CONVERSION_PATTERN);
+    if (conversionPattern == null) {
+      throw new InitializationException("Log " + CONVERSION_PATTERN + " is not set.");
+    }
+
+    Matcher dateFormatMatcher = Pattern.compile("%-?\\d*(?:\\.\\d+)?d(?:\\{([^}]+)\\})?").matcher(conversionPattern);
+    String dateFormat = "yyyy-MM-dd HH:mm:ss,SSS"; //ISO8601
+    if (dateFormatMatcher.find() && dateFormatMatcher.groupCount() >= 1) {
+      if (dateFormatMatcher.group(1).equals("ABSOLUTE")) {
+        dateFormat = "HH:mm:ss,SSS";
+      } else {
+        dateFormat = dateFormatMatcher.group(1);
+      }
+    }
+    p.setProperty("dateFormat", dateFormat);
+
+    String parserPattern = p.getProperty(CONVERSION_PATTERN, "");
+
+    Map<Character, String> conversionCharacters = new HashMap<Character, String>();
+    conversionCharacters.put('C', "CLASS");
+    conversionCharacters.put('c', "CLASS");
+    conversionCharacters.put('d', "TIMESTAMP");
+    conversionCharacters.put('F', "FILE");
+//        conversionCharacters.put('l', "");//Location ?
+    conversionCharacters.put('L', "LINE");
+    conversionCharacters.put('m', "MESSAGE");
+    conversionCharacters.put('M', "METHOD");
+    conversionCharacters.put('n', ""); // New Line
+    conversionCharacters.put('p', "LEVEL");
+//        conversionCharacters.put('r', "");//Milliseconds
+    conversionCharacters.put('t', "THREAD");
+    conversionCharacters.put('x', "NDC");
+
+    for (Map.Entry<Character, String> conversion : conversionCharacters.entrySet()) {
+      parserPattern = parserPattern.replaceAll("%-?\\d*(?:\\.\\d+)?" + conversion.getKey() + "(?:\\{([^}]+)\\})?", conversion.getValue());
+    }
+    p.setProperty("pattern", parserPattern);
   }
 }
