@@ -8,6 +8,7 @@ import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.OtrosApplication;
 
 import java.text.SimpleDateFormat;
+import javax.swing.table.TableCellRenderer;
 
 import static pl.otros.logview.gui.ConfKeys.*;
 
@@ -17,6 +18,7 @@ public class Renderers {
   private final DateRenderer dateRenderer;
   private ClassWrapperRenderer classWrapperRenderer;
   private LevelRenderer levelRenderer;
+  private StringRenderer stringRenderer;
 
   public Renderers(OtrosApplication otrosApplication) {
     final DataConfiguration configuration = otrosApplication.getConfiguration();
@@ -24,6 +26,7 @@ public class Renderers {
     classWrapperRenderer.reloadConfiguration(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, StringUtils.EMPTY));
     levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
     dateRenderer = new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
+    stringRenderer = new StringRenderer();
     configuration.addConfigurationListener(new ConfigurationListener() {
       @Override
       public void configurationChanged(ConfigurationEvent event) {
@@ -65,5 +68,9 @@ public class Renderers {
 
   public LevelRenderer getLevelRenderer() {
     return levelRenderer;
+  }
+
+  public TableCellRenderer getStringRenderer() {
+    return stringRenderer;
   }
 }
