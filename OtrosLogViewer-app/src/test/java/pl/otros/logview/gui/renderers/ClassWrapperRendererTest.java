@@ -1,9 +1,11 @@
 package pl.otros.logview.gui.renderers;
 
 import com.google.common.base.Joiner;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import javax.swing.*;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
@@ -38,7 +40,7 @@ public class ClassWrapperRendererTest {
   }
 
   @Test
-  public void testAbbreviatePackage() throws Exception {
-
+  public void testIsNullSafe() throws Exception {
+    underTest.getTableCellRendererComponent(Mockito.mock(JTable.class), null, false, false, 0, 0);
   }
 }

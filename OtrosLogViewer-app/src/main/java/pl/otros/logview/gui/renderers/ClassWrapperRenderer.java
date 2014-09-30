@@ -36,9 +36,12 @@ public class ClassWrapperRenderer extends DefaultTableCellRenderer implements Ta
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    final ClassWrapper classWrapper = (ClassWrapper) value;
-    final String className = classWrapper.getClassName();
-    final String abbreviatePackage = abbreviatePackage(className, replacements);
+    String abbreviatePackage = "";
+    if (value != null) {
+      final ClassWrapper classWrapper = (ClassWrapper) value;
+      final String className = classWrapper.getClassName();
+      abbreviatePackage = abbreviatePackage(className, replacements);
+    }
     return super.getTableCellRendererComponent(table, abbreviatePackage, isSelected, hasFocus, row, column);
   }
 

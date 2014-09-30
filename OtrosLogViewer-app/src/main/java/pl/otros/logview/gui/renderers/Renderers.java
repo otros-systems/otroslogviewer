@@ -18,7 +18,7 @@ public class Renderers {
   private ClassWrapperRenderer classWrapperRenderer;
   private LevelRenderer levelRenderer;
 
-  public Renderers(OtrosApplication otrosApplication) {
+  private Renderers(OtrosApplication otrosApplication) {
     final DataConfiguration configuration = otrosApplication.getConfiguration();
     classWrapperRenderer = new ClassWrapperRenderer();
     classWrapperRenderer.reloadConfiguration(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, StringUtils.EMPTY));
