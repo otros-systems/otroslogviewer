@@ -16,6 +16,7 @@
 
 package pl.otros.logview.gui.message.update;
 
+import com.google.common.base.Throwables;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.LogDataTableModel;
 import pl.otros.logview.gui.LogViewPanel;
@@ -38,22 +39,21 @@ import java.util.logging.Logger;
 
 public class MessageDetailListener implements ListSelectionListener, NoteObserver {
 
-  private static final Logger LOGGER = Logger.getLogger(MessageDetailListener.class.getName());
   public static final int FORMAT_IN_SEPARATE_THREAD_THRESHOLD = 4 * 1024;
-
+  private static final Logger LOGGER = Logger.getLogger(MessageDetailListener.class.getName());
+  private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
+  private final PluginableElementsContainer<MessageFormatter> formattersContainer;
   private LogViewPanel logViewPanel;
   private JTable table;
   private JTextPane logDetailTextArea;
   private LogDataTableModel dataTableModel;
   private SimpleDateFormat dateFormat;
   private int maximumMessageSize = 400 * 1000;
-
-
-  private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
-  private final PluginableElementsContainer<MessageFormatter> formattersContainer;
-
   private FormatMessageDialogWorker messageFormatSwingWorker;
   private DelayedSwingInvoke delayedSwingInvoke;
+  private int firstIndex = -1;
+  private int lastIndex = -1;
+  private int rowCount;
 
   public MessageDetailListener(LogViewPanel logViewPanel, SimpleDateFormat dateFormat,
                                PluginableElementsContainer<MessageFormatter> formattersContainer, PluginableElementsContainer<MessageColorizer> colorizersContainer) {
@@ -80,7 +80,18 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
 
   @Override
   public void valueChanged(ListSelectionEvent e) {
-    updateInfo();
+    boolean fireUpdate = (firstIndex == e.getFirstIndex() || lastIndex == e.getLastIndex() || rowCount != table.getRowCount());
+    fireUpdate = fireUpdate && !e.getValueIsAdjusting();
+    LOGGER.fine(String.format("Value changed adjusting:%s, %d->%d, current %d->%d, rowCount %d->%d, fire: %s", e.getValueIsAdjusting(), e.getFirstIndex(),
+        e.getLastIndex(),
+        firstIndex,
+        lastIndex, rowCount, table.getRowCount(), fireUpdate));
+    firstIndex = e.getFirstIndex();
+    lastIndex = e.getLastIndex();
+    rowCount = table.getRowCount();
+    if (fireUpdate) {
+      updateInfo();
+    }
 
   }
 
@@ -103,8 +114,7 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
         LogData displayedLogData = dataTableModel.getLogData(rowConverted);
         logViewPanel.setDisplayedLogData(displayedLogData);
         messageFormatSwingWorker = new FormatMessageDialogWorker(displayedLogData, dateFormat, logViewPanel.getLogDetailWithRulerScrollPane(),
-            colorizersContainer,
-            formattersContainer, maximumMessageSize);
+            colorizersContainer, formattersContainer, maximumMessageSize);
         if (displayedLogData.getMessage().length() > FORMAT_IN_SEPARATE_THREAD_THRESHOLD) {
           logDetailTextArea.setText("Updating log event details...");
           messageFormatSwingWorker.execute();
@@ -112,9 +122,12 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
           messageFormatSwingWorker.updateChanges(messageFormatSwingWorker.doInBackground());
         }
 
+      } else {
+        logDetailTextArea.setText("No row selected");
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Error formatting message details", e);
+      logDetailTextArea.setText("Error rendering message details:" + e.getMessage() + "\n" + Throwables.getStackTraceAsString(e));
     }
     LOGGER.finer("Gui update call scheduled. Changes will be done in background");
 
@@ -124,6 +137,10 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
     return dataTableModel;
   }
 
+  public void setMaximumMessageSize(int maximumMessageSize) {
+    this.maximumMessageSize = maximumMessageSize;
+    delayedSwingInvoke.performAction();
+  }
 
   private final class PluginableElementEventListenerImplementation<T extends PluginableElement> implements PluginableElementEventListener<T> {
 
@@ -141,14 +158,5 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
     public void elementAdded(T element) {
       updateInfo();
     }
-  }
-
-  public int getMaximumMessageSize() {
-    return maximumMessageSize;
-  }
-
-  public void setMaximumMessageSize(int maximumMessageSize) {
-    this.maximumMessageSize = maximumMessageSize;
-    delayedSwingInvoke.performAction();
   }
 }
