@@ -49,7 +49,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
           toolTipText.append("<BR/>\n");
         }
         toolTipText.append("</HTML>");
-        LOGGER.info("Tooltip text: " + toolTipText.toString());
+        LOGGER.fine("Tooltip text: " + toolTipText.toString());
         textPane.setToolTipText(toolTipText.toString());
       }
     } catch (IOException e1) {
@@ -60,8 +60,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
 
   private LocationInfo getLocationInfoUnderCursor(MouseEvent e) {
     AttributeSet styleUnderCursor = getStyleUnderCursor(e);
-    LocationInfo locationInfo = (LocationInfo) styleUnderCursor.getAttribute("locationInfo");
-    return locationInfo;
+    return (LocationInfo) styleUnderCursor.getAttribute("locationInfo");
   }
 
   @Override
