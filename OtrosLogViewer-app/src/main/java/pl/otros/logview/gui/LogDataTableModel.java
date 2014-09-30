@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,14 @@ import pl.otros.logview.store.file.FileLogDataStore;
 import javax.swing.table.AbstractTableModel;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,12 +58,12 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   private static final Note EMPTY_NOTE = new Note("");
   private Set<NoteObserver> noteObservers;
   private LogDataStore logDataStore;
-    private Map<String,ClassWrapper> classWrapperCache;
+  private Map<String, ClassWrapper> classWrapperCache;
 
   private int maximumMessageLength = 2000;
 
   public LogDataTableModel() {
-      classWrapperCache = new HashMap<String, ClassWrapper>(100);
+    classWrapperCache = new HashMap<String, ClassWrapper>(100);
 
     String cached = System.getProperty("cacheEvents");
     if (StringUtils.equalsIgnoreCase(cached, "true")) {
@@ -116,10 +123,10 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         break;
       case CLASS:
         String clazz = ld.getClazz();
-          if (!classWrapperCache.containsKey(clazz)){
-              classWrapperCache.put(clazz,new ClassWrapper(clazz));
-          }
-          result = classWrapperCache.get(clazz);
+        if (!classWrapperCache.containsKey(clazz)) {
+          classWrapperCache.put(clazz, new ClassWrapper(clazz));
+        }
+        result = classWrapperCache.get(clazz);
         break;
       case METHOD:
         result = StringUtils.left(ld.getMethod(), maximumMessageLength);
@@ -183,8 +190,8 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     if (logDatas.length == 0) {
       return;
     }
-    for (int i = 0; i < logDatas.length; i++) {
-      addLogDataToTable(logDatas[i]);
+    for (LogData logData : logDatas) {
+      addLogDataToTable(logData);
     }
     fireTableRowsInserted(getRowCount() - logDatas.length, getRowCount() - 1);
   }
@@ -240,7 +247,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   @Override
   public Class<?> getColumnClass(int columnIndex) {
     // return super.getColumnClass(columnIndex); LogData ld = list.get(rowIndex);
-    Class<?> result = String.class;
+    Class<?> result;
     TableColumns selectedColumn = TableColumns.getColumnById(columnIndex);
     switch (selectedColumn) {
       case ID:
@@ -255,9 +262,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       case MESSAGE:
         result = String.class;
         break;
-        case CLASS:
-          result = ClassWrapper.class;
-          break;
+      case CLASS:
+        result = ClassWrapper.class;
+        break;
       case MARK:
         result = MarkerColors.class;
         break;
@@ -392,12 +399,12 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     for (int row = 0; row < logDataStore.getCount(); row++) {
       LogData ld = logDataStore.getLogData(row);
       if (ld.isMarked()) {
-        m.marks.put(Integer.valueOf(row), Boolean.TRUE);
-        m.marksColor.put(Integer.valueOf(row), ld.getMarkerColors());
+        m.marks.put(row, Boolean.TRUE);
+        m.marksColor.put(row, ld.getMarkerColors());
       }
       Note note = ld.getNote();
       if (note != null && StringUtils.isNotBlank(note.getNote())) {
-        m.notes.put(Integer.valueOf(row), note);
+        m.notes.put(row, note);
       }
     }
     return m;
@@ -407,7 +414,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     logDataStore.clear();
     logDataStore.setLimit(memento.dataLimit);
 
-    logDataStore.add(memento.list.toArray(new LogData[0]));
+    logDataStore.add(memento.list.toArray(new LogData[memento.list.size()]));
 
     TreeMap<Integer, MarkerColors> marksColor = memento.getMarksColor();
     for (Integer row : marksColor.keySet()) {
@@ -418,6 +425,46 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       logDataStore.addNoteToRow(row, memento.notes.get(row));
     }
     fireTableDataChanged();
+  }
+
+  private void dumpInfo() {
+    System.out.println("LogDataTableModel.dumpInfo() list.size" + logDataStore.getCount());
+    System.out.println("LogDataTableModel.dumpInfo() dumping content");
+
+    // for (Integer idx : list.keySet()) {
+    // System.out.println("LogDataTableModel.dumpInfo() idx: " + idx + ": " + list.get(idx));
+    // }
+    // System.out.println("LogDataTableModel.enclosing_method() marks size" + marks.size());
+  }
+
+  public int getDataLimit() {
+    return logDataStore.getLimit();
+  }
+
+  public void setDataLimit(int dataLimit) {
+    logDataStore.setLimit(dataLimit);
+
+  }
+
+  @Override
+  public Note removeNote(int row, boolean notify) {
+    Note n = logDataStore.removeNote(row);
+    if (notify) {
+      NoteEvent event = new NoteEvent(EventType.REMOVE, this, n, row);
+      notifyAllNoteObservers(event);
+    }
+    return n;
+  }
+
+  @Override
+  public int clear() {
+    int clear = logDataStore.clear();
+    fireTableDataChanged();
+    return clear;
+  }
+
+  public LogDataStore getLogDataStore() {
+    return logDataStore;
   }
 
   public static class Memento implements Serializable {
@@ -505,46 +552,6 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       this.visibleColumns = visibleColumns;
     }
 
-  }
-
-  private void dumpInfo() {
-    System.out.println("LogDataTableModel.dumpInfo() list.size" + logDataStore.getCount());
-    System.out.println("LogDataTableModel.dumpInfo() dumping content");
-
-    // for (Integer idx : list.keySet()) {
-    // System.out.println("LogDataTableModel.dumpInfo() idx: " + idx + ": " + list.get(idx));
-    // }
-    // System.out.println("LogDataTableModel.enclosing_method() marks size" + marks.size());
-  }
-
-  public int getDataLimit() {
-    return logDataStore.getLimit();
-  }
-
-  public void setDataLimit(int dataLimit) {
-    logDataStore.setLimit(dataLimit);
-
-  }
-
-  @Override
-  public Note removeNote(int row, boolean notify) {
-    Note n = logDataStore.removeNote(row);
-    if (notify) {
-      NoteEvent event = new NoteEvent(EventType.REMOVE, this, n, row);
-      notifyAllNoteObservers(event);
-    }
-    return n;
-  }
-
-  @Override
-  public int clear() {
-    int clear = logDataStore.clear();
-    fireTableDataChanged();
-    return clear;
-  }
-
-  public LogDataStore getLogDataStore() {
-    return logDataStore;
   }
 
 }
