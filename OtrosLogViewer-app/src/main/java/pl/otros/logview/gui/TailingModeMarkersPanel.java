@@ -32,8 +32,12 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 public class TailingModeMarkersPanel extends JPanel implements PluginableElementEventListener<AutomaticMarker>, TableModelListener {
 
@@ -42,7 +46,6 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
   private DefaultComboBoxModel boxModel;
   private JTable table;
   private SelectedMarkersTableModel defaultTableModel;
-  private MarkersRowFilter markersRowFilter;
   private PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public TailingModeMarkersPanel(LogDataTableModel logDataTableModel) {
@@ -54,7 +57,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     table.getColumnModel().getColumn(0).setMaxWidth(16);
 
     TableRowSorter<SelectedMarkersTableModel> rowSorter = new TableRowSorter<SelectedMarkersTableModel>(defaultTableModel);
-    markersRowFilter = new MarkersRowFilter();
+    MarkersRowFilter markersRowFilter = new MarkersRowFilter();
     rowSorter.setRowFilter(markersRowFilter);
     table.setRowSorter(rowSorter);
     table.setOpaque(true);
@@ -179,7 +182,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
   class SelectedMarkersTableModel extends AbstractTableModel implements PluginableElementEventListener<AutomaticMarker> {
 
-    private List<AutomaticMarker> data = new ArrayList<AutomaticMarker>();
+    private final List<AutomaticMarker> data = new ArrayList<AutomaticMarker>();
     private HashSet<AutomaticMarker> selected = new HashSet<AutomaticMarker>();
 
     public HashSet<AutomaticMarker> getSelected() {
@@ -196,8 +199,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     @Override
     public int getRowCount() {
       synchronized (data) {
-        int rowCount = data.size();
-        return rowCount;
+        return data.size();
       }
     }
 
@@ -210,7 +212,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
       if (columnIndex == 0 && aValue instanceof Boolean) {
         Boolean isSelected = (Boolean) aValue;
-        if (isSelected.booleanValue()) {
+        if (isSelected) {
           selected.add(data.get(rowIndex));
         } else {
           selected.remove(data.get(rowIndex));
@@ -221,10 +223,9 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     @Override
     public Object getValueAt(int row, int col) {
       if (col == 0) {
-        return Boolean.valueOf(selected.contains(data.get(row)));
+        return selected.contains(data.get(row));
       } else {
-        AutomaticMarker automaticMarker = data.get(row);
-        return automaticMarker;
+        return data.get(row);
       }
     }
 
