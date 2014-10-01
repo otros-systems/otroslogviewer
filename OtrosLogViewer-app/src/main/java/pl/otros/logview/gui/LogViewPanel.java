@@ -17,7 +17,11 @@
 package pl.otros.logview.gui;
 
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventSource;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -70,12 +74,13 @@ import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.note.NoteEvent;
 import pl.otros.logview.gui.note.NoteEvent.EventType;
 import pl.otros.logview.gui.note.NoteObserver;
+import pl.otros.logview.gui.renderers.DateRenderer;
+import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.MarkTableEditor;
 import pl.otros.logview.gui.renderers.MarkTableRenderer;
 import pl.otros.logview.gui.renderers.NoteRenderer;
 import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
-import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
@@ -116,11 +121,6 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.event.EventSource;
-import pl.otros.logview.gui.renderers.DateRenderer;
 
 public class LogViewPanel extends JPanel implements LogDataCollector {
 
@@ -246,7 +246,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setDefaultRenderer(MarkerColors.class, new TableMarkDecoratorRenderer(new MarkTableRenderer()));
     table.setDefaultEditor(Note.class, new NoteTableEditor());
     table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
-    table.setDefaultRenderer(ClassWrapper.class, renderers.getClassWrapperRenderer());
+    table.setDefaultRenderer(ClassWrapper.class, new TableMarkDecoratorRenderer(renderers.getClassWrapperRenderer()));
     sorter = new TableRowSorter<LogDataTableModel>(dataTableModel);
     for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
       sorter.setSortable(i, false);
@@ -263,8 +263,9 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
+        boolean hasFocus = otrosApplication.getApplicationJFrame().hasFocus();
         final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
-        if (!e.getValueIsAdjusting() && enabled) {
+        if (hasFocus && enabled && !e.getValueIsAdjusting()) {
           try {
             final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
             LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
