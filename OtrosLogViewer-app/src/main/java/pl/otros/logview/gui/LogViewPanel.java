@@ -221,6 +221,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     updateColumnsSize();
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
     final Renderers renderers = Renderers.getInstance(otrosApplication);
+    table.setDefaultRenderer(String.class, new TableMarkDecoratorRenderer(renderers.getStringRenderer()));
     table.setDefaultRenderer(Object.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
