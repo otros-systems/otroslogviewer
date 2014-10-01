@@ -264,7 +264,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        boolean hasFocus = otrosApplication.getApplicationJFrame().hasFocus();
+        boolean hasFocus = otrosApplication.getApplicationJFrame().isFocused();
         final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
         if (hasFocus && enabled && !e.getValueIsAdjusting()) {
           try {
