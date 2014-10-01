@@ -5,28 +5,28 @@
  */
 package pl.otros.logview.gui.renderers;
 
-import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 import org.apache.commons.lang.StringUtils;
 
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+
 /**
- *
  * @author Administrator
  */
 public class StringRenderer implements TableCellRenderer {
   private final JLabel label;
 
-  public StringRenderer(){
+  public StringRenderer() {
     this.label = new JLabel();
     label.setOpaque(true);
   }
-  
+
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    label.setText(StringUtils.abbreviate(value.toString(), 500).replace("\t", "    ").replace("\n", "|"));
+    String message = value == null ? "" : value.toString();
+    label.setText(StringUtils.abbreviate(message, 500).replace("\t", "    ").replace("\n", "|"));
     return label;
   }
-  
+
 }
