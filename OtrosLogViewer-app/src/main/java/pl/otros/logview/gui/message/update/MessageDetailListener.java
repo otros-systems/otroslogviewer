@@ -80,12 +80,10 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
 
   @Override
   public void valueChanged(ListSelectionEvent e) {
-    boolean fireUpdate = (firstIndex == e.getFirstIndex() || lastIndex == e.getLastIndex() || rowCount != table.getRowCount());
-    fireUpdate = fireUpdate && !e.getValueIsAdjusting();
-    LOGGER.fine(String.format("Value changed adjusting:%s, %d->%d, current %d->%d, rowCount %d->%d, fire: %s", e.getValueIsAdjusting(), e.getFirstIndex(),
-        e.getLastIndex(),
-        firstIndex,
-        lastIndex, rowCount, table.getRowCount(), fireUpdate));
+    if (e.getValueIsAdjusting()){
+      return;
+    }
+    boolean fireUpdate = (firstIndex != e.getFirstIndex() || lastIndex != e.getLastIndex() || rowCount != table.getRowCount());
     firstIndex = e.getFirstIndex();
     lastIndex = e.getLastIndex();
     rowCount = table.getRowCount();
