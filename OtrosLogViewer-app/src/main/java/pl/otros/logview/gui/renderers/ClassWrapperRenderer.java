@@ -4,7 +4,6 @@ import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.gui.ClassWrapper;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.IOException;
@@ -16,8 +15,9 @@ import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class ClassWrapperRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
+public class ClassWrapperRenderer  implements TableCellRenderer {
   private SortedMap<String, String> replacements;
+  private JLabel label;
 
 
   public ClassWrapperRenderer() {
@@ -31,6 +31,8 @@ public class ClassWrapperRenderer extends DefaultTableCellRenderer implements Ta
         return result;
       }
     });
+    label = new JLabel();
+    label.setOpaque(true);
 
   }
 
@@ -42,7 +44,8 @@ public class ClassWrapperRenderer extends DefaultTableCellRenderer implements Ta
       final String className = classWrapper.getClassName();
       abbreviatePackage = abbreviatePackage(className, replacements);
     }
-    return super.getTableCellRendererComponent(table, abbreviatePackage, isSelected, hasFocus, row, column);
+    label.setText(abbreviatePackage);
+    return label;
   }
 
   Map<String, String> toMap(String configuration) {
