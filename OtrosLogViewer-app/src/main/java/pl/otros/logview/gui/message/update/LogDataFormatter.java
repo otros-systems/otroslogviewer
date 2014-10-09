@@ -16,7 +16,6 @@
 
 package pl.otros.logview.gui.message.update;
 
-import com.google.common.base.Joiner;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
@@ -36,6 +35,8 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -52,6 +53,9 @@ public class LogDataFormatter {
     private Style mainStyle = null;
     private Style classMethodStyle = null;
     private Style boldArialStyle = null;
+    private Style propertyNameStyle = null;
+    private Style propertyValueStyle = null;
+
     private StyleContext sc;
 
 
@@ -93,6 +97,13 @@ public class LogDataFormatter {
         StyleConstants.setFontFamily(boldArialStyle, "arial");
         StyleConstants.setBold(boldArialStyle, true);
 
+        propertyNameStyle = sc.addStyle("propertyValue",classMethodStyle);
+        StyleConstants.setForeground(propertyNameStyle,new Color(0,0,128));
+
+        propertyValueStyle = sc.addStyle("propertyValue",classMethodStyle);
+        StyleConstants.setForeground(propertyNameStyle,new Color(0,128,0));
+
+
 
     }
 
@@ -133,11 +144,15 @@ public class LogDataFormatter {
             chunks.add(new TextChunkWithStyle("Logger name: " + ld.getLoggerName() + NEW_LINE, mainStyle));
         }
 
-        if (ld.getProperties() != null && ld.getProperties().size() > 0) {
+      Map<String, String> properties = ld.getProperties();
+      if (properties != null && properties.size() > 0) {
             chunks.add(new TextChunkWithStyle("Properties:\n", boldArialStyle));
-            String prop = Joiner.on(NEW_LINE).withKeyValueSeparator("=").join(ld.getProperties());
-            chunks.add(new TextChunkWithStyle(prop, boldArialStyle));
-            chunks.add(new TextChunkWithStyle(NEW_LINE, boldArialStyle));
+          ArrayList<String> keys = new ArrayList(properties.keySet());
+          Collections.sort(keys);
+          for (String key : keys) {
+            chunks.add(new TextChunkWithStyle(key+"=",propertyNameStyle));
+            chunks.add(new TextChunkWithStyle(properties.get(key)+"\n",propertyValueStyle));
+          }
         }
 
 
