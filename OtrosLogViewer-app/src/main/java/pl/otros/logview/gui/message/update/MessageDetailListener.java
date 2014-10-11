@@ -51,9 +51,6 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
   private int maximumMessageSize = 400 * 1000;
   private FormatMessageDialogWorker messageFormatSwingWorker;
   private DelayedSwingInvoke delayedSwingInvoke;
-  private int firstIndex = -1;
-  private int lastIndex = -1;
-  private int rowCount;
 
   public MessageDetailListener(LogViewPanel logViewPanel, SimpleDateFormat dateFormat,
                                PluginableElementsContainer<MessageFormatter> formattersContainer, PluginableElementsContainer<MessageColorizer> colorizersContainer) {
@@ -80,17 +77,17 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
 
   @Override
   public void valueChanged(ListSelectionEvent e) {
-    if (e.getValueIsAdjusting()){
+    if (e.getValueIsAdjusting()) {
       return;
     }
-    boolean fireUpdate = (firstIndex != e.getFirstIndex() || lastIndex != e.getLastIndex() || rowCount != table.getRowCount());
-    firstIndex = e.getFirstIndex();
-    lastIndex = e.getLastIndex();
-    rowCount = table.getRowCount();
-    if (fireUpdate) {
-      updateInfo();
+    int row = table.getSelectedRow();
+    if (row >= 0 && row < table.getRowCount()) {
+      int rowConverted = table.convertRowIndexToModel(row);
+      LogData displayedLogData = dataTableModel.getLogData(rowConverted);
+      if (!displayedLogData.equals(logViewPanel.getDisplayedLogData())){
+        updateInfo();
+      }
     }
-
   }
 
   @Override
