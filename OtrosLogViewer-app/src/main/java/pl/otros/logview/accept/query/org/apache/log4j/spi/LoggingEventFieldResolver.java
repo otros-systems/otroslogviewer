@@ -3,7 +3,12 @@ package pl.otros.logview.accept.query.org.apache.log4j.spi;
 import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A singleton helper utility which accepts a field name and a LoggingEvent and returns the value of that field.
@@ -213,11 +218,13 @@ public final class LoggingEventFieldResolver {
     } else if (upperField.startsWith(PROP_FIELD)) {
       // FIXME investigate
       // note: need to use actual fieldname since case matters
-      Object propValue = event.getProperties().get(fieldName.substring(5));
+      Map<String, String> properties = event.getProperties();
+      String propName = fieldName.substring(PROP_FIELD.length());
+      Object propValue = properties.get(propName);
       if (propValue == null) {
         // case-specific match didn't work, try case insensitive match
-        String lowerPropKey = fieldName.substring(5).toLowerCase();
-        Set entrySet = event.getProperties().entrySet();
+        String lowerPropKey = propName.toLowerCase();
+        Set entrySet = properties.entrySet();
         for (Iterator iter = entrySet.iterator(); iter.hasNext();) {
           Map.Entry thisEntry = (Map.Entry) iter.next();
           if (thisEntry.getKey().toString().equalsIgnoreCase(lowerPropKey)) {

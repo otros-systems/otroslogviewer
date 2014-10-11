@@ -114,7 +114,7 @@ public class EqualsRule extends AbstractRule {
   public boolean evaluate(final LogData event, Map matches) {
     Object p2 = RESOLVER.getValue(field, event);
 
-    boolean result = (p2 != null) && p2.toString().equals(value);
+    boolean result = (p2 != null) && p2.toString().equalsIgnoreCase(value);
     if (result && matches != null) {
       Set entries = (Set) matches.get(field.toUpperCase());
       if (entries == null) {
