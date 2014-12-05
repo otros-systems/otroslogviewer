@@ -1,5 +1,7 @@
 package pl.otros.logview.gui.renderers;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.gui.ClassWrapper;
 
@@ -8,32 +10,33 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class ClassWrapperRenderer  implements TableCellRenderer {
+public class ClassWrapperRenderer implements TableCellRenderer {
+
+  private final Comparator<String> stringLengthComparator = new Comparator<String>() {
+    @Override
+    public int compare(String o1, String o2) {
+      int result = o2.length() - o1.length();
+      if (result == 0) {
+        result = o1.compareTo(o2);
+      }
+      return result;
+    }
+  };
+
   private SortedMap<String, String> replacements;
   private JLabel label;
 
 
   public ClassWrapperRenderer() {
-    replacements = new TreeMap<String, String>(new Comparator<String>() {
-      @Override
-      public int compare(String o1, String o2) {
-        int result = o2.length() - o1.length();
-        if (result == 0) {
-          result = o1.compareTo(o2);
-        }
-        return result;
-      }
-    });
+    replacements = toMap("");
     label = new JLabel();
     label.setOpaque(true);
-
   }
 
   @Override
@@ -42,16 +45,47 @@ public class ClassWrapperRenderer  implements TableCellRenderer {
     if (value != null) {
       final ClassWrapper classWrapper = (ClassWrapper) value;
       final String className = classWrapper.getClassName();
-      abbreviatePackage = abbreviatePackage(className, replacements);
+      abbreviatePackage = abbreviatePackageUsingMappings(className, replacements);
+
+      int availableWidth = table.getColumnModel().getColumn(column).getWidth();
+      availableWidth -= table.getIntercellSpacing().getWidth();
+      if (label.getBorder() != null) {
+        Insets borderInsets = label.getBorder().getBorderInsets(label);
+        availableWidth -= (borderInsets.left + borderInsets.right);
+      }
+      FontMetrics fm = label.getFontMetrics(label.getFont());
+
+      abbreviatePackage = abbreviatePackagesToSingleLetter(abbreviatePackage, availableWidth, fm);
+
+      while (fm.stringWidth(abbreviatePackage) > availableWidth && abbreviatePackage.length() > 0) {
+        abbreviatePackage = abbreviatePackage.substring(1);
+      }
+
     }
     label.setText(abbreviatePackage);
     return label;
   }
 
-  Map<String, String> toMap(String configuration) {
+  public String abbreviatePackagesToSingleLetter(String abbreviatePackage, int availableWidth, FontMetrics fm) {
+    if (fm.stringWidth(abbreviatePackage) > availableWidth) {
+      final java.util.List<String> split = Splitter.on('.').splitToList(abbreviatePackage);
+      int index = 0;
+      while (fm.stringWidth(abbreviatePackage) > availableWidth && index < split.size() - 1) {
+        java.util.List<String> list = new ArrayList<String>(split.size());
+        for (int i = 0; i < split.size(); i++) {
+          list.add(i <= index ? split.get(i).substring(0, 1) : split.get(i));
+        }
+        abbreviatePackage = Joiner.on(".").join(list);
+        index++;
+      }
+    }
+    return abbreviatePackage;
+  }
+
+  SortedMap<String, String> toMap(String configuration) {
     configuration = StringUtils.defaultString(configuration);
     Properties p = new Properties();
-    Map<String, String> result = new HashMap<String, String>();
+    SortedMap<String, String> result = new TreeMap<String, String>(stringLengthComparator);
     try {
       p.load(new StringReader(configuration));
       for (Object o : p.keySet()) {
@@ -65,7 +99,7 @@ public class ClassWrapperRenderer  implements TableCellRenderer {
     return result;
   }
 
-  String abbreviatePackage(String clazz, SortedMap<String, String> abbreviations) {
+  String abbreviatePackageUsingMappings(String clazz, SortedMap<String, String> abbreviations) {
     for (String s : abbreviations.keySet()) {
       if (clazz.startsWith(s)) {
         return StringUtils.replaceOnce(clazz, s, abbreviations.get(s));
@@ -75,8 +109,6 @@ public class ClassWrapperRenderer  implements TableCellRenderer {
   }
 
   public void reloadConfiguration(String propertyConfiguration) {
-    replacements.clear();
-    replacements.putAll(toMap(propertyConfiguration));
-
+    replacements = toMap(propertyConfiguration);
   }
 }
