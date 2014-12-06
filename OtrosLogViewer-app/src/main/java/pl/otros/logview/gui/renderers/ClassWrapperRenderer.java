@@ -73,7 +73,8 @@ public class ClassWrapperRenderer implements TableCellRenderer {
       while (fm.stringWidth(abbreviatePackage) > availableWidth && index < split.size() - 1) {
         java.util.List<String> list = new ArrayList<String>(split.size());
         for (int i = 0; i < split.size(); i++) {
-          list.add(i <= index ? split.get(i).substring(0, 1) : split.get(i));
+          final String s = split.get(i);
+          list.add(i <= index && s.length()>0 ? s.substring(0, 1) : s);
         }
         abbreviatePackage = Joiner.on(".").join(list);
         index++;

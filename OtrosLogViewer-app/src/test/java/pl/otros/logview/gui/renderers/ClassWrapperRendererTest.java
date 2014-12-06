@@ -82,6 +82,12 @@ public class ClassWrapperRendererTest {
         new Object[]{"com.company.package.Class",13,"c.c.p.Class"},
         new Object[]{"com.company.package.Class",11,"c.c.p.Class"},
         new Object[]{"com.company.package.Class",5,"c.c.p.Class"},
+        new Object[]{"Class",8,"Class"},
+        new Object[]{"Class",3,"Class"},
+        new Object[]{"",3,""},
+        new Object[]{"com.package.Dot.",1,"c.p.D."},
+        new Object[]{"com.package.Dot.",9,"c.p.Dot."},
+        new Object[]{".com.package.Dot.",10,".c.p.Dot."},
     };
   }
 
