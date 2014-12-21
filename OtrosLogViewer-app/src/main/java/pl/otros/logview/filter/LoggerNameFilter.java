@@ -21,7 +21,7 @@ public class LoggerNameFilter extends AbstractStringBasedFilter {
 
   private static final String NAME = "Logger name filter";
   private static final String DESCRIPTION = "Filtering events based on a Logger name.";
-  private static final String LABEL_TEXT = "Enter a text";
+  private static final String LABEL_TEXT = "Enter text";
   private String condition = "";
 
   public LoggerNameFilter() {
