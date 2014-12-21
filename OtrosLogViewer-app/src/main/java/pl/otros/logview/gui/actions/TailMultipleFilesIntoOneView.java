@@ -93,7 +93,8 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
       names[i] = importers[i].getName();
     }
 
-    TableColumns[] visibleColumns = new TableColumns[]{TableColumns.ID,//
+    TableColumns[] visibleColumns = new TableColumns[]{
+        TableColumns.ID,//
         TableColumns.TIME,//
         TableColumns.LEVEL,//
         TableColumns.MESSAGE,//
