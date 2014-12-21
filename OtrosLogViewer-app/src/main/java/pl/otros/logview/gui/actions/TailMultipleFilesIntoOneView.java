@@ -79,7 +79,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     }
 
     if (list.size() == 0) {
-      JOptionPane.showMessageDialog((Component) guiSource, "None of file can be opened :(", "Open error", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog((Component) guiSource, "No files can be opened :(", "Open error", JOptionPane.ERROR_MESSAGE);
       return;
     }
 
