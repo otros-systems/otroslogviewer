@@ -191,7 +191,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
 
   private String getTooltip() {
     StringBuilder sb = new StringBuilder();
-    sb.append("<html>Many files:<br>");
+    sb.append("<html>Multiple files:<br>");
     for (FileObject fo : fileObjects) {
       sb.append(fo.getName().getFriendlyURI());
       sb.append("<BR>");

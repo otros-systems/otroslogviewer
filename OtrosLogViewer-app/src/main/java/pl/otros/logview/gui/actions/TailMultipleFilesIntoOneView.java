@@ -106,7 +106,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
         TableColumns.LOG_SOURCE
 
     };
-    final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper("Many log files " + loadingInfos.length, null,visibleColumns,getOtrosApplication());
+    final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper("Multiple log files " + loadingInfos.length, null,visibleColumns,getOtrosApplication());
 
     logViewPanelWrapper.goToLiveMode();
     BaseConfiguration configuration = new BaseConfiguration();
@@ -115,14 +115,14 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     BufferingLogDataCollectorProxy logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
 
     StringBuilder sb = new StringBuilder();
-    sb.append("<html>Many files:<br>");
+    sb.append("<html>Multiple files:<br>");
     for (LoadingInfo loadingInfo : loadingInfos) {
       sb.append(loadingInfo.getFriendlyUrl());
       sb.append("<BR>");
     }
     sb.append("</html>");
 
-    getOtrosApplication().addClosableTab(String.format("Many log files [%d]", loadingInfos.length),sb.toString(), Icons.ARROW_REPEAT,logViewPanelWrapper,true);
+    getOtrosApplication().addClosableTab(String.format("Multiple logs [%d]", loadingInfos.length),sb.toString(), Icons.ARROW_REPEAT,logViewPanelWrapper,true);
 
     LogImporter importer = new DetectOnTheFlyLogImporter(elements);
     try {
@@ -154,7 +154,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
   private FileObject[] getFileObjects(ActionEvent e) {
     JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser);
-    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(),"Open many log into one view");
+    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(),"Open multiple log files into one view");
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       return null;
     }
