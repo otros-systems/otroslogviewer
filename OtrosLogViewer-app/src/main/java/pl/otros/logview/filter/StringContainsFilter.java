@@ -21,7 +21,7 @@ public class StringContainsFilter extends AbstractStringBasedFilter {
 
   private static final String NAME = "String contains filter";
   private static final String DESCRIPTION = "Filtering events based on a matching string in log message.";
-  private static final String LABLE_TEXT = "Enter a text";
+  private static final String LABLE_TEXT = "Enter text";
   private String condition = "";
 
   public StringContainsFilter() {
