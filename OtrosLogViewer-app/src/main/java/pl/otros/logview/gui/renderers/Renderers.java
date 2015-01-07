@@ -7,8 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.OtrosApplication;
 
-import java.text.SimpleDateFormat;
 import javax.swing.table.TableCellRenderer;
+import java.text.SimpleDateFormat;
 
 import static pl.otros.logview.gui.ConfKeys.*;
 

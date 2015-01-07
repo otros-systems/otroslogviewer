@@ -115,6 +115,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       case TIME:
         result = ld.getDate();
         break;
+      case DELTA:
+        result = new TimeDelta(ld.getDate());
+        break;
       case LEVEL:
         result = ld.getLevel();
         break;
@@ -255,6 +258,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         break;
       case TIME:
         result = Date.class;
+        break;
+      case DELTA:
+        result = TimeDelta.class;
         break;
       case LEVEL:
         result = Level.class;

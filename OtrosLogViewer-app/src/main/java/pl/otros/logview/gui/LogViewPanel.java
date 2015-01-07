@@ -82,6 +82,7 @@ import pl.otros.logview.gui.renderers.NoteRenderer;
 import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
+import pl.otros.logview.gui.renderers.TimeDeltaRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
@@ -226,6 +227,21 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
     table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(renderers.getDateRenderer()));
+    final TimeDeltaRenderer timeDeltaRenderer = new TimeDeltaRenderer();
+    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent listSelectionEvent) {
+        final int[] selectedRows = table.getSelectedRows();
+        if (selectedRows.length>0){
+          final int selectedRow = selectedRows[selectedRows.length - 1];
+          final Date selectedDate = dataTableModel.getLogData(table.convertRowIndexToModel(selectedRow)).getDate();
+          timeDeltaRenderer.setSelectedTimestamp(selectedDate);
+          table.repaint();
+        }
+      }
+    });
+    table.setDefaultRenderer(TimeDelta.class,new TableMarkDecoratorRenderer(timeDeltaRenderer));
+
 
     ((EventSource) configuration.getConfiguration()).addConfigurationListener(new ConfigurationListener() {
       @Override
@@ -372,8 +388,9 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     FontMetrics fm = table.getFontMetrics(table.getFont());
     updateColumnSizeIfVisible(TableColumns.ID, fm.stringWidth("0000000"), fm.stringWidth("000000000"));
     updateTimeColumnSize();
+    updateColumnSizeIfVisible(TableColumns.DELTA,60,100);
     updateLevelColumnSize();
-    updateColumnSizeIfVisible(TableColumns.CLASS, 100, 300);
+    updateColumnSizeIfVisible(TableColumns.CLASS, 100, 500);
     updateColumnSizeIfVisible(TableColumns.THREAD, 100, 300);
     updateColumnSizeIfVisible(TableColumns.METHOD, 100, 200);
     updateColumnSizeIfVisible(TableColumns.LINE, fm.stringWidth("0000"), fm.stringWidth("000000"));

@@ -21,19 +21,20 @@ public enum TableColumns {
 
   ID("ID", 0), //
   TIME("Time", 1), //
-  LEVEL("L", 2), //
-  MESSAGE("Message", 3), //
-  CLASS("Class", 4), //
-  METHOD("Method", 5), //
-  THREAD("Thread", 6), //
-  MARK("M", 7), //
-  NOTE("Enter a Note", 8), //
-  FILE("File", 9), //
-  LINE("Line", 10), //
-  NDC("NDC", 11), //
-  PROPERTIES("Properties", 12), //
-  LOGGER_NAME("Logger", 13), //
-  LOG_SOURCE("Source", 14);//
+  DELTA("Delta", 2), //
+  LEVEL("L", 3), //
+  MESSAGE("Message", 4), //
+  CLASS("Class", 5), //
+  METHOD("Method", 6), //
+  THREAD("Thread", 7), //
+  MARK("M", 8), //
+  NOTE("Enter a Note", 9), //
+  FILE("File", 10), //
+  LINE("Line", 11), //
+  NDC("NDC", 12), //
+  PROPERTIES("Properties", 13), //
+  LOGGER_NAME("Logger", 14), //
+  LOG_SOURCE("Source", 15);//
 
   private static HashMap<Integer, TableColumns> map = new HashMap<Integer, TableColumns>();
   static {
