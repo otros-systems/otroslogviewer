@@ -211,21 +211,34 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
       @Override
       protected List<Action> getAdditionalActions() {
         final List<Action> additionalActions = super.getAdditionalActions();
-        additionalActions.add(new AbstractAction("Save column layout") {
+        additionalActions.add(new AbstractAction("Save current to new column layout") {
           @Override
           public void actionPerformed(ActionEvent actionEvent) {
-            System.out.println("Hello save");
-            final String s = JOptionPane.showInputDialog(table, "Layout name");
-            System.out.println("Saving as " + s);
+              // Consider image disk--plus.png
+            LOGGER.warning(String.format("Saving New column layout '%s'",
+              JOptionPane.showInputDialog(table, "Layout name")));
           }
         });
         //TODO get column layout from configuration, and create action for every layout
         final String[] columnLayoutNames = "Layout 1, Log 1, asdf,sdf".split(",");
         for (String columnLayoutName : columnLayoutNames) {
+          final String namePtr = columnLayoutName;
           additionalActions.add(new AbstractAction(columnLayoutName.trim()) {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-              System.out.println("Doing layout " + getName());
+                String retVal = (String) JOptionPane.showInputDialog(table,
+                  String.format("Column layout '%s'", namePtr),
+                  "Select Column Layout Action",
+                  JOptionPane.QUESTION_MESSAGE, null, new String[] {
+                    "Apply to view",
+                      String.format("Update '%s' according to current view",
+                        namePtr),
+                    "Rename", "Remove", "Export"
+                  }, "Apply to view"
+                );
+                LOGGER.warning((retVal == null)
+                  ? "User cancelled col-layout pupup"
+                  : String.format("Do '%s' to layout '%s'", retVal, namePtr));
             }
           });
         }
@@ -376,6 +389,13 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     table.addKeyListener(new MarkRowBySpaceKeyListener(otrosApplication));
     initAcceptConditions();
+  }
+
+  private JPopupMenu initColLayoutPopupMenu() {
+    JPopupMenu jPopupMenu = new JPopupMenu();
+    jPopupMenu.add("one");
+    jPopupMenu.add("two");
+    return jPopupMenu;
   }
 
   private JPopupMenu initMessageDetailPopupMenu() {
