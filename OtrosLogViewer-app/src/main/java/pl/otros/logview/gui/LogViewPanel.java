@@ -103,6 +103,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -242,7 +243,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                     }
                     LOGGER.warning(String.format("colids = <<%s>>",
                       StringUtils.join(visibleColNames, ",")));
-                    configuration.setProperty("colLayout." + newLayoutName, 
+                    configuration.setProperty("colLayout." + newLayoutName,
                       StringUtils.join(visibleColNames, ","));
                     populatePopup();
                 }
@@ -368,7 +369,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
       table.getColumnExt(tableColumns).setVisible(true);
     }
 
-    table.getTableHeader().getColumnModel().moveColumn(0,3);
+    sortColumnsInAlphabeticOrder();
 
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     updateColumnsSize();
@@ -498,6 +499,45 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     table.addKeyListener(new MarkRowBySpaceKeyListener(otrosApplication));
     initAcceptConditions();
+  }
+
+
+  /**
+   * Sort column in alphabetic order - column sequencing proof of concept
+   */
+  protected void sortColumnsInAlphabeticOrder() {
+    final int columnCount = table.getColumnCount(false);
+    final Map<String,Integer> currentColumnLayout = new HashMap<String, Integer>();
+    for (int i=0; i<columnCount; i++){
+      final String columnName = table.getColumnName(i);
+      currentColumnLayout.put(columnName, i);
+    }
+    final ArrayList<String> sortedColumnsName = new ArrayList<String>(currentColumnLayout.keySet());
+    Collections.sort(sortedColumnsName);
+    for (int i=0;i<sortedColumnsName.size();i++){
+      final int index = findColumnIndexByHeader(table.getColumnModel(),sortedColumnsName.get(i));
+      if(index>-1){
+        LOGGER.info("Moving " + index + " to " + i);
+        table.moveColumn(index,i);
+      }
+    }
+  }
+
+  /**
+   * Find column index by it's name
+   * @param columnModel column model
+   * @param columnName column name to find
+   * @return column index or -1 if not found
+   */
+  protected Integer findColumnIndexByHeader(TableColumnModel columnModel, String columnName) {
+    for (int i=0; i<columnModel.getColumnCount();i++){
+      final String header = columnModel.getColumn(i).getHeaderValue().toString();
+      if (  StringUtils.equals(header,columnName) ){
+        return i;
+      }
+    }
+    LOGGER.warning("Can't find column index for " + columnName);
+    return -1;
   }
 
   private JPopupMenu initColLayoutPopupMenu() {
