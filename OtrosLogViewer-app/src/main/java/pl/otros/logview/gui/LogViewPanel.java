@@ -68,6 +68,7 @@ import pl.otros.logview.gui.actions.ShowCallHierarchyAction;
 import pl.otros.logview.gui.actions.TableResizeActionListener;
 import pl.otros.logview.gui.actions.UnMarkRowAction;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
+import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.markers.AutomaticMarker;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageColorizer;
@@ -85,6 +86,7 @@ import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.gui.table.ColumnLayout;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -226,9 +228,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                     LOGGER.warning( String.format(
                       "Saving New column layout '%s'", newLayoutName));
                     LOGGER.warning(
-                      "TODO:  Validate layout name uses only word charaters");
-                    configuration.addProperty("colLayout", newLayoutName);
-                    List visibleColNames = new ArrayList();
+                        "TODO:  Validate layout name uses only word charaters");
+                    List<String> visibleColNames = new ArrayList();
                     for (TableColumn tc : table.getColumns()) {
                         Object o = tc.getIdentifier();
                         if (!(o instanceof TableColumns)) {
@@ -241,28 +242,29 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                         TableColumns tcs = (TableColumns) o;
                         visibleColNames.add(tcs.getName());
                     }
-                    LOGGER.warning(String.format("colids = <<%s>>",
-                      StringUtils.join(visibleColNames, ",")));
-                    configuration.setProperty("colLayout." + newLayoutName,
-                      StringUtils.join(visibleColNames, ","));
-                    populatePopup();
+                  ColumnLayout columnLayout = new ColumnLayout(newLayoutName,visibleColNames);
+                  final List<ColumnLayout> columnLayouts = LogTableFormatConfigView.loadColumnLayouts(configuration);
+                  columnLayouts.add(columnLayout);
+                  LogTableFormatConfigView.saveColumnLayouts(columnLayouts,configuration);
+                  populatePopup();
                 }
             });
             //TODO get column layout from configuration, and create action for every layout
-            final List columnLayoutNames = configuration.getList("colLayout");
-            for (Object columnLayoutName : columnLayoutNames) {
-                final String namePtr = (String) columnLayoutName;
-                additionalActions.add(new AbstractAction(namePtr) {
+            final List<ColumnLayout> columnLayoutNames = LogTableFormatConfigView.loadColumnLayouts(configuration);
+                configuration.getList("colLayout");
+            for (final ColumnLayout columnLayout : columnLayoutNames) {
+                final String name =  columnLayout.getName();
+                additionalActions.add(new AbstractAction(name) {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         String retVal =
                           (String) JOptionPane.showInputDialog(table,
-                        String.format("Column layout '%s'", namePtr),
+                        String.format("Column layout '%s'", name),
                           "Select Column Layout Action",
                           JOptionPane.QUESTION_MESSAGE, null, new String[] {
                               "Apply to view", String.format(
                                 "Update '%s' according to current view",
-                                namePtr),
+                                name),
                             "Rename", "Remove", "Export"
                           }, "Apply to view");
                         if (retVal == null) {
@@ -270,11 +272,10 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                             return;
                         }
                         LOGGER.warning(String.format("Do '%s' to layout '%s'",
-                          retVal, namePtr));
+                          retVal, name));
                         if (retVal.equals("Apply to view")) {
                             LOGGER.warning("TODO:  Implement Col-Layout Apply action");
-                            List colNames = configuration.getList(
-                              "colLayout." + namePtr);
+                            List<String> colNames = columnLayout.getColumns();
                             LOGGER.warning(String.format(
                               "Retrieved %d col names: <<%s>>",
                               colNames.size(), colNames.toString()));
@@ -324,7 +325,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                         } else if (retVal.equals("Remove")) {
                             List list = configuration.getList("colLayout");
                             int origSize = list.size();
-                            if (!list.remove(namePtr) ||
+                            if (!list.remove(name) ||
                               list.size() != origSize - 1) {
                                 LOGGER.severe(String.format(
                                   "Failed to remove '%s' from list.  "
@@ -333,14 +334,14 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                                 LOGGER.warning("Throw up a pop-up");
                             }
                             configuration.setProperty("colLayout", list);
-                            if (configuration.getString("colLayout." + namePtr)
+                            if (configuration.getString("colLayout." + name)
                               != null)
                                 configuration.clearProperty(
-                                  "colLayout." + namePtr);
+                                  "colLayout." + name);
                             populatePopup();
                             LOGGER.warning(String.format(
                               "Removed layout '%s'.  There are now %d.",
-                              namePtr, list.size()));
+                              name, list.size()));
                         } else if (retVal.equals("Export")) {
                             LOGGER.warning("TODO:  Implement Col-Layout Export action");
                         } else {

@@ -34,7 +34,7 @@ public class Renderers {
           return;
         }
         final String property = event.getPropertyName();
-        final String value = event.getPropertyValue().toString();
+        final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
         if (property.equals(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS)) {
           classWrapperRenderer.reloadConfiguration(value);
         } else if (property.equals(LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
