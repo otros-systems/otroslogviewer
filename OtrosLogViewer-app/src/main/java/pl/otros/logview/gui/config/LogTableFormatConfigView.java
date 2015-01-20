@@ -230,8 +230,12 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       return;
     }
     final List<ColumnLayout> columnLayouts = loadColumnLayouts(xmlConfiguration);
+    importColumnLayouts(columnLayouts);
+  }
+
+  private void importColumnLayouts(List<ColumnLayout> columnLayouts) {
     if (columnLayouts.isEmpty()){
-      JOptionPane.showMessageDialog(panel.getRootPane(),"No column layout in clipboard have been found");
+      JOptionPane.showMessageDialog(panel.getRootPane(), "No column layout in clipboard have been found");
       return;
     }
     JPanel messagePanel = new JPanel(new BorderLayout());
@@ -286,8 +290,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
   @Override
   public void loadConfiguration(Configuration configuration) {
-    //TODO configuration is not reload on reload button
-
     LevelRenderer.Mode mode = LevelRenderer.Mode.valueOf(configuration.getString(LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly.name()));
     radioGroup.setSelectedValue(mode);
     String dateFormat = StringUtils.defaultIfBlank(configuration.getString(LOG_TABLE_FORMAT_DATE_FORMAT), dateFormats[1]);
