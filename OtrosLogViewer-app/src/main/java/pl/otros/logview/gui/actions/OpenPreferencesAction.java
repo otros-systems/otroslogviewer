@@ -41,6 +41,8 @@ public class OpenPreferencesAction extends OtrosAction {
     };
     if (configComponent == null) {
       configComponent = new ConfigComponent(configurationProvider, actionAfterSave, null, configViews);
+    } else {
+      configComponent.reload();
     }
     getOtrosApplication().addClosableTab("Preferences", "OtrosLogViewerPreferences", Icons.GEAR, configComponent, true);
   }

@@ -2,7 +2,7 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import pl.otros.logview.OtrosConfiguration;
+import pl.otros.swing.config.OtrosConfiguration;
 
 import java.io.IOException;
 

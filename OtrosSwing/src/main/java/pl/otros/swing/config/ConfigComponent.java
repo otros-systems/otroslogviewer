@@ -3,6 +3,7 @@ package pl.otros.swing.config;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.FileConfiguration;
 import org.jdesktop.swingx.JXList;
 import pl.otros.swing.config.provider.ConfigurationProvider;
@@ -26,7 +27,7 @@ public class ConfigComponent extends JPanel {
   private Action actionAfterCancel;
 
   public ConfigComponent(final ConfigurationProvider configurationProvider, final ConfigView... configViews) {
-    this(configurationProvider,null,null,configViews);
+    this(configurationProvider, null, null, configViews);
   }
 
   @SuppressWarnings("serial")
@@ -63,29 +64,11 @@ public class ConfigComponent extends JPanel {
         centralPanel.repaint();
       }
     });
-    for (ConfigView configView : configViews) {
-      try {
-        Configuration configurationForView = configurationProvider.getConfigurationForView(configView);
-        if (configurationForView instanceof FileConfiguration) {
-          FileConfiguration fc = (FileConfiguration) configurationForView;
-          try {
-            fc.load();
-          } catch (ConfigurationException e) {
-            // TODO
-          }
-        }
-        configView.loadConfiguration(configurationForView);
-        centralPanel.add(configView.getView(), BorderLayout.CENTER);
-        configView.getView().getComponents();
-      } catch (ConfigurationException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-    }
+    reload();
     if (list.getModel().getSize() > 0) {
       list.setSelectedIndex(0);
     }
-    JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     JButton saveButton = new JButton("Save");
     saveButton.addActionListener(new ActionListener() {
       @Override
@@ -94,31 +77,50 @@ public class ConfigComponent extends JPanel {
       }
     });
     southPanel.add(saveButton);
-    JButton reloadButton = new JButton();
+    final JButton reloadButton = new JButton();
     reloadButton.setAction(new AbstractAction("Reload") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        for (ConfigView configView : configViews) {
-          Configuration configurationForView;
-          try {
-            configurationForView = configurationProvider.getConfigurationForView(configView);
-            if (configurationForView instanceof FileConfiguration) {
-              FileConfiguration fc = (FileConfiguration) configurationForView;
-              fc.reload();
-              configView.loadConfiguration(fc);
-            }
-          } catch (ConfigurationException e1) {
-            e1.printStackTrace();
-          }
-        }
+        reload();
       }
     });
     southPanel.add(reloadButton);
+
     this.add(upLabel, "dock north");
     this.add(leftPanel, "dock west");
     this.add(new JScrollPane(centralPanel), "dock center, grow, push");
     this.add(southPanel, "dock south");
     list.requestFocus();
+  }
+
+  public void reload() {
+    boolean mainConfigLoaded = false;
+    for (ConfigView configView : configViews) {
+      Configuration configurationForView;
+
+      try {
+        configurationForView = configurationProvider.getConfigurationForView(configView);
+        if (configurationForView instanceof DataConfiguration) {
+          DataConfiguration dc = (DataConfiguration) configurationForView;
+          configurationForView = dc.getConfiguration();
+        }
+        if (configurationForView instanceof FileConfiguration) {
+          FileConfiguration fc = (FileConfiguration) configurationForView;
+          if (configView instanceof InMainConfig) {
+            if (!mainConfigLoaded) {
+              fc.reload();
+              mainConfigLoaded = true;
+            }
+          } else {
+            fc.reload();
+          }
+          configView.loadConfiguration(fc);
+        }
+      } catch (ConfigurationException e1) {
+        //TODO ??
+        e1.printStackTrace();
+      }
+    }
   }
 
   public void saveConfig() {
@@ -141,19 +143,37 @@ public class ConfigComponent extends JPanel {
       JOptionPane.showMessageDialog(this, texPane, "Validation Error", JOptionPane.ERROR_MESSAGE);
       return;
     }
+    FileConfiguration mainConfig = null;
     for (ConfigView configView : configViews) {
       Configuration configurationForView;
       try {
         configurationForView = configurationProvider.getConfigurationForView(configView);
         configView.saveConfiguration(configurationForView);
+
+        if (configurationForView instanceof OtrosConfiguration) {
+          configurationForView = ((OtrosConfiguration) configurationForView).getConfiguration();
+        }
+
         if (configurationForView instanceof FileConfiguration) {
           FileConfiguration fc = (FileConfiguration) configurationForView;
-          fc.save();
+          if (configView instanceof InMainConfig) {
+            mainConfig = fc;
+          } else {
+            fc.save();
+          }
         }
       } catch (ConfigurationException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
       }
+    }
+    try {
+      if (mainConfig != null) {
+        mainConfig.save();
+      }
+    } catch (ConfigurationException e) {
+      //TODO what to do?
+      e.printStackTrace();
     }
     if (actionAfterSave != null) {
       actionAfterSave.actionPerformed(null);

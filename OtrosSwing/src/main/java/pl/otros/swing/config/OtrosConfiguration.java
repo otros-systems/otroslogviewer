@@ -1,4 +1,4 @@
-package pl.otros.logview;
+package pl.otros.swing.config;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DataConfiguration;
