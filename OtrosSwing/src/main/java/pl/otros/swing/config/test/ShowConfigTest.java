@@ -19,7 +19,7 @@ public class ShowConfigTest {
 //    otrosApplication.setConfiguration(new DataConfiguration(new BaseConfiguration()));
 //    DataConfiguration configuration = otrosApplication.getConfiguration();
     DataConfiguration configuration = new DataConfiguration(new BaseConfiguration());
-    ConfigurationProvider configurationProvider = new ConfigurationProviderImpl(configuration, new File("C:/tmp/conf"));
+    ConfigurationProvider configurationProvider = new ConfigurationProviderImpl(configuration, new File(System.getProperty("java.io.tmpdir")));
     configuration.setProperty("view1.text", "ASD ASD");
     configuration.setProperty("view2.text", "sdf\nd\ndf\ns");
     JFrame f = new JFrame("CV");
