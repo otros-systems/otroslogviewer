@@ -21,7 +21,11 @@ import org.jdesktop.swingx.JXComboBox;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.gui.Icons;
+import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.gui.LogViewPanelWrapper;
+import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.gui.StatusObserver;
 import pl.otros.logview.gui.actions.search.AcceptConditionSearchMatcher;
 import pl.otros.logview.gui.actions.search.RegexMatcher;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
@@ -67,7 +71,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
       return 0;
     }
 
-    SearchMatcher searchMatcher = null;
+    SearchMatcher searchMatcher;
     if (SearchMode.STRING_CONTAINS.equals(searchMode)) {
       searchMatcher = new StringContainsSearchMatcher(string);
     } else if (SearchMode.REGEX.equals(searchMode)) {
@@ -124,8 +128,14 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
 
   @Override
   public void configurationChanged(ConfigurationEvent e) {
-    if (e.getPropertyName().equalsIgnoreCase("gui.markColor")) {
-      markerColors = (MarkerColors) e.getPropertyValue();
+    if (e.getPropertyName() != null && e.getPropertyName().equalsIgnoreCase("gui.markColor")) {
+      final Object propertyValue = e.getPropertyValue();
+      if (propertyValue instanceof MarkerColors) {
+        markerColors = (MarkerColors) propertyValue;
+      } else if (propertyValue instanceof String) {
+        String value = (String) propertyValue;
+        markerColors = MarkerColors.fromString(value);
+      }
     }
   }
 
