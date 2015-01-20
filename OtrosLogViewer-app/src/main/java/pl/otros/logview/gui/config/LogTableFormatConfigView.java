@@ -30,17 +30,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static javax.swing.JOptionPane.*;
 import static pl.otros.logview.gui.ConfKeys.*;
 
 public class LogTableFormatConfigView extends AbstractConfigView implements InMainConfig {
+
+  private static final Logger LOGGER = Logger.getLogger(LogTableFormatConfigView.class.getName());
 
   public static final String DEFAULT_ABBREVIATION_HEADER =
       "#You can define abbreviations for the packages you use\n" +
@@ -143,11 +148,31 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     //TODO export to file and clipboard
     //TODO import from file and clipboard
     final JToolBar exportToolbar = new JToolBar();
-    exportToolbar.add(new AbstractAction("Export to clipboard") {
+    exportToolbar.add(new AbstractAction("Export all to clipboard") {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         try {
-          exportToClipBoard();
+          exportToClipBoard(LogTableFormatConfigView.this.columnLayoutListModel.getList());
+        } catch (ConfigurationException e) {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(exportToolbar.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(), "Export error", JOptionPane
+              .ERROR_MESSAGE);
+        }
+      }
+    });
+    exportToolbar.add(new AbstractAction("Export selected to clipboard") {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        try {
+          final Object[] selectedValues = LogTableFormatConfigView.this.columnLayoutsList.getSelectedValues();
+          if (selectedValues.length==0){
+            return;
+          }
+          List<ColumnLayout> list = new ArrayList<ColumnLayout>();
+          for (Object selectedValue : selectedValues) {
+            list.add((ColumnLayout) selectedValue);
+          }
+          exportToClipBoard(list);
         } catch (ConfigurationException e) {
           e.printStackTrace();
           JOptionPane.showMessageDialog(exportToolbar.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(), "Export error", JOptionPane
@@ -192,9 +217,44 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     System.out.println("Import from file");
   }
 
-  private void importFromClipboard() throws IOException, UnsupportedFlavorException {
-    String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-    System.out.println("Import from clipboard: " + data);
+  private void importFromClipboard() throws IOException, UnsupportedFlavorException, ConfigurationException {
+    XMLConfiguration xmlConfiguration = null;
+    try {
+      String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+      StringReader stringReader = new StringReader(data);
+      xmlConfiguration = new XMLConfiguration();
+      xmlConfiguration.load(stringReader);
+    } catch (Exception e){
+      LOGGER.log(Level.SEVERE,"Can't import table layout from clipboard",e);
+      JOptionPane.showMessageDialog(panel.getRootPane(),"Can't import from clipboard");
+      return;
+    }
+    final List<ColumnLayout> columnLayouts = loadColumnLayouts(xmlConfiguration);
+    if (columnLayouts.isEmpty()){
+      JOptionPane.showMessageDialog(panel.getRootPane(),"No column layout in clipboard have been found");
+      return;
+    }
+    JPanel messagePanel = new JPanel(new BorderLayout());
+    final MutableListModel<ColumnLayout> listModel = new MutableListModel<ColumnLayout>();
+    for (ColumnLayout columnLayout : columnLayouts) {
+      listModel.add(columnLayout);
+    }
+
+    final JList jList = new JList(listModel);
+    jList.setCellRenderer(new ColumnLayoutRenderer());
+    jList.getSelectionModel().setSelectionInterval(0,listModel.getSize());
+    messagePanel.add(new JScrollPane(jList));
+    final int resp = JOptionPane.showConfirmDialog(LogTableFormatConfigView.this.panel.getRootPane(), messagePanel, "Select column layouts to import",
+        JOptionPane.OK_CANCEL_OPTION);
+    if (resp == JOptionPane.CANCEL_OPTION){
+      return;
+    }
+    jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+    final int[] selectedIndices = jList.getSelectedIndices();
+    for (int i = 0; i < selectedIndices.length; i++) {
+      columnLayouts.add(listModel.getElementAt(i));
+    }
   }
 
   private void exportToFile() {
@@ -202,10 +262,10 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
   }
 
-  private void exportToClipBoard() throws ConfigurationException {
+  private void exportToClipBoard(List<ColumnLayout> columnLayouts) throws ConfigurationException {
     System.out.println("Export to clipboard");
     final XMLConfiguration xmlConfiguration = new XMLConfiguration();
-    saveColumnLayouts(columnLayoutListModel.getList(), xmlConfiguration);
+    saveColumnLayouts(columnLayouts, xmlConfiguration);
     final StringWriter writer = new StringWriter();
     xmlConfiguration.save(writer);
     StringSelection stringSelection = new StringSelection(writer.getBuffer().toString());
