@@ -24,7 +24,7 @@ public class SwitchAutoJump extends OtrosAction {
     configuration.addConfigurationListener(new ConfigurationListener() {
       @Override
       public void configurationChanged(ConfigurationEvent event) {
-        if (event.getPropertyName().equals(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED)) {
+        if (event.getPropertyName() != null && event.getPropertyName().equals(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED)) {
           putValue(SMALL_ICON, getIcon(configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true)));
         }
       }
