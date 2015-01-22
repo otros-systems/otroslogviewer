@@ -35,7 +35,7 @@ public class OpenPreferencesAction extends OtrosAction {
       }
     };
     ConfigView[] configViews = new ConfigView[]{
-        new LogTableFormatConfigView(),
+        new LogTableFormatConfigView(getOtrosApplication()),
         new IdeIntegrationConfigView(getOtrosApplication()),
         new VersionCheckConfigView()
     };

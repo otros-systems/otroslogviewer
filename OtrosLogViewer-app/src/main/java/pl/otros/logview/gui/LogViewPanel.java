@@ -370,7 +370,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
       table.getColumnExt(tableColumns).setVisible(true);
     }
 
-    sortColumnsInAlphabeticOrder();
+//    sortColumnsInAlphabeticOrder();
 
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     updateColumnsSize();
@@ -539,13 +539,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
     LOGGER.warning("Can't find column index for " + columnName);
     return -1;
-  }
-
-  private JPopupMenu initColLayoutPopupMenu() {
-    JPopupMenu jPopupMenu = new JPopupMenu();
-    jPopupMenu.add("one");
-    jPopupMenu.add("two");
-    return jPopupMenu;
   }
 
   private JPopupMenu initMessageDetailPopupMenu() {

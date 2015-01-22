@@ -267,7 +267,20 @@ public class Icons {
   @Path(path = "/img/fugue/arrow-step-over.png")
   public static ImageIcon ARROW_STEP_OVER;
 
+
   @Path(path = "/img/fugue/arrow-step-over.png", gray = true)
   public static ImageIcon ARROW_STEP_OVER_GRAY;
+
+  @Path(path = "/img/fugue/table-export.png")
+  public static ImageIcon TABLE_EXPORT;
+
+  @Path(path = "/img/fugue/table-import.png")
+  public static ImageIcon TABLE_IMPORT;
+
+  @Path(path = "/img/fugue/clipboard-sign.png")
+  public static ImageIcon CLIPBOARD_SIGN;
+
+  @Path(path = "/img/fugue/clipboard-sign-out.png")
+  public static ImageIcon CLIPBOARD_SIGN_OUT;
 
 }
