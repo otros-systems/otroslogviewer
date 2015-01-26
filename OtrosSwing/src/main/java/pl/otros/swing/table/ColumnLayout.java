@@ -1,4 +1,4 @@
-package pl.otros.logview.gui.table;
+package pl.otros.swing.table;
 
 import java.util.List;
 

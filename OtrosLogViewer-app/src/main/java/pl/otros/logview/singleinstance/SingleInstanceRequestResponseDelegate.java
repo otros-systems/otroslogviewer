@@ -12,7 +12,11 @@ import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +126,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         JFrame applicationJFrame = null;
         if (otrosApplication != null) {
           applicationJFrame = otrosApplication.getApplicationJFrame();
-          OtrosSwingUtils.frameToFron(applicationJFrame);
+          OtrosSwingUtils.frameToFront(applicationJFrame);
         }
         if (files.length > 0) {
           new TailMultipleFilesIntoOneView(otrosApplication).openFileObjectsIntoOneView(files, applicationJFrame);

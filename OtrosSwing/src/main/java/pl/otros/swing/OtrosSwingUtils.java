@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class OtrosSwingUtils {
 
-  public static void frameToFron(JFrame frame){
+  public static void frameToFront(JFrame frame){
     int state = frame.getExtendedState();
     state &= ~JFrame.ICONIFIED;
     frame.setExtendedState(state);

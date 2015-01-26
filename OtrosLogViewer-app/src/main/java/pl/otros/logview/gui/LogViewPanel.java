@@ -22,7 +22,6 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
-import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -86,7 +85,6 @@ import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
-import pl.otros.logview.gui.table.ColumnLayout;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -97,6 +95,7 @@ import pl.otros.logview.pluginable.PluginableElementsContainer;
 import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
+import pl.otros.swing.table.ColumnLayout;
 import pl.otros.vfs.browser.table.FileSize;
 
 import javax.swing.*;
@@ -105,7 +104,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -212,152 +210,49 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     // Initialize default column visible before creating context menu
     table.setColumnControlVisible(true);
     final ColumnControlButton columnControlButton =
-      new ColumnControlButton(table){
-        @Override
-        protected List<Action> getAdditionalActions() {
+        new ColumnControlButton(table) {
+          @Override
+          protected List<Action> getAdditionalActions() {
             final List<Action> additionalActions = super.getAdditionalActions();
-            additionalActions.add(
-              new AbstractAction("Save current to new column layout") {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    // Consider image disk--plus.png
-                    String newLayoutName =
-                      JOptionPane.showInputDialog(table, "New Layout name");
-                    if (newLayoutName == null) return;
-                    newLayoutName = newLayoutName.trim();
-                    LOGGER.warning( String.format(
-                      "Saving New column layout '%s'", newLayoutName));
-                    LOGGER.warning(
-                        "TODO:  Validate layout name uses only word charaters");
-                    List<String> visibleColNames = new ArrayList();
-                    for (TableColumn tc : table.getColumns()) {
-                        Object o = tc.getIdentifier();
-                        if (!(o instanceof TableColumns)) {
-                            LOGGER.severe(
-                              "TableColumn idenfier of unexpected type: "
-                              + tc.getIdentifier().getClass().getName());
-                            LOGGER.warning("Throw up a pop-up");
-                            return;
-                        }
-                        TableColumns tcs = (TableColumns) o;
-                        visibleColNames.add(tcs.getName());
-                    }
-                  ColumnLayout columnLayout = new ColumnLayout(newLayoutName,visibleColNames);
-                  final List<ColumnLayout> columnLayouts = LogTableFormatConfigView.loadColumnLayouts(configuration);
-                  columnLayouts.add(columnLayout);
-                  LogTableFormatConfigView.saveColumnLayouts(columnLayouts,configuration);
-                  populatePopup();
+            final AbstractAction saveLayout = new AbstractAction("Save current to new column layout", Icons.DISK) {
+              @Override
+              public void actionPerformed(ActionEvent actionEvent) {
+                String newLayoutName = JOptionPane.showInputDialog(table, "New Layout name");
+                if (newLayoutName == null) {
+                  return;
                 }
-            });
-            //TODO get column layout from configuration, and create action for every layout
-            final List<ColumnLayout> columnLayoutNames = LogTableFormatConfigView.loadColumnLayouts(configuration);
-                configuration.getList("colLayout");
-            for (final ColumnLayout columnLayout : columnLayoutNames) {
-                final String name =  columnLayout.getName();
-                additionalActions.add(new AbstractAction(name) {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        String retVal =
-                          (String) JOptionPane.showInputDialog(table,
-                        String.format("Column layout '%s'", name),
-                          "Select Column Layout Action",
-                          JOptionPane.QUESTION_MESSAGE, null, new String[] {
-                              "Apply to view", String.format(
-                                "Update '%s' according to current view",
-                                name),
-                            "Rename", "Remove", "Export"
-                          }, "Apply to view");
-                        if (retVal == null) {
-                            LOGGER.warning("User cancelled col-layout pupup");
-                            return;
-                        }
-                        LOGGER.warning(String.format("Do '%s' to layout '%s'",
-                          retVal, name));
-                        if (retVal.equals("Apply to view")) {
-                            LOGGER.warning("TODO:  Implement Col-Layout Apply action");
-                            List<String> colNames = columnLayout.getColumns();
-                            LOGGER.warning(String.format(
-                              "Retrieved %d col names: <<%s>>",
-                              colNames.size(), colNames.toString()));
-                            List<TableColumns> visCols =
-                              new ArrayList<TableColumns>();
-                            Map<String, TableColumns> colNameToEnum =
-                              new HashMap<String, TableColumns>();
-                            for (TableColumns tcEnum : TableColumns.values())
-                                colNameToEnum.put(tcEnum.getName(), tcEnum);
+                newLayoutName = newLayoutName.trim();
+                LOGGER.info(String.format("Saving New column layout '%s'", newLayoutName));
+                ArrayList<String> visibleColNames = new ArrayList<String>();
+                for (TableColumn tc : table.getColumns()) {
+                  Object o = tc.getIdentifier();
+                  if (!(o instanceof TableColumns)) {
+                    LOGGER.severe("TableColumn identifier of unexpected type: " + tc.getIdentifier().getClass().getName());
+                    LOGGER.warning("Throw up a pop-up");
+                    return;
+                  }
+                  TableColumns tcs = (TableColumns) o;
+                  visibleColNames.add(tcs.getName());
+                }
+                ColumnLayout columnLayout = new ColumnLayout(newLayoutName, visibleColNames);
+                final List<ColumnLayout> columnLayouts = LogTableFormatConfigView.loadColumnLayouts(configuration);
+                columnLayouts.add(columnLayout);
+                LogTableFormatConfigView.saveColumnLayouts(columnLayouts, configuration);
+                populatePopup();
+              }
+            };
+            additionalActions.add(saveLayout);
 
-                            for (TableColumn tableColumn : table.getColumns()) {
-                                Object o = tableColumn.getIdentifier();
-                                if (!(o instanceof TableColumns)) {
-                                    LOGGER.severe(
-                                      "TableColumn idenfier of unexpected type: "
-                                      + tableColumn.getIdentifier().getClass().getName());
-                                    LOGGER.warning("Throw up a pop-up");
-                                    return;
-                                }
-                                TableColumns tcs = (TableColumns) o;
-                                table.getColumnExt(tcs).setVisible(false);
-                            }
-                            for (Object colName : colNames)
-                                visCols.add(
-                                  colNameToEnum.get((String) colName));
-                            // Want to JXTable.setColumnSequence but need
-                            // "logical column names".  I see nothing about
-                            // "logical column names" elsewhere in the APIs.
-                            /*
-                            //EnumSet<TableColumns> visCols =
-                              //EnumSet.noneOf(TableColumns.class);
-                            List<TableColumns> visCols =
-                              new ArrayList<TableColumns>();
-                            for (TableColumns tableColumn : TableColumns.values()) {
-                                int modelI = tableColumn.getColumn();
-                                // Just to emulate column changes:
-                                if (((modelI / 2) * 2) == modelI) // Even
-                                    visCols.add(tableColumn);
-                            }
-                            */
-                            showOnlyThisColumns(visCols.toArray(new TableColumns[0]));
-                            LOGGER.warning("Column changes applied");
-                        } else if (retVal.startsWith("Update")) {
-                            LOGGER.warning("TODO:  Implement Col-Layout Update action");
-                        } else if (retVal.equals("Rename")) {
-                            LOGGER.warning("TODO:  Implement Col-Layout Rename action");
-                        } else if (retVal.equals("Remove")) {
-                            List list = configuration.getList("colLayout");
-                            int origSize = list.size();
-                            if (!list.remove(name) ||
-                              list.size() != origSize - 1) {
-                                LOGGER.severe(String.format(
-                                  "Failed to remove '%s' from list.  "
-                                  + "Size went from %d to %d", origSize,
-                                  list.size()));
-                                LOGGER.warning("Throw up a pop-up");
-                            }
-                            configuration.setProperty("colLayout", list);
-                            if (configuration.getString("colLayout." + name)
-                              != null)
-                                configuration.clearProperty(
-                                  "colLayout." + name);
-                            populatePopup();
-                            LOGGER.warning(String.format(
-                              "Removed layout '%s'.  There are now %d.",
-                              name, list.size()));
-                        } else if (retVal.equals("Export")) {
-                            LOGGER.warning("TODO:  Implement Col-Layout Export action");
-                        } else {
-                            LOGGER.severe(
-                              "Unexpected return value from col layout popup: "
-                              + retVal);
-                            LOGGER.warning("Throw up a pop-up");
-                        }
-                    }
-                });
+            final List<ColumnLayout> columnLayoutNames = LogTableFormatConfigView.loadColumnLayouts(configuration);
+            for (final ColumnLayout columnLayout : columnLayoutNames) {
+              final String name = columnLayout.getName();
+              final AbstractAction applyColumnLayout = new ApplyColumnLayoutAction(name, Icons.EDIT_COLUMNS, columnLayout, table);
+              additionalActions.add(applyColumnLayout);
             }
             return additionalActions;
-        }
-    };
+          }
+        };
     table.setColumnControl(columnControlButton);
-;
 
     List<TableColumn> columns = table.getColumns(true);
     for (int i = 0; i < columns.size(); i++) {
@@ -369,8 +264,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     for (TableColumns tableColumns : visibleColumns) {
       table.getColumnExt(tableColumns).setVisible(true);
     }
-
-//    sortColumnsInAlphabeticOrder();
 
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     updateColumnsSize();
@@ -448,11 +341,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     addFiltersGUIsToPanel(filtersPanel);
     logsTablePanel.setLayout(new BorderLayout());
     logsTablePanel.add(new JScrollPane(table));
-//    ScrollableHeightOnlyPanel scrollableHeightOnlyPanel = new ScrollableHeightOnlyPanel(new BorderLayout());
-//    scrollableHeightOnlyPanel.add(logDetailWithRulerScrollPane);
-//    scrollPane = new JScrollPane(logDetailWithRulerScrollPane);
-//    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     JPanel messageDetailsPanel = new JPanel(new BorderLayout());
     messageDetailToolbar = new JToolBar("MessageDetail");
     messageDetailsPanel.add(messageDetailToolbar, BorderLayout.NORTH);
@@ -500,45 +388,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     table.addKeyListener(new MarkRowBySpaceKeyListener(otrosApplication));
     initAcceptConditions();
-  }
-
-
-  /**
-   * Sort column in alphabetic order - column sequencing proof of concept
-   */
-  protected void sortColumnsInAlphabeticOrder() {
-    final int columnCount = table.getColumnCount(false);
-    final Map<String,Integer> currentColumnLayout = new HashMap<String, Integer>();
-    for (int i=0; i<columnCount; i++){
-      final String columnName = table.getColumnName(i);
-      currentColumnLayout.put(columnName, i);
-    }
-    final ArrayList<String> sortedColumnsName = new ArrayList<String>(currentColumnLayout.keySet());
-    Collections.sort(sortedColumnsName);
-    for (int i=0;i<sortedColumnsName.size();i++){
-      final int index = findColumnIndexByHeader(table.getColumnModel(),sortedColumnsName.get(i));
-      if(index>-1){
-        LOGGER.info("Moving " + index + " to " + i);
-        table.moveColumn(index,i);
-      }
-    }
-  }
-
-  /**
-   * Find column index by it's name
-   * @param columnModel column model
-   * @param columnName column name to find
-   * @return column index or -1 if not found
-   */
-  protected Integer findColumnIndexByHeader(TableColumnModel columnModel, String columnName) {
-    for (int i=0; i<columnModel.getColumnCount();i++){
-      final String header = columnModel.getColumn(i).getHeaderValue().toString();
-      if (  StringUtils.equals(header,columnName) ){
-        return i;
-      }
-    }
-    LOGGER.warning("Can't find column index for " + columnName);
-    return -1;
   }
 
   private JPopupMenu initMessageDetailPopupMenu() {
@@ -856,12 +705,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   }
 
-  public void showOnlyThisColumns(TableColumns[] columns) {
-    for (TableColumns tableColumns : columns) {
-      table.getColumnExt(tableColumns).setVisible(true);
-    }
-    updateColumnsSize();
-  }
 
   protected void initMessageDetailsToolbar() {
     final JButton buttonFormatters = new JButton("Message formatters", Icons.MESSAGE_FORMATTER);
@@ -1017,4 +860,5 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
   }
+
 }

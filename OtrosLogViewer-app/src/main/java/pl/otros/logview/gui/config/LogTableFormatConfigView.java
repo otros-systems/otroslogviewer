@@ -17,14 +17,13 @@ import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.renderers.LevelRenderer;
-import pl.otros.logview.gui.table.ColumnLayout;
 import pl.otros.logview.io.Utils;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
 import pl.otros.swing.config.ValidationResult;
+import pl.otros.swing.table.ColumnLayout;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
-import pl.otros.vfs.browser.VfsBrowser;
 import pl.otros.vfs.browser.list.MutableListModel;
 
 import javax.swing.*;
@@ -59,8 +58,6 @@ import static pl.otros.logview.gui.ConfKeys.*;
 
 public class LogTableFormatConfigView extends AbstractConfigView implements InMainConfig {
 
-  private static final Logger LOGGER = Logger.getLogger(LogTableFormatConfigView.class.getName());
-
   public static final String DEFAULT_ABBREVIATION_HEADER =
       "#You can define abbreviations for the packages you use\n" +
           "#put here package abbreviations like in Eclipse (http://java.dzone.com/articles/eclipse-tip-help-tidy-package)\n" +
@@ -68,7 +65,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   public static final String ACTION_RENAME = "rename";
   public static final String ACTION_DELETE = "delete";
   public static final String COL_LAYOUT = "colLayout";
-
+  public static final String ACTION_COPY_SELECTED = "copy";
+  public static final String ACTION_PASTE = "paste";
+  private static final Logger LOGGER = Logger.getLogger(LogTableFormatConfigView.class.getName());
   private final String[] dateFormats;
   private final JXRadioGroup radioGroup;
   private final JXComboBox dateFormatRadio;
@@ -77,7 +76,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   private final JList columnLayoutsList;
   private MutableListModel<ColumnLayout> columnLayoutListModel;
   private OtrosApplication otrosApplication;
-  private VfsBrowser vfsBrowser;
   private JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog;
 
   public LogTableFormatConfigView(final OtrosApplication otrosApplication) {
@@ -118,6 +116,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
     addLabel("Package abbreviation", 'a', packageAbbreviationSp, panel);
 
+
+    //Column layouts
+    final JPanel columnLayoutsPanel = new JPanel(new BorderLayout());
     columnLayoutListModel = new MutableListModel<ColumnLayout>();
 
     columnLayoutsList = new JList(columnLayoutListModel);
@@ -125,7 +126,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     columnLayoutsList.setCellRenderer(new ColumnLayoutRenderer());
     final ActionMap actionMap = columnLayoutsList.getActionMap();
-    final AbstractAction deleteAction = new AbstractAction("Delete") {
+    final AbstractAction deleteAction = new AbstractAction("Delete",Icons.DELETE) {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         final int i = showConfirmDialog(panel, "Do you want to delete column layout //TODO name", "Rename", YES_NO_OPTION);
@@ -135,7 +136,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
       }
     };
-    final AbstractAction renameAction = new AbstractAction("Rename") {
+    final AbstractAction renameAction = new AbstractAction("Rename",Icons.EDIT_SIGNATURE) {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         final int selectedIndex = columnLayoutsList.getSelectedIndex();
@@ -150,7 +151,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutsList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        boolean selected = columnLayoutsList.getSelectedIndices().length>0;
+        boolean selected = columnLayoutsList.getSelectedIndices().length > 0;
         renameAction.setEnabled(selected);
         deleteAction.setEnabled(selected);
       }
@@ -159,11 +160,34 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     deleteAction.setEnabled(false);
     columnLayoutsList.setSelectedIndices(new int[0]);
 
+
+    final JToolBar importToolbar = new JToolBar(SwingConstants.VERTICAL);
+    importToolbar.add(new JLabel("Export: "));
+
+    final AbstractAction exportSelectedToClipboard = new CopyAllOrSelectedToClipboardAction(columnLayoutsPanel);
+    importToolbar.add(exportSelectedToClipboard);
+
+    importToolbar.add(new ExportToFileAction(columnLayoutsPanel));
+
+    importToolbar.add(new JLabel("Import: "));
+    final AbstractAction importFromClipboard = new PasteFomClipboardAction(columnLayoutsPanel);
+    importToolbar.add(importFromClipboard);
+    final AbstractAction importFromFileAction = new ImportFromFileAction(otrosApplication, columnLayoutsPanel);
+    importToolbar.add(importFromFileAction);
+
+
     actionMap.put(ACTION_DELETE, deleteAction);
     actionMap.put(ACTION_RENAME, renameAction);
+    actionMap.put(ACTION_COPY_SELECTED, exportSelectedToClipboard);
+    actionMap.put(ACTION_PASTE, importFromClipboard);
     columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), ACTION_RENAME);
     columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), ACTION_DELETE);
     columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_DELETE);
+
+    //TODO verify CTRL+C/V CMD+C/V
+    //TOOD map CTRL/SHIFT insert
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK), ACTION_PASTE);
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), ACTION_COPY_SELECTED);
 
     final JScrollPane scrollPane = new JScrollPane(columnLayoutsList);
     scrollPane.setMinimumSize(new Dimension(100, 40));
@@ -174,102 +198,42 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         }
       }
     });
-    addPopupMenuWithActionFromActionMap(columnLayoutsList, ACTION_RENAME, ACTION_DELETE);
-
-    final JToolBar exportToolbar = new JToolBar();
-    exportToolbar.add(new AbstractAction("Export all to clipboard",Icons.CLIPBOARD_SIGN_OUT) {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        try {
-          exportToClipBoard(columnLayoutListModel.getList());
-        } catch (ConfigurationException e) {
-          e.printStackTrace();
-          JOptionPane.showMessageDialog(exportToolbar.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(), "Export error", JOptionPane
-              .ERROR_MESSAGE);
-        }
-      }
-    });
-    exportToolbar.add(new AbstractAction("Export selected to clipboard",Icons.CLIPBOARD_SIGN_OUT) {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        try {
-          final Object[] selectedValues = LogTableFormatConfigView.this.columnLayoutsList.getSelectedValues();
-          if (selectedValues.length == 0) {
-            return;
-          }
-          List<ColumnLayout> list = new ArrayList<ColumnLayout>();
-          for (Object selectedValue : selectedValues) {
-            list.add((ColumnLayout) selectedValue);
-          }
-          exportToClipBoard(list);
-        } catch (ConfigurationException e) {
-          LOGGER.log(Level.SEVERE, "Can't export column layouts. ", e);
-          JOptionPane.showMessageDialog(exportToolbar.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(), "Export error", JOptionPane
-              .ERROR_MESSAGE);
-        }
-      }
-    });
-    exportToolbar.add(new AbstractAction("Export to file", Icons.TABLE_EXPORT) {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Select file");
-        if (chooser.showSaveDialog(panel.getRootPane()) == JFileChooser.APPROVE_OPTION) {
-          final File selectedFile = chooser.getSelectedFile();
-          try {
-            exportToFile(selectedFile, columnLayoutListModel.getList());
-          } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Can't export column layouts to file " + selectedFile, e);
-            JOptionPane.showMessageDialog(exportToolbar.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
-                .ERROR_MESSAGE);
-          }
-        }
-      }
-    });
-
-    final JToolBar importToolbar = new JToolBar();
-    importToolbar.add(new AbstractAction("Import from clipboard",Icons.CLIPBOARD_SIGN) {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        try {
-          importFromClipboard();
-
-        } catch (Exception e) {
-          LOGGER.log(Level.SEVERE, "Can't import column layout from clipboard", e);
-          JOptionPane.showMessageDialog(importToolbar.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error", JOptionPane
-              .ERROR_MESSAGE);
-        }
-      }
-    });
-    importToolbar.add(new AbstractAction("Import from file", Icons.TABLE_IMPORT) {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication);
-        dialog.setMultiSelectionEnabled(false);
-        dialog.setSelectionMode(SelectionMode.FILES_ONLY);
-
-        final JOtrosVfsBrowserDialog.ReturnValue returnValue = dialog.showOpenDialog(panel.getRootPane(), "Select file with column layout to import");
-        if (returnValue == JOtrosVfsBrowserDialog.ReturnValue.Approve) {
-          final FileObject selectedFile = dialog.getSelectedFile();
-          try {
-            importFromFile(selectedFile);
-          } catch (ConfigurationException e) {
-            LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
-            JOptionPane.showMessageDialog(importToolbar.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-                JOptionPane.ERROR_MESSAGE);
-          } catch (FileSystemException e) {
-            LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
-            JOptionPane.showMessageDialog(importToolbar.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-                JOptionPane.ERROR_MESSAGE);
-          }
-        }
-      }
-    });
+    addPopupMenuWithActionFromActionMap(columnLayoutsList, ACTION_COPY_SELECTED, ACTION_PASTE, ACTION_RENAME, ACTION_DELETE);
 
 
-    addLabel("Column layouts", 'c', scrollPane, panel);
-    addLabel("Export", 'x', exportToolbar, panel);
-    addLabel("Import", 'i', importToolbar, panel);
+    columnLayoutsPanel.add(scrollPane);
+    columnLayoutsPanel.add(importToolbar, BorderLayout.EAST);
+
+    addLabel("Column layouts", 'c', columnLayoutsPanel, panel);
+  }
+
+  //TODO extract save/load method common place
+  public static void saveColumnLayouts(List<ColumnLayout> list, Configuration c) {
+    final DataConfiguration dc = new DataConfiguration(c);
+    final Iterator<String> keys = dc.getKeys(COL_LAYOUT);
+    while (keys.hasNext()) {
+      dc.clearProperty(keys.next());
+    }
+
+    dc.setProperty(COL_LAYOUT + ".count", list.size());
+    for (int i = 0; i < list.size(); i++) {
+      dc.setProperty(String.format("%s._%d.name", COL_LAYOUT, i), list.get(i).getName());
+      dc.setProperty(String.format("%s._%d.columns", COL_LAYOUT, i), list.get(i).getColumns());
+    }
+
+  }
+
+  public static List<ColumnLayout> loadColumnLayouts(Configuration configuration) {
+    List<ColumnLayout> layouts = new ArrayList<ColumnLayout>();
+    DataConfiguration dc = new DataConfiguration(configuration);
+    final int count = dc.getInt(COL_LAYOUT + ".count", 0);
+    for (int i = 0; i < count; i++) {
+      String columnLayoutName = dc.getString(COL_LAYOUT + "._" + i + ".name");
+      List<String> list = dc.getList(String.class, COL_LAYOUT + "._" + i + ".columns");
+      ColumnLayout columnLayout = new ColumnLayout(columnLayoutName, list);
+      layouts.add(columnLayout);
+    }
+    return layouts;
   }
 
   public JOtrosVfsBrowserDialog getjOtrosVfsBrowserDialog(OtrosApplication otrosApplication) {
@@ -278,7 +242,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     }
     return jOtrosVfsBrowserDialog;
   }
-
 
   private void importFromFile(FileObject file) throws ConfigurationException, FileSystemException {
     try {
@@ -360,7 +323,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     otrosApplication.getStatusObserver().updateStatus("Column layouts have been exported to clipboard");
   }
 
-
   @Override
   public JComponent getView() {
     return panel;
@@ -397,37 +359,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     saveColumnLayouts(columnLayoutListModel.getList(), c);
   }
 
-  //TODO extract save/load method common place
-  public static void saveColumnLayouts(List<ColumnLayout> list, Configuration c) {
-    final DataConfiguration dc = new DataConfiguration(c);
-    final Iterator<String> keys = dc.getKeys(COL_LAYOUT);
-    while (keys.hasNext()) {
-      dc.clearProperty(keys.next());
-    }
-
-    dc.setProperty(COL_LAYOUT + ".count", list.size());
-    for (int i = 0; i < list.size(); i++) {
-      dc.setProperty(String.format("%s._%d.name", COL_LAYOUT, i), list.get(i).getName());
-      dc.setProperty(String.format("%s._%d.columns", COL_LAYOUT, i), list.get(i).getColumns());
-    }
-
-  }
-
-
-  public static List<ColumnLayout> loadColumnLayouts(Configuration configuration) {
-    List<ColumnLayout> layouts = new ArrayList<ColumnLayout>();
-    DataConfiguration dc = new DataConfiguration(configuration);
-    final int count = dc.getInt(COL_LAYOUT + ".count", 0);
-    for (int i = 0; i < count; i++) {
-      String columnLayoutName = dc.getString(COL_LAYOUT + "._" + i + ".name");
-      List<String> list = dc.getList(String.class, COL_LAYOUT + "._" + i + ".columns");
-      ColumnLayout columnLayout = new ColumnLayout(columnLayoutName, list);
-      layouts.add(columnLayout);
-    }
-    return layouts;
-  }
-
-
   //TODO move to some common
   private JPopupMenu addPopupMenuWithActionFromActionMap(JComponent list, String... actions) {
     JPopupMenu favoritesPopupMenu = new JPopupMenu();
@@ -439,6 +370,117 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     return favoritesPopupMenu;
   }
 
+  private class CopyAllOrSelectedToClipboardAction extends AbstractAction {
+    private final JPanel columnLayoutsPanel;
+
+    public CopyAllOrSelectedToClipboardAction(JPanel columnLayoutsPanel) {
+      super("Copy selected to clipboard", Icons.DOCUMENT_COPY);
+      putValue(SHORT_DESCRIPTION, this.getValue(NAME));
+      this.columnLayoutsPanel = columnLayoutsPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      try {
+        List<ColumnLayout> list = new ArrayList<ColumnLayout>();
+        final Object[] selectedValues = LogTableFormatConfigView.this.columnLayoutsList.getSelectedValues();
+        if (selectedValues.length == 0) {
+          list.addAll(columnLayoutListModel.getList());
+        } else {
+          for (Object selectedValue : selectedValues) {
+            list.add((ColumnLayout) selectedValue);
+          }
+        }
+        exportToClipBoard(list);
+      } catch (ConfigurationException e) {
+        LOGGER.log(Level.SEVERE, "Can't export column layouts. ", e);
+        JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(),
+            "Export error", JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
+  private class ExportToFileAction extends AbstractAction {
+    private final JPanel columnLayoutsPanel;
+
+    public ExportToFileAction(JPanel columnLayoutsPanel) {
+      super("Export to file", Icons.TABLE_EXPORT);
+      putValue(SHORT_DESCRIPTION, this.getValue(NAME));
+      this.columnLayoutsPanel = columnLayoutsPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      JFileChooser chooser = new JFileChooser();
+      chooser.setDialogTitle("Select file");
+      if (chooser.showSaveDialog(panel.getRootPane()) == JFileChooser.APPROVE_OPTION) {
+        final File selectedFile = chooser.getSelectedFile();
+        try {
+          exportToFile(selectedFile, columnLayoutListModel.getList());
+        } catch (Exception e) {
+          LOGGER.log(Level.SEVERE, "Can't export column layouts to file " + selectedFile, e);
+          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
+              .ERROR_MESSAGE);
+        }
+      }
+    }
+  }
+
+  private class PasteFomClipboardAction extends AbstractAction {
+    private final JPanel columnLayoutsPanel;
+
+    public PasteFomClipboardAction(JPanel columnLayoutsPanel) {
+      super("Paste from clipboard", Icons.CLIPBOARD_PASTE);
+      putValue(SHORT_DESCRIPTION, this.getValue(NAME));
+      this.columnLayoutsPanel = columnLayoutsPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      try {
+        importFromClipboard();
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE, "Can't import column layout from clipboard", e);
+        JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(),
+            "Paste error", JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
+  private class ImportFromFileAction extends AbstractAction {
+    private final OtrosApplication otrosApplication;
+    private final JPanel columnLayoutsPanel;
+
+    public ImportFromFileAction(OtrosApplication otrosApplication, JPanel columnLayoutsPanel) {
+      super("Import from file", Icons.TABLE_IMPORT);
+      putValue(SHORT_DESCRIPTION, this.getValue(NAME));
+      this.otrosApplication = otrosApplication;
+      this.columnLayoutsPanel = columnLayoutsPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication);
+      dialog.setMultiSelectionEnabled(false);
+      dialog.setSelectionMode(SelectionMode.FILES_ONLY);
+
+      final JOtrosVfsBrowserDialog.ReturnValue returnValue = dialog.showOpenDialog(panel.getRootPane(), "Select file with column layout to import");
+      if (returnValue == JOtrosVfsBrowserDialog.ReturnValue.Approve) {
+        final FileObject selectedFile = dialog.getSelectedFile();
+        try {
+          importFromFile(selectedFile);
+        } catch (ConfigurationException e) {
+          LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
+          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
+              JOptionPane.ERROR_MESSAGE);
+        } catch (FileSystemException e) {
+          LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
+          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
+              JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    }
+  }
 }
 
 
