@@ -21,10 +21,10 @@ import pl.otros.logview.io.Utils;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
 import pl.otros.swing.config.ValidationResult;
+import pl.otros.swing.list.MutableListModel;
 import pl.otros.swing.table.ColumnLayout;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
-import pl.otros.vfs.browser.list.MutableListModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -67,6 +67,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   public static final String COL_LAYOUT = "colLayout";
   public static final String ACTION_COPY_SELECTED = "copy";
   public static final String ACTION_PASTE = "paste";
+  public static final String VIEW_ID = "logDisplay";
   private static final Logger LOGGER = Logger.getLogger(LogTableFormatConfigView.class.getName());
   private final String[] dateFormats;
   private final JXRadioGroup radioGroup;
@@ -79,7 +80,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   private JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog;
 
   public LogTableFormatConfigView(final OtrosApplication otrosApplication) {
-    super("logDisplay", "Log event display", "This configuration provides allow user to change how log events are displayed");
+    super(VIEW_ID, "Log event display", "This configuration provides allow user to change how log events are displayed");
     this.otrosApplication = otrosApplication;
     panel = new JPanel();
     panel.setLayout(new MigLayout());
@@ -126,17 +127,18 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     columnLayoutsList.setCellRenderer(new ColumnLayoutRenderer());
     final ActionMap actionMap = columnLayoutsList.getActionMap();
-    final AbstractAction deleteAction = new AbstractAction("Delete",Icons.DELETE) {
+    final AbstractAction deleteAction = new AbstractAction("Delete", Icons.DELETE) {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
-        final int i = showConfirmDialog(panel, "Do you want to delete column layout //TODO name", "Rename", YES_NO_OPTION);
+        final ColumnLayout layout = columnLayoutListModel.getElementAt(columnLayoutsList.getSelectedIndex());
+        final int i = showConfirmDialog(panel, "Do you want to delete column layout " + layout.getName(), "Remove", YES_NO_OPTION);
         if (OK_OPTION == i) {
           columnLayoutListModel.remove(columnLayoutsList.getSelectedIndex());
         }
 
       }
     };
-    final AbstractAction renameAction = new AbstractAction("Rename",Icons.EDIT_SIGNATURE) {
+    final AbstractAction renameAction = new AbstractAction("Rename", Icons.EDIT_SIGNATURE) {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         final int selectedIndex = columnLayoutsList.getSelectedIndex();
@@ -159,6 +161,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     renameAction.setEnabled(false);
     deleteAction.setEnabled(false);
     columnLayoutsList.setSelectedIndices(new int[0]);
+    columnLayoutsList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 
     final JToolBar importToolbar = new JToolBar(SwingConstants.VERTICAL);
@@ -256,7 +259,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   }
 
   private void importFromClipboard() throws IOException, UnsupportedFlavorException, ConfigurationException {
-    XMLConfiguration xmlConfiguration = null;
+    XMLConfiguration xmlConfiguration;
     try {
       String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
       StringReader stringReader = new StringReader(data);
@@ -284,19 +287,23 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
     final JList jList = new JList(listModel);
     jList.setCellRenderer(new ColumnLayoutRenderer());
-    jList.getSelectionModel().setSelectionInterval(0, listModel.getSize());
+    jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    if (listModel.getSize() > 0) {
+      jList.getSelectionModel().setSelectionInterval(0, listModel.getSize() - 1);
+    }
     messagePanel.add(new JScrollPane(jList));
     final int resp = JOptionPane.showConfirmDialog(LogTableFormatConfigView.this.panel.getRootPane(), messagePanel, "Select column layouts to import",
         JOptionPane.OK_CANCEL_OPTION);
     if (resp == JOptionPane.CANCEL_OPTION) {
       return;
     }
-    jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
     final int[] selectedIndices = jList.getSelectedIndices();
-    for (int i = 0; i < selectedIndices.length; i++) {
-      columnLayouts.add(columnLayoutListModel.getElementAt(i));
+    for (int selectedIndex : selectedIndices) {
+      final ColumnLayout elementAt = listModel.getElementAt(selectedIndex);
+      columnLayoutListModel.add(elementAt);
     }
+
   }
 
   private void exportToFile(File file, List<ColumnLayout> columnLayouts) throws ConfigurationException, FileNotFoundException {
