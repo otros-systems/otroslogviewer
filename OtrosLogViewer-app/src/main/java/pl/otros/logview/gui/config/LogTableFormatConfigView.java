@@ -187,10 +187,10 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), ACTION_DELETE);
     columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_DELETE);
 
-    //TODO verify CTRL+C/V CMD+C/V
-    //TOOD map CTRL/SHIFT insert
-    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK), ACTION_PASTE);
-    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), ACTION_COPY_SELECTED);
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), ACTION_PASTE);
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_DOWN_MASK), ACTION_PASTE);
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), ACTION_COPY_SELECTED);
+    columnLayoutsList.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.CTRL_DOWN_MASK), ACTION_COPY_SELECTED);
 
     final JScrollPane scrollPane = new JScrollPane(columnLayoutsList);
     scrollPane.setMinimumSize(new Dimension(100, 40));
