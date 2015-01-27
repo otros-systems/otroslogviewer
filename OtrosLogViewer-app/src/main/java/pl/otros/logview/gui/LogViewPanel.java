@@ -84,6 +84,7 @@ import pl.otros.logview.gui.renderers.NoteRenderer;
 import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
+import pl.otros.logview.gui.renderers.TimeDeltaRenderer;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
@@ -274,6 +275,20 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setDefaultRenderer(Integer.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
     table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
     table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(renderers.getDateRenderer()));
+    final TimeDeltaRenderer timeDeltaRenderer = new TimeDeltaRenderer();
+    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent listSelectionEvent) {
+        final int[] selectedRows = table.getSelectedRows();
+        if (selectedRows.length>0){
+          final int selectedRow = selectedRows[selectedRows.length - 1];
+          final Date selectedDate = dataTableModel.getLogData(table.convertRowIndexToModel(selectedRow)).getDate();
+          timeDeltaRenderer.setSelectedTimestamp(selectedDate);
+          table.repaint();
+        }
+      }
+    });
+    table.setDefaultRenderer(TimeDelta.class,new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
     ((EventSource) configuration.getConfiguration()).addConfigurationListener(new ConfigurationListener() {
       @Override
@@ -415,9 +430,10 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     FontMetrics fm = table.getFontMetrics(table.getFont());
     updateColumnSizeIfVisible(TableColumns.ID, fm.stringWidth("0000000"), fm.stringWidth("000000000"));
     updateTimeColumnSize();
+    updateColumnSizeIfVisible(TableColumns.DELTA,60,100);
     updateLevelColumnSize();
-    updateColumnSizeIfVisible(TableColumns.CLASS, 100, 400);
-    updateColumnSizeIfVisible(TableColumns.THREAD, 100, 400);
+    updateColumnSizeIfVisible(TableColumns.CLASS, 100, 500);
+    updateColumnSizeIfVisible(TableColumns.THREAD, 100, 300);
     updateColumnSizeIfVisible(TableColumns.METHOD, 100, 200);
     updateColumnSizeIfVisible(TableColumns.LINE, fm.stringWidth("0000"), fm.stringWidth("000000"));
     updateColumnSizeIfVisible(TableColumns.MARK, 16, 16);
@@ -522,11 +538,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private JPopupMenu initTableContextMenu() {
     JPopupMenu menu = new JPopupMenu("Menu");
     JMenuItem mark = new JMenuItem("Mark selected rows");
-    JPanel markPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    for (MarkerColors value : MarkerColors.values()) {
-      markPanel.add(new JButton(Icons.DISK));
-    }
-
     mark.addActionListener(new MarkRowAction(otrosApplication));
     JMenuItem unmark = new JMenuItem("Unmark selected rows");
     unmark.addActionListener(new UnMarkRowAction(otrosApplication));
@@ -574,7 +585,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     menu.add(labelMarkingRows);
     menu.add(new JSeparator());
     menu.add(mark);
-    menu.add(markPanel);
     menu.add(unmark);
     JMenu[] markersMenu = getAutomaticMarkersMenu();
     menu.add(markersMenu[0]);
@@ -860,5 +870,4 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
   }
-
 }
