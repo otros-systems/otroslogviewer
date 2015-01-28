@@ -897,7 +897,7 @@ public class LogViewMainFrame extends JFrame {
   private void initGlobalHotKeys() {
     KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     manager.addKeyEventPostProcessor(new KeyboardTabSwitcher(logsTabbedPane));
-    manager.addKeyEventPostProcessor(new FocusComponentOnHotKey(searchField, KeyEvent.VK_F, KeyEvent.CTRL_MASK));
+    manager.addKeyEventPostProcessor(new FocusComponentOnHotKey(searchField, KeyEvent.VK_F, KeyEvent.META_MASK));
   }
 
   private void initPosition() {
