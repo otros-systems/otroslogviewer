@@ -3,23 +3,28 @@ package pl.otros.logview.gui.renderers;
 import pl.otros.logview.gui.TimeDelta;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.Date;
 
-public class TimeDeltaRenderer extends DefaultTableCellRenderer {
+public class TimeDeltaRenderer implements TableCellRenderer {
 
   public static final int SECOND = 1000;
   public static final int MINUTE = 60 * SECOND;
   public static final int HOUR = 60 * MINUTE;
 
   private Date selectedTimestamp;
+  private JLabel label;
+
+  public TimeDeltaRenderer() {
+    label  = new JLabel();
+    label.setOpaque(true);
+    label.setHorizontalAlignment(SwingConstants.RIGHT);
+
+  }
 
   @Override
   public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent(jTable, o, b, b1, i, i1);
-    label.setHorizontalAlignment(SwingConstants.RIGHT);
-
     if (o != null && o instanceof TimeDelta && selectedTimestamp != null) {
       TimeDelta timeDelta = (TimeDelta) o;
       label.setText(formatDelta(timeDelta.getTimestamp().getTime() - selectedTimestamp.getTime()));
