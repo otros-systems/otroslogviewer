@@ -20,7 +20,7 @@ class ApplyColumnLayoutAction extends AbstractAction {
   private final JXTable table;
 
   public ApplyColumnLayoutAction(String name, Icon icon, ColumnLayout columnLayout, JXTable table) {
-    super(name, icon);
+    super(String.format("Switch layout to \"%s\"", name), icon);
     this.columnLayout = columnLayout;
     this.table = table;
   }

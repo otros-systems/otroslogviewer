@@ -212,6 +212,13 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.setColumnControlVisible(true);
     final ColumnControlButton columnControlButton =
         new ColumnControlButton(table) {
+
+          @Override
+          public void togglePopup() {
+            populatePopup();
+            super.togglePopup();
+          }
+
           @Override
           protected List<Action> getAdditionalActions() {
             final List<Action> additionalActions = super.getAdditionalActions();
@@ -288,7 +295,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         }
       }
     });
-    table.setDefaultRenderer(TimeDelta.class,new TableMarkDecoratorRenderer(timeDeltaRenderer));
+    table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
     ((EventSource) configuration.getConfiguration()).addConfigurationListener(new ConfigurationListener() {
       @Override
