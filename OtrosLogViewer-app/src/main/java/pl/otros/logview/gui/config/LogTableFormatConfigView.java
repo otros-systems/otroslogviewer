@@ -54,6 +54,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.swing.JOptionPane.*;
+import static javax.swing.SwingConstants.LEFT;
+import static javax.swing.SwingConstants.VERTICAL;
 import static pl.otros.logview.gui.ConfKeys.*;
 
 public class LogTableFormatConfigView extends AbstractConfigView implements InMainConfig {
@@ -123,6 +125,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutListModel = new MutableListModel<ColumnLayout>();
 
     columnLayoutsList = new JList(columnLayoutListModel);
+    columnLayoutsList.setToolTipText("Click right mouse button to edit or delete");
     columnLayoutsList.setMinimumSize(new Dimension(100, 40));
     columnLayoutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     columnLayoutsList.setCellRenderer(new ColumnLayoutRenderer());
@@ -163,7 +166,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     columnLayoutsList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 
-    final JToolBar importToolbar = new JToolBar(SwingConstants.VERTICAL);
+    final JToolBar importToolbar = new JToolBar(VERTICAL);
     importToolbar.add(new JLabel("Export: "));
 
     final AbstractAction exportSelectedToClipboard = new CopyAllOrSelectedToClipboardAction(columnLayoutsPanel);
@@ -202,9 +205,12 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     });
     addPopupMenuWithActionFromActionMap(columnLayoutsList, ACTION_COPY_SELECTED, ACTION_PASTE, ACTION_RENAME, ACTION_DELETE);
 
+    final String hintText = "Column layouts can be exported/imported from clipboard or file";
+    final JLabel hintLabel = new JLabel(hintText, Icons.LEVEL_INFO, LEFT);
 
     columnLayoutsPanel.add(scrollPane);
     columnLayoutsPanel.add(importToolbar, BorderLayout.EAST);
+    columnLayoutsPanel.add(hintLabel, BorderLayout.SOUTH);
 
     addLabel("Column layouts", 'c', columnLayoutsPanel, panel);
   }
