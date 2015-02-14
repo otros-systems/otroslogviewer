@@ -145,7 +145,6 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         final ColumnLayout o = columnLayoutListModel.getElementAt(selectedIndex);
         final String newName = (String) showInputDialog(panel, "Rename column layout", "Enter new name for column layout", PLAIN_MESSAGE, null, null, o.getName());
         if (newName != null) {
-          //TODO check for duplicate
           columnLayoutListModel.change(selectedIndex, new ColumnLayout(newName, o.getColumns()));
         }
       }
