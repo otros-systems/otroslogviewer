@@ -159,7 +159,11 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         result = getProperties(ld);
         break;
       case LOGGER_NAME:
-        result = ld.getLoggerName();
+        final String loggerName = ld.getLoggerName();
+        if (!classWrapperCache.containsKey(loggerName)) {
+          classWrapperCache.put(loggerName, new ClassWrapper(loggerName));
+        }
+        result = classWrapperCache.get(loggerName);
         break;
       case LOG_SOURCE:
         result = ld.getLogSource();
@@ -269,6 +273,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         result = String.class;
         break;
       case CLASS:
+      case LOGGER_NAME:
         result = ClassWrapper.class;
         break;
       case MARK:
