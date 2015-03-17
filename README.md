@@ -65,7 +65,6 @@ Filter level WARNING or higher and highlighting:
   * JGoodies Looks
 
 ## Similar software
-  * [Retrospective](http://www.retrospective.centeractive.com?olv)
   * [log.io](http://logio.org/)
   * [Apache chainsaw](http://logging.apache.org/chainsaw/index.html)
   * [Lilith](http://lilith.huxhorn.de/)
