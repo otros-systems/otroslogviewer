@@ -1,8 +1,8 @@
-# otroslogviewer
-# Otros Log Viewer and parser
+# OtrosLogViewer
 Useful software for analysing applications logs and traces.
 
-Follow us on [Twitter](https://twitter.com/OtrosSystems)&lt;wiki:gadget url="http://www.ohloh.net/p/olv/widgets/project\_users.xml" height="100" border="0" /&gt;  Created with: [![](http://www.jetbrains.com/idea/opensource/img/all/banners/idea125x37_white.gif)](http://www.jetbrains.com/idea/)
+Follow us on [Twitter](https://twitter.com/OtrosSystems)
+Created with: [![](http://www.jetbrains.com/idea/opensource/img/all/banners/idea125x37_white.gif)](http://www.jetbrains.com/idea/)
 
 
 ## Do you want help
