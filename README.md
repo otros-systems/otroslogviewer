@@ -1,18 +1,6 @@
 # OtrosLogViewer
 Useful software for analysing applications logs and traces.
 
-Follow us on [Twitter](https://twitter.com/OtrosSystems)
-Created with: [![](http://www.jetbrains.com/idea/opensource/img/all/banners/idea125x37_white.gif)](http://www.jetbrains.com/idea/)
-
-
-## Do you want help
-Do you want to help? You can donate to OtrosLogViewer
-
-Using **PayPal**:
-[![](https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_76x48.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GJUQP3X5FMUQU&lc=US&item_name=OtrosLogViewer%20%2d%20donate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
-
-Using **BitCoin**: 1JYDZMysFaXv1u58susqEqX4ukdtSnLLpW
-
 ## Requirements
   * Java 6
 
@@ -88,7 +76,17 @@ Filter level WARNING or higher and highlighting:
 ## Contact
 If you have any questions please write to otros.systems at gmail.com
 
+Follow us on [Twitter](https://twitter.com/OtrosSystems)
 Created with: [![](http://www.jetbrains.com/idea/opensource/img/all/banners/idea125x37_white.gif)](http://www.jetbrains.com/idea/)
+
+
+## Do you want help
+Do you want to help? You can donate to OtrosLogViewer
+
+Using **PayPal**:
+[![](https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_76x48.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GJUQP3X5FMUQU&lc=US&item_name=OtrosLogViewer%20%2d%20donate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+
+Using **BitCoin**: 1JYDZMysFaXv1u58susqEqX4ukdtSnLLpW
 
 [![](http://petition.stopsoftwarepatents.eu/banner/171006582880/ssp-362-60.gif)](http://petition.stopsoftwarepatents.eu/171006582880/)
 
