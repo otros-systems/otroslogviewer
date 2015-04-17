@@ -1,4 +1,4 @@
-#check wiki on http://code.google.com/p/otroslogviewer/wiki/Log4jPatternLayout
+#check wiki on https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout
 
 type=log4j
 pattern=TIMESTAMP LEVEL [THREAD]  MESSAGE
@@ -19,6 +19,6 @@ charset=windows-1252
 #        RELATIVETIME
 #        MESSAGE
 #        NDC
-#        PROP(key) 
+#        PROP(key)
 #    Specify the date format by adding the property 'dateFormat', using patterns from java.text.SimpleDateFormat
-#    For custom level mapping, add the property 'customLevels' providing values in the format CustomLevel1=Log4jLevel,CustomLevel2=Log4jLevel 
+#    For custom level mapping, add the property 'customLevels' providing values in the format CustomLevel1=Log4jLevel,CustomLevel2=Log4jLevel

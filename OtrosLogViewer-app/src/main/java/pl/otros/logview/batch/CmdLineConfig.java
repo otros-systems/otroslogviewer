@@ -62,7 +62,7 @@ public class CmdLineConfig {
 
   public void printUsage() {
     jCommander.usage();
-    System.out.println("Check wiki for more information: http://code.google.com/p/otroslogviewer/wiki/BatchProcessing");
+    System.out.println("Check wiki for more information: https://github.com/otros-systems/otroslogviewer/wiki/BatchProcessing");
   }
 
 }

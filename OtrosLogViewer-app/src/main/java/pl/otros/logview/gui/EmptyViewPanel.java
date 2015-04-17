@@ -180,7 +180,7 @@ public class EmptyViewPanel extends JPanel {
 		}
 
 		JTextArea visitTf = new JTextArea(
-				"Have a different log format? Go to http://code.google.com/p/otroslogviewer/wiki/Log4jPatternLayout\nto check how to create a log parser based on the log4j PatternLayout.");
+				"Have a different log format? Go to https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout\nto check how to create a log parser based on the log4j PatternLayout.");
 		visitTf.setEditable(false);
 		visitTf.setBackground(tailLabel.getBackground());
 		visitTf.setBorder(null);
