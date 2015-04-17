@@ -92,7 +92,7 @@ public class LogFileInNewTabOpener {
     LOGGER.severe("Error loading log (" + file.getName().getFriendlyURI() + "): no suitable log parser found");
 
     String errorMessage = "Error loading log file: no suitable log parser found for " + file.getName().getFriendlyURI() + "\n"
-        + "Go http://code.google.com/p/otroslogviewer/wiki/Log4jPatternLayout to check how to parse log4j custom pattern.";
+        + "Go https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout to check how to parse log4j custom pattern.";
     JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
   }
 

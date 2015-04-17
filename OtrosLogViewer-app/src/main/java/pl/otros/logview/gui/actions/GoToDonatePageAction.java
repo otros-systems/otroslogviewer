@@ -32,7 +32,7 @@ public class GoToDonatePageAction extends OtrosAction {
 
   private static final Logger LOGGER = Logger.getLogger(GoToDonatePageAction.class.getName());
 
-  private static final String DONATE_URL = "http://code.google.com/p/otroslogviewer/wiki/DonateAndDonors";
+  private static final String DONATE_URL = "https://github.com/otros-systems/otroslogviewer/wiki/DonateAndDonors";
 
   public GoToDonatePageAction(OtrosApplication otrosApplication) {
     super(otrosApplication);

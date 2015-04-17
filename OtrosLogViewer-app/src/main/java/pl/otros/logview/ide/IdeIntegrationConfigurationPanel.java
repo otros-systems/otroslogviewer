@@ -86,7 +86,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
           @Override
           public void run() {
             try {
-              Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/wiki/JumpToCode"));
+              Desktop.getDesktop().browse(new URI("https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode"));
             } catch (Exception e1) {
               LOGGER.log(Level.SEVERE, "Can't open page", e1);
             }

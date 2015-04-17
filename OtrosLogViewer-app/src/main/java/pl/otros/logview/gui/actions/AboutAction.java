@@ -87,7 +87,7 @@ public class AboutAction extends OtrosAction {
 		sd.insertString(0, "OtrosLogViewer\n", titleStyle);
 		sd.insertString(sd.getLength(), "Build: " + build + "\n", mainStyle);
 		sd.insertString(sd.getLength(), "Project web page: http://code.google.com/p/otroslogviewer/\n", mainStyle);
-		sd.insertString(sd.getLength(), "Program documentation: http://code.google.com/p/otroslogviewer/wiki/Introduction?tm=6 \n", mainStyle);
+		sd.insertString(sd.getLength(), "Program documentation: https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6 \n", mainStyle);
 
 		sd.insertString(sd.getLength(), "License: Apache Commons 2.0", licenceStyle);
 

@@ -20,13 +20,13 @@ Useful software for analysing applications logs and traces.
   * Listening on a socket
   * Adding notes to log event
   * Saving/loading log investigation (with added marks and notes)
-  * [Integration with IntelliJ IDEA](http://code.google.com/p/otroslogviewer/wiki/JumpToCode)
+  * [Integration with IntelliJ IDEA](https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode)
 
 
 ## Included parsers
   * Java Util Logging XMLFormatter
   * Java Util Logging SimpleFormatter
-  * log4j pattern layout [(how to create your own)](http://code.google.com/p/otroslogviewer/wiki/Log4jPatternLayout)
+  * log4j pattern layout [(how to create your own)](https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout)
   * log4j XMLLayout
 
 ## Included filters
@@ -47,10 +47,10 @@ Filter level WARNING or higher and highlighting:
 
 ![http://lh5.ggpht.com/_qGxhLPhk4wE/TTixTV-fyNI/AAAAAAAAA18/ILCMZ_siOIE/olv-2011-01-20.png](http://lh5.ggpht.com/_qGxhLPhk4wE/TTixTV-fyNI/AAAAAAAAA18/ILCMZ_siOIE/olv-2011-01-20.png)
 
-[Click here to see more screenshots](http://code.google.com/p/otroslogviewer/wiki/Screenshots)
+[Click here to see more screenshots](https://github.com/otros-systems/otroslogviewer/wiki/Screenshots)
 
 ## Video
-[Screen cap recording ](http://code.google.com/p/otroslogviewer/wiki/Wideo)
+[Screen cap recording ](https://github.com/otros-systems/otroslogviewer/wiki/Wideo)
 
 ## Powered by
   * Apache commons: net, lang, vfs, httpclient, logging, collections, compress, io
