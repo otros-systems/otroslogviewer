@@ -16,6 +16,10 @@
 
 package pl.otros.logview.gui;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableScheduledFuture;
+import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
@@ -106,11 +110,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -123,6 +129,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -332,6 +339,9 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     dataTableModel.addNoteObserver(messageDetailListener);
 
     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+      Optional<? extends ListenableScheduledFuture<?>> scheduledJump = Optional.absent();
+
       @Override
       public void valueChanged(ListSelectionEvent e) {
         boolean hasFocus = otrosApplication.getApplicationJFrame().isFocused();
@@ -339,15 +349,36 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         if (hasFocus && enabled && !e.getValueIsAdjusting()) {
           try {
             final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
-            LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
+            final LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
             final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
             final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
             if (ideAvailable) {
-              LOGGER.fine("Jumping to " + li);
-              jumpToCodeService.jump(li);
+              scheduledJump.transform(new Function<ListenableScheduledFuture<?>, Boolean>() {
+                @Override
+                public Boolean apply(ListenableScheduledFuture<?> input) {
+                  input.cancel(false);
+                  return Boolean.TRUE;
+                }
+              });
+              ListeningScheduledExecutorService scheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
+              ListenableScheduledFuture<?> jump =scheduledExecutorService.schedule(
+                      new Runnable() {
+                        public void run() {
+                          LOGGER.fine("Jumping to " + li);
+                          try {
+                            jumpToCodeService.jump(li);
+                          } catch (IOException e1) {
+                            e1.printStackTrace();
+                          }
+                        }
+                      }
+                      , 300, TimeUnit.MILLISECONDS
+              );
+
+              scheduledJump = Optional.of(jump);
             }
           } catch (Exception e1) {
-            LOGGER.warning("Can't perform jump to code " + e1.getMessage());
+            LOGGER.warning("Can't perform jump to code: " + e1.getMessage());
           }
 
         }
