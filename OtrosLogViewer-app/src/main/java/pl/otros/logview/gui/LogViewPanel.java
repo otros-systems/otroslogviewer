@@ -16,10 +16,6 @@
 
 package pl.otros.logview.gui;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableScheduledFuture;
-import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
@@ -73,7 +69,6 @@ import pl.otros.logview.gui.actions.UnMarkRowAction;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
 import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
@@ -89,9 +84,9 @@ import pl.otros.logview.gui.renderers.NoteTableEditor;
 import pl.otros.logview.gui.renderers.Renderers;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.gui.renderers.TimeDeltaRenderer;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.gui.util.JumpToCodeSelectionListener;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.logview.pluginable.PluginableElement;
 import pl.otros.logview.pluginable.PluginableElementEventListener;
@@ -110,13 +105,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,7 +122,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -338,53 +330,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.getSelectionModel().addListSelectionListener(messageDetailListener);
     dataTableModel.addNoteObserver(messageDetailListener);
 
-    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-      Optional<? extends ListenableScheduledFuture<?>> scheduledJump = Optional.absent();
-
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        boolean hasFocus = otrosApplication.getApplicationJFrame().isFocused();
-        final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
-        if (hasFocus && enabled && !e.getValueIsAdjusting()) {
-          try {
-            final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
-            final LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
-            final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
-            final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
-            if (ideAvailable) {
-              scheduledJump.transform(new Function<ListenableScheduledFuture<?>, Boolean>() {
-                @Override
-                public Boolean apply(ListenableScheduledFuture<?> input) {
-                  input.cancel(false);
-                  return Boolean.TRUE;
-                }
-              });
-              ListeningScheduledExecutorService scheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
-              ListenableScheduledFuture<?> jump =scheduledExecutorService.schedule(
-                      new Runnable() {
-                        public void run() {
-                          LOGGER.fine("Jumping to " + li);
-                          try {
-                            jumpToCodeService.jump(li);
-                          } catch (IOException e1) {
-                            e1.printStackTrace();
-                          }
-                        }
-                      }
-                      , 300, TimeUnit.MILLISECONDS
-              );
-
-              scheduledJump = Optional.of(jump);
-            }
-          } catch (Exception e1) {
-            LOGGER.warning("Can't perform jump to code: " + e1.getMessage());
-          }
-
-        }
-      }
-    });
-
+    table.getSelectionModel().addListSelectionListener(new JumpToCodeSelectionListener(otrosApplication, dataTableModel,table,100));
 
     notes = new JTextArea();
     notes.setEditable(false);
@@ -908,4 +854,5 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
   }
+
 }
