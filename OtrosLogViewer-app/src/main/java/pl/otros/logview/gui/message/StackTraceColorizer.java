@@ -30,17 +30,19 @@ import static pl.otros.logview.gui.message.MessageColorizerUtils.increaseOffset;
 
 public class StackTraceColorizer implements MessageColorizer {
   private static final String NANE = "Java stack trace";
-  protected static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
+  protected static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>]+)\\(([\\d\\w\\.\\u0020:]+)\\)(\\s*//.*)?)");
   protected static final int EXCEPTION_LINE_GROUP_PACKAGE = 2;
   protected static final int EXCEPTION_LINE_GROUP_CLASS = 3;
   protected static final int EXCEPTION_LINE_GROUP_METHOD = 4;
   protected static final int EXCEPTION_LINE_GROUP_FILE = 5;
+  protected static final int EXCEPTION_LINE_GROUP_CODE_COMMENT = 6;
   private static final String DESCRIPTION = "Colorize java stack trace.";
   private Style styleStackTrace;
   private Style stylePackage;
   private Style styleClass;
   private Style styleMethod;
   private Style styleFile;
+  private Style styleCodeComment;
   private StackTraceFinder stackTraceFinder;
   private StyleContext styleContext;
 
@@ -51,10 +53,11 @@ public class StackTraceColorizer implements MessageColorizer {
   protected void initStyles() {
     styleContext = new StyleContext();
     Style defaultStyle = styleContext.getStyle(StyleContext.DEFAULT_STYLE);
+    StyleConstants.setFontFamily(defaultStyle, "courier");
     styleStackTrace = styleContext.addStyle("stackTrace", defaultStyle);
+
     StyleConstants.setBackground(styleStackTrace, new Color(255, 224, 193));
     StyleConstants.setForeground(styleStackTrace, Color.BLACK);
-    StyleConstants.setFontFamily(styleStackTrace, "courier");
     stylePackage = styleContext.addStyle("stylePackage", styleStackTrace);
     styleClass = styleContext.addStyle("styleClass", stylePackage);
     StyleConstants.setForeground(styleClass, new Color(11, 143, 61));
@@ -66,6 +69,10 @@ public class StackTraceColorizer implements MessageColorizer {
     styleFile = styleContext.addStyle("styleFile", styleStackTrace);
     StyleConstants.setForeground(styleFile, Color.BLACK);
     StyleConstants.setUnderline(styleFile, true);
+
+    styleCodeComment = styleContext.addStyle("styleCodeComment", defaultStyle);
+    StyleConstants.setForeground(styleCodeComment, Color.DARK_GRAY);
+    StyleConstants.setItalic(styleCodeComment, true);
   }
 
   @Override
@@ -88,6 +95,7 @@ public class StackTraceColorizer implements MessageColorizer {
         list.addAll(increaseOffset(colorizeStackTraceRegex(styleClass, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_CLASS), newOffset));
         list.addAll(increaseOffset(colorizeStackTraceRegex(styleMethod, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_METHOD), newOffset));
         list.addAll(increaseOffset(colorizeStackTraceRegex(styleFile, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_FILE), newOffset));
+        list.addAll(increaseOffset(colorizeStackTraceRegex(styleCodeComment, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_CODE_COMMENT), newOffset));
       }
     }
     return list;

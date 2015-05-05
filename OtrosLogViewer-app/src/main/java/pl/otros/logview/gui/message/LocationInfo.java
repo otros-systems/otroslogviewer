@@ -131,7 +131,7 @@ public class LocationInfo {
     }
     fullInfo = fullInfo.trim();
     fullInfo = StringUtils.removeStart(fullInfo, "at ");
-    int lastClosingBrace = fullInfo.lastIndexOf(')');
+    int lastClosingBrace = fullInfo.indexOf(')');
     int lastColon = fullInfo.lastIndexOf(':', lastClosingBrace);
     int lastOpeningBrace = fullInfo.lastIndexOf('(', lastColon);
     if (lastOpeningBrace == -1 || lastClosingBrace == -1 || lastColon == -1) {
@@ -142,7 +142,8 @@ public class LocationInfo {
     String methodName;
     String fileName;
     int lineNumber;
-    lineNumber = Integer.parseInt(fullInfo.substring(lastColon + 1, lastClosingBrace));
+    final String lineNumberString = fullInfo.substring(lastColon + 1, lastClosingBrace);
+    lineNumber = Integer.parseInt(lineNumberString);
     fileName = fullInfo.substring(lastOpeningBrace + 1, lastColon);
     // packageName
     fullInfo = fullInfo.substring(0, lastOpeningBrace);

@@ -16,13 +16,13 @@
 package pl.otros.logview.loader;
 
 import pl.otros.logview.api.plugins.Plugin;
-import pl.otros.logview.api.plugins.PluginInfo;
 import pl.otros.logview.filter.LogFilter;
 import pl.otros.logview.gui.StatusObserver;
 import pl.otros.logview.gui.markers.AutomaticMarker;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
+import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
 import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -111,7 +111,7 @@ public class LvDynamicLoader {
   }
 
 private void loadPlugins() {
-	
+	pluginInfos.add(new StackTraceFormatterPlugin());
 	pluginInfos.addAll(baseLoader.load(AllPluginables.USER_PLUGINS, Plugin.class));
     pluginInfos.addAll(baseLoader.load(AllPluginables.SYSTEM_PLUGINS, Plugin.class));
     ArrayList<PluginablePluginAdapter> pluList = new ArrayList<PluginablePluginAdapter>();

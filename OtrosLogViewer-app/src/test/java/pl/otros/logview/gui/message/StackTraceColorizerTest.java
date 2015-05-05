@@ -40,11 +40,22 @@ public class StackTraceColorizerTest {
     //given
     String string = "at A.ExTest.readMyFile(ExTest.java:19)\n  at ExTest.main(ExTest.java:7)\naa";
     string = "something\n" +
-             "java.io.FileNotFoundException: fred.txt\n" +
-             "\tat java.io.FileInputStream.<init>(FileInputStream.java)\n" +
-             "\tat java.io.FileInputStream.<init>(FileInputStream.java)\n" +
-             "\tat A.ExTest.readMyFile(ExTest.java:19)\n" +
+             "java.io.FileNotFoundException: fred.txt //comment\n" +
+             "\tat java.io.FileInputStream.<init>(FileInputStream.java) //code comment \n" +
+             "\tat java.io.FileInputStream.<init>(FileInputStream.java) //code comment\n" +
+             "\tat A.ExTest.readMyFile(ExTest.java:19) //Some code\n" +
              "  at ExTest.main(ExTest.java:7)\n";
+      string = "Formatted: Error in thread Thread-7\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame$15$1.run(LogViewMainFrame.java:888)  //throw new RuntimeException(\"Exception from tread!\");\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:898)  //KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:890)  //}).start();\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:891)  //}\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:892)  //}\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:893)  //});\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:894)  //menu.add(b);\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:894)  //menu.add(b);\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:895)  //}\n" +
+              "\tat pl.otros.logview.gui.LogViewMainFrame.initPosition(LogViewMainFrame.java:896)  //";
     StackTraceColorizer colorizer = new StackTraceColorizer();
     Matcher matcher = StackTraceColorizer.exceptionLine.matcher(string);
 //    System.out.println("Find: " + matcher.find());
