@@ -1,14 +1,11 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
-import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.StackTraceFinder;
 import pl.otros.logview.gui.message.SubText;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeServiceImpl;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.io.IOException;
@@ -60,14 +57,11 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
 
             while (matcher.find()) {
                 final String group = matcher.group(1);
-                System.out.println("Group: " + group);
                 sb.append(group);
                 final LocationInfo location = LocationInfo.parse(group);
                 if (location != null) {
                     try {
-                        System.out.println("LI:" + location);
                         String content = jumpToCodeService.getContent(location).replaceAll("\r", "");
-                        System.out.println("Content is " + content);
                         if (StringUtils.isNotBlank(content)){
                             final String begin = "\n" + location.getLineNumber() + ":";
                             content = content.substring(content.indexOf(begin)+begin.length());
@@ -85,49 +79,4 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-
-        BaseConfiguration b = new BaseConfiguration();
-        b.setProperty(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true);
-        final JumpToCodeService jumpToCodeService = new JumpToCodeServiceImpl(b);
-
-        String message = "Error occurred when using message colorizer Java stack trace: null\n" +
-                "\n" +
-                "java.lang.NullPointerException\n" +
-                "\tat java.util.Hashtable.put(Hashtable.java:514)\n" +
-                "\tat javax.swing.text.SimpleAttributeSet.addAttribute(SimpleAttributeSet.java:193)\n" +
-                "\tat javax.swing.text.StyleContext.addAttribute(StyleContext.java:310)\n" +
-                "\tat javax.swing.text.StyleContext$NamedStyle.addAttribute(StyleContext.java:1501)\n" +
-                "\tat javax.swing.text.StyleConstants.setBackground(StyleConstants.java:585)\n" +
-                "\tat pl.otros.logview.gui.message.StackTraceColorizer.initStyles(StackTraceColorizer.java:74)\n" +
-                "\tat pl.otros.logview.gui.message.StackTraceColorizer.colorize(StackTraceColorizer.java:85)\n" +
-                "\tat pl.otros.logview.gui.message.update.MessageUpdateUtils$2.call(MessageUpdateUtils.java:100)\n" +
-                "\tat pl.otros.logview.gui.message.update.MessageUpdateUtils$2.call(MessageUpdateUtils.java:92)\n" +
-                "\tat java.util.concurrent.FutureTask.run(FutureTask.java:262)\n" +
-                "\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\n" +
-                "\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\n" +
-                "\tat java.lang.Thread.run(Thread.java:745)\n" +
-                "\n" +
-                "java.lang.NullPointerException\n" +
-                "\tat java.util.Hashtable.put(Hashtable.java:514)\n" +
-                "\tat javax.swing.text.SimpleAttributeSet.addAttribute(SimpleAttributeSet.java:193)\n" +
-                "\tat javax.swing.text.StyleContext.addAttribute(StyleContext.java:310)\n" +
-                "\tat javax.swing.text.StyleContext$NamedStyle.addAttribute(StyleContext.java:1501)\n" +
-                "\tat javax.swing.text.StyleConstants.setBackground(StyleConstants.java:585)\n" +
-                "\tat pl.otros.logview.gui.message.StackTraceColorizer.initStyles(StackTraceColorizer.java:74)\n" +
-                "\tat pl.otros.logview.gui.message.StackTraceColorizer.colorize(StackTraceColorizer.java:85)\n" +
-                "\tat pl.otros.logview.gui.message.update.MessageUpdateUtils$2.call(MessageUpdateUtils.java:100)\n" +
-                "\tat pl.otros.logview.gui.message.update.MessageUpdateUtils$2.call(MessageUpdateUtils.java:92)\n" +
-                "\tat java.util.concurrent.FutureTask.run(FutureTask.java:262)\n" +
-                "\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)\n" +
-                "\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)\n" +
-                "\tat java.lang.Thread.run(Thread.java:745)\n";
-
-        final long start = System.currentTimeMillis();
-        final StackTraceFormatter formtterPlugin = new StackTraceFormatter(jumpToCodeService);
-        formtterPlugin.format(message);
-        System.out.println("\nFormatted: " + formtterPlugin.format(message));
-        System.out.println("Formatting took "+ (System.currentTimeMillis()-start + "ms"));
-
-    }
 }
