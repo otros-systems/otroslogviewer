@@ -19,7 +19,7 @@ public class FullWidthJTextPane extends JTextPane {
 
     public boolean getScrollableTracksViewportWidth() {
         if (fullWidth) {
-            Container parent = SwingUtilities.getUnwrappedParent(this);
+            Container parent = getParent();
             if (parent instanceof JViewport) {
                 JViewport port = (JViewport) parent;
                 TextUI ui = getUI();
@@ -43,12 +43,7 @@ public class FullWidthJTextPane extends JTextPane {
 
     public void setFullWidth(boolean fullWidth) {
         this.fullWidth = fullWidth;
-        final Container parent = this.getParent();
-        if (parent!=null){
-            parent.revalidate();
-            parent.repaint();
-        } else {
-            this.repaint();
-        }
+        this.revalidate();
     }
+
 }
