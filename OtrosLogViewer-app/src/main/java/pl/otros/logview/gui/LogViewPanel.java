@@ -709,7 +709,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 logDetailTextArea.setFullWidth(wrapText.isSelected());
-                final ImageIcon imageIcon = wrapText.isSelected() ? Icons.SCROLL_HORIZONTAL : new ImageIcon(GrayFilter.createDisabledImage(Icons.SCROLL_HORIZONTAL.getImage()));
+                final ImageIcon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(Icons.SCROLL_HORIZONTAL.getImage())) : Icons.SCROLL_HORIZONTAL;
                 wrapText.setIcon(imageIcon);
             }
         });

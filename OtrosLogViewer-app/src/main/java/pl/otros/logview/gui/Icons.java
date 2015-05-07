@@ -285,7 +285,7 @@ public class Icons {
   @Path(path = "/img/fugue/edit-column.png")
   public static ImageIcon EDIT_COLUMNS;
 
-  @Path(path = "/img/fugue/ui-scroll-pane-horizontal.png")
+  @Path(path = "/img/fugue/arrow-continue-180.png")
   public static ImageIcon SCROLL_HORIZONTAL;
 
 }
