@@ -24,8 +24,6 @@ public class FullWidthJTextPane extends JTextPane {
                 JViewport port = (JViewport) parent;
                 TextUI ui = getUI();
                 int w = port.getWidth();
-                Dimension min = ui.getMinimumSize(this);
-                Dimension max = ui.getMaximumSize(this);
                 final Dimension preferredSize = ui.getPreferredSize(this);
                 if (preferredSize.width <= w) {
                     return true;
