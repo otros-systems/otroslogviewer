@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+
+
 public class SubText implements Comparable<SubText> {
 
   int start = 0;
@@ -55,6 +57,10 @@ public class SubText implements Comparable<SubText> {
     return end - start;
   }
 
+  public String subString(String s){
+    return s.substring(start,end);
+  }
+
   @Override
   public String toString() {
     return "SubText [start=" + start + ", end=" + end + "]";
@@ -78,11 +84,7 @@ public class SubText implements Comparable<SubText> {
     if (getClass() != obj.getClass())
       return false;
     SubText other = (SubText) obj;
-    if (end != other.end)
-      return false;
-    if (start != other.start)
-      return false;
-    return true;
+    return end == other.end && start == other.start;
   }
 
 }

@@ -22,6 +22,7 @@ import pl.otros.logview.gui.markers.AutomaticMarker;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
+import pl.otros.logview.gui.message.json.JsonMessageFormatter;
 import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
 import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporter;
@@ -123,6 +124,7 @@ private void loadPlugins() {
 
   private void loadMessageFormatter() {
     messageFormatters.add(new SoapMessageFormatter());
+    messageFormatters.add(new JsonMessageFormatter());
     messageFormatters.addAll(baseLoader.load(new File("./plugins/message"), MessageFormatter.class));
     messageFormatters.addAll(baseLoader.load(AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS, MessageFormatter.class));
     PluginableElementsContainer<MessageFormatter> pluginableElementsContainer = AllPluginables.getInstance().getMessageFormatters();
@@ -206,7 +208,7 @@ private void loadPlugins() {
       // if pluginable element is wrong e.g. do not have method
       Set<Integer> versionsSet = new HashSet<Integer>();
       for (int i : versions) {
-        versionsSet.add(Integer.valueOf(i));
+        versionsSet.add(i);
       }
       try {
         if (versionsSet.contains(element.getApiVersion())) {
