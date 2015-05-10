@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class StackTraceFinder {
 
-  private static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*\\.)?([\\w\\d\\$]+)\\.([\\d\\w<>]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
+  private static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*\\.)?([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
 
   public SortedSet<SubText> findStackTraces(String text) {
     SortedSet<SubText> set = new TreeSet<SubText>();
