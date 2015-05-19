@@ -4,6 +4,9 @@ Useful software for analysing applications logs and traces.
 ## Requirements
   * Java 6
 
+## Download 
+  * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory)
+
 ## Features
   * Loading logs from remote servers using ftp, sftp, ssh, samba and others ([supported file systems](http://commons.apache.org/vfs/filesystems.html))
   * Tailing logs from local disk and sftp
