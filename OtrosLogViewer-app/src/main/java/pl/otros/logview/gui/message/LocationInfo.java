@@ -161,7 +161,6 @@ public class LocationInfo {
   }
 
   static String removeLambdas(String fullInfo) {
-    System.out.println("LocationInfo.removeLambdas -> " + fullInfo);
     return fullInfo.replaceFirst("\\$\\$.*?\\.","\\$Lambda.");
   }
 

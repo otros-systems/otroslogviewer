@@ -26,44 +26,14 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
-import org.jdesktop.swingx.JXComboBox;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.api.plugins.Plugin;
 import pl.otros.logview.batch.BatchProcessor;
-import pl.otros.logview.exceptionshandler.EventQueueProxy;
-import pl.otros.logview.exceptionshandler.ListUncaughtExceptionHandlers;
-import pl.otros.logview.exceptionshandler.LoggingExceptionHandler;
-import pl.otros.logview.exceptionshandler.ShowErrorDialogExceptionHandler;
-import pl.otros.logview.exceptionshandler.StatusObserverExceptionHandler;
+import pl.otros.logview.exceptionshandler.*;
 import pl.otros.logview.filter.QueryFilter;
-import pl.otros.logview.gui.actions.AboutAction;
-import pl.otros.logview.gui.actions.CheckForNewVersionAction;
-import pl.otros.logview.gui.actions.ChekForNewVersionOnStartupAction;
-import pl.otros.logview.gui.actions.CloseAllTabsAction;
-import pl.otros.logview.gui.actions.ConnectToSocketHubAppenderAction;
-import pl.otros.logview.gui.actions.ExitAction;
-import pl.otros.logview.gui.actions.GettingStartedAction;
-import pl.otros.logview.gui.actions.GoToDonatePageAction;
-import pl.otros.logview.gui.actions.JumpToMarkedAction;
+import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.JumpToMarkedAction.Direction;
-import pl.otros.logview.gui.actions.MarkAllFoundAction;
-import pl.otros.logview.gui.actions.OpenLogInvestigationAction;
-import pl.otros.logview.gui.actions.OpenPreferencesAction;
-import pl.otros.logview.gui.actions.SaveLogInvestigationAction;
-import pl.otros.logview.gui.actions.SearchByLevel;
-import pl.otros.logview.gui.actions.ShowLoadedPlugins;
-import pl.otros.logview.gui.actions.ShowLog4jPatternParserEditor;
-import pl.otros.logview.gui.actions.ShowMarkersEditor;
-import pl.otros.logview.gui.actions.ShowMessageColorizerEditor;
-import pl.otros.logview.gui.actions.ShowOlvLogs;
-import pl.otros.logview.gui.actions.StartSocketListener;
-import pl.otros.logview.gui.actions.StopAllSocketListeners;
-import pl.otros.logview.gui.actions.SwitchAutoJump;
-import pl.otros.logview.gui.actions.TailLogActionListener;
-import pl.otros.logview.gui.actions.TailLogWithAutoDetectActionListener;
-import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.logview.gui.actions.globalhotkeys.FocusComponentOnHotKey;
 import pl.otros.logview.gui.actions.globalhotkeys.KeyboardTabSwitcher;
 import pl.otros.logview.gui.actions.read.DragAndDropFilesHandler;
@@ -80,6 +50,8 @@ import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
 import pl.otros.logview.gui.services.jumptocode.ServicesImpl;
+import pl.otros.logview.gui.suggestion.SearchSuggestionRenderer;
+import pl.otros.logview.gui.suggestion.SearchSuggestionSource;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
@@ -101,6 +73,7 @@ import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
+import pl.otros.swing.suggest.SuggestDecorator;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.imageio.ImageIO;
@@ -111,24 +84,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -149,14 +111,14 @@ public class LogViewMainFrame extends JFrame {
   private DataConfiguration configuration;
   private CardLayout cardLayout;
   private JPanel cardLayoutPanel;
-  private JXComboBox searchField;
+  private JTextField searchField;
   private AllPluginables allPluginables;
   private PluginableElementsContainer<LogImporter> logImportersContainer;
   private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
-  private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
+  private SearchSuggestionSource searchSuggestionSource;
 
   public LogViewMainFrame(DataConfiguration c) throws InitializationException {
     super();
@@ -510,10 +472,13 @@ public class LogViewMainFrame extends JFrame {
     final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
     final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD);
     final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE);
-    searchFieldCbxModel = new DefaultComboBoxModel();
-    searchField = new JXComboBox(searchFieldCbxModel);
+    searchField = new JTextField();
+    searchSuggestionSource = new SearchSuggestionSource(SearchMode.STRING_CONTAINS, new ArrayList<>(0));
+    SuggestDecorator.decorate(searchField, searchSuggestionSource
+      , new SearchSuggestionRenderer(), s -> searchField.setText(s.getFullContent()));
+
     searchField.setEditable(true);
-    AutoCompleteDecorator.decorate(searchField);
+//    AutoCompleteDecorator.decorate(searchField);
     searchField.setMinimumSize(new Dimension(150, 10));
     searchField.setPreferredSize(new Dimension(250, 10));
     searchField.setToolTipText("<HTML>Enter text to search.<BR/>" + "Enter - search next,<BR/>Alt+Enter search previous,<BR/>"
@@ -521,7 +486,7 @@ public class LogViewMainFrame extends JFrame {
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
-        JTextComponent editorComponent = (JTextComponent) searchField.getEditor().getEditorComponent();
+        JTextComponent editorComponent = (JTextComponent) searchField;
         int stringEnd = editorComponent.getSelectionStart();
         if (stringEnd < 0) {
           stringEnd = editorComponent.getText().length();
@@ -539,15 +504,14 @@ public class LogViewMainFrame extends JFrame {
         }
       }
     };
-    JTextComponent searchFieldTextComponent = (JTextComponent) searchField.getEditor().getEditorComponent();
-    searchFieldTextComponent.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+    searchField.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
       @Override
       protected void documentChanged(DocumentEvent e) {
         delayedSearchResultUpdate.performAction();
       }
     });
     final MarkAllFoundAction markAllFoundAction = new MarkAllFoundAction(otrosApplication);
-    final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener((JTextField) searchField.getEditor().getEditorComponent(), observer,
+    final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener(searchField, observer,
         SearchMode.STRING_CONTAINS);
     SearchMode searchModeFromConfig = configuration.get(SearchMode.class, "gui.searchMode", SearchMode.STRING_CONTAINS);
     final String lastSearchString;
@@ -565,9 +529,7 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.warning("Unknown search mode " + searchModeFromConfig);
       lastSearchString = "";
     }
-    Component editorComponent = searchField.getEditor().getEditorComponent();
-    if (editorComponent instanceof JTextField) {
-      final JTextField sfTf = (JTextField) editorComponent;
+      final JTextField sfTf = (JTextField) searchField;
       sfTf.getDocument().addDocumentListener(searchValidatorDocumentListener);
       sfTf.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
         @Override
@@ -584,14 +546,13 @@ public class LogViewMainFrame extends JFrame {
       });
       sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
       sfTf.setText(lastSearchString);
-    }
     searchMode.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         SearchMode mode = null;
         boolean validationEnabled = false;
         String confKey = null;
-        String lastSearch = ((JTextField) searchField.getEditor().getEditorComponent()).getText();
+        String lastSearch = searchField.getText();
         if (searchMode.getSelectedIndex() == 0) {
           mode = SearchMode.STRING_CONTAINS;
           searchValidatorDocumentListener.setSearchMode(mode);
@@ -621,12 +582,9 @@ public class LogViewMainFrame extends JFrame {
         markAllFoundAction.setSearchMode(mode);
         configuration.setProperty("gui.searchMode", mode);
         searchResultColorizer.setSearchMode(mode);
-        List<Object> list = configuration.getList(confKey);
-        searchFieldCbxModel.removeAllElements();
-        for (Object o : list) {
-          searchFieldCbxModel.addElement(o);
-        }
-        searchField.setSelectedItem(lastSearch);
+        List<String> list = configuration.getList(String.class,confKey);
+        searchSuggestionSource.setModeAndHistory(mode,list);
+        searchField.setText(lastSearch);
       }
     });
     searchMode.setSelectedIndex(selectedSearchMode);

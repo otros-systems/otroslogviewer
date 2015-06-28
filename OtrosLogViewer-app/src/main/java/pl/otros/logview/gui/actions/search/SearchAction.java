@@ -69,7 +69,7 @@ public class SearchAction extends OtrosAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
-		String text = getOtrosApplication().getSearchField().getSelectedItem().toString().trim();
+		String text = getOtrosApplication().getSearchField().getText().trim();
 		if (text.trim().length() == 0) {
 			statusObserver.updateStatus("No search criteria", StatusObserver.LEVEL_WARNING);
 			return;
@@ -115,14 +115,14 @@ public class SearchAction extends OtrosAction {
 			}
 		}
 		updateList(confKey, getOtrosApplication().getConfiguration(), text);
-		DefaultComboBoxModel model = (DefaultComboBoxModel) getOtrosApplication().getSearchField().getModel();
-		model.removeElement(text);
-		model.insertElementAt(text, 0);
-		model.setSelectedItem(text);
-		int maxCount = getOtrosApplication().getConfiguration().getInt(ConfKeys.SEARCH_LAST_COUNT, 30);
-		while (model.getSize() > maxCount) {
-			model.removeElementAt(model.getSize() - 1);
-		}
+//		DefaultComboBoxModel model = (DefaultComboBoxModel) getOtrosApplication().getSearchField().getModel();
+//		model.removeElement(text);
+//		model.insertElementAt(text, 0);
+//		model.setSelectedItem(text);
+//		int maxCount = getOtrosApplication().getConfiguration().getInt(ConfKeys.SEARCH_LAST_COUNT, 30);
+//		while (model.getSize() > maxCount) {
+//			model.removeElementAt(model.getSize() - 1);
+//		}
 
 		context.setSearchMatcher(searchMatcher);
 		SearchResult searchNext = searchEngine.searchNext(context, nextRowProvider);

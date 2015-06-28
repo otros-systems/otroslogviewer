@@ -16,7 +16,6 @@
 package pl.otros.logview.gui;
 
 import org.apache.commons.configuration.DataConfiguration;
-import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.api.plugins.MenuActionProvider;
@@ -42,7 +41,7 @@ public class OtrosApplication {
   private StatusObserver statusObserver;
   private JFrame applicationJFrame;
   private JTabbedPane jTabbedPane;
-  private JXComboBox searchField;
+  private JTextField searchField;
   private MarkerColors selectedMarkColors;
   private JMenu pluginsMenu;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
@@ -85,7 +84,7 @@ public class OtrosApplication {
     this.pluginsMenu = pluginsMenu;
   }
 
-  public JXComboBox getSearchField() {
+  public JTextField getSearchField() {
     return searchField;
   }
 
@@ -168,7 +167,7 @@ public class OtrosApplication {
     this.jTabbedPane = jTabbedPane;
   }
 
-  public void setSearchField(JXComboBox searchField) {
+  public void setSearchField(JTextField searchField) {
     this.searchField = searchField;
   }
 
