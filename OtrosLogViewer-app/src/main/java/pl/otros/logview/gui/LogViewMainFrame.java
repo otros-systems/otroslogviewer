@@ -82,7 +82,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -486,13 +485,12 @@ public class LogViewMainFrame extends JFrame {
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
-        JTextComponent editorComponent = (JTextComponent) searchField;
-        int stringEnd = editorComponent.getSelectionStart();
+        int stringEnd = searchField.getSelectionStart();
         if (stringEnd < 0) {
-          stringEnd = editorComponent.getText().length();
+          stringEnd = searchField.getText().length();
         }
         try {
-          String selectedText = editorComponent.getText(0, stringEnd);
+          String selectedText = searchField.getText(0, stringEnd);
           if (StringUtils.isBlank(selectedText)) {
             return;
           }
