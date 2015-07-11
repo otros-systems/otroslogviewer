@@ -31,6 +31,11 @@ public class LogDataBuilder {
     return ld;
   }
 
+  public LogDataBuilder withLineNumber(String lineNumber){
+    ld.setLine(lineNumber);
+    return this;
+  }
+
   public LogDataBuilder withId(int id) {
     ld.setId(id);
     return this;

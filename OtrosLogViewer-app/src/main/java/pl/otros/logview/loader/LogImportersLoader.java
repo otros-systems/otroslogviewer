@@ -17,18 +17,19 @@ package pl.otros.logview.loader;
 
 import pl.otros.logview.importer.*;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
+import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
 import pl.otros.logview.parser.JulSimpleFormmaterParser;
 import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
+import pl.otros.logview.parser.log4j.Log4jUtil;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import pl.otros.logview.parser.log4j.Log4jUtil;
+import java.util.logging.Logger;
 
 public class LogImportersLoader {
 
@@ -56,6 +57,10 @@ public class LogImportersLoader {
     Log4jSerilizedLogImporter log4jSerilizedLogImporter = new Log4jSerilizedLogImporter();
     log4jSerilizedLogImporter.init(new Properties());
     list.add(log4jSerilizedLogImporter);
+
+    LogbackSocketLogImporter logbackSockeLogImporter = new LogbackSocketLogImporter();
+    logbackSockeLogImporter.init(new Properties());
+    list.add(logbackSockeLogImporter);
 
     return list;
 
