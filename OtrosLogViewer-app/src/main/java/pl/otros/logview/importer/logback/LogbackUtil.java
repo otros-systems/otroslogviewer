@@ -9,11 +9,12 @@ import pl.otros.logview.MarkerColors;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class LogbackUtil {
 
-  public static LogDataBuilder translate(ILoggingEvent ev){
+  public static LogDataBuilder translate(ILoggingEvent ev) {
     final LogDataBuilder builder = new LogDataBuilder()
       .withLoggerName(ev.getLoggerName())
       .withMessage(ev.getMessage())
@@ -21,14 +22,13 @@ public class LogbackUtil {
       .withProperties(ev.getMDCPropertyMap())
       .withDate(new Date(ev.getTimeStamp()))
       .withThread(ev.getThreadName());
-    addMarker(ev, builder);
-    addException(ev, builder);
+    addMarker(ev.getMarker(), ev.getMDCPropertyMap(), builder);
+    addException(ev.getThrowableProxy(), ev.getMessage(), builder);
     addCallerData(ev, builder);
-
     return builder;
   }
 
-  private static void addCallerData(ILoggingEvent ev, LogDataBuilder builder) {
+  static void addCallerData(ILoggingEvent ev, LogDataBuilder builder) {
     if (ev.hasCallerData()) {
       final StackTraceElement[] callerData = ev.getCallerData();
       if (callerData.length > 0) {
@@ -40,24 +40,24 @@ public class LogbackUtil {
     }
   }
 
-  private static void addException(ILoggingEvent ev, LogDataBuilder builder) {
-    if (ev.getThrowableProxy()!=null){
-      final IThrowableProxy throwableProxy = ev.getThrowableProxy();
-      StringBuilder sb= new StringBuilder();
-      sb.append(throwableProxy.getCause()).append("\n");
+  static void addException(IThrowableProxy throwableProxy, String message, LogDataBuilder builder) {
+    if (throwableProxy != null) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(message).append("\n");
+      sb.append(throwableProxy.getClassName()).append(": ").append(throwableProxy.getMessage()).append("\n");
+
       for (StackTraceElementProxy stackTraceElementProxy : throwableProxy.getStackTraceElementProxyArray()) {
-        sb.append("\tat ").append(stackTraceElementProxy.getSTEAsString());
+        sb.append("\t").append(stackTraceElementProxy.getSTEAsString()).append("\n");
       }
-      builder.withMessage(ev.getMessage() +"\n" + sb.toString());
+      builder.withMessage( sb.toString());
     }
   }
 
-  private static void addMarker(ILoggingEvent ev, LogDataBuilder builder) {
-    final Marker marker = ev.getMarker();
-    if (marker!=null){
+  static void addMarker(Marker marker, Map<String, String> mdcMap, LogDataBuilder builder) {
+    if (marker != null) {
       builder.withMarked(true);
       builder.withMarkerColors(MarkerColors.Aqua);
-      HashMap<String,String> mdc = new HashMap<>(ev.getMDCPropertyMap());
+      HashMap<String, String> mdc = new HashMap<>(mdcMap);
       mdc.put("marker", marker.toString());
       builder.withProperties(mdc);
     }
