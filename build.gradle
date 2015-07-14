@@ -24,8 +24,8 @@ subprojects {
     apply plugin: "jacoco"
 
 
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     dependencies {
         testCompile 'org.testng:testng:6.8.8'
         testCompile 'org.mockito:mockito-core:1.9.0'
