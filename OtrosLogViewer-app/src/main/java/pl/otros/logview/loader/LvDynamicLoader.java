@@ -37,11 +37,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LvDynamicLoader {
 
-  private static final Logger LOGGER = Logger.getLogger(LvDynamicLoader.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LvDynamicLoader.class.getName());
   private static LvDynamicLoader instance = null;
   private LogImportersLoader logImportersLoader;
   private LogFiltersLoader logFiltersLoader;
@@ -214,10 +215,10 @@ private void loadPlugins() {
         if (versionsSet.contains(element.getApiVersion())) {
           container.addElement(element);
         } else {
-          LOGGER.warning("Cant add pluginable element " + element.getPluginableId() + ", wrong version: " + element.getApiVersion());
+          LOGGER.warn("Cant add pluginable element " + element.getPluginableId() + ", wrong version: " + element.getApiVersion());
         }
       } catch (Throwable e) {
-        LOGGER.warning("Cant add pluginable element " + element);
+        LOGGER.warn("Cant add pluginable element " + element);
       }
     }
   }

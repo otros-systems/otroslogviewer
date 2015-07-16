@@ -16,11 +16,13 @@
 package pl.otros.logview.parser.log4j;
 
 import org.testng.annotations.Test;
-import static org.testng.Assert.fail;
-import static org.testng.Assert.assertEquals;
+import pl.otros.logview.importer.InitializationException;
+
 import java.util.Properties;
 import java.util.logging.Level;
-import pl.otros.logview.importer.InitializationException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 public class Log4jUtilTest {
 

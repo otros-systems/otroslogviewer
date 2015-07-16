@@ -22,12 +22,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PopupListener implements MouseListener, KeyListener {
 
-    private static final Logger LOGGER = Logger.getLogger(PopupListener.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PopupListener.class.getName());
     private Callable<JPopupMenu> menuCallable;
     private JPopupMenu jPopupMenu;
 
@@ -44,7 +46,7 @@ public class PopupListener implements MouseListener, KeyListener {
             try {
                 jPopupMenu = menuCallable.call();
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE,"Can't generate and show popup menu: " + e.getMessage(),e);
+                LOGGER.error("Can't generate and show popup menu: " + e.getMessage(),e);
                 return;
             }
         }

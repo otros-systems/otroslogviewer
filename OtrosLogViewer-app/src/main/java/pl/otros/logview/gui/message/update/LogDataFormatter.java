@@ -37,14 +37,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class LogDataFormatter {
 
   public static final String NEW_LINE = "\n";
-  private static final Logger LOGGER = Logger.getLogger(LogDataFormatter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogDataFormatter.class.getName());
 
     private LogData ld;
     private ArrayList<TextChunkWithStyle> chunks = new ArrayList<TextChunkWithStyle>();
@@ -109,7 +110,7 @@ public class LogDataFormatter {
 
     public java.util.List<TextChunkWithStyle> format() throws Exception {
 
-        LOGGER.finer("Start do in background");
+        LOGGER.trace("Start do in background");
 
         String s1 = "Date:    " + dateFormat.format(ld.getDate()) + NEW_LINE;
         chunks.add(new TextChunkWithStyle(s1, mainStyle));

@@ -21,11 +21,12 @@ import pl.otros.logview.gui.OtrosApplication;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClearMarkingsAction extends OtrosAction {
 
-  private static final Logger LOGGER = Logger.getLogger(ClearMarkingsAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClearMarkingsAction.class.getName());
 
 
 

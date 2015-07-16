@@ -22,11 +22,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IconsLoader {
 
-  private static final Logger LOGGER = Logger.getLogger(IconsLoader.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(IconsLoader.class.getName());
 
   public static void loadIcons() {
     Field[] fields = Icons.class.getFields();
@@ -42,9 +43,9 @@ public class IconsLoader {
           }
           imageIcon = new ImageIcon(image);
           field.set(null, imageIcon);
-          LOGGER.fine("Icon " + annotation.path() + " for field " + field.getName() + " loaded");
+          LOGGER.debug("Icon " + annotation.path() + " for field " + field.getName() + " loaded");
         } catch (Exception e) {
-          LOGGER.severe("Can't load icon " + annotation.path() + " for field " + field.getName());
+          LOGGER.error("Can't load icon " + annotation.path() + " for field " + field.getName());
         }
       }
     }

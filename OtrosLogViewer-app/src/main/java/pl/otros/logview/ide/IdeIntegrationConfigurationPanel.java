@@ -18,11 +18,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IdeIntegrationConfigurationPanel extends JXPanel {
-  private static final Logger LOGGER = Logger.getLogger(IdeIntegrationConfigurationPanel.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(IdeIntegrationConfigurationPanel.class.getName());
   private SpinnerNumberModel spinnerNumberModel;
   private JXTextField hostNameTextField;
   private JCheckBox enableAutoJumping;
@@ -88,7 +90,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
             try {
               Desktop.getDesktop().browse(new URI("https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode"));
             } catch (Exception e1) {
-              LOGGER.log(Level.SEVERE, "Can't open page", e1);
+              LOGGER.error( "Can't open page", e1);
             }
           }
         });

@@ -8,12 +8,13 @@ import pl.otros.logview.gui.actions.OtrosAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class IdeIntegrationConfigAction extends OtrosAction {
-  private static final Logger LOGGER = Logger.getLogger(IdeIntegrationConfigAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(IdeIntegrationConfigAction.class.getName());
 
   public IdeIntegrationConfigAction(OtrosApplication otrosApplication) {
     super(otrosApplication);

@@ -26,11 +26,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StopAllSocketListeners extends OtrosAction {
 
-	private static final Logger LOGGER = Logger.getLogger(StopAllSocketListeners.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(StopAllSocketListeners.class.getName());
 	private Collection<SocketLogReader> logReaders = null;
 
 	public StopAllSocketListeners(OtrosApplication otrosApplication, Collection<SocketLogReader> logReaders) {
@@ -75,7 +76,7 @@ public class StopAllSocketListeners extends OtrosAction {
 				socketLogReader.close();
 			} catch (IOException e) {
 				failedCount++;
-				LOGGER.warning("Error closing socket " + e.getMessage());
+				LOGGER.warn("Error closing socket " + e.getMessage());
 			}
 		}
 		if (failedCount == 0) {

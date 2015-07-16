@@ -23,11 +23,12 @@ import pl.otros.vfs.browser.SelectionMode;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ImportLogActionListener extends OtrosAction {
 
-  static final Logger LOGGER = Logger.getLogger(ImportLogActionListener.class.getName());
+  static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
 	private String title;
 
   public ImportLogActionListener(OtrosApplication otrosApplication, String title) {

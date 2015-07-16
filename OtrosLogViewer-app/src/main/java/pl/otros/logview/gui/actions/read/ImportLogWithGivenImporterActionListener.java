@@ -19,11 +19,12 @@ import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.io.LoadingInfo;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImportLogWithGivenImporterActionListener extends ImportLogActionListener {
 
-  static final Logger LOGGER = Logger.getLogger(ImportLogWithGivenImporterActionListener.class.getName());
+  static final Logger LOGGER = LoggerFactory.getLogger(ImportLogWithGivenImporterActionListener.class.getName());
   private LogImporter importer;
 
   public ImportLogWithGivenImporterActionListener(OtrosApplication otrosApplication, LogImporter importer) {

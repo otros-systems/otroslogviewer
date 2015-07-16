@@ -19,11 +19,12 @@ package pl.otros.logview.store;
 import pl.otros.logview.LogData;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDataStore {
 
-  private static final Logger LOGGER = Logger.getLogger(MemoryLogDataStore.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MemoryLogDataStore.class.getName());
 
   protected ArrayList<LogData> list;
   protected SortedSet<Date> s = new TreeSet<Date>();
@@ -86,14 +87,14 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
 
   @Override
   public void remove(int... rows) {
-    LOGGER.fine(String.format("Removing %d rows, first sorting by id", rows.length));
+    LOGGER.debug(String.format("Removing %d rows, first sorting by id", rows.length));
     Arrays.sort(rows);
-    LOGGER.finest("Rows sorted, removing from end");
+    LOGGER.trace("Rows sorted, removing from end");
     for (int i = rows.length - 1; i >= 0; i--) {
       LogData removed = list.remove(rows[i]);
       notable.removeNote(removed.getId(), false);
     }
-    LOGGER.finest(String.format("%d rows where removed ", rows.length));
+    LOGGER.trace(String.format("%d rows where removed ", rows.length));
 
   }
 

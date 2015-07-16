@@ -36,14 +36,16 @@ import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class CopyStyledMessageDetailAction extends OtrosAction {
 
-    private static final Logger LOGGER = Logger.getLogger(CopyStyledMessageDetailAction.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CopyStyledMessageDetailAction.class.getName());
 
     private DateFormat dateFormat;
     private final PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer;
@@ -66,11 +68,11 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
         MessageUpdateUtils messageUpdateUtils = new MessageUpdateUtils();
         LogViewPanel selectedLogViewPanel = getOtrosApplication().getSelectedLogViewPanel();
         if (selectedLogViewPanel == null ){
-            LOGGER.warning("Currently selected component is not LogViewPanel, will not copy");
+            LOGGER.warn("Currently selected component is not LogViewPanel, will not copy");
             return;
         }
         if (selectedLogViewPanel.getDisplayedLogData() == null){
-          LOGGER.fine("Currently no LogData is displayed, nothing to copy");
+          LOGGER.debug("Currently no LogData is displayed, nothing to copy");
           return;
         }
         LogData logData = selectedLogViewPanel.getDisplayedLogData();
@@ -84,7 +86,7 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
             @Override
             public boolean isCancelled() {
                 boolean b = start > System.currentTimeMillis() + 5000;
-                LOGGER.fine("Is cancelled: " + b);
+                LOGGER.debug("Is cancelled: " + b);
                 return b;
             }
         };
@@ -108,7 +110,7 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
             plainTextAndHtml.setPlainText(plainText);
             plainTextAndHtml.setHtml(html);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error occurred when formatting message", e);
+            LOGGER.error( "Error occurred when formatting message", e);
         }
         return plainTextAndHtml;
     }

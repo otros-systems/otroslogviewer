@@ -24,11 +24,12 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GettingStartedAction extends OtrosAction {
 
-  private static final Logger LOGGER = Logger.getLogger(GettingStartedAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(GettingStartedAction.class.getName());
 
   private static final String URL = "https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6";;
 
@@ -41,7 +42,7 @@ public class GettingStartedAction extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     try {
-      LOGGER.fine("Opening donation page");
+      LOGGER.debug("Opening donation page");
       Desktop.getDesktop().browse(new URI(URL));
     } catch (IOException e1) {
       LOGGER.info(String.format("Can't open donate url due to IOException: %s", e1.getMessage()));

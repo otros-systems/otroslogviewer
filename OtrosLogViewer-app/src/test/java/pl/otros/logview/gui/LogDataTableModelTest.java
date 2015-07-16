@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.MarkerColors;

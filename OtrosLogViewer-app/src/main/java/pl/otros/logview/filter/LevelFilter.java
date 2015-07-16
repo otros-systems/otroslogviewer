@@ -17,6 +17,7 @@ package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.LogData;
+import pl.otros.logview.RenamedLevel;
 import pl.otros.logview.gui.LogDataTableModel;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
@@ -26,7 +27,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Properties;
 import java.util.logging.Level;
-import pl.otros.logview.RenamedLevel;
 
 public class LevelFilter extends AbstractLogFilter {
   private int passLevel = Level.ALL.intValue();

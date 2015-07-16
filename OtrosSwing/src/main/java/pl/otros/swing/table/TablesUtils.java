@@ -6,11 +6,12 @@ import org.jdesktop.swingx.JXTable;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TablesUtils {
 
-  private static final Logger LOGGER = Logger.getLogger(TablesUtils.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TablesUtils.class.getName());
 
   /**
    * Find column index by it's name
@@ -26,7 +27,7 @@ public class TablesUtils {
         return i;
       }
     }
-    LOGGER.warning("Can't find column index for " + columnName);
+    LOGGER.warn("Can't find column index for " + columnName);
     return -1;
   }
 

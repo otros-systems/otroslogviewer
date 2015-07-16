@@ -22,11 +22,12 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogImportStats extends AbstractTableModel {
 
-  private static final Logger LOGGER = Logger.getLogger(LogImportStats.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogImportStats.class.getName());
   private String fileName;
 
   private NumberFormat speedFormat = NumberFormat.getInstance();
@@ -102,7 +103,7 @@ public class LogImportStats extends AbstractTableModel {
       }
       updateEtaAndSpeed();
     } catch (Exception e) {
-      // LOGGER.severe("GOD, why? " + e.getMessage());
+      // LOGGER.error("GOD, why? " + e.getMessage());
     }
     SwingUtilities.invokeLater(new Runnable() {
 

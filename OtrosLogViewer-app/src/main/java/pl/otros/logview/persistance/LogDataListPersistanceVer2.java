@@ -16,6 +16,8 @@
 package pl.otros.logview.persistance;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
@@ -23,11 +25,10 @@ import pl.otros.logview.Note;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LogDataListPersistanceVer2 implements LogDataListPersistance {
 
-  private static final Logger LOGGER = Logger.getLogger(LogDataListPersistanceVer2.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogDataListPersistanceVer2.class.getName());
 
   public static final String HEADER_ID = "ID";
   public static final String HEADER_TIMESTAMP = "TIMESTAMP";
@@ -114,7 +115,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
         mdc = bout.toString();
         mdc = mdc.substring(mdc.indexOf("\n") + 1);
       } catch (IOException e) {
-        LOGGER.severe(String.format("Can't save LogData (id=%d) properties: %s", logData.getId(), e.getMessage()));
+        LOGGER.error(String.format("Can't save LogData (id=%d) properties: %s", logData.getId(), e.getMessage()));
       }
 
     }
@@ -207,7 +208,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
           ld.setProperties(m);
         }
       } catch (IOException e) {
-        LOGGER.severe(String.format("Can't load LogData (id=%d) properties: %s", ld.getId(), e.getMessage()));
+        LOGGER.error(String.format("Can't load LogData (id=%d) properties: %s", ld.getId(), e.getMessage()));
       }
     }
 

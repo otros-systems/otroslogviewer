@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class ApplyColumnLayoutAction extends AbstractAction {
-  private final Logger LOGGER = Logger.getLogger(ApplyColumnLayoutAction.class.getName());
+  private final Logger LOGGER = LoggerFactory.getLogger(ApplyColumnLayoutAction.class.getName());
   private final ColumnLayout columnLayout;
   private final JXTable table;
 
@@ -28,7 +29,7 @@ class ApplyColumnLayoutAction extends AbstractAction {
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     List<String> colNames = columnLayout.getColumns();
-    LOGGER.fine(String.format("Retrieved %d col names: <<%s>>", colNames.size(), colNames.toString()));
+    LOGGER.debug(String.format("Retrieved %d col names: <<%s>>", colNames.size(), colNames.toString()));
     List<TableColumns> visCols = new ArrayList<TableColumns>();
     Map<String, TableColumns> colNameToEnum = new HashMap<String, TableColumns>();
     for (TableColumns tcEnum : TableColumns.values()) {
@@ -38,7 +39,7 @@ class ApplyColumnLayoutAction extends AbstractAction {
     for (TableColumn tableColumn : table.getColumns()) {
       Object o = tableColumn.getIdentifier();
       if (!(o instanceof TableColumns)) {
-        LOGGER.severe("TableColumn identifier of unexpected type: " + tableColumn.getIdentifier().getClass().getName());
+        LOGGER.error("TableColumn identifier of unexpected type: " + tableColumn.getIdentifier().getClass().getName());
         return;
       }
       TableColumns tcs = (TableColumns) o;
@@ -49,7 +50,7 @@ class ApplyColumnLayoutAction extends AbstractAction {
     }
     TablesUtils.showOnlyThisColumns(table, visCols.toArray(new TableColumns[visCols.size()]));
     TablesUtils.sortColumnsInOrder(columnLayout, table);
-    LOGGER.fine("Column changes applied");
+    LOGGER.debug("Column changes applied");
 
   }
 }

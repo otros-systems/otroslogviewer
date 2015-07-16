@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.importer.InitializationException;
@@ -28,13 +30,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
 
   private static final String DATE_PATTERNS = "DATE_PATTERNS";
 
-  private static final Logger LOGGER = Logger.getLogger(JulSimpleFormmaterParser.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormmaterParser.class.getName());
 
   private static final String ICON_PATH = "img/java.png";
 
@@ -59,7 +60,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       pd.setIcon(icon);
       LOGGER.info("icon loaded");
     } catch (Exception e) {
-      LOGGER.warning("Error loading icon: " + e.getMessage());
+      LOGGER.warn("Error loading icon: " + e.getMessage());
     }
   }
 
@@ -85,10 +86,10 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       // e.printStackTrace();
       return null;
     } catch (Exception e) {
-      LOGGER.warning("Exception: " + e.getClass());
-      LOGGER.warning("Exception " + e.getMessage());
-      LOGGER.warning("event: " + event);
-      LOGGER.warning("Buffer: " + sb.toString());
+      LOGGER.warn("Exception: " + e.getClass());
+      LOGGER.warn("Exception " + e.getMessage());
+      LOGGER.warn("event: " + event);
+      LOGGER.warn("Buffer: " + sb.toString());
       return null;
     } finally {
       sb.append(event);
@@ -124,7 +125,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       }
     }
     if (date == null) {
-      LOGGER.warning("Date \"" + dateString + "\" not parsed!");
+      LOGGER.warn("Date \"" + dateString + "\" not parsed!");
       return null;
     }
     LogData logData = new LogData();
@@ -146,7 +147,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       }
     }
     if (logData.getLevel() == null) {
-      LOGGER.warning("Level not parsed!");
+      LOGGER.warn("Level not parsed!");
       return null;
     }
     sb.setLength(0);

@@ -38,11 +38,12 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImportLogActionListener extends  OtrosAction {
 
-  private static final Logger LOGGER = Logger.getLogger(ImportLogActionListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
   private LogImporter importer;
   private LogImportStats importStats;
 
@@ -108,7 +109,7 @@ public class ImportLogActionListener extends  OtrosAction {
         Thread t = new Thread(r);
         t.start();
       } catch (Exception e1) {
-        LOGGER.severe("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
+        LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
         JOptionPane.showMessageDialog(null, "Error loading log: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         continue;
       }
@@ -244,7 +245,7 @@ public class ImportLogActionListener extends  OtrosAction {
 
   private static class ReadingStopperForRemove implements HierarchyListener {
 
-    private static final Logger LOGGER = Logger.getLogger(ReadingStopperForRemove.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
     private SoftReference<Stoppable> reference;
 
@@ -257,7 +258,7 @@ public class ImportLogActionListener extends  OtrosAction {
     public void hierarchyChanged(HierarchyEvent e) {
       if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
         Stoppable stoppable = reference.get();
-        LOGGER.fine("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
+        LOGGER.debug("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
         if (stoppable != null) {
           stoppable.stop();
         }

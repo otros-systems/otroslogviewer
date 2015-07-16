@@ -1,5 +1,18 @@
 package pl.otros.logview.store.async;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import pl.otros.logview.LogData;
+import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.MarkerColors;
+import pl.otros.logview.Note;
+import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.store.MemoryLogDataStore;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -10,22 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
-
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
-import pl.otros.logview.store.LogDataStore;
-import pl.otros.logview.store.MemoryLogDataStore;
-
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 
 
 public class MemoryAsyncLogDataStoreTest {

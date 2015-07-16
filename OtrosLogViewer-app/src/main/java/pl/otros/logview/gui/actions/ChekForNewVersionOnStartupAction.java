@@ -26,11 +26,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract {
 
-  private static final Logger LOGGER = Logger.getLogger(CheckForNewVersionAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
 
   public ChekForNewVersionOnStartupAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
@@ -38,7 +39,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
 
   @Override
   protected void handleError(Exception e) {
-    LOGGER.warning("Error when checking new version" + e.getMessage());
+    LOGGER.warn("Error when checking new version" + e.getMessage());
 
   }
 
@@ -61,7 +62,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
           Desktop.getDesktop().browse(new URI("https://sourceforge.net/projects/otroslogviewer/files/?source=app"));
         } catch (Exception e1) {
           String msg = "Can't open browser with download page: " + e1.getMessage();
-          LOGGER.severe(msg);
+          LOGGER.error(msg);
           getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
         }
       }
@@ -90,11 +91,11 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
         dialog.setVisible(false);
         dialog.dispose();
         if (chboxDoNotNotifyMeAboutVersion.isSelected()) {
-          LOGGER.fine("Disabling new version notificiation for " + current);
+          LOGGER.debug("Disabling new version notificiation for " + current);
           getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, current);
         }
         if (chboxDoNotCheckVersionOnStart.isSelected()) {
-          LOGGER.fine("Disabling new version check on start");
+          LOGGER.debug("Disabling new version check on start");
           getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_ON_STARTUP, false);
         }
       }

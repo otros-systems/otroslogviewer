@@ -26,11 +26,12 @@ import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.TableColumnNameSelfDescribable;
 
 import javax.swing.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogFileInNewTabOpener {
 
-  static final Logger LOGGER = Logger.getLogger(LogFileInNewTabOpener.class.getName());
+  static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
   private LogImporterProvider importerProvider;
 	private OtrosApplication otrosApplication;
 
@@ -58,7 +59,7 @@ public class LogFileInNewTabOpener {
       otrosApplication.addClosableTab(getTabName(file),  file.getName().getFriendlyURI(),Icons.FOLDER_OPEN,panel,true);
       startThreadToImportLogDataFromFile(file, openFileObject, importer, panel);
     } catch (Exception e1) {
-      LOGGER.severe("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
+      LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
       JOptionPane.showMessageDialog(null, "Error loading log: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }
@@ -89,7 +90,7 @@ public class LogFileInNewTabOpener {
   }
 
   private void handleInvalidImporter(final FileObject file) {
-    LOGGER.severe("Error loading log (" + file.getName().getFriendlyURI() + "): no suitable log parser found");
+    LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): no suitable log parser found");
 
     String errorMessage = "Error loading log file: no suitable log parser found for " + file.getName().getFriendlyURI() + "\n"
         + "Go https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout to check how to parse log4j custom pattern.";

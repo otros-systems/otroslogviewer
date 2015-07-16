@@ -26,6 +26,8 @@ import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.table.ColumnControlButton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.MarkerColors;
@@ -71,11 +73,10 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LogViewPanel extends JPanel implements LogDataCollector {
 
-    private static final Logger LOGGER = Logger.getLogger(LogViewPanel.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanel.class.getName());
     private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
     private final MessageDetailListener messageDetailListener;
     private Font menuLabelFont;
@@ -182,8 +183,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                                 for (TableColumn tc : table.getColumns()) {
                                     Object o = tc.getIdentifier();
                                     if (!(o instanceof TableColumns)) {
-                                        LOGGER.severe("TableColumn identifier of unexpected type: " + tc.getIdentifier().getClass().getName());
-                                        LOGGER.warning("Throw up a pop-up");
+                                        LOGGER.error("TableColumn identifier of unexpected type: " + tc.getIdentifier().getClass().getName());
+                                        LOGGER.warn("Throw up a pop-up");
                                         return;
                                     }
                                     TableColumns tcs = (TableColumns) o;
@@ -429,7 +430,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                 LogFilter filter = logFilter.getClass().newInstance();
                 filtersList.add(filter);
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Can't initialize filter: " + logFilter.getClass(), e);
+                LOGGER.error("Can't initialize filter: " + logFilter.getClass(), e);
             }
 
         }
@@ -560,7 +561,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                     menu.add(action);
                 }
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Cant get action from from provider " + menuActionProvider, e);
+                LOGGER.error("Cant get action from from provider " + menuActionProvider, e);
             }
         }
 

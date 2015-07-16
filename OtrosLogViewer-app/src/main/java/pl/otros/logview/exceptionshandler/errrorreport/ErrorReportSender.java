@@ -10,11 +10,12 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ErrorReportSender {
 
-     private static final Logger LOGGER = Logger.getLogger(ErrorReportSender.class.getName()) ;
+     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorReportSender.class.getName()) ;
 
 
 	private static final String ERROR_SEND_URL = "http://otroslogviewer.appspot.com/services/reportError";

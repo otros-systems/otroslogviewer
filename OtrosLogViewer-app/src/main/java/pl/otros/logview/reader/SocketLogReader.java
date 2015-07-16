@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SocketLogReader {
 
-  private static final Logger LOGGER = Logger.getLogger(SocketLogReader.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(SocketLogReader.class.getName());
   private ServerSocket serverSocket;
   private StatusObserver observer;
   private final LogDataCollector logDataCollector;
@@ -68,7 +69,7 @@ public class SocketLogReader {
           if (isClosed()) {
             LOGGER.info("Listening on socket closed.");
           } else {
-            LOGGER.warning("Problem with listening on socket: " + e.getMessage());
+            LOGGER.warn("Problem with listening on socket: " + e.getMessage());
           }
         }
       }

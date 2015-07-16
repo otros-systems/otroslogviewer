@@ -15,6 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.importer;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -22,14 +25,11 @@ import org.xml.sax.InputSource;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
 import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
 import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
-import org.apache.commons.lang.StringUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -41,13 +41,12 @@ import java.io.*;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UtilLoggingXmlLogImporter extends AbstractPluginableElement implements LogImporter, TableColumnNameSelfDescribable {
 
   private static final String DOC_BUILDER = "DOC_BUILDER";
   private static final String PARTIAL_EVENT = "PARTIAL_EVENT";
-  private static final Logger LOGGER = Logger.getLogger(UtilLoggingXmlLogImporter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(UtilLoggingXmlLogImporter.class.getName());
   private static final String NAME = "Improved XMLFormatter";
   private Icon icon;
   private static final String ICON_PATH = "img/java.png";
@@ -84,7 +83,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(ICON_PATH)));
       LOGGER.info("icon loaded");
     } catch (Exception e) {
-      LOGGER.warning("Error loading icon: " + e.getMessage());
+      LOGGER.warn("Error loading icon: " + e.getMessage());
     }
 
   }
@@ -106,7 +105,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       }
 
     } catch (UnsupportedEncodingException e) {
-      LOGGER.severe("Cant load codepage " + e.getMessage());
+      LOGGER.error("Cant load codepage " + e.getMessage());
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -155,7 +154,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       document = docBuilder.parse(inputSource);
 
     } catch (Exception e) {
-      LOGGER.warning("Problem with creating document: " + e.getMessage());
+      LOGGER.warn("Problem with creating document: " + e.getMessage());
 
     }
 
@@ -249,7 +248,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
         String tagName = logEventNode.getNodeName();
 
         if (tagName.equalsIgnoreCase("logger")) {
-          logger = Logger.getLogger(getCData(list.item(y)));
+          logger = LoggerFactory.getLogger(getCData(list.item(y)));
         } else
         if (tagName.equalsIgnoreCase("millis")) {
           timeStamp = Long.parseLong(getCData(list.item(y)));

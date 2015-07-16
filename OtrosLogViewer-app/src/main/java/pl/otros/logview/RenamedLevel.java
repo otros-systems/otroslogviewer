@@ -12,7 +12,7 @@ import java.util.logging.Level;
  *
  * @author Administrator
  */
-public class RenamedLevel extends Level{
+public class RenamedLevel extends Level {
     //Log4J levels
     public static RenamedLevel TRACE = new RenamedLevel("TRACE", Level.FINEST.intValue());
     public static RenamedLevel DEBUG = new RenamedLevel("DEBUG", Level.FINE.intValue());

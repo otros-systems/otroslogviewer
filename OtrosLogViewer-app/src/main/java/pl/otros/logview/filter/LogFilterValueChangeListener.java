@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.LogDataTableModel;
 import pl.otros.logview.gui.StatusObserver;
 
@@ -22,12 +24,10 @@ import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LogFilterValueChangeListener {
 
-  private static final Logger LOGGER = Logger.getLogger(LogFilterValueChangeListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogFilterValueChangeListener.class.getName());
   private TableRowSorter<LogDataTableModel> rowSorter;
   private Collection<LogFilter> logFilters;
   private StatusObserver observer;
@@ -43,24 +43,19 @@ public class LogFilterValueChangeListener {
   }
 
   public void valueChanged() {
-    if (LOGGER.isLoggable(Level.FINEST)) {
-      LOGGER.finest("Value of filter have changed, updateding view");
-    }
+    LOGGER.trace("Value of filter have changed, updating view");
     int selectedRow = table.getSelectedRow();
     if (selectedRow >= 0) {
       lastKnownSelectedRow = table.convertRowIndexToModel(selectedRow);
     }
-    if (LOGGER.isLoggable(Level.FINEST)) {
-      LOGGER.finest(String.format("Last selected row is %d", selectedRow));
-    }
+
+    LOGGER.trace("Last selected row is {}", selectedRow);
 
     ArrayList<LogFilter> enabledFiltersList = new ArrayList<LogFilter>();
     for (LogFilter logFilter : logFilters) {
       if (logFilter.isEnable()) {
         enabledFiltersList.add(logFilter);
-        if (LOGGER.isLoggable(Level.FINEST)) {
-          LOGGER.finest(String.format("Filter \"%s\" is in use", logFilter.getName()));
-        }
+        LOGGER.trace("Filter \"{}\" is in use", logFilter.getName());
       }
     }
 
@@ -80,9 +75,7 @@ public class LogFilterValueChangeListener {
 
     if (lastKnownSelectedRow >= 0 && lastKnownSelectedRow < table.getRowCount()) {
       int convertRowIndexToView = table.convertRowIndexToView(lastKnownSelectedRow);
-      if (LOGGER.isLoggable(Level.FINEST)) {
-        LOGGER.finest(String.format("Last selected row was %d (view index: %d)", selectedRow, convertRowIndexToView));
-      }
+      LOGGER.trace("Last selected row was {} (view index: {})", selectedRow, convertRowIndexToView);
       table.scrollRectToVisible(table.getCellRect(convertRowIndexToView, 0, false));
     }
 

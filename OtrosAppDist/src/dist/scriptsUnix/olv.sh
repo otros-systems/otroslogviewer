@@ -35,7 +35,7 @@ cd "$OLV_HOME"
 [ -n "$TMPDIR" ] || TMPDIR=/tmp
 
 MEMORY=-Xmx1024m
-LOG_PROPERTIES=-Djava.util.logging.config.file=logging.properties
+LOG_PROPERTIES=-Dlogback.configurationFile=logback.xml
 #SFTP_KEY=-Dvfs.Identities=
 
 if [ -n "$JAVA_HOME" ]

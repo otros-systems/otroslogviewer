@@ -21,11 +21,12 @@ import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.StatusObserver;
 
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MarkRowAction extends  OtrosAction {
 
-	private  static final Logger LOGGER = Logger.getLogger(MarkRowAction.class.getName());
+	private  static final Logger LOGGER = LoggerFactory.getLogger(MarkRowAction.class.getName());
 
   public MarkRowAction(OtrosApplication otrosApplication) {
 		super(otrosApplication);

@@ -29,11 +29,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Log4jSerilizedLogImporter extends AbstractPluginableElement implements LogImporter {
 
-  private static final Logger LOGGER = Logger.getLogger(Log4jSerilizedLogImporter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(Log4jSerilizedLogImporter.class.getName());
 
   private static final String DESCRIPTION = "Log4j serialized events";
   private static final String NAME = "Log4j serialized events used org.apache.log4j.net.SocketAppenders";
@@ -69,9 +70,9 @@ public class Log4jSerilizedLogImporter extends AbstractPluginableElement impleme
         dataCollector.add(translateLog4j);
       }
     } catch (IOException e) {
-      LOGGER.warning(String.format("IOException when reading log4j serialized event", e.getMessage()));
+      LOGGER.warn(String.format("IOException when reading log4j serialized event", e.getMessage()));
     } catch (ClassNotFoundException e) {
-      LOGGER.warning(String.format("ClassNotFoundException when reading log4j serialized event", e.getMessage()));
+      LOGGER.warn(String.format("ClassNotFoundException when reading log4j serialized event", e.getMessage()));
     }
   }
 

@@ -25,11 +25,12 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfDescribable {
 
-  private static final Logger LOGGER = Logger.getLogger(LogImporterUsingParser.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogImporterUsingParser.class.getName());
   private LogParser parser = null;
 
   private ParserDescription pd;
@@ -47,7 +48,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
 
   @Override
   public void importLogs(InputStream in, final LogDataCollector dataCollector, ParsingContext parsingContext) {
-    LOGGER.finest("Log import started ");
+    LOGGER.trace("Log import started ");
     String line = null;
     LogData logData = null;
     String charset = parser.getParserDescription().getCharset();
@@ -59,7 +60,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
       try {
         logReader = new BufferedReader(new InputStreamReader(in, charset));
       } catch (UnsupportedEncodingException e1) {
-        LOGGER.severe(String.format("Required charset [%s] is not supported: %s", charset, e1.getMessage()));
+        LOGGER.error(String.format("Required charset [%s] is not supported: %s", charset, e1.getMessage()));
         LOGGER.info(String.format("Using default charset: %s", Charset.defaultCharset().displayName()));
         logReader = new BufferedReader(new InputStreamReader(in));
       }
@@ -89,10 +90,10 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
 
       } catch (IOException e) {
         e.printStackTrace();
-        LOGGER.severe(String.format("IOException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
+        LOGGER.error(String.format("IOException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
         break;
       } catch (ParseException e) {
-        LOGGER.severe(String.format("ParseException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
+        LOGGER.error(String.format("ParseException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
         e.printStackTrace();
         break;
       }
@@ -115,7 +116,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
       LOGGER.info("Cannot parser rest of buffer, probably stopped importing");
     }
 
-    LOGGER.finest("Log import finished!");
+    LOGGER.trace("Log import finished!");
   }
 
   @Override

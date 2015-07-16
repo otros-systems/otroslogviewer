@@ -17,6 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
 
@@ -24,7 +26,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
  */
 public class TimestampInequalityRule extends AbstractRule {
 
-  private static final Logger LOGGER = Logger.getLogger(TimestampEqualsRule.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TimestampEqualsRule.class.getName());
 
   /**
    * Serialization ID.
@@ -93,7 +94,7 @@ public class TimestampInequalityRule extends AbstractRule {
         Date parse = df.parse(value);
         timeStamp = parse.getTime();
         dateFormatFound = true;
-        LOGGER.fine(String.format("Date format for %s detected: %s", value, df.toPattern()));
+        LOGGER.debug(String.format("Date format for %s detected: %s", value, df.toPattern()));
         break;
       } catch (ParseException pe) {
         // check next log format
@@ -112,7 +113,7 @@ public class TimestampInequalityRule extends AbstractRule {
           todayCal.set(Calendar.SECOND, calendar.get(Calendar.SECOND));
           todayCal.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND));
           timeStamp = todayCal.getTimeInMillis();
-          LOGGER.fine(String.format("Date format for %s detected: %s", value, df.toPattern()));
+          LOGGER.debug(String.format("Date format for %s detected: %s", value, df.toPattern()));
           dateFormatFound = true;
           break;
         } catch (ParseException pe) {
@@ -129,21 +130,21 @@ public class TimestampInequalityRule extends AbstractRule {
         if (matcher.find()) {
           count = Integer.parseInt(matcher.group(1));
           unit = 60 * 1000;
-          LOGGER.fine(String.format("Date format is -%d minutes", count));
+          LOGGER.debug(String.format("Date format is -%d minutes", count));
         }
       } else if (value.matches("-\\d+h(ours?)?")) {
         Matcher matcher = Pattern.compile("-(\\d+)h(ours?)?").matcher(value);
         if (matcher.find()) {
           count = Integer.parseInt(matcher.group(1));
           unit = 60 * 60 * 1000;
-          LOGGER.fine(String.format("Date format is -%d hours", count));
+          LOGGER.debug(String.format("Date format is -%d hours", count));
         }
       } else if (value.matches("-\\d+d(ays?)?")) {
         Matcher matcher = Pattern.compile("-(\\d+)d(ays?)?").matcher(value);
         if (matcher.find()) {
           count = Integer.parseInt(matcher.group(1));
           unit = 24 * 60 * 60 * 1000;
-          LOGGER.fine(String.format("Date format is -%d days", count));
+          LOGGER.debug(String.format("Date format is -%d days", count));
         }
       }
       if (count > 0) {
@@ -154,7 +155,7 @@ public class TimestampInequalityRule extends AbstractRule {
     }
 
     if (!dateFormatFound) {
-      LOGGER.fine(String.format("Date format for %s is not found", value));
+      LOGGER.debug(String.format("Date format for %s is not found", value));
       throw new IllegalArgumentException("Could not parse date: " + value);
     }
   }
