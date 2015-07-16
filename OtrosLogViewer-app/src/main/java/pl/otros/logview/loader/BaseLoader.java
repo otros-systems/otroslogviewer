@@ -22,11 +22,12 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseLoader {
 
-  public static final Logger LOGGER = Logger.getLogger(BaseLoader.class.getName());
+  public static final Logger LOGGER = LoggerFactory.getLogger(BaseLoader.class.getName());
 
   /**
    * Load classes (interface implementation) from directory.
@@ -72,11 +73,11 @@ public class BaseLoader {
           T classInstance = (T) class1.newInstance();
           list.add(classInstance);
         } catch (Throwable e) {
-          LOGGER.severe(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));
+          LOGGER.error(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));
         }
       }
     } catch (Throwable e) {
-      LOGGER.severe(String.format("Error loading class type %s from file %s: %s", type, file, e.getMessage()));
+      LOGGER.error(String.format("Error loading class type %s from file %s: %s", type, file, e.getMessage()));
     }
     return list;
   }
@@ -90,11 +91,11 @@ public class BaseLoader {
           T am = (T) class1.newInstance();
           list.add(am);
         } catch (Throwable e) {
-          LOGGER.severe(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));
+          LOGGER.error(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));
         }
       }
     } catch (Throwable e) {
-      LOGGER.severe(String.format("Error loading class type %s from file %s: %s", type, file, e.getMessage()));
+      LOGGER.error(String.format("Error loading class type %s from file %s: %s", type, file, e.getMessage()));
     }
     return list;
   }
@@ -116,7 +117,7 @@ public class BaseLoader {
           list.add((Class<T>) c);
         }
       } catch (Throwable t) {
-        LOGGER.warning(String.format("Error checking if class %s from file %s is implementing %s: %s", klazz, f, interfaceClass.getName(), t.getMessage()));
+        LOGGER.warn(String.format("Error checking if class %s from file %s is implementing %s: %s", klazz, f, interfaceClass.getName(), t.getMessage()));
       }
     }
     return list;

@@ -3,11 +3,13 @@ package pl.otros.logview.ide;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 
 import javax.swing.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IdeAvailabilityCheck implements Runnable {
-  private static final Logger LOGGER = Logger.getLogger(IdeAvailabilityCheck.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(IdeAvailabilityCheck.class.getName());
   private static final String ICE_DISCONNECTED_TOOLTIP = "<HTML>OtrosLogViewer can't connect with your IDE.<BR/>Click to configure</HTML>";
   private static final String IDE_CONNECTED_TOOLTIP ="<HTML>OtrosLogViewer is connected with your IDE.<BR/>Click to configure</HTML>";
   private JButton iconLabel;
@@ -22,7 +24,7 @@ public class IdeAvailabilityCheck implements Runnable {
 
   @Override
   public void run() {
-    LOGGER.fine("Checking if IDE is available");
+    LOGGER.debug("Checking if IDE is available");
     boolean ideAvailable = jumpToCodeService.isIdeAvailable();
     Ide ide = jumpToCodeService.getIde();
     if (ide!=null && !ide.equals(Ide.DISCONNECTED)){
@@ -36,7 +38,7 @@ public class IdeAvailabilityCheck implements Runnable {
     lastTimeIdeAvailable = ideAvailable;
     try {
 
-    LOGGER.fine("IDE is available: " + ideAvailable + ", current IDE is: " + ide);
+    LOGGER.debug("IDE is available: " + ideAvailable + ", current IDE is: " + ide);
     final Icon icon = ideAvailable?ide.getIconConnected():ide.getIconDiscounted();
     final String toolTip = ideAvailable?IDE_CONNECTED_TOOLTIP: ICE_DISCONNECTED_TOOLTIP;
 
@@ -48,7 +50,7 @@ public class IdeAvailabilityCheck implements Runnable {
       }
     });
     } catch (Exception e){
-      LOGGER.log(Level.SEVERE,"Exception when checking IDE",e);
+      LOGGER.error("Exception when checking IDE",e);
     }
 
   }

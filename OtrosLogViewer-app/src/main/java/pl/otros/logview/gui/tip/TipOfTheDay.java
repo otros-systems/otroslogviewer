@@ -24,12 +24,13 @@ import org.jdesktop.swingx.tips.TipOfTheDayModel;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TipOfTheDay {
 
   private static final String GUI_SHOW_TIP_OF_THE_DAY = "gui.showTipOfTheDay";
-  private static final Logger LOGGER = Logger.getLogger(TipOfTheDay.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TipOfTheDay.class.getName());
   private DataConfiguration dataConfiguration;
 
   public TipOfTheDay(DataConfiguration dataConfiguration) {
@@ -56,7 +57,7 @@ public class TipOfTheDay {
         }
       });
     } catch (IOException e) {
-      LOGGER.warning("Can't load tip of the day: " + e.getMessage());
+      LOGGER.warn("Can't load tip of the day: " + e.getMessage());
     }
   }
 

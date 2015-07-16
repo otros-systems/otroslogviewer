@@ -26,11 +26,12 @@ import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DetectOnTheFlyLogImporter extends AbstractPluginableElement implements LogImporter {
 
-  private static final Logger LOGGER = Logger.getLogger(DetectOnTheFlyLogImporter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(DetectOnTheFlyLogImporter.class.getName());
 
   protected static final String PROPERTY_BYTE_BUFFER = "DetectInTheFlyLogImporter.byteBuffer";
   protected static final String PROPERTY_LOG_IMPORTER = "DetectInTheFlyLogImporter.logImporter";
@@ -65,7 +66,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
     if (customContextProperties.containsKey(PROPERTY_LOG_IMPORTER)) {
       // Log importer detected, use it;
       LogImporter logImporter = (LogImporter) customContextProperties.get(PROPERTY_LOG_IMPORTER);
-      LOGGER.fine(String.format("Have log importer detected (%s), will use it", logImporter.getName()));
+      LOGGER.debug(String.format("Have log importer detected (%s), will use it", logImporter.getName()));
       logImporter.importLogs(in, dataCollector, parsingContext);
     } else {
       try {
@@ -77,20 +78,20 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
           int totalRead = byteArrayOutputStream.size();
           totalRead += read;
           if (totalRead < detectTryMinimum) {
-            LOGGER.fine(String.format("To small amount of data to detect log importer [%db]", totalRead));
+            LOGGER.debug(String.format("To small amount of data to detect log importer [%db]", totalRead));
             byteArrayOutputStream.write(buff, 0, read);
           } else if (totalRead > detectTryMaximum) {
             // stop parsing, protect of loading unlimited data
             parsingContext.setParsingInProgress(false);
-            LOGGER.warning("Reached maximum size of log importer detection buffer, Will not load more data");
+            LOGGER.warn("Reached maximum size of log importer detection buffer, Will not load more data");
           } else {
             // try to detect log
 
             byteArrayOutputStream.write(buff, 0, read);
-            LOGGER.fine("Trying to detect log importer");
+            LOGGER.debug("Trying to detect log importer");
             LogImporter detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
             if (detectLogImporter != null) {
-              LOGGER.fine(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
+              LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
               detectLogImporter.initParsingContext(parsingContext);
               customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
               byte[] buf = byteArrayOutputStream.toByteArray();
@@ -104,7 +105,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
         }
       } catch (IOException e) {
         e.printStackTrace();
-        LOGGER.warning("IOException reading log file " + parsingContext.getLogSource());
+        LOGGER.warn("IOException reading log file " + parsingContext.getLogSource());
       }
 
     }

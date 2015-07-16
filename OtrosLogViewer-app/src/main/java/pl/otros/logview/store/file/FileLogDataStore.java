@@ -26,11 +26,12 @@ import pl.otros.logview.store.LogDataStore;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataStore {
 
-  private static final Logger LOGGER = Logger.getLogger(FileLogDataStore.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileLogDataStore.class.getName());
   private static final int INITIAL_MAPPING_SIZE = 10000;
   private HashMap<Integer, Long> storeIdFilePositionMapping;
   private RandomAccessFile randomAccessFile;
@@ -72,7 +73,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     try {
       HashMap<Integer, Long> newLogDataPosition = new HashMap<Integer, Long>(logDatas.length);
       long length = randomAccessFile.length();
-      LOGGER.finest(String.format("Setting position in file %s to %d", randomAccessFile.getFD().toString(), length));
+      LOGGER.trace(String.format("Setting position in file %s to %d", randomAccessFile.getFD().toString(), length));
       randomAccessFile.seek(length);
       for (int i = 0; i < logDatas.length; i++) {
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -112,7 +113,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
 
       ensureLimit();
     } catch (IOException e) {
-      LOGGER.severe(String.format("Error adding %d events: %s", logDatas.length, e.getMessage()));
+      LOGGER.error(String.format("Error adding %d events: %s", logDatas.length, e.getMessage()));
       e.printStackTrace();
     } finally {
       IOUtils.closeQuietly(oout);
@@ -122,16 +123,16 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
 
   @Override
   public void remove(int... rows) {
-    LOGGER.fine(String.format("Removing %d rows, first sorting by id", rows.length));
+    LOGGER.debug(String.format("Removing %d rows, first sorting by id", rows.length));
     Arrays.sort(rows);
-    LOGGER.finest("Rows sorted, removing from end");
+    LOGGER.trace("Rows sorted, removing from end");
     for (int i = rows.length - 1; i >= 0; i--) {
       Integer removeId = logDatasId.remove(rows[i]).id;
       notable.removeNote(removeId, false);
       marks.remove(removeId);
       storeIdFilePositionMapping.remove(removeId);
     }
-    LOGGER.finest(String.format("%d rows where removed ", rows.length));
+    LOGGER.trace(String.format("%d rows where removed ", rows.length));
 
   }
 
@@ -142,7 +143,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       return getLogDataById(logDataId);
     } catch (Exception e) {
       e.printStackTrace();
-      LOGGER.severe(String.format("Can't load data for row %d: %s", row, e.getMessage()));
+      LOGGER.error(String.format("Can't load data for row %d: %s", row, e.getMessage()));
     }
     return null;
   }
@@ -196,7 +197,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     try {
       old.close();
     } catch (IOException e) {
-      LOGGER.warning("Can't close temporary file: " + e.getMessage());
+      LOGGER.warn("Can't close temporary file: " + e.getMessage());
       e.printStackTrace();
     }
     return size;

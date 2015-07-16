@@ -27,11 +27,12 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageColorizerLoader {
 
-  private static final Logger LOGGER = Logger.getLogger(MessageColorizerLoader.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerLoader.class.getName());
   private BaseLoader baseLoader = new BaseLoader();
 
   public ArrayList<MessageColorizer> loadInternal() {
@@ -68,7 +69,7 @@ public class MessageColorizerLoader {
           colorizer.setFile(file.getAbsolutePath());
           list.add(colorizer);
         } catch (Exception e) {
-          LOGGER.severe(String.format("Can't load property file based message colorizer from file %s : %s", file.getName(), e.getMessage()));
+          LOGGER.error(String.format("Can't load property file based message colorizer from file %s : %s", file.getName(), e.getMessage()));
           e.printStackTrace();
         } finally {
           IOUtils.closeQuietly(in);

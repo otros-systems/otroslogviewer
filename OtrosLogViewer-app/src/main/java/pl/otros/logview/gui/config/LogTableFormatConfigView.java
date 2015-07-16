@@ -13,6 +13,8 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
@@ -34,24 +36,13 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.awt.event.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static javax.swing.JOptionPane.*;
 import static javax.swing.SwingConstants.LEFT;
@@ -70,7 +61,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   public static final String ACTION_COPY_SELECTED = "copy";
   public static final String ACTION_PASTE = "paste";
   public static final String VIEW_ID = "logDisplay";
-  private static final Logger LOGGER = Logger.getLogger(LogTableFormatConfigView.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogTableFormatConfigView.class.getName());
   private final String[] dateFormats;
   private final JXRadioGroup radioGroup;
   private final JXComboBox dateFormatRadio;
@@ -274,7 +265,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus("Column layouts have been imported");
     } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "Can't import table layout from clipboard", e);
+      LOGGER.error( "Can't import table layout from clipboard", e);
       JOptionPane.showMessageDialog(panel.getRootPane(), "Can't import from clipboard");
     }
   }
@@ -405,7 +396,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         }
         exportToClipBoard(list);
       } catch (ConfigurationException e) {
-        LOGGER.log(Level.SEVERE, "Can't export column layouts. ", e);
+        LOGGER.error( "Can't export column layouts. ", e);
         JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(),
             "Export error", JOptionPane.ERROR_MESSAGE);
       }
@@ -430,7 +421,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         try {
           exportToFile(selectedFile, columnLayoutListModel.getList());
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE, "Can't export column layouts to file " + selectedFile, e);
+          LOGGER.error( "Can't export column layouts to file " + selectedFile, e);
           JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
               .ERROR_MESSAGE);
         }
@@ -452,7 +443,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       try {
         importFromClipboard();
       } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Can't import column layout from clipboard", e);
+        LOGGER.error( "Can't import column layout from clipboard", e);
         JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(),
             "Paste error", JOptionPane.ERROR_MESSAGE);
       }
@@ -482,11 +473,11 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         try {
           importFromFile(selectedFile);
         } catch (ConfigurationException e) {
-          LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
+          LOGGER.error( "Can't import column layout from file", e);
           JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
               JOptionPane.ERROR_MESSAGE);
         } catch (FileSystemException e) {
-          LOGGER.log(Level.SEVERE, "Can't import column layout from file", e);
+          LOGGER.error( "Can't import column layout from file", e);
           JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
               JOptionPane.ERROR_MESSAGE);
         }

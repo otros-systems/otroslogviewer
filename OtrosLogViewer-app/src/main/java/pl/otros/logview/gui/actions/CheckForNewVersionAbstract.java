@@ -24,12 +24,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static pl.otros.logview.gui.ConfKeys.*;
 
 public abstract class CheckForNewVersionAbstract extends OtrosAction {
-  private static final Logger LOGGER = Logger.getLogger(CheckForNewVersionAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
   SwingWorker<String, String> versionChecker = new SwingWorker<String, String>() {
     @Override
     protected String doInBackground() throws Exception {
@@ -47,7 +48,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
         running = VersionUtil.getRunningVersion();
         current = VersionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
       } catch (Exception e) {
-        LOGGER.severe("Error checking version: " + e.getMessage());
+        LOGGER.error("Error checking version: " + e.getMessage());
       }
       return current;
     }
@@ -64,7 +65,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
             handleVersionIsUpToDate(current);
           }
         } else {
-          LOGGER.warning(String.format("Current version is %s, running version is %s", current, running));
+          LOGGER.warn(String.format("Current version is %s, running version is %s", current, running));
         }
       } catch (Exception e) {
         handleError(e);

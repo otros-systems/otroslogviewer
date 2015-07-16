@@ -40,12 +40,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageColorizerBrowser extends JPanel {
 
   private static final String MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT = "MessageColorizerEditorDefaultContent.txt";
-  private static final Logger LOGGER = Logger.getLogger(MessageColorizerBrowser.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerBrowser.class.getName());
   private PluginableElementsContainer<MessageColorizer> container;
 	private OtrosApplication otrosApplication;
 	private JList jList;
@@ -148,7 +149,7 @@ public class MessageColorizerBrowser extends JPanel {
           jList.setSelectedValue(mc, true);
         } catch (ConfigurationException e1) {
           String errorMessage = String.format("Can't save message colorizer: %s", e1.getMessage());
-          LOGGER.severe(errorMessage);
+          LOGGER.error(errorMessage);
           MessageColorizerBrowser.this.otrosApplication.getStatusObserver().updateStatus(errorMessage, StatusObserver.LEVEL_ERROR);
         }
       }
@@ -175,7 +176,7 @@ public class MessageColorizerBrowser extends JPanel {
           jList.setSelectedValue(editor.createMessageColorizer(), true);
         } catch (ConfigurationException e1) {
           String errorMessage = String.format("Can't save message colorizer: %s", e1.getMessage());
-          LOGGER.severe(errorMessage);
+          LOGGER.error(errorMessage);
           MessageColorizerBrowser.this.otrosApplication.getStatusObserver().updateStatus(errorMessage, StatusObserver.LEVEL_ERROR);
         }
       }
@@ -190,7 +191,7 @@ public class MessageColorizerBrowser extends JPanel {
           removeMessageColorizerWithNullFile();
           applyMessageColorizer(File.createTempFile("messageColorizer", "pattern"));
         } catch (Exception e) {
-          LOGGER.severe("Cannot create message colorizer: " + e.getMessage());
+          LOGGER.error("Cannot create message colorizer: " + e.getMessage());
         }
 
       }
@@ -324,7 +325,7 @@ public class MessageColorizerBrowser extends JPanel {
       try {
         defualtContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
       } catch (IOException e) {
-        LOGGER.severe(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
+        LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }
     }
     return defualtContent;

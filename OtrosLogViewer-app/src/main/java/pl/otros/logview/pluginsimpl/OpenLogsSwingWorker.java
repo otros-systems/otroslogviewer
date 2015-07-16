@@ -39,13 +39,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 class OpenLogsSwingWorker extends SwingWorker<Void, String> {
 
-  private static final Logger LOGGER = Logger.getLogger(OpenLogsSwingWorker.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenLogsSwingWorker.class.getName());
 
   private LogViewPanelWrapper logViewPanelWrapper;
   private PluginContext pluginContext;
@@ -115,7 +116,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
         try {
           loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
         } catch (FileSystemException e1) {
-          LOGGER.warning("Can't initialize start position for tailing. Can duplicate some values for small files");
+          LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
         }
         while (parsingContext.isParsingInProgress()) {
           try {
@@ -127,7 +128,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
 
             Utils.reloadFileObject(loadingInfo);
           } catch (Exception e) {
-            LOGGER.warning("Exception in tailing loop: " + e.getMessage());
+            LOGGER.warn("Exception in tailing loop: " + e.getMessage());
           }
         }
         LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
@@ -157,7 +158,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     try {
       importer.init(new Properties());
     } catch (InitializationException e1) {
-      LOGGER.severe("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
+      LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
       JOptionPane.showMessageDialog(null, "Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage(), "Open error",
           JOptionPane.ERROR_MESSAGE);
     }
@@ -173,7 +174,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       } catch (Exception e1) {
         String msg = String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage());
         publish(msg);
-        LOGGER.warning(msg);
+        LOGGER.warn(msg);
       }
     }
     LoadingInfo[] loadingInfos = new LoadingInfo[list.size()];

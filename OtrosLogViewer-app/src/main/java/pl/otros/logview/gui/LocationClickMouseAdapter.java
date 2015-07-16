@@ -1,5 +1,7 @@
 package pl.otros.logview.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 
@@ -9,11 +11,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class LocationClickMouseAdapter extends MouseAdapter {
-  private static final Logger LOGGER = Logger.getLogger(LocationClickMouseAdapter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LocationClickMouseAdapter.class.getName());
   private final OtrosApplication otrosApplication;
   private JTextPane textPane;
 
@@ -49,7 +49,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
           toolTipText.append("<BR/>\n");
         }
         toolTipText.append("</HTML>");
-        LOGGER.fine("Tooltip text: " + toolTipText.toString());
+        LOGGER.debug("Tooltip text: " + toolTipText.toString());
         textPane.setToolTipText(toolTipText.toString());
       }
     } catch (IOException e1) {
@@ -68,7 +68,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
     LocationInfo locationInfo = getLocationInfoUnderCursor(e);
     if (locationInfo != null && otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_ENABLED, true)) {
       JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
-      LOGGER.fine("Is jump available: " + jumpToCodeService.isIdeAvailable());
+      LOGGER.debug("Is jump available: " + jumpToCodeService.isIdeAvailable());
       try {
         if (jumpToCodeService.isIdeAvailable() && jumpToCodeService.isJumpable(locationInfo)) {
           LOGGER.info("Jumping to " + locationInfo);
@@ -76,7 +76,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
         }
       } catch (IOException e1) {
         otrosApplication.getStatusObserver().updateStatus("Can't go to location " + locationInfo.toString(), StatusObserver.LEVEL_WARNING);
-        LOGGER.log(Level.WARNING, "Can't open location in IDE", e1);
+        LOGGER.warn( "Can't open location in IDE", e1);
       }
     }
   }

@@ -20,11 +20,12 @@ import pl.otros.logview.Stoppable;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReadingStopperForRemove implements HierarchyListener {
 
-  private static final Logger LOGGER = Logger.getLogger(ReadingStopperForRemove.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
   private SoftReference<Stoppable> reference;
 
@@ -37,7 +38,7 @@ public class ReadingStopperForRemove implements HierarchyListener {
   public void hierarchyChanged(HierarchyEvent e) {
     if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
       Stoppable stoppable = reference.get();
-      LOGGER.fine("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
+      LOGGER.debug("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
       if (stoppable != null) {
         stoppable.stop();
       }

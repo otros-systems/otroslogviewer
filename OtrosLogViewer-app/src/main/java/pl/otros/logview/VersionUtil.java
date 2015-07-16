@@ -28,12 +28,13 @@ import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.Manifest;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VersionUtil {
 
   private static final String CURRENT_VERSION_PAGE_URL = "http://otroslogviewer.appspot.com/services/currentVersion?";
-  private static final Logger LOGGER = Logger.getLogger(VersionUtil.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(VersionUtil.class.getName());
   public static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
   /**

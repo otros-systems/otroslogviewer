@@ -106,4 +106,8 @@ public class LogDataBuilder {
     return this;
   }
 
+  public LogDataBuilder withFile(String file) {
+    ld.setFile(file);
+    return this;
+  }
 }

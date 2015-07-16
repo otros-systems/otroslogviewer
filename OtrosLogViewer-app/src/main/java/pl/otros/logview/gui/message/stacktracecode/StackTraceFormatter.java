@@ -8,12 +8,13 @@ import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.regex.Pattern;
 
 public class StackTraceFormatter extends AbstractPluginableElement implements MessageFormatter {
 
-  private static final Logger LOGGER = Logger.getLogger(StackTraceFormatter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(StackTraceFormatter.class.getName());
   public static final String STACK_TRACE_REGEX = "(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))";
   private final JumpToCodeService jumpToCodeService;
 

@@ -9,7 +9,8 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
@@ -30,7 +31,7 @@ public class GoToDonatePageAction extends OtrosAction {
    */
   private static final long serialVersionUID = 1L;
 
-  private static final Logger LOGGER = Logger.getLogger(GoToDonatePageAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(GoToDonatePageAction.class.getName());
 
   private static final String DONATE_URL = "https://github.com/otros-systems/otroslogviewer/wiki/DonateAndDonors";
 
@@ -44,7 +45,7 @@ public class GoToDonatePageAction extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     try {
-      LOGGER.fine("Opening donation page");
+      LOGGER.debug("Opening donation page");
       Desktop.getDesktop().browse(new URI(DONATE_URL));
     } catch (IOException e1) {
       LOGGER.info(String.format("Can't open donate url due to IOException: %s", e1.getMessage()));

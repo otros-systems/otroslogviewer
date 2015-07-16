@@ -17,7 +17,7 @@
 
 package pl.otros.logview.importer.log4jxml;
 
-import org.apache.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -47,7 +47,7 @@ public final class UtilLoggingEntityResolver implements EntityResolver {
       Class clazz = getClass();
       InputStream in = clazz.getResourceAsStream("/pl/otros/logview/importer/log4jxml/logger.dtd");
       if (in == null) {
-        LogManager.getLogger(UtilLoggingEntityResolver.class).error(
+        LoggerFactory.getLogger(UtilLoggingEntityResolver.class).error(
             "Could not find [logger.dtd]. Used [" + clazz.getClassLoader() + "] class loader in the search.");
         return null;
       } else {

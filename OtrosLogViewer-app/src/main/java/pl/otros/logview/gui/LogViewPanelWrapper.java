@@ -30,11 +30,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogViewPanelWrapper extends JPanel {
 
-  private static final Logger LOGGER = Logger.getLogger(LogViewPanelWrapper.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanelWrapper.class.getName());
 
   private String name;
   private LogDataTableModel dataTableModel = new LogDataTableModel();

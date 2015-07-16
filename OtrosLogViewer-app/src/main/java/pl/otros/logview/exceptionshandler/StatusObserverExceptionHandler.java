@@ -17,13 +17,14 @@
 package pl.otros.logview.exceptionshandler;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.otros.logview.gui.StatusObserver;
 
 public class StatusObserverExceptionHandler implements UncaughtExceptionHandler {
 
-	private static final Logger LOGGER = Logger.getLogger(StatusObserverExceptionHandler.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(StatusObserverExceptionHandler.class.getName());
 	
 	private StatusObserver statusObserver;
 	

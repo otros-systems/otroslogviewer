@@ -28,10 +28,11 @@ import pl.otros.logview.uml.Message.MessageType;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShowCallHierarchyAction extends FocusOnThisAbstractAction<CallHierarchyLogFilter> {
-  private static final Logger LOGGER = Logger.getLogger(ShowCallHierarchyAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ShowCallHierarchyAction.class.getName());
 
   public ShowCallHierarchyAction(CallHierarchyLogFilter filter, JCheckBox filterEnableCheckBox, OtrosApplication otrosApplication) {
     super(filter, filterEnableCheckBox, otrosApplication);
@@ -51,7 +52,7 @@ public class ShowCallHierarchyAction extends FocusOnThisAbstractAction<CallHiera
     try {
       findCallHierarchyEvents(selected, dataTableModel, listEntryEvents, listOfEvents2);
     } catch (java.util.NoSuchElementException e1) {
-      LOGGER.severe("Log file do not have consistent Entry/Return in logs");
+      LOGGER.error("Log file do not have consistent Entry/Return in logs");
       throw new Exception("Log file do not have consistent Entry/Return in logs",e1);
     }
     filter.setListId(listEntryEvents, listOfEvents2);

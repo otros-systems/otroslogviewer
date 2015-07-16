@@ -32,14 +32,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class MessageUpdateUtils {
 
-  public static final Logger LOGGER = Logger.getLogger(MessageUpdateUtils.class.getName());
+  public static final Logger LOGGER = LoggerFactory.getLogger(MessageUpdateUtils.class.getName());
 
   private ExecutorService executorService;
 
@@ -62,8 +64,8 @@ public class MessageUpdateUtils {
             return messageFormatter.format(s1);
           }
         } catch (Throwable e) {
-          LOGGER.severe(String.format("Error occurred when using message formatter %s: %s", messageFormatter.getName(), e.getMessage()));
-          LOGGER.fine(String.format("Error occurred when using message formatter %s with message\"%s\"", messageFormatter.getName(), StringUtils.left(s1, 1500)));
+          LOGGER.error(String.format("Error occurred when using message formatter %s: %s", messageFormatter.getName(), e.getMessage()));
+          LOGGER.debug(String.format("Error occurred when using message formatter %s with message\"%s\"", messageFormatter.getName(), StringUtils.left(s1, 1500)));
         } finally {
           Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
@@ -77,10 +79,10 @@ public class MessageUpdateUtils {
       result = submit.get(timeoutSeconds, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
       String msg = String.format("Formatting message with %s takes to long time, skipping this formatter", messageFormatter.getName());
-      LOGGER.warning(msg);
+      LOGGER.warn(msg);
       submit.cancel(true);
     } catch (Exception e) {
-      LOGGER.severe(String.format("Error occurred when using message formatter %s: %s", messageFormatter.getName(), e.getMessage()));
+      LOGGER.error(String.format("Error occurred when using message formatter %s: %s", messageFormatter.getName(), e.getMessage()));
       submit.cancel(true);
     }
 
@@ -104,8 +106,8 @@ public class MessageUpdateUtils {
             list.addAll(colorize);
           }
         } catch (Throwable e) {
-          LOGGER.log(Level.SEVERE,String.format("Error occurred when using message colorizer %s: %s%n", messageColorizer.getName(), e.getMessage()),e);
-          LOGGER.fine(String.format("Error occurred when using message colorizer %s with message\"%s\"", messageColorizer.getName(), StringUtils.left(message, 1500)));
+          LOGGER.error(String.format("Error occurred when using message colorizer %s: %s%n", messageColorizer.getName(), e.getMessage()),e);
+          LOGGER.debug(String.format("Error occurred when using message colorizer %s with message\"%s\"", messageColorizer.getName(), StringUtils.left(message, 1500)));
           e.printStackTrace();
         } finally {
           Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -119,10 +121,10 @@ public class MessageUpdateUtils {
       return submit.get(timeoutSeconds, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
       String msg = String.format("Formatting message with %s takes to long time, skipping this formatter", messageColorizer.getName());
-      LOGGER.warning(msg);
+      LOGGER.warn(msg);
       submit.cancel(true);
     } catch (Exception e) {
-      LOGGER.severe(String.format("Error occurred when using message formatter %s: %s", messageColorizer.getName(), e.getMessage()));
+      LOGGER.error(String.format("Error occurred when using message formatter %s: %s", messageColorizer.getName(), e.getMessage()));
       submit.cancel(true);
     }
     return new ArrayList<MessageFragmentStyle>(0);
@@ -144,10 +146,10 @@ public class MessageUpdateUtils {
         otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().addHighlight(mfs.getOffset(), mfs.getLength() + mfs.getOffset(),
             highlighter);
       } catch (BadLocationException e) {
-        LOGGER.log(Level.SEVERE, "Cant get text of log detail view for highlighting search result", e);
+        LOGGER.error( "Cant get text of log detail view for highlighting search result", e);
       }
     }
-    LOGGER.finest("Update with chunks finished");
+    LOGGER.trace("Update with chunks finished");
   }
 
   public static void highlightSearchResult(OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane,
@@ -158,7 +160,7 @@ public class MessageUpdateUtils {
     try {
       text = styledDocument.getText(0, styledDocument.getLength());
     } catch (BadLocationException e) {
-      LOGGER.log(Level.SEVERE, "Cant get document text for log details view: ", e);
+      LOGGER.error( "Cant get document text for log details view: ", e);
       return;
     }
     MessageColorizer messageColorizer = colorizersContainer.getElement(SearchResultColorizer.class.getName());

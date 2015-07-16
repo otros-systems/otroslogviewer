@@ -23,12 +23,14 @@ import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends OtrosAction {
 
-  private static final Logger LOGGER = Logger.getLogger(FocusOnThisAbstractAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(FocusOnThisAbstractAction.class.getName());
 
   protected T filter;
   protected JCheckBox filterEnableCheckBox;
@@ -56,7 +58,7 @@ public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends Otr
       filterEnableCheckBox.setSelected(true);
       filter.setEnable(true);
     } catch (Exception e1) {
-      LOGGER.log(Level.SEVERE,"Error occurred when focusing on events ",e1);
+      LOGGER.error("Error occurred when focusing on events ",e1);
       JOptionPane.showMessageDialog(getOtrosApplication().getApplicationJFrame(), e1.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }

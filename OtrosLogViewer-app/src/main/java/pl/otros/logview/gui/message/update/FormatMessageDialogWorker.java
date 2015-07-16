@@ -16,6 +16,8 @@
 
 package pl.otros.logview.gui.message.update;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFormatter;
@@ -30,14 +32,12 @@ import javax.swing.text.StyledDocument;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  */
 public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithStyle>, TextChunkWithStyle> implements CancelStatus {
 
-  private static final Logger LOGGER = Logger.getLogger(FormatMessageDialogWorker.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(FormatMessageDialogWorker.class.getName());
 
   private LogData ld;
   private ArrayList<TextChunkWithStyle> chunks = new ArrayList<TextChunkWithStyle>();
@@ -69,7 +69,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
 
   @Override
   protected List<TextChunkWithStyle> doInBackground() throws Exception {
-    LOGGER.finer("Start do in background");
+    LOGGER.trace("Start do in background");
     LogDataFormatter logDataFormatter = new LogDataFormatter(ld, dateFormat, messageUtils, colorizersContainer, formattersContainer, this, maximumMessageSize);
     chunks.addAll(logDataFormatter.format());
     return chunks;
@@ -78,26 +78,26 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
 
   @Override
   protected void done() {
-    LOGGER.finest("Message details format and colors calculated, updating GUI");
+    LOGGER.trace("Message details format and colors calculated, updating GUI");
     StyledDocument styledDocument = otrosJTextWithRulerScrollPane.getjTextComponent().getStyledDocument();
     try {
       styledDocument.remove(0, styledDocument.getLength());
     } catch (BadLocationException e) {
-      LOGGER.log(Level.SEVERE, "Can't clear log events text  area", e);
+      LOGGER.error( "Can't clear log events text  area", e);
     }
     if (!isCancelled()) {
       updateChanges(chunks);
     }
-    LOGGER.finest("GUI updated");
+    LOGGER.trace("GUI updated");
   }
 
   protected void updateChanges(List<TextChunkWithStyle> chunks) {
-    LOGGER.finest("Start updating view with chunks, size: " + chunks.size());
+    LOGGER.trace("Start updating view with chunks, size: " + chunks.size());
     StyledDocument document = otrosJTextWithRulerScrollPane.getjTextComponent().getStyledDocument();
     List<MessageFragmentStyle> searchResultPositions = new ArrayList<MessageFragmentStyle>();
     int i = 0;
     for (TextChunkWithStyle chunk : chunks) {
-      LOGGER.finer("Updating with chunk " + i++);
+      LOGGER.trace("Updating with chunk " + i++);
       try {
 
         if (chunk.getString() != null) {
@@ -115,7 +115,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
           otrosJTextWithRulerScrollPane.getjTextComponent().insertIcon(chunk.getIcon());
         }
       } catch (BadLocationException e) {
-        LOGGER.log(Level.SEVERE, "Can't update log details text area", e);
+        LOGGER.error( "Can't update log details text area", e);
       }
     }
 

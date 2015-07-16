@@ -18,12 +18,14 @@ package pl.otros.logview.batch;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StreamProcessingLogDataCollector implements LogDataCollector {
 
-  private static final Logger LOGGER = Logger.getLogger(StreamProcessingLogDataCollector.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(StreamProcessingLogDataCollector.class.getName());
   private LogDataParsedListener logDataParsedListener;
   private BatchProcessingContext batchProcessingContext;
 
@@ -40,7 +42,7 @@ public class StreamProcessingLogDataCollector implements LogDataCollector {
       try {
         logDataParsedListener.logDataParsed(logDatas[i], batchProcessingContext);
       } catch (Exception e) {
-        LOGGER.log(Level.SEVERE,"Error processing log data " + e.getMessage(),e);
+        LOGGER.error("Error processing log data " + e.getMessage(),e);
         System.out.println("Error processing log data " + e.getMessage());
         e.printStackTrace();
       }

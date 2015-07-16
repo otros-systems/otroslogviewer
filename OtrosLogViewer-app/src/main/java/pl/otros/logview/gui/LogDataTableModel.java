@@ -17,6 +17,8 @@ package pl.otros.logview.gui;
 
 import com.google.common.base.Joiner;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.MarkerColors;
@@ -36,22 +38,14 @@ import pl.otros.logview.store.file.FileLogDataStore;
 import javax.swing.table.AbstractTableModel;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LogDataTableModel extends AbstractTableModel implements LogDataCollector, MarkableTableModel, NotableTableModel {
 
   private static final String EMPTY_STRING = "";
 
-  private static final Logger LOGGER = Logger.getLogger(LogDataTableModel.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogDataTableModel.class.getName());
 
   private static final LogData EMPTY_LOG_DATA = new LogData();
 
@@ -71,7 +65,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         LOGGER.info("Trying to use cache log store");
         logDataStore = new CachedLogStore(new FileLogDataStore());
       } catch (IOException e) {
-        LOGGER.severe("Can't create cached log store: " + e.getMessage());
+        LOGGER.error("Can't create cached log store: " + e.getMessage());
       }
     }
 
@@ -219,7 +213,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   }
 
   public int removeRows(AcceptCondition acceptCondition) {
-    LOGGER.fine(String.format("Removing rows using accept condition: %s", acceptCondition.getName()));
+    LOGGER.debug(String.format("Removing rows using accept condition: %s", acceptCondition.getName()));
     ArrayList<Integer> toDelete = new ArrayList<Integer>();
     for (int row = 0; row < logDataStore.getCount(); row++) {
       LogData logData = logDataStore.getLogData(row);
@@ -227,7 +221,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         toDelete.add(row);
       }
     }
-    LOGGER.fine(String.format("To remove using accept condition %s is %d rows", acceptCondition.getName(), toDelete.size()));
+    LOGGER.debug(String.format("To remove using accept condition %s is %d rows", acceptCondition.getName(), toDelete.size()));
     if (toDelete.size() > 0) {
       int[] rows = new int[toDelete.size()];
       for (int i = 0; i < rows.length; i++) {
@@ -235,7 +229,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       }
       removeRows(rows);
     }
-    LOGGER.fine(String.format("Using accept condition %s was removed %d rows", acceptCondition.getName(), toDelete.size()));
+    LOGGER.debug(String.format("Using accept condition %s was removed %d rows", acceptCondition.getName(), toDelete.size()));
     return toDelete.size();
   }
 
@@ -245,9 +239,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     if (rows.length > 0) {
       int firstRow = rows[0];
       int lastRow = rows[rows.length - 1];
-      LOGGER.finest(String.format("Firing event fireTableRowsDeleted %d->%d", firstRow, lastRow));
+      LOGGER.trace(String.format("Firing event fireTableRowsDeleted %d->%d", firstRow, lastRow));
       fireTableRowsDeleted(firstRow, lastRow);
-      LOGGER.finest(String.format("Firing event fireTableRowsDeleted has ended"));
+      LOGGER.trace(String.format("Firing event fireTableRowsDeleted has ended"));
     }
   }
 

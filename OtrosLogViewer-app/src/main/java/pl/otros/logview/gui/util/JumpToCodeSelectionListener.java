@@ -16,14 +16,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JumpToCodeSelectionListener perorms jump to code in IDE if selected log event contains location info, applications has focus and jump to code is enabled
  */
 public class JumpToCodeSelectionListener implements ListSelectionListener {
 
-    private static final Logger LOGGER = Logger.getLogger(JumpToCodeSelectionListener.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(JumpToCodeSelectionListener.class.getName());
 
     private final OtrosApplication otrosApplication;
     private final LogDataTableModel dataTableModel;
@@ -73,7 +74,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
                     scheduledJump = Optional.of(jump);
                 }
             } catch (Exception e1) {
-                LOGGER.warning("Can't perform jump to code: " + e1.getMessage());
+                LOGGER.warn("Can't perform jump to code: " + e1.getMessage());
             }
 
         }
@@ -89,7 +90,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         }
 
         public void run() {
-            LOGGER.fine("Jumping to " + li);
+            LOGGER.debug("Jumping to " + li);
             try {
                 jumpToCodeService.jump(li);
             } catch (IOException e1) {

@@ -15,11 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.persistance;
 
-import static org.testng.AssertJUnit.assertEquals;
-
 import org.testng.Assert;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
@@ -32,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+
+import static org.testng.AssertJUnit.assertEquals;
 //TODO check assert order
 public class PersistanceVer2Test {
 

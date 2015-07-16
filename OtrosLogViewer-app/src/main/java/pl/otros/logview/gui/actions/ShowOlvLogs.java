@@ -20,7 +20,7 @@ import pl.otros.logview.gui.LogDataTableModel;
 import pl.otros.logview.gui.LogViewPanelWrapper;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.logging.GuiJulHandler;
+import pl.otros.logview.logging.GuiAppender;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
@@ -51,13 +51,13 @@ public class ShowOlvLogs extends OtrosAction {
         @Override
         public void hierarchyChanged(HierarchyEvent e) {
           if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
-            GuiJulHandler.stop();
+            GuiAppender.stopAppender();
           }
         }
       });
     }
 
     getOtrosApplication().addClosableTab("OLV internal Logs","OLV internal Logs",Icons.LEVEL_INFO,logViewPanelWrapper,true);
-    GuiJulHandler.start(logViewPanelWrapper.getDataTableModel(), logViewPanelWrapper.getConfiguration());
+    GuiAppender.start(logViewPanelWrapper.getDataTableModel(), logViewPanelWrapper.getConfiguration());
   }
 }

@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Rule class implementing equality evaluation for timestamps.
@@ -39,7 +40,7 @@ public class TimestampEqualsRule extends AbstractRule {
   private static final long HOUR = 60 * MINUTE;
   private static final long DAY = 24 * HOUR;
 
-  private static final Logger LOGGER = Logger.getLogger(TimestampEqualsRule.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TimestampEqualsRule.class.getName());
   /**
    * Serialization ID.
    */
@@ -106,7 +107,7 @@ public class TimestampEqualsRule extends AbstractRule {
         Date parse = df.parse(value);
         timeStamp = parse.getTime();
         dateFormatFound = true;
-        LOGGER.fine(String.format("Date format for %s detected: %s with duration %dms", value, df.toPattern(), duration));
+        LOGGER.debug(String.format("Date format for %s detected: %s with duration %dms", value, df.toPattern(), duration));
         break;
       } catch (ParseException pe) {
         // check next log format
@@ -127,7 +128,7 @@ public class TimestampEqualsRule extends AbstractRule {
           todayCal.set(Calendar.SECOND, calendar.get(Calendar.SECOND));
           todayCal.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND));
           timeStamp = todayCal.getTimeInMillis();
-          LOGGER.fine(String.format("Date format for %s detected: %s with duration %dms", value, df.toPattern(), duration));
+          LOGGER.debug(String.format("Date format for %s detected: %s with duration %dms", value, df.toPattern(), duration));
           dateFormatFound = true;
           break;
         } catch (ParseException pe) {
@@ -137,7 +138,7 @@ public class TimestampEqualsRule extends AbstractRule {
     }
 
     if (!dateFormatFound) {
-      LOGGER.fine(String.format("Date format for %s is not found", value));
+      LOGGER.debug(String.format("Date format for %s is not found", value));
       throw new IllegalArgumentException("Could not parse date: " + value);
     }
   }

@@ -13,11 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogbackSocketLogImporter extends AbstractPluginableElement implements LogImporter {
-  private static final Logger LOGGER = Logger.getLogger(LogbackSocketLogImporter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogbackSocketLogImporter.class.getName());
 
   public LogbackSocketLogImporter() {
     super("Logback - socket", "Logback serialized events for socket appender");
@@ -54,7 +56,7 @@ public class LogbackSocketLogImporter extends AbstractPluginableElement implemen
         }
       }
     } catch (IOException | ClassNotFoundException e) {
-      LOGGER.log(Level.SEVERE, "Can't read serialized logback events from stream: " + e.getMessage(), e);
+      LOGGER.error( "Can't read serialized logback events from stream: " + e.getMessage(), e);
     }
   }
 

@@ -1,5 +1,7 @@
 package pl.otros.logview.exceptionshandler.errrorreport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -12,12 +14,10 @@ import java.lang.management.RuntimeMXBean;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class OtrosAppERDC implements ErrorReportDataCollector {
 
-    private static final Logger LOGGER = Logger.getLogger(OtrosAppERDC.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OtrosAppERDC.class.getName());
     private static final String VERSION = "APPLICATION:version";
 
 
@@ -42,7 +42,7 @@ public class OtrosAppERDC implements ErrorReportDataCollector {
         try {
             r.put(VERSION, VersionUtil.getRunningVersion());
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING,"Cannot check running version",e);    
+            LOGGER.warn("Cannot check running version",e);
         }
 
         return r;

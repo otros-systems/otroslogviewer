@@ -5,11 +5,12 @@ import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.ide.Ide;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JumpToCodeServiceImpl implements JumpToCodeService {
 
-  private static final Logger LOGGER = Logger.getLogger(JumpToCodeServiceImpl.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(JumpToCodeServiceImpl.class.getName());
 
   public JumpToCodeClient jumpToCodeClient;
 
@@ -44,17 +45,17 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   public void jump(LocationInfo locationInfo) throws IOException {
     String url = jumpToCodeClient.getUrl(locationInfo);
     if (url != null) {
-      LOGGER.finest("Jumping to location " + locationInfo + " by opening URL: " + url);
+      LOGGER.trace("Jumping to location " + locationInfo + " by opening URL: " + url);
       jumpToCodeClient.jumpTo(url);
     } else {
-      LOGGER.finest("Can't jump to " + locationInfo);
+      LOGGER.trace("Can't jump to " + locationInfo);
     }
   }
 
   @Override
   public boolean isJumpable(LocationInfo locationInfo) throws IOException {
     boolean jumpable = jumpToCodeClient.isJumpable(locationInfo);
-    LOGGER.finest("Checking if location " + locationInfo + " is jumpable: " + jumpable);
+    LOGGER.trace("Checking if location " + locationInfo + " is jumpable: " + jumpable);
     return jumpable;
   }
 

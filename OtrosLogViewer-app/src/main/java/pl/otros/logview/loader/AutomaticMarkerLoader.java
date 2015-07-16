@@ -28,12 +28,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AutomaticMarkerLoader {
 
-  private static final Logger LOGGER = Logger.getLogger(AutomaticMarker.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(AutomaticMarker.class.getName());
   private static BaseLoader baseLoader = new BaseLoader();
 
   public static ArrayList<AutomaticMarker> loadInternalMarkers() throws IOException {
@@ -49,11 +51,11 @@ public class AutomaticMarkerLoader {
         AutomaticMarker am = (AutomaticMarker) c.newInstance();
         markers.add(am);
       } catch (ClassNotFoundException e) {
-        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
+        LOGGER.error( "Error loading class " + line, e);
       } catch (InstantiationException e) {
-        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
+        LOGGER.error( "Error loading class " + line, e);
       } catch (IllegalAccessException e) {
-        LOGGER.log(Level.SEVERE, "Error loading class " + line, e);
+        LOGGER.error( "Error loading class " + line, e);
       }
     }
 
@@ -81,7 +83,7 @@ public class AutomaticMarkerLoader {
         try {
           markers.add(loadRegexMarkerFromProperties(file));
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE, "Cannot initialize RegexMarker from file " + file.getName(), e);
+          LOGGER.error( "Cannot initialize RegexMarker from file " + file.getName(), e);
         }
       }
     }
@@ -102,7 +104,7 @@ public class AutomaticMarkerLoader {
         try {
           markers.add(loadStringMarkerFromProperties(file));
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE, "Cannot initialize StringMarker from file " + file.getName(), e);
+          LOGGER.error( "Cannot initialize StringMarker from file " + file.getName(), e);
         }
       }
     }
@@ -157,7 +159,7 @@ public class AutomaticMarkerLoader {
           markers.add(loadPropertyBasedMarker(p));
           fin.close();
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE, "Cannot initialize RegexMarker from file " + file.getName(), e);
+          LOGGER.error( "Cannot initialize RegexMarker from file " + file.getName(), e);
         }
       }
     }

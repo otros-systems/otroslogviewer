@@ -3,13 +3,11 @@ package pl.otros.logview.gui.services.jumptocode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.ide.Ide;
@@ -18,14 +16,12 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is the interface with the JumpToCode plugin for IntellijJ IDEA
  */
 public class JumpToCodeClient {
-  private static final Logger LOGGER = Logger.getLogger(JumpToCodeClient.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(JumpToCodeClient.class.getName());
   private HttpClient client;
   private Configuration configuration;
   private Cache<LocationInfo, Boolean> locationInfoCache;
@@ -88,10 +84,10 @@ public class JumpToCodeClient {
    * @param url a JumpToCode url that represents a source location
    */
   protected void jumpTo(String url) throws IOException {
-    LOGGER.finest("Jumping to URL " + url);
+    LOGGER.trace("Jumping to URL " + url);
     HttpMethod method = new GetMethod(url);
     int execute = execute(method);
-    LOGGER.finest("Result status: " + execute);
+    LOGGER.trace("Result status: " + execute);
   }
 
   private HttpMethod buildMethod(String url, LocationInfo locationInfo, HttpOperation httpOperation) {
@@ -127,14 +123,14 @@ public class JumpToCodeClient {
       return locationInfoCache.get(locationInfo, new Callable<Boolean>() {
         @Override
         public Boolean call() throws Exception {
-          LOGGER.finest("Checking if " + locationInfo + " is jumpable.");
+          LOGGER.trace("Checking if " + locationInfo + " is jumpable.");
           HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.TEST);
           try {
             int execute = execute(method);
-            LOGGER.finest("HTTP status line is " + execute);
+            LOGGER.trace("HTTP status line is " + execute);
             return (execute == HttpStatus.SC_OK);
           } catch (IOException e) {
-            LOGGER.log(Level.FINEST, "IOException when checking if location if jumpable", e);
+            LOGGER.trace("IOException when checking if location if jumpable", e);
             return false;
           }
         }
@@ -178,7 +174,7 @@ public class JumpToCodeClient {
     try {
       return ideCache.get(getUrl(), new GetIdeCallable(getUrl()));
     } catch (ExecutionException e) {
-      LOGGER.finest("Can't get ide: " + e.getMessage());
+      LOGGER.trace("Can't get ide: " + e.getMessage());
     }
     return Ide.DISCONNECTED;
   }
@@ -228,7 +224,7 @@ public class JumpToCodeClient {
         return ide;
       } catch (IOException e) {
         // IDE is not available;
-        LOGGER.finest("IDE is not available: " + e.getMessage());
+        LOGGER.trace("IDE is not available: " + e.getMessage());
         return Ide.DISCONNECTED;
       } finally {
         method.releaseConnection();

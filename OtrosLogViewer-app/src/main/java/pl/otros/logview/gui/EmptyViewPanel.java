@@ -30,11 +30,12 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EmptyViewPanel extends JPanel {
 
-  private  static final Logger LOGGER = Logger.getLogger(EmptyViewPanel.class.getName());
+  private  static final Logger LOGGER = LoggerFactory.getLogger(EmptyViewPanel.class.getName());
 	private OtrosApplication otrosApplication;
   private final JAnimatedLogo jLabel;
 
@@ -49,19 +50,19 @@ public class EmptyViewPanel extends JPanel {
 		logImportersContainer.addListener(new PluginableElementEventListener<LogImporter>() {
 			@Override
 			public void elementAdded(LogImporter element) {
-        LOGGER.fine("Plugins updated, updating GUI");
+        LOGGER.debug("Plugins updated, updating GUI");
 				initIntEDT();
 			}
 
 			@Override
 			public void elementRemoved(LogImporter element) {
-        LOGGER.fine("Plugins updated, updating GUI") ;
+        LOGGER.debug("Plugins updated, updating GUI") ;
 				initIntEDT();
 			}
 
 			@Override
 			public void elementChanged(LogImporter element) {
-        LOGGER.fine("Plugins updated, updating GUI");
+        LOGGER.debug("Plugins updated, updating GUI");
 				initIntEDT();
 			}
 
@@ -79,13 +80,13 @@ public class EmptyViewPanel extends JPanel {
     this.addAncestorListener(new AncestorListener() {
       @Override
       public void ancestorAdded(AncestorEvent event) {
-        LOGGER.finest("Starting logo icon animation");
+        LOGGER.trace("Starting logo icon animation");
         jLabel.start();
       }
 
       @Override
       public void ancestorRemoved(AncestorEvent event) {
-        LOGGER.finest("Stopping logo icon animation");
+        LOGGER.trace("Stopping logo icon animation");
         jLabel.stop();
       }
 

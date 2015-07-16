@@ -16,10 +16,9 @@
 
 package pl.otros.logview.accept.query;
 
-import static org.testng.AssertJUnit.assertEquals;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 import pl.otros.logview.MarkerColors;
@@ -28,6 +27,8 @@ import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 public class QueryAcceptConditionTest {
 

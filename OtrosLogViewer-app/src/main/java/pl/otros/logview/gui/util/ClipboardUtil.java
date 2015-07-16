@@ -16,6 +16,9 @@
 
 package pl.otros.logview.gui.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -26,8 +29,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  */
@@ -44,7 +45,7 @@ public class ClipboardUtil {
 
 
     private static class HtmlTransferable implements Transferable {
-        private static final Logger LOGGER = Logger.getLogger(HtmlTransferable.class.getName());
+        private static final Logger LOGGER = LoggerFactory.getLogger(HtmlTransferable.class.getName());
 
         private static ArrayList flavors = new ArrayList();
 
@@ -66,7 +67,7 @@ public class ClipboardUtil {
                 flavors.add(new DataFlavor(TEXT_PLAIN_CHARSET_UNICODE_CLASS_JAVA_IO_INPUT_STREAM));
 
             } catch (ClassNotFoundException ex) {
-                LOGGER.log(Level.SEVERE, "Did not found class for clipboard flavor", ex);
+                LOGGER.error( "Did not found class for clipboard flavor", ex);
             }
         }
 
@@ -85,14 +86,14 @@ public class ClipboardUtil {
 
 
         public boolean isDataFlavorSupported(DataFlavor flavor) {
-            LOGGER.log(Level.FINEST,"Checking if flavor %s is available ", flavor.getMimeType());
+            LOGGER.trace("Checking if flavor %s is available ", flavor.getMimeType());
             return flavors.contains(flavor);
         }
 
 
 
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            LOGGER.log(Level.FINEST,"Getting transfer data for flavor: " + flavor.getMimeType());
+            LOGGER.trace("Getting transfer data for flavor: " + flavor.getMimeType());
             String text = flavor.getMimeType().startsWith("text/html")?plainTextAndHtml.getHtml():plainTextAndHtml.getPlainText();
             if (String.class.equals(flavor.getRepresentationClass())) {
                 return text;

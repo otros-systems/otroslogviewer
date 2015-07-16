@@ -22,10 +22,11 @@ import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PluginContextImpl implements PluginContext {
-  private static final Logger LOGGER = Logger.getLogger(PluginContextImpl.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(PluginContextImpl.class.getName());
 
   private OtrosApplication application;
   private LogOpenHandler logOpenHandler;
