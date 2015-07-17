@@ -43,12 +43,13 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class TailMultipleFilesIntoOneView extends OtrosAction {
 
-	private static final Logger LOGGER = Logger.getLogger(TailMultipleFilesIntoOneView.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(TailMultipleFilesIntoOneView.class.getName());
 
 
 	public TailMultipleFilesIntoOneView(OtrosApplication otrosApplication) {
@@ -74,7 +75,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
         try {
             list.add(Utils.openFileObject(file, true));
         } catch (Exception e1) {
-            LOGGER.warning(String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage()));
+            LOGGER.warn(String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage()));
         }
     }
 
@@ -128,7 +129,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     try {
       importer.init(new Properties());
     } catch (InitializationException e1) {
-      LOGGER.severe("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
+      LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
       JOptionPane.showMessageDialog((Component) guiSource, "Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage(), "Open error",
           JOptionPane.ERROR_MESSAGE);
 

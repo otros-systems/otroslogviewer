@@ -30,13 +30,14 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 public class Utils {
 
-  private static final Logger LOGGER = Logger.getLogger(Utils.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getName());
   private static final int GZIP_MIN_SIZE = 26;
   private static final int GZIP_CHECK_BUFFER_SIZE = 8 * 1024;
   private static final int DETECT_LOAD_SIZE = 8 * 1024;
@@ -44,7 +45,7 @@ public class Utils {
   public static boolean checkIfIsGzipped(FileObject fileObject) throws IOException {
     boolean gziped = false;
     if (fileObject.getContent().getSize() == 0) {
-      LOGGER.fine("File object " + fileObject.getName() + " is empty, can't detect gzip compression");
+      LOGGER.debug("File object " + fileObject.getName() + " is empty, can't detect gzip compression");
       return false;
     }
     InputStream inputStream = fileObject.getContent().getInputStream();
@@ -62,7 +63,7 @@ public class Utils {
       gziped = checkIfIsGzipped(b, read);
     } catch (IOException e) {
       // Not gziped
-      LOGGER.fine(fileObject.getName() + " is not gzip");
+      LOGGER.debug(fileObject.getName() + " is not gzip");
     }
 
     return gziped;
@@ -182,7 +183,7 @@ public class Utils {
           try {
               logImporter.initParsingContext(parsingContext);
           } catch (Exception e) {
-              LOGGER.warning(String.format("Exception when initializing parsing context for logger %s: %s", logImporter.getName(), e.getMessage()));
+              LOGGER.warn(String.format("Exception when initializing parsing context for logger %s: %s", logImporter.getName(), e.getMessage()));
           }
           try {
               logImporter.importLogs(bin, logCollector, parsingContext);
@@ -239,7 +240,7 @@ public class Utils {
       }
       sb.append(fileObject.getName().getBaseName());
     } catch (URISyntaxException e) {
-      LOGGER.warning("Problem with preparing short name of FileObject: " + e.getMessage());
+      LOGGER.warn("Problem with preparing short name of FileObject: " + e.getMessage());
       sb.setLength(0);
       sb.append(fileObject.getName().getScheme()).append("://").append(fileObject.getName().getBaseName());
     }

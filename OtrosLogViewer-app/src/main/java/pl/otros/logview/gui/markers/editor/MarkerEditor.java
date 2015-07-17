@@ -35,11 +35,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MarkerEditor extends JPanel {
 
-  private static final Logger LOGGER = Logger.getLogger(MarkerEditor.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MarkerEditor.class.getName());
 
   private boolean changed = false;
   private JTextField stringMatcherConditionM;

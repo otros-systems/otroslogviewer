@@ -34,13 +34,15 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageDetailListener implements ListSelectionListener, NoteObserver {
 
   public static final int FORMAT_IN_SEPARATE_THREAD_THRESHOLD = 4 * 1024;
-  private static final Logger LOGGER = Logger.getLogger(MessageDetailListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageDetailListener.class.getName());
   private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
   private LogViewPanel logViewPanel;
@@ -121,10 +123,10 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
         logDetailTextArea.setText("No row selected");
       }
     } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "Error formatting message details", e);
+      LOGGER.error("Error formatting message details", e);
       logDetailTextArea.setText("Error rendering message details:" + e.getMessage() + "\n" + Throwables.getStackTraceAsString(e));
     }
-    LOGGER.finer("Gui update call scheduled. Changes will be done in background");
+    LOGGER.trace("Gui update call scheduled. Changes will be done in background");
 
   }
 

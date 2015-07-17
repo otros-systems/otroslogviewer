@@ -37,13 +37,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageColorizerEditor extends JPanel {
 
   private static final String MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT = "MessageColorizerEditorDefaultContent.txt";
 
-  private static final Logger LOGGER = Logger.getLogger(MessageColorizerEditor.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerEditor.class.getName());
 
   private static String defualtContent;
 
@@ -75,7 +76,7 @@ public class MessageColorizerEditor extends JPanel {
     try {
       editorPane.getDocument().insertString(0, defaultContent, null);
     } catch (BadLocationException e1) {
-      LOGGER.severe(String.format("Can't set text: %s", e1.getMessage()));
+      LOGGER.error(String.format("Can't set text: %s", e1.getMessage()));
     }
 
     deleyedSwingInvoke = new DelayedSwingInvoke() {
@@ -135,7 +136,7 @@ public class MessageColorizerEditor extends JPanel {
 				}
 			}
     } catch (Exception e) {
-      LOGGER.severe(String.format("Can't init PropertyPatternMessageColorizer:%s", e.getMessage()));
+      LOGGER.error(String.format("Can't init PropertyPatternMessageColorizer:%s", e.getMessage()));
       statusObserver.updateStatus(String.format("Error: %s", e.getMessage()), StatusObserver.LEVEL_ERROR);
     }
 
@@ -154,7 +155,7 @@ public class MessageColorizerEditor extends JPanel {
       try {
         defualtContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
       } catch (IOException e) {
-        LOGGER.severe(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
+        LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }
     }
     return defualtContent;

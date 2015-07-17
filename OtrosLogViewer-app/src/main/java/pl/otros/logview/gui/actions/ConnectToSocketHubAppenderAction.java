@@ -41,13 +41,14 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConnectToSocketHubAppenderAction extends OtrosAction {
 
 	private static final int RECONNECT_TIME = 20 * 1000;
 
-	private static final Logger LOGGER = Logger.getLogger(ConnectToSocketHubAppenderAction.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
 
 	private BufferingLogDataCollectorProxy logDataCollector;
 	private LogViewPanelWrapper logViewPanelWrapper;
@@ -114,20 +115,20 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 							logImporter.importLogs(bin, logDataCollector, parsingContext);
 							getOtrosApplication().getStatusObserver().updateStatus("Loading logs from Log4j SocketHubAppender finished", StatusObserver.LEVEL_WARNING);
 						} catch (IOException e1) {
-							LOGGER.warning(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e1.getMessage()));
+							LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e1.getMessage()));
 						}
 						try {
-							LOGGER.fine("Reconnecting in " + RECONNECT_TIME + "ms");
+							LOGGER.debug("Reconnecting in " + RECONNECT_TIME + "ms");
 							Thread.sleep(RECONNECT_TIME);
 						} catch (InterruptedException e) {
-							LOGGER.warning("Waiting thread interrupted" + e.getMessage());
+							LOGGER.warn("Waiting thread interrupted" + e.getMessage());
 						}
 						if (parsingContext.isParsingInProgress()) {
 							try {
-								LOGGER.fine(String.format("Connecting to Log4j SocketHubAppender at %s:%d", inetAddress.getHostName(), port2));
+								LOGGER.debug(String.format("Connecting to Log4j SocketHubAppender at %s:%d", inetAddress.getHostName(), port2));
 								s = new Socket(inetAddress, port2);
 							} catch (IOException e) {
-								LOGGER.warning(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e.getMessage()));
+								LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e.getMessage()));
 							}
 						}
 					}

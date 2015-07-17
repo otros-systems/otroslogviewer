@@ -20,12 +20,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SingleInstanceRequestResponseDelegate implements RequestDelegate, ResponseDelegate {
 
-  private static final Logger LOGGER = Logger.getLogger(SingleInstanceRequestResponseDelegate.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(SingleInstanceRequestResponseDelegate.class.getName());
   private OtrosApplication otrosApplication;
 
   private static SingleInstanceRequestResponseDelegate instance;
@@ -66,7 +68,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         socket.close();
       }
     } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, "Can't write params to socket", e);
+      LOGGER.error( "Can't write params to socket", e);
       e.printStackTrace();
     }
   }
@@ -98,7 +100,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         socket.close();
       }
     } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, "Can't read params from socket", e);
+      LOGGER.error( "Can't read params from socket", e);
     }
 
     openFilesFromStartArgs(otrosApplication,filesList, path);
@@ -116,7 +118,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         FileObject fo = VFS.getManager().resolveFile(new File(path), file);
         fileObjects.add(fo);
       } catch (FileSystemException e) {
-        LOGGER.log(Level.SEVERE, "Cant resolve " + file + " in path " + path, e);
+        LOGGER.error( "Cant resolve " + file + " in path " + path, e);
       }
     }
     final FileObject[] files = fileObjects.toArray(new FileObject[0]);

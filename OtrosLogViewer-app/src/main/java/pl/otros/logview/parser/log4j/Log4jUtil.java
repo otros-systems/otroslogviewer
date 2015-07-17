@@ -18,22 +18,23 @@ package pl.otros.logview.parser.log4j;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.spi.LoggingEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
+import pl.otros.logview.RenamedLevel;
+import pl.otros.logview.importer.InitializationException;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import pl.otros.logview.RenamedLevel;
-import pl.otros.logview.importer.InitializationException;
 
 public class Log4jUtil {
 
-  private static final Logger LOGGER = Logger.getLogger(Log4jUtil.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(Log4jUtil.class.getName());
   private static final Map<String, String> IMMUTABLE_EMPTY_MAP = new ImmutableMap.Builder<String, String>().build();
   public static final String CONVERSION_PATTERN = "conversionPattern";
   
@@ -92,7 +93,7 @@ public class Log4jUtil {
     } else if (s.equalsIgnoreCase("TRACE")) {
       return RenamedLevel.TRACE;
     }
-    LOGGER.severe("Level \"" + s + "\" not parsed!");
+    LOGGER.error("Level \"" + s + "\" not parsed!");
     return null;
   }
 

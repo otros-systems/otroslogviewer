@@ -25,13 +25,15 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AboutAction extends OtrosAction {
 
 	private String build = "?";
-	private static final Logger LOGGER = Logger.getLogger(AboutAction.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(AboutAction.class.getName());
 	private JTextPane textArea;
 
 	private Style defaultStyle = null;
@@ -48,7 +50,7 @@ public class AboutAction extends OtrosAction {
 		try {
 			build = VersionUtil.getRunningVersion();
 		} catch (IOException e) {
-			LOGGER.severe("Problem with checking running version: " + e.getMessage());
+			LOGGER.error("Problem with checking running version: " + e.getMessage());
 		}
 
 		animatedLogo = new JAnimatedLogo();
@@ -74,7 +76,7 @@ public class AboutAction extends OtrosAction {
 		try {
 			fillText();
 		} catch (BadLocationException e) {
-			LOGGER.log(Level.SEVERE,"Bad location when filling text.",e);
+			LOGGER.error("Bad location when filling text.",e);
 		}
 		panel = new JPanel(new FlowLayout());
 		panel.add(animatedLogo);

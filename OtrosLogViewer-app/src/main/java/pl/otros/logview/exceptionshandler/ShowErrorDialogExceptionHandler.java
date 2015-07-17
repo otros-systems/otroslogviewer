@@ -33,14 +33,16 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShowErrorDialogExceptionHandler extends
         AbstractSwingUncaughtExceptionHandler implements
         UncaughtExceptionHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(ShowErrorDialogExceptionHandler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowErrorDialogExceptionHandler.class.getName());
     private OtrosApplication otrosApplication;
     private JTextField emailTextField;
     private JTextArea commentTextArea;
@@ -132,7 +134,7 @@ public class ShowErrorDialogExceptionHandler extends
                 try {
                     errorReportSender.sendReport(stringStringMap);
                 } catch (IOException e) {
-                    LOGGER.log(Level.SEVERE, "Cant send error report", e);
+                    LOGGER.error( "Cant send error report", e);
                 }
             }
         };
@@ -158,7 +160,7 @@ public class ShowErrorDialogExceptionHandler extends
             try {
             map.putAll(errorReportDataCollector.collect(ctx));
             } catch (Throwable t){
-                LOGGER.log(Level.SEVERE,"Error during collecting diagnostic data" ,t);
+                LOGGER.error("Error during collecting diagnostic data" ,t);
             }
         }
         return map;

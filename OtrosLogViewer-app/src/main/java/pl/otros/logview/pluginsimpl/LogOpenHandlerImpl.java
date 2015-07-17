@@ -24,14 +24,16 @@ import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class LogOpenHandlerImpl implements LogOpenHandler {
 
-  private static final Logger LOGGER = Logger.getLogger(LogOpenHandlerImpl.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogOpenHandlerImpl.class.getName());
 
   private PluginContext pluginContext;
 
@@ -52,7 +54,7 @@ public class LogOpenHandlerImpl implements LogOpenHandler {
       try {
         list.add(VFSUtils.resolveFileObject(uri));
       } catch (FileSystemException e) {
-        LOGGER.log(Level.SEVERE,"Can't resolve uri " + uri,e);
+        LOGGER.error("Can't resolve uri " + uri,e);
       }
     }
     FileObject[] fileObjects = new FileObject[0];

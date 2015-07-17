@@ -23,11 +23,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
 
-  private static final Logger LOGGER = Logger.getLogger(CheckForNewVersionAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
 
   public CheckForNewVersionAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
@@ -38,7 +39,7 @@ public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
   protected void handleError(Exception e) {
     String message = "Problem with checking new version: " + e.getLocalizedMessage();
     JOptionPane.showMessageDialog(null, message, "Error!", JOptionPane.ERROR_MESSAGE);
-    LOGGER.warning("Error when checking new version" + e.getMessage());
+    LOGGER.warn("Error when checking new version" + e.getMessage());
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
 		if (statusObserver != null) {
       statusObserver.updateStatus("Error when checking new version" + e.getMessage(), StatusObserver.LEVEL_WARNING);
@@ -63,7 +64,7 @@ public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
           Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
         } catch (Exception e1) {
           String msg = "Can't open browser with download page: " + e1.getMessage();
-          LOGGER.severe(msg);
+          LOGGER.error(msg);
           getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
         }
       }

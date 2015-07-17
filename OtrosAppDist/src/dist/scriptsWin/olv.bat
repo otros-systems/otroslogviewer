@@ -22,7 +22,7 @@ IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
 set MEMORY=-Xmx1024m
-set LOG_PROPERTIES=-Djava.util.logging.config.file=logging.properties
+set LOG_PROPERTIES=-Dlogback.configurationFile=logback.xml
 cd "%OLV_HOME%"
 
 if "%1"=="-batch" goto batchMode

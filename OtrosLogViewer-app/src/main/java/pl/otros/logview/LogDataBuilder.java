@@ -31,6 +31,11 @@ public class LogDataBuilder {
     return ld;
   }
 
+  public LogDataBuilder withLineNumber(String lineNumber){
+    ld.setLine(lineNumber);
+    return this;
+  }
+
   public LogDataBuilder withId(int id) {
     ld.setId(id);
     return this;
@@ -101,4 +106,8 @@ public class LogDataBuilder {
     return this;
   }
 
+  public LogDataBuilder withFile(String file) {
+    ld.setFile(file);
+    return this;
+  }
 }

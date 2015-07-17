@@ -22,12 +22,14 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TableMarkDecoratorRenderer implements TableCellRenderer {
 
-  private static final Logger LOGGER = Logger.getLogger(TableMarkDecoratorRenderer.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TableMarkDecoratorRenderer.class.getName());
   private TableCellRenderer subjectRenderer;
 
 
@@ -46,13 +48,13 @@ public class TableMarkDecoratorRenderer implements TableCellRenderer {
       MarkableTableModel markedModel = (MarkableTableModel) model;
       try {
         int converterRow = table.convertRowIndexToModel(row);
-        LOGGER.finest(String.format("Checking if row %d [model %d] is marked.",row, converterRow));
+        LOGGER.trace(String.format("Checking if row %d [model %d] is marked.",row, converterRow));
         marked = markedModel.isMarked(converterRow);
-        LOGGER.finest(String.format("Row %d is marked: %s",row,marked));
+        LOGGER.trace(String.format("Row %d is marked: %s",row,marked));
         markerColors = markedModel.getMarkerColors(converterRow);
-        LOGGER.finest(String.format("Color of row %d is %s",row,markerColors));
+        LOGGER.trace(String.format("Color of row %d is %s",row,markerColors));
       } catch (NullPointerException e) {
-        LOGGER.log(Level.SEVERE, "TableMarkDecoratorRenderer.getTableCellRendererComponent() null pointer caught at index " + row, e);
+        LOGGER.error( "TableMarkDecoratorRenderer.getTableCellRendererComponent() null pointer caught at index " + row, e);
       }
     }
 

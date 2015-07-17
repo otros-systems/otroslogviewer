@@ -26,6 +26,10 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.jdesktop.swingx.JXComboBox;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.api.plugins.Plugin;
@@ -62,7 +66,6 @@ import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.loader.IconsLoader;
 import pl.otros.logview.loader.LvDynamicLoader;
-import pl.otros.logview.logging.GuiJulHandler;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.logview.pluginable.PluginableElementEventListener;
 import pl.otros.logview.pluginable.PluginableElementsContainer;
@@ -92,13 +95,12 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static pl.otros.logview.gui.ConfKeys.FORMATTER_SOAP_REMOVE_XSI_FOR_NIL;
 
 public class LogViewMainFrame extends JFrame {
   public static final String VFS_IDENTITIES = "vfs.Identities";
-  private static final Logger LOGGER = Logger.getLogger(LogViewMainFrame.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class.getName());
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
   private static SingleInstance singleInstance;
@@ -127,7 +129,7 @@ public class LogViewMainFrame extends JFrame {
     try {
       title += ' ' + VersionUtil.getRunningVersion();
     } catch (Exception e) {
-      LOGGER.warning("Can't load version of running OLV");
+      LOGGER.warn("Can't load version of running OLV");
     }
     this.setTitle(title);
     try {
@@ -138,7 +140,7 @@ public class LogViewMainFrame extends JFrame {
       BufferedImage icon = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(iconPath));
       this.setIconImage(icon);
     } catch (Exception e1) {
-      LOGGER.warning("Can't load icon: " + e1.getMessage());
+      LOGGER.warn("Can't load icon: " + e1.getMessage());
     }
     Exception modalDisplayException = null;
     // If non-terminal load problem occurs, queue to display for user on
@@ -149,7 +151,7 @@ public class LogViewMainFrame extends JFrame {
       LvDynamicLoader.getInstance().loadAll();
       OtrosSplash.setMessage("Loading plugins loaded");
     } catch (IOException e) {
-      LOGGER.severe("Problem with loading automatic markers, filter or log importers: " + e.getMessage());
+      LOGGER.error("Problem with loading automatic markers, filter or log importers: " + e.getMessage());
       modalDisplayException = e;
     } catch (InitializationException ie) {
       // Details should have been logged at lower level
@@ -273,11 +275,7 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
       System.exit(0);
     }
-    GuiJulHandler handler = new GuiJulHandler();
-    handler.setLevel(Level.ALL);
-    Logger olvLogger = Logger.getLogger("pl.otros.logview");
-    olvLogger.setLevel(Level.ALL);
-    olvLogger.addHandler(handler);
+
     LOGGER.info("Starting application");
     OtrosSplash.setMessage("Starting application");
     OtrosSplash.setMessage("Loading configuration");
@@ -293,11 +291,11 @@ public class LogViewMainFrame extends JFrame {
         try {
           OtrosSplash.setMessage("Loading L&F");
           String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-          LOGGER.config("Initializing look and feelL: " + lookAndFeel);
+          LOGGER.debug("Initializing look and feel: " + lookAndFeel);
           PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
           UIManager.setLookAndFeel(lookAndFeel);
         } catch (Throwable e1) {
-          LOGGER.warning("Cannot initialize LookAndFeel: " + e1.getMessage());
+          LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
         }
         try {
           final DataConfiguration c1 = new OtrosConfiguration(c);
@@ -331,7 +329,7 @@ public class LogViewMainFrame extends JFrame {
           SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
               mf.otrosApplication.getAppProperties().getCurrentDir());
         } catch (InitializationException e) {
-          LOGGER.log(Level.SEVERE, "Cannot initialize main frame", e);
+          LOGGER.error("Cannot initialize main frame", e);
         }
       }
     });
@@ -346,7 +344,7 @@ public class LogViewMainFrame extends JFrame {
       try {
         commonConfiguration.load(commonConfigurationFile);
       } catch (ConfigurationException e) {
-        LOGGER.severe("Can't load configuration, creating new " + e.getMessage());
+        LOGGER.error("Can't load configuration, creating new " + e.getMessage());
       }
     } else {
       LOGGER.info("Common configuration file do not exist");
@@ -367,7 +365,7 @@ public class LogViewMainFrame extends JFrame {
       try {
         userConfiguration.load();
       } catch (ConfigurationException e) {
-        LOGGER.severe(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
+        LOGGER.error(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
       }
     }
     Iterator<?> keys = commonConfiguration.getKeys();
@@ -389,7 +387,7 @@ public class LogViewMainFrame extends JFrame {
       try {
         configuration.load();
       } catch (ConfigurationException e) {
-        LOGGER.severe(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
+        LOGGER.error(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
       }
     }
     configuration.setAutoSave(true);
@@ -405,7 +403,7 @@ public class LogViewMainFrame extends JFrame {
         Plugin plugin = ppi.getPlugin();
         plugin.initialize(contextImpl);
       } catch (Exception e) {
-        LOGGER.severe("Can't initialize plugins " + ppi.getName() + "\n" + Throwables.getStackTraceAsString(e));
+        LOGGER.error("Can't initialize plugins " + ppi.getName() + "\n" + Throwables.getStackTraceAsString(e));
       }
     }
   }
@@ -498,7 +496,7 @@ public class LogViewMainFrame extends JFrame {
           MessageUpdateUtils.highlightSearchResult(logDetailWithRulerScrollPane, otrosApplication.getAllPluginables().getMessageColorizers());
           RulerBarHelper.scrollToFirstMarker(logDetailWithRulerScrollPane);
         } catch (BadLocationException e) {
-          LOGGER.log(Level.SEVERE, "Can't update search highlight", e);
+          LOGGER.error("Can't update search highlight", e);
         }
       }
     };
@@ -524,7 +522,7 @@ public class LogViewMainFrame extends JFrame {
       selectedSearchMode = 2;
       lastSearchString = configuration.getString(ConfKeys.SEARCH_LAST_QUERY, "");
     } else {
-      LOGGER.warning("Unknown search mode " + searchModeFromConfig);
+      LOGGER.warn("Unknown search mode " + searchModeFromConfig);
       lastSearchString = "";
     }
       final JTextField sfTf = (JTextField) searchField;
@@ -538,7 +536,7 @@ public class LogViewMainFrame extends JFrame {
               searchResultColorizer.setSearchString(e.getDocument().getText(0, length));
             }
           } catch (BadLocationException e1) {
-            LOGGER.log(Level.SEVERE, "Error: ", e1);
+            LOGGER.error("Error: ", e1);
           }
         }
       });

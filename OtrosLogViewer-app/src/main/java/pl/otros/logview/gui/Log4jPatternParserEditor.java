@@ -38,12 +38,14 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Log4jPatternParserEditor extends JPanel {
 
-  private static final Logger LOGGER = Logger.getLogger(Log4jPatternParserEditor.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(Log4jPatternParserEditor.class.getName());
 
   private JButton loadLog;
   private JButton testParser;
@@ -89,9 +91,9 @@ public class Log4jPatternParserEditor extends JPanel {
             return true;
 
           } catch (UnsupportedFlavorException e) {
-            LOGGER.warning("Can't import data, UnsupportedFlavorException: " + e.getMessage());
+            LOGGER.warn("Can't import data, UnsupportedFlavorException: " + e.getMessage());
           } catch (IOException e) {
-            LOGGER.warning("Can't import data, IOException: " + e.getMessage());
+            LOGGER.warn("Can't import data, IOException: " + e.getMessage());
           }
         }
 
@@ -104,9 +106,9 @@ public class Log4jPatternParserEditor extends JPanel {
               return true;
             }
           } catch (UnsupportedFlavorException e) {
-            LOGGER.warning("Can't import data, UnsupportedFlavorException: " + e.getMessage());
+            LOGGER.warn("Can't import data, UnsupportedFlavorException: " + e.getMessage());
           } catch (IOException e) {
-            LOGGER.warning("Can't import data, IOException: " + e.getMessage());
+            LOGGER.warn("Can't import data, IOException: " + e.getMessage());
           }
         }
 
@@ -204,7 +206,7 @@ public class Log4jPatternParserEditor extends JPanel {
         propertyEditor.setText(string);
         propertyEditor.setCaretPosition(0);
       } catch (IOException e) {
-        LOGGER.severe("Can't load default value of property editor");
+        LOGGER.error("Can't load default value of property editor");
       }
     }
   }
@@ -217,8 +219,8 @@ public class Log4jPatternParserEditor extends JPanel {
         try {
           selectLogFileAndLoad();
         } catch (IOException e1) {
-          LOGGER.severe("Error loading file " + e1.getMessage());
-          LOGGER.log(Level.SEVERE,"Error loading file: " + e1.getMessage(),e1);
+          LOGGER.error("Error loading file " + e1.getMessage());
+          LOGGER.error("Error loading file: " + e1.getMessage(),e1);
         }
       }
     });
@@ -229,11 +231,11 @@ public class Log4jPatternParserEditor extends JPanel {
         try {
           testParser();
         } catch (InitializationException e1){
-          LOGGER.log(Level.SEVERE,"Error during parser test: " + e1.getMessage(),e1);
+          LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
           JOptionPane.showMessageDialog(Log4jPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
               JOptionPane.ERROR_MESSAGE);
         } catch (Exception e1) {
-          LOGGER.log(Level.SEVERE,"Error during parser test: " + e1.getMessage(),e1);
+          LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
         }
       }
     });
@@ -281,7 +283,7 @@ public class Log4jPatternParserEditor extends JPanel {
 				LogImporterUsingParser log4jImporter = createLog4jImporter(text);
 				otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
 			} catch (Exception e) {
-        LOGGER.severe("Can't save parser: " + e.getMessage());
+        LOGGER.error("Can't save parser: " + e.getMessage());
         JOptionPane.showMessageDialog(this, "Can't save parser: " + e.getMessage(), "Error saving parser", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
       } finally {

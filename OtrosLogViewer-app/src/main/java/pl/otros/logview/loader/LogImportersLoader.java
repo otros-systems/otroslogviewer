@@ -17,22 +17,25 @@ package pl.otros.logview.loader;
 
 import pl.otros.logview.importer.*;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
+import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
 import pl.otros.logview.parser.JulSimpleFormmaterParser;
 import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
+import pl.otros.logview.parser.log4j.Log4jUtil;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import pl.otros.logview.parser.log4j.Log4jUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogImportersLoader {
 
-  public static final Logger LOGGER = Logger.getLogger(LogImportersLoader.class.getName());
+  public static final Logger LOGGER = LoggerFactory.getLogger(LogImportersLoader.class.getName());
   private BaseLoader baseLoader = new BaseLoader();
 
   public Collection<LogImporter> loadInternalLogImporters() throws InitializationException {
@@ -56,6 +59,10 @@ public class LogImportersLoader {
     Log4jSerilizedLogImporter log4jSerilizedLogImporter = new Log4jSerilizedLogImporter();
     log4jSerilizedLogImporter.init(new Properties());
     list.add(log4jSerilizedLogImporter);
+
+    LogbackSocketLogImporter logbackSockeLogImporter = new LogbackSocketLogImporter();
+    logbackSockeLogImporter.init(new Properties());
+    list.add(logbackSockeLogImporter);
 
     return list;
 
@@ -90,10 +97,10 @@ public class LogImportersLoader {
 
       } catch (IOException e) {
         // TODO Auto-generated catch block
-        LOGGER.log(Level.SEVERE, "IOException", e);
+        LOGGER.error( "IOException", e);
       } catch (ClassNotFoundException e) {
         // TODO Auto-generated catch block
-        LOGGER.log(Level.SEVERE, "ClassNotFoundException", e);
+        LOGGER.error( "ClassNotFoundException", e);
       }
     }
     return logImporters;
@@ -145,10 +152,10 @@ public class LogImportersLoader {
             logImporter.init(p);
             logImporters.add(logImporter);
           } else {
-            LOGGER.log(Level.SEVERE, "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
+            LOGGER.error( "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
           }
         } catch (Exception e) {
-          LOGGER.log(Level.SEVERE,
+          LOGGER.error(
                   "Can't load property file based logger [" + file.getName() + ": " + e.getMessage(), e);
           if (exceptionMessages.length() > 0) exceptionMessages.append("\n");
           exceptionMessages.append("Can't load property file based logger [")

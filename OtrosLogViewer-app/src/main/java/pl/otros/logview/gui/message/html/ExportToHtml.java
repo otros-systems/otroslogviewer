@@ -24,11 +24,12 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExportToHtml {
 
-    private static final Logger LOGGER = Logger.getLogger(ExportToHtml.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExportToHtml.class.getName());
     public static final String INLINE_HTML_HEADER = "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">";
 
     public enum HTML_MODE {
@@ -91,7 +92,7 @@ public class ExportToHtml {
         ArrayList<HtmlSpanFragment> htmlSpanFragments = new ArrayList<HtmlSpanFragment>();
         for (MessageFragmentStyle mfs : styles) {
             id++;
-            LOGGER.finest(String.format("Creating span [id=%d] for style %s", id, mfs.getStyle().getName()));
+            LOGGER.trace(String.format("Creating span [id=%d] for style %s", id, mfs.getStyle().getName()));
             HtmlSpanFragment fragmentEnd = new HtmlSpanFragment(mfs.getOffset() + mfs.getLength() - 1, String.format("</span id=\"%d\">", id));
             HtmlSpanFragment fragmentStart = new HtmlSpanFragment(mfs.getOffset() - 1, generateSpanStart(html_mode,id, mfs));
             htmlSpanFragments.add(fragmentStart);

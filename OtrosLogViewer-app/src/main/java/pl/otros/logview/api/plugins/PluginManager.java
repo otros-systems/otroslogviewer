@@ -22,13 +22,14 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class PluginManager {
 
-    private  static final Logger LOGGER = Logger.getLogger(PluginManager.class.getName());
+    private  static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class.getName());
     public Collection<PluginInfo> loadPlugins(File dirWithPlugins){
         BaseLoader baseLoader = new BaseLoader();
         File[] dirs = dirWithPlugins.listFiles(new FileFilter() {

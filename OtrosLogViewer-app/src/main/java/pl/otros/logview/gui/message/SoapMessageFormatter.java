@@ -28,7 +28,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,7 @@ public class SoapMessageFormatter implements MessageFormatter {
   public static final String REMOVE_NIL_PATTERN = "(<\\w+)( [^>]*?xsi:nil=\"true\".*?)(/>)";
   public static final String REMOVE_NIL_REPLACE_PATTERN = "$1$3";
   public static final String XML_VERSION_1_0_ENCODING_UTF_8 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-  private static final Logger LOGGER = Logger.getLogger(SoapMessageFormatter.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(SoapMessageFormatter.class.getName());
   private static final String NAME = "Soap formatter";
   private static final String DESCRIPTION = "Formatting SOAP messages.";
   private static final Pattern PATTERN_MULTIREF_DEFINITION = Pattern.compile("<(\\w+) href=\"#(id\\d+)\".*?/>", Pattern.DOTALL);
@@ -83,7 +84,7 @@ public class SoapMessageFormatter implements MessageFormatter {
         try {
           soapMessage = removeMultiRefs(soapMessage);
         } catch (Exception e) {
-          LOGGER.severe("Error occurred when removing multirefs: " + e.getMessage());
+          LOGGER.error("Error occurred when removing multirefs: " + e.getMessage());
         }
       }
       if (removeXsiForNilElements) {
@@ -93,7 +94,7 @@ public class SoapMessageFormatter implements MessageFormatter {
       try {
         soapMessage = prettyFormat(soapMessage);
       } catch (Exception e) {
-        LOGGER.severe("Error occurred when formatting soap message: " + e.getMessage());
+        LOGGER.error("Error occurred when formatting soap message: " + e.getMessage());
       }
 
       sb.append(soapMessage);

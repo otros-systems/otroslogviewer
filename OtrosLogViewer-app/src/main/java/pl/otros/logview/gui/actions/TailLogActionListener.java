@@ -41,11 +41,12 @@ import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TailLogActionListener extends OtrosAction {
 
-  private static final Logger LOGGER = Logger.getLogger(TailLogActionListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(TailLogActionListener.class.getName());
   private LogImporter importer;
   private LogImportStats importStats;
 
@@ -73,7 +74,7 @@ public class TailLogActionListener extends OtrosAction {
     try {
       loadingInfo = Utils.openFileObject(file, true);
     } catch (Exception e2) {
-      LOGGER.severe("Cannot open tailing input stream for " + file.getName().getFriendlyURI() + ", " + e2.getMessage());
+      LOGGER.error("Cannot open tailing input stream for " + file.getName().getFriendlyURI() + ", " + e2.getMessage());
       JOptionPane.showMessageDialog(null, "Cannot open tailing input stream for: " + file.getName().getFriendlyURI() + ", " + e2.getMessage(), "Error",
           JOptionPane.ERROR_MESSAGE);
       return;
@@ -132,7 +133,7 @@ public class TailLogActionListener extends OtrosAction {
           try {
             loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
           } catch (FileSystemException e1) {
-            LOGGER.warning("Can't initialize start position for tailing. Can duplicate some values for small files");
+            LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
           }
           while (parsingContext.isParsingInProgress()) {
             try {
@@ -144,7 +145,7 @@ public class TailLogActionListener extends OtrosAction {
 
               Utils.reloadFileObject(loadingInfo);
             } catch (Exception e) {
-              LOGGER.warning("Exception in tailing loop: " + e.getMessage());
+              LOGGER.warn("Exception in tailing loop: " + e.getMessage());
             }
           }
           LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
@@ -177,7 +178,7 @@ public class TailLogActionListener extends OtrosAction {
 
   public static class ReadingStopperForRemove implements HierarchyListener {
 
-    private static final Logger LOGGER = Logger.getLogger(ReadingStopperForRemove.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
     private List<SoftReference<Stoppable>> referencesList;
 
@@ -195,7 +196,7 @@ public class TailLogActionListener extends OtrosAction {
         // if (e.getChangeFlags() == 6) {
         for (SoftReference<Stoppable> ref : referencesList) {
           Stoppable stoppable = ref.get();
-          LOGGER.fine("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
+          LOGGER.debug("Tab removed, stopping thread if reference is != null (actual: " + stoppable + ")");
           if (stoppable != null) {
             stoppable.stop();
           }
@@ -207,7 +208,7 @@ public class TailLogActionListener extends OtrosAction {
 
   public static class ParsingContextStopperForClosingTab implements Stoppable {
 
-    private static final Logger LOGGER = Logger.getLogger(ParsingContextStopperForClosingTab.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParsingContextStopperForClosingTab.class.getName());
     private ParsingContext context;
 
     public ParsingContextStopperForClosingTab(ParsingContext context) {

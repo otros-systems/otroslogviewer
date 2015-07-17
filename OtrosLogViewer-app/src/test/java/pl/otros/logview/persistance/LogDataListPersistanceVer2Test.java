@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.persistance;
 
-import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
