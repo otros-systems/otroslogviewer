@@ -31,23 +31,24 @@ public class ConfKeys {
   public static final String SEARCH_LAST_REGEX = "gui.search.regexMatcher";
   public static final String SEARCH_LAST_QUERY = "gui.search.queryMatcher";
   public static final String SEARCH_LAST_COUNT = "gui.search.maxCount";
+  public static final String SEARCH_HISTORY = "gui.search.history";
 
   public static final String FORMATTER_SOAP_REMOVE_MULTIREFS = "gui.formatter.soap.removeMultirefs";
-  public static final String FORMATTER_SOAP_REMOVE_XSI_FOR_NIL = "gui.formatter.soap.removeXsiForNil";
 
+  public static final String FORMATTER_SOAP_REMOVE_XSI_FOR_NIL = "gui.formatter.soap.removeXsiForNil";
   public static final String UUID = "uuid";
   public static final String HTTP_PROXY_USE = "http.proxy.use";
   public static final String HTTP_PROXY_HOST = "http.proxy.host";
   public static final String HTTP_PROXY_PORT = "http.proxy.port";
-  public static final String HTTP_PROXY_USER = "http.proxy.user";
 
+  public static final String HTTP_PROXY_USER = "http.proxy.user";
   public static final String MESSAGE_FORMATTER_MAX_SIZE = "gui.formatter.general.messageFormatMaximumSize";
   public static final String JUMP_TO_CODE_AUTO_JUMP_ENABLED = "services.jumpToCode.autoJump.enabled";
   public static final String JUMP_TO_CODE_ENABLED = "services.jumpToCode.enabled";
   public static final String JUMP_TO_CODE_HOST = "services.jumpToCode.host";
+
+
   public static final String JUMP_TO_CODE_PORT = "services.jumpToCode.port";
-
-
   public static final String LOG_TABLE_FORMAT_LEVEL_RENDERER = "gui.LoTableFormat.levelRenderer";
   public static final String LOG_TABLE_FORMAT_DATE_FORMAT = "gui.LogTableFormat.dateFormat";
   public static final String LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS = "gui.LogTableFormat.packageAbbreviations";

@@ -14,11 +14,15 @@ public class StringSearchSuggestionSource implements SuggestionSource<SearchSugg
   }
 
   @Override
-  public List<SearchSuggestion> getSuggestions(String s) {
-    final String sLc = s.toLowerCase();
+  public List<SearchSuggestion> getSuggestions(String queryString) {
+    return historySuggestions(queryString);
+  }
+
+  protected List<SearchSuggestion> historySuggestions(String queryString) {
+    final String lowerCase = queryString.toLowerCase();
     return history.stream()
-      .filter(h -> h.toLowerCase().contains(sLc))
-      .map(h -> new SearchSuggestion(h, h, h.toLowerCase().indexOf(sLc), h.toLowerCase().indexOf(sLc)+s.length()))
+      .filter(h -> h.toLowerCase().contains(lowerCase))
+      .map(h -> new SearchSuggestion(h, h, h.toLowerCase().indexOf(lowerCase), h.toLowerCase().indexOf(lowerCase) + lowerCase.length()))
       .collect(Collectors.toList());
   }
 }

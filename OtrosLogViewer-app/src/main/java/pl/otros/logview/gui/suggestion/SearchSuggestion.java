@@ -30,4 +30,13 @@ public class SearchSuggestion {
   public Optional<SubText> getHighlightRange() {
     return highlightRange;
   }
+
+  @Override
+  public String toString() {
+    return "SearchSuggestion{" +
+      "toDisplay='" + toDisplay + '\'' +
+      ", fullContent='" + fullContent + '\'' +
+      ", highlightRange=" + highlightRange +
+      '}';
+  }
 }
