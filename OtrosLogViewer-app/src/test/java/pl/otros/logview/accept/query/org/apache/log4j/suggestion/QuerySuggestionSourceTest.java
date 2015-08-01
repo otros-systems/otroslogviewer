@@ -5,6 +5,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class QuerySuggestionSourceTest {
 
@@ -24,7 +25,7 @@ public class QuerySuggestionSourceTest {
   @DataProvider(name = "getExpectedTypeProvider")
   public Object[][] getExpectedTypeProvider() {
     return new Object[][]{
-      new Object[]{"level>INFO && message ~= ala", QuerySuggestionSource.ExpectedType.FIELD},
+      new Object[]{"level>INFO && message ~= ala", QuerySuggestionSource.ExpectedType.VALUE_MSG},
       new Object[]{"", QuerySuggestionSource.ExpectedType.FIELD},
       new Object[]{"level", QuerySuggestionSource.ExpectedType.OPERATOR},
       new Object[]{"level ", QuerySuggestionSource.ExpectedType.OPERATOR},
@@ -44,7 +45,7 @@ public class QuerySuggestionSourceTest {
 
   @Test(dataProvider = "getExpectedTypeProvider")
   public void testGetExpectedType(String query, QuerySuggestionSource.ExpectedType expectedType) throws Exception {
-    Assert.assertEquals(underTest.getExpectedType(query),expectedType);
+    Assert.assertEquals(underTest.getExpectedType(query), Collections.singletonList(expectedType));
   }
 
 
@@ -55,22 +56,26 @@ public class QuerySuggestionSourceTest {
       new Object[]{"level", "level"},
       new Object[]{"level>", "level>"},
       new Object[]{"level >", "level >"},//date<'2012-02-22 19:35:43
-      new Object[]{"level>INFO", ""},
+      new Object[]{"level>F", "level>F"},
+      new Object[]{"level>INFO", "level>INFO"},
       new Object[]{"level>INFO &&", ""},
       new Object[]{"level>INFO && ", ""},
       new Object[]{"level>INFO && mess", "mess"},
       new Object[]{"level>'INFO' && mess", "mess"},
       new Object[]{"level>\"INFO\" && mess", "mess"},
       new Object[]{"level>INFO && message", "message"},
-      new Object[]{"level>INFO && message ~= ala", ""},
+      new Object[]{"level>INFO && message ~= ala", "message ~= ala"},
       new Object[]{"level>INFO && message ", "message "},
       new Object[]{"level>INFO && message ~=", "message ~="},
       new Object[]{"level>INFO && message ~= ", "message ~= "},
+      new Object[]{"level>INFO && message ~= a ", ""},
       new Object[]{"(level>INFO || level<ERROR) &&", ""},
       new Object[]{"(level>INFO || level<ERROR) && mes", "mes"},
       new Object[]{"(level>INFO || level<ERROR) && message", "message"},
       new Object[]{"(level>INFO || level<ERROR) && message~=", "message~="},
-      new Object[]{"(level>INFO || level<ERROR) && message~=boom", ""},
+      new Object[]{"(level>INFO || level<ERROR) && message~=boom", "message~=boom"},
+      new Object[]{"(level>INFO || level<ERROR) && message~=boom ", "message~=boom "},
+      new Object[]{"(level>INFO || level<ERROR) && message~=boom &", "&"},
     };
   }
 
@@ -96,4 +101,25 @@ public class QuerySuggestionSourceTest {
   public void testCountParenthesisBalance(String s, int expected){
     Assert.assertEquals(underTest.countParenthesisBalance(s),expected);
   }
+
+
+  @DataProvider(name = "lastValue")
+  public Object[][] lastValueProvider(){
+    return new Object[][]{
+      new Object[]{"",""},
+      new Object[]{"(","("},
+      new Object[]{"(lev=",1},
+      new Object[]{"(level>INFO || level<ERROR) &&",""},
+      new Object[]{"(level>INFO || (level<ERROR)) &&",""},
+      new Object[]{"(level>INFO","level>INFO"},
+    };
+  }
+
+  @Test(dataProvider = "lastValue")
+  public void testLastValue(String s, String expected){
+    Assert.assertEquals(underTest.getLastValue(s),expected);
+  }
+
+
+
 }
