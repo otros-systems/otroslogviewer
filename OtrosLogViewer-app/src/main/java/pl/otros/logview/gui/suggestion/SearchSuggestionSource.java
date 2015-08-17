@@ -1,6 +1,5 @@
 package pl.otros.logview.gui.suggestion;
 
-import pl.otros.logview.accept.query.org.apache.log4j.suggestion.QuerySuggestionSource;
 import pl.otros.logview.gui.actions.search.SearchAction;
 import pl.otros.swing.suggest.SuggestionSource;
 
@@ -39,7 +38,8 @@ public class SearchSuggestionSource implements SuggestionSource<SearchSuggestion
     } else if (searchMode.equals(SearchAction.SearchMode.REGEX)) {
       source = new RegexSearchSuggestionSource(historyForMode);
     } else if (searchMode.equals(SearchAction.SearchMode.QUERY)) {
-      source = new QuerySuggestionSource(historyForMode);
+      //TODO implement query suggestion
+      source = new HistoryOnlySuggestions(historyForMode);
     } else {
       source = new StringSearchSuggestionSource(new ArrayList<>(0));
     }
