@@ -51,7 +51,7 @@ public class StringRegexMarkerEditor extends JPanel {
 
   private final JTextField condition;
   private final JTextField file;
-  private final JTextField preCondition;
+  private JTextField preCondition;
   private final JCheckBox ignoreCase;
   private final JCheckBox include;
   private final JTextField groups;

@@ -18,6 +18,8 @@ package pl.otros.logview.gui.message.editor;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.StatusObserver;
@@ -38,8 +40,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MessageColorizerBrowser extends JPanel {
 
@@ -59,7 +59,7 @@ public class MessageColorizerBrowser extends JPanel {
   private final JToolBar toolBar;
   private final JButton useButton;
   private final JButton saveButton;
-  private final JButton saveAsButton;
+  private JButton saveAsButton;
   private final JButton deleteButton;
 
   private JFileChooser chooser;
