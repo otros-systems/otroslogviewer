@@ -7,7 +7,7 @@ import pl.otros.swing.config.ValidationResult;
 import javax.swing.*;
 
 public class ViewTable extends AbstractConfigView {
-  private JTable table;
+  private final JTable table;
 
   public ViewTable() {
     super("view4", "View 4", "VSfs fas fsf \nadsf saf ");

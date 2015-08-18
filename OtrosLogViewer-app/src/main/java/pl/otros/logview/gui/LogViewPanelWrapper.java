@@ -40,18 +40,18 @@ public class LogViewPanelWrapper extends JPanel {
   private String name;
   private LogDataTableModel dataTableModel = new LogDataTableModel();
   private LogViewPanel logViewPanel;
-  private CardLayout cardLayout;
+  private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_LOADING = "card layout loading";
   private static final String CARD_LAYOUT_CONTENT = "card layout content";
-  private JProgressBar loadingProgressBar;
-  private JTable statsTable;
-  private JButton stopButton;
+  private final JProgressBar loadingProgressBar;
+  private final JTable statsTable;
+  private final JButton stopButton;
   private JCheckBox follow;
-  private SoftReference<Stoppable> stopableReference;
+  private final SoftReference<Stoppable> stopableReference;
   private Mode mode = Mode.Static;
   private JCheckBox playTailing;
   private DataConfiguration configuration;
-	private OtrosApplication otrosApplication;
+	private final OtrosApplication otrosApplication;
 
 	public enum Mode {
     Static, Live
@@ -87,7 +87,7 @@ public class LogViewPanelWrapper extends JPanel {
 
     fillDefaultConfiguration();
 
-    stopableReference = new SoftReference<Stoppable>(stoppable);
+    stopableReference = new SoftReference<>(stoppable);
     // this.statusObserver = statusObserver;
     dataTableModel = logDataTableModel == null ? new LogDataTableModel() : logDataTableModel;
     logViewPanel = new LogViewPanel(dataTableModel, visibleColumns,otrosApplication);
@@ -123,14 +123,10 @@ public class LogViewPanelWrapper extends JPanel {
     c.gridy++;
     c.weightx = 1;
     stopButton = new JButton("Stop, you have imported already enough!");
-    stopButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        Stoppable stoppable = stopableReference.get();
-        if (stoppable != null) {
-          stoppable.stop();
-        }
+    stopButton.addActionListener(e -> {
+      Stoppable stoppable1 = stopableReference.get();
+      if (stoppable1 != null) {
+        stoppable1.stop();
       }
     });
     panelLoading.add(stopButton, c);
@@ -218,14 +214,10 @@ public class LogViewPanelWrapper extends JPanel {
     boolean play = configuration.getBoolean(ConfKeys.TAILING_PANEL_PLAY);
     playTailing = new JCheckBox("", play ? Icons.TAILING_LIVE : Icons.TAILING_PAUSE, play);
     playTailing.setToolTipText("Pause adding new data");
-    playTailing.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        boolean play = playTailing.isSelected();
-        playTailing.setIcon(play ? Icons.TAILING_LIVE : Icons.TAILING_PAUSE);
-        configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, play);
-      }
+    playTailing.addActionListener(e -> {
+      boolean play1 = playTailing.isSelected();
+      playTailing.setIcon(play1 ? Icons.TAILING_LIVE : Icons.TAILING_PAUSE);
+      configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, play1);
     });
   }
 
@@ -233,58 +225,42 @@ public class LogViewPanelWrapper extends JPanel {
     boolean f = configuration.getBoolean(ConfKeys.TAILING_PANEL_FOLLOW);
     follow = new JCheckBox("Follow new events", f ? Icons.FOLLOW_ON : Icons.FOLLOW_OFF, f);
     follow.setToolTipText("Scroll to latest log event");
-    follow.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        boolean f = follow.isSelected();
-        follow.setIcon(f ? Icons.FOLLOW_ON : Icons.FOLLOW_OFF);
-        configuration.setProperty(ConfKeys.TAILING_PANEL_FOLLOW, f);
-      }
+    follow.addActionListener(e -> {
+      boolean f1 = follow.isSelected();
+      follow.setIcon(f1 ? Icons.FOLLOW_ON : Icons.FOLLOW_OFF);
+      configuration.setProperty(ConfKeys.TAILING_PANEL_FOLLOW, f1);
     });
 
   }
 
   private void addRowScroller() {
-    dataTableModel.addTableModelListener(new TableModelListener() {
-
-      @Override
-      public void tableChanged(final TableModelEvent e) {
-        if (follow.isSelected() && e.getType() == TableModelEvent.INSERT) {
-          final Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-              try {
-                JTable table = logViewPanel.getTable();
-                int row = table.getRowCount() - 1;
-                if (row > 0) {
-                  Rectangle rect = table.getCellRect(row, 0, true);
-                  table.scrollRectToVisible(rect);
-                  table.clearSelection();
-                  table.setRowSelectionInterval(row, row);
-                }
-              } catch (IllegalArgumentException iae) {
-                // ignore..out of bounds
-                iae.printStackTrace();
-              }
+    dataTableModel.addTableModelListener(e -> {
+      if (follow.isSelected() && e.getType() == TableModelEvent.INSERT) {
+        final Runnable r = () -> {
+          try {
+            JTable table = logViewPanel.getTable();
+            int row = table.getRowCount() - 1;
+            if (row > 0) {
+              Rectangle rect = table.getCellRect(row, 0, true);
+              table.scrollRectToVisible(rect);
+              table.clearSelection();
+              table.setRowSelectionInterval(row, row);
             }
-          };
-          // Wait for JViewPort size update
-          // TODO Find way to invoke this listener after viewport is notified about changes
-          Runnable r2 = new Runnable() {
-
-            @Override
-            public void run() {
-              try {
-                Thread.sleep(300);
-              } catch (InterruptedException ignore) {
-              }
-              SwingUtilities.invokeLater(r);
-            }
-          };
-          new Thread(r2).start();
-        }
+          } catch (IllegalArgumentException iae) {
+            // ignore..out of bounds
+            iae.printStackTrace();
+          }
+        };
+        // Wait for JViewPort size update
+        // TODO Find way to invoke this listener after viewport is notified about changes
+        Runnable r2 = () -> {
+          try {
+            Thread.sleep(300);
+          } catch (InterruptedException ignore) {
+          }
+          SwingUtilities.invokeLater(r);
+        };
+        new Thread(r2).start();
       }
     });
   }

@@ -104,18 +104,18 @@ public class LogViewMainFrame extends JFrame {
   private static SingleInstance singleInstance;
   private JToolBar toolBar;
   private JButton buttonSearch;
-  private JLabelStatusObserver observer;
-  private JTabbedPane logsTabbedPane;
-  private EnableDisableComponetsForTabs enableDisableComponetsForTabs;
-  private DataConfiguration configuration;
-  private CardLayout cardLayout;
-  private JPanel cardLayoutPanel;
+  private final JLabelStatusObserver observer;
+  private final JTabbedPane logsTabbedPane;
+  private final EnableDisableComponetsForTabs enableDisableComponetsForTabs;
+  private final DataConfiguration configuration;
+  private final CardLayout cardLayout;
+  private final JPanel cardLayoutPanel;
   private JXComboBox searchField;
-  private AllPluginables allPluginables;
-  private PluginableElementsContainer<LogImporter> logImportersContainer;
-  private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
-  private SearchResultColorizer searchResultColorizer;
-  private OtrosApplication otrosApplication;
+  private final AllPluginables allPluginables;
+  private final PluginableElementsContainer<LogImporter> logImportersContainer;
+  private final PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
+  private final SearchResultColorizer searchResultColorizer;
+  private final OtrosApplication otrosApplication;
   private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
 
@@ -197,12 +197,7 @@ public class LogViewMainFrame extends JFrame {
     cardLayoutPanel.add(logsTabbedPane, CARD_LAYOUT_LOGS_TABLE);
     EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication);
     final JScrollPane jScrollPane = new JScrollPane(emptyViewPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        jScrollPane.getVerticalScrollBar().setValue(0);
-      }
-    });
+    SwingUtilities.invokeLater(() -> jScrollPane.getVerticalScrollBar().setValue(0));
     cardLayoutPanel.add(jScrollPane, CARD_LAYOUT_EMPTY);
     cardLayout.show(cardLayoutPanel, CARD_LAYOUT_EMPTY);
     enableDisableComponetsForTabs.stateChanged(null);
@@ -283,52 +278,49 @@ public class LogViewMainFrame extends JFrame {
     }
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          OtrosSplash.setMessage("Loading L&F");
-          String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-          LOGGER.debug("Initializing look and feel: " + lookAndFeel);
-          PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
-          UIManager.setLookAndFeel(lookAndFeel);
-        } catch (Throwable e1) {
-          LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
-        }
-        try {
-          final DataConfiguration c1 = new OtrosConfiguration(c);
-          final LogViewMainFrame mf = new LogViewMainFrame(c1);
-          // mf.exitAction was instantiated in the constructor (previous line)
-          // Not sure retrieving this from most appropriate Apache config
-          // object.
-          mf.exitAction.setConfirm(
-              c.getBoolean("generalBehavior.confirmExit", true));
-          /* TODO:  Implement User Preferences screen or checkbox on exit widget
-           * that will update the same config object something like:
-           *     c.setProperty("generalBehavior.confirmExit", newValue);
-           */
-          mf.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-              c.setProperty("gui.state", mf.getExtendedState());
-              if (mf.getExtendedState() == Frame.NORMAL) {
-                c.setProperty("gui.width", mf.getWidth());
-                c.setProperty("gui.height", mf.getHeight());
-              }
+    SwingUtilities.invokeAndWait(() -> {
+      try {
+        OtrosSplash.setMessage("Loading L&F");
+        String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+        LOGGER.debug("Initializing look and feel: " + lookAndFeel);
+        PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
+        UIManager.setLookAndFeel(lookAndFeel);
+      } catch (Throwable e1) {
+        LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
+      }
+      try {
+        final DataConfiguration c1 = new OtrosConfiguration(c);
+        final LogViewMainFrame mf = new LogViewMainFrame(c1);
+        // mf.exitAction was instantiated in the constructor (previous line)
+        // Not sure retrieving this from most appropriate Apache config
+        // object.
+        mf.exitAction.setConfirm(
+            c.getBoolean("generalBehavior.confirmExit", true));
+        /* TODO:  Implement User Preferences screen or checkbox on exit widget
+         * that will update the same config object something like:
+         *     c.setProperty("generalBehavior.confirmExit", newValue);
+         */
+        mf.addComponentListener(new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            c.setProperty("gui.state", mf.getExtendedState());
+            if (mf.getExtendedState() == Frame.NORMAL) {
+              c.setProperty("gui.width", mf.getWidth());
+              c.setProperty("gui.height", mf.getHeight());
             }
+          }
 
-            @Override
-            public void componentMoved(ComponentEvent e) {
-              c.setProperty("gui.location.x", mf.getLocation().x);
-              c.setProperty("gui.location.y", mf.getLocation().y);
-            }
-          });
-          mf.addWindowListener(mf.exitAction);
-          SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-              mf.otrosApplication.getAppProperties().getCurrentDir());
-        } catch (InitializationException e) {
-          LOGGER.error("Cannot initialize main frame", e);
-        }
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            c.setProperty("gui.location.x", mf.getLocation().x);
+            c.setProperty("gui.location.y", mf.getLocation().y);
+          }
+        });
+        mf.addWindowListener(mf.exitAction);
+        SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
+            mf.otrosApplication.getAppProperties().getCurrentDir());
+      } catch (InitializationException e) {
+        LOGGER.error("Cannot initialize main frame", e);
       }
     });
   }
@@ -447,14 +439,11 @@ public class LogViewMainFrame extends JFrame {
       }
 
       private void reloadMenuBar() {
-        GuiUtils.runLaterInEdt(new Runnable() {
-          @Override
-          public void run() {
-            initMenu();
-            //without validating tree menu bar is inactive
-            synchronized (LogViewMainFrame.this.getTreeLock()) {
-              LogViewMainFrame.this.validateTree();
-            }
+        GuiUtils.runLaterInEdt(() -> {
+          initMenu();
+          //without validating tree menu bar is inactive
+          synchronized (LogViewMainFrame.this.getTreeLock()) {
+            LogViewMainFrame.this.validateTree();
           }
         });
       }
@@ -542,49 +531,44 @@ public class LogViewMainFrame extends JFrame {
       sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
       sfTf.setText(lastSearchString);
     }
-    searchMode.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        SearchMode mode = null;
-        boolean validationEnabled = false;
-        String confKey = null;
-        String lastSearch = ((JTextField) searchField.getEditor().getEditorComponent()).getText();
-        if (searchMode.getSelectedIndex() == 0) {
-          mode = SearchMode.STRING_CONTAINS;
-          searchValidatorDocumentListener.setSearchMode(mode);
-          validationEnabled = false;
-          searchMode.setToolTipText("Checking if log message contains string (case is ignored)");
-          confKey = ConfKeys.SEARCH_LAST_STRING;
-        } else if (searchMode.getSelectedIndex() == 1) {
-          mode = SearchMode.REGEX;
-          validationEnabled = true;
-          searchMode.setToolTipText("Checking if log message matches regular expression (case is ignored)");
-          confKey = ConfKeys.SEARCH_LAST_REGEX;
-        } else if (searchMode.getSelectedIndex() == 2) {
-          mode = SearchMode.QUERY;
-          validationEnabled = true;
-          String querySearchTooltip = "<HTML>" + //
-              "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
-              "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
-              "See wiki for more info<BR/>" + //
-              "</HTML>";
-          searchMode.setToolTipText(querySearchTooltip);
-          confKey = ConfKeys.SEARCH_LAST_QUERY;
-        }
+    searchMode.addActionListener(e -> {
+      SearchMode mode = null;
+      boolean validationEnabled = false;
+      String confKey = null;
+      String lastSearch = ((JTextField) searchField.getEditor().getEditorComponent()).getText();
+      if (searchMode.getSelectedIndex() == 0) {
+        mode = SearchMode.STRING_CONTAINS;
         searchValidatorDocumentListener.setSearchMode(mode);
-        searchValidatorDocumentListener.setEnable(validationEnabled);
-        searchActionForward.setSearchMode(mode);
-        searchActionBackward.setSearchMode(mode);
-        markAllFoundAction.setSearchMode(mode);
-        configuration.setProperty("gui.searchMode", mode);
-        searchResultColorizer.setSearchMode(mode);
-        List<Object> list = configuration.getList(confKey);
-        searchFieldCbxModel.removeAllElements();
-        for (Object o : list) {
-          searchFieldCbxModel.addElement(o);
-        }
-        searchField.setSelectedItem(lastSearch);
+        validationEnabled = false;
+        searchMode.setToolTipText("Checking if log message contains string (case is ignored)");
+        confKey = ConfKeys.SEARCH_LAST_STRING;
+      } else if (searchMode.getSelectedIndex() == 1) {
+        mode = SearchMode.REGEX;
+        validationEnabled = true;
+        searchMode.setToolTipText("Checking if log message matches regular expression (case is ignored)");
+        confKey = ConfKeys.SEARCH_LAST_REGEX;
+      } else if (searchMode.getSelectedIndex() == 2) {
+        mode = SearchMode.QUERY;
+        validationEnabled = true;
+        String querySearchTooltip = "<HTML>" + //
+            "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
+            "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
+            "See wiki for more info<BR/>" + //
+            "</HTML>";
+        searchMode.setToolTipText(querySearchTooltip);
+        confKey = ConfKeys.SEARCH_LAST_QUERY;
       }
+      searchValidatorDocumentListener.setSearchMode(mode);
+      searchValidatorDocumentListener.setEnable(validationEnabled);
+      searchActionForward.setSearchMode(mode);
+      searchActionBackward.setSearchMode(mode);
+      markAllFoundAction.setSearchMode(mode);
+      configuration.setProperty("gui.searchMode", mode);
+      searchResultColorizer.setSearchMode(mode);
+      List<Object> list = configuration.getList(confKey);
+      searchFieldCbxModel.removeAllElements();
+      list.forEach(searchFieldCbxModel::addElement);
+      searchField.setSelectedItem(lastSearch);
     });
     searchMode.setSelectedIndex(selectedSearchMode);
     final JCheckBox markFound = new JCheckBox("Mark search result");
@@ -594,14 +578,11 @@ public class LogViewMainFrame extends JFrame {
     JButton markAllFoundButton = new JButton(markAllFoundAction);
     final JComboBox markColor = new JComboBox(MarkerColors.values());
     markFound.setSelected(configuration.getBoolean("gui.markFound", true));
-    markFound.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        boolean selected = markFound.isSelected();
-        searchActionForward.setMarkFound(selected);
-        searchActionBackward.setMarkFound(selected);
-        configuration.setProperty("gui.markFound", markFound.isSelected());
-      }
+    markFound.addChangeListener(e -> {
+      boolean selected = markFound.isSelected();
+      searchActionForward.setMarkFound(selected);
+      searchActionBackward.setMarkFound(selected);
+      configuration.setProperty("gui.markFound", markFound.isSelected());
     });
     markColor.setRenderer(new MarkerColorsComboBoxRenderer());
 //		markColor.addActionListener(new ActionListener() {
@@ -616,16 +597,13 @@ public class LogViewMainFrame extends JFrame {
 //				otrosApplication.setSelectedMarkColors(markerColors);
 //			}
 //		});
-    markColor.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
-        searchActionForward.setMarkerColors(markerColors);
-        searchActionBackward.setMarkerColors(markerColors);
-        markAllFoundAction.setMarkerColors(markerColors);
-        configuration.setProperty("gui.markColor", markColor.getSelectedItem());
-        otrosApplication.setSelectedMarkColors(markerColors);
-      }
+    markColor.addItemListener(e -> {
+      MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
+      searchActionForward.setMarkerColors(markerColors);
+      searchActionBackward.setMarkerColors(markerColors);
+      markAllFoundAction.setMarkerColors(markerColors);
+      configuration.setProperty("gui.markColor", markColor.getSelectedItem());
+      otrosApplication.setSelectedMarkColors(markerColors);
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
     buttonSearch = new JButton(searchActionForward);
@@ -747,7 +725,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.setMnemonic(KeyEvent.VK_T);
     JMenuItem closeAll = new JMenuItem(new CloseAllTabsAction(otrosApplication));
     enableDisableComponetsForTabs.addComponet(closeAll);
-    ArrayList<SocketLogReader> logReaders = new ArrayList<SocketLogReader>();
+    ArrayList<SocketLogReader> logReaders = new ArrayList<>();
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
@@ -781,19 +759,9 @@ public class LogViewMainFrame extends JFrame {
     menu.add(new JSeparator());
     boolean storeOnDisk = StringUtils.equalsIgnoreCase(System.getProperty("cacheEvents"), "true");
     JRadioButtonMenuItem radioButtonMemory = new JRadioButtonMenuItem("Memory - faster, more memory required", !storeOnDisk);
-    radioButtonMemory.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        System.setProperty("cacheEvents", Boolean.FALSE.toString());
-      }
-    });
+    radioButtonMemory.addActionListener(e -> System.setProperty("cacheEvents", Boolean.FALSE.toString()));
     JRadioButtonMenuItem radioButtonDisk = new JRadioButtonMenuItem("Disk with caching - slower, less memory required", storeOnDisk);
-    radioButtonDisk.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        System.setProperty("cacheEvents", Boolean.TRUE.toString());
-      }
-    });
+    radioButtonDisk.addActionListener(e -> System.setProperty("cacheEvents", Boolean.TRUE.toString()));
     final ButtonGroup buttonGroup = new ButtonGroup();
     buttonGroup.add(radioButtonDisk);
     buttonGroup.add(radioButtonMemory);
@@ -833,19 +801,13 @@ public class LogViewMainFrame extends JFrame {
     QueryFilter queryFilter = new QueryFilter();
     allPluginables.getLogFiltersContainer().addElement(queryFilter);
     JButton b = new JButton("Throw exception");
-    b.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (System.currentTimeMillis() % 2 == 0) {
-          throw new RuntimeException("Exception swing action!");
-        } else {
-          new Thread(new Runnable() {
-            @Override
-            public void run() {
-              throw new RuntimeException("Exception from tread!");
-            }
-          }).start();
-        }
+    b.addActionListener(e -> {
+      if (System.currentTimeMillis() % 2 == 0) {
+        throw new RuntimeException("Exception swing action!");
+      } else {
+        new Thread(() -> {
+          throw new RuntimeException("Exception from tread!");
+        }).start();
       }
     });
     menu.add(b);

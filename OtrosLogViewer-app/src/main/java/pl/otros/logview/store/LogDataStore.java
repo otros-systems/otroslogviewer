@@ -24,30 +24,30 @@ import java.util.TreeMap;
 
 public interface LogDataStore extends MarkableTableModel, Iterable<LogData>, LogDataCollector {
 
-  public int getCount();
+  int getCount();
 
-  public void remove(int... ids);
+  void remove(int... ids);
 
-  public LogData getLogData(int row);
+  LogData getLogData(int row);
 
-  public LogData[] getLogData();
+  LogData[] getLogData();
 
-  public Integer getLogDataIdInRow(int row);
+  Integer getLogDataIdInRow(int row);
 
-  public int getLimit();
+  int getLimit();
 
-  public void setLimit(int limit);
+  void setLimit(int limit);
 
-  public int clear();
+  int clear();
 
-  public void addNoteToRow(int row, Note note);
+  void addNoteToRow(int row, Note note);
 
-  public Note getNote(int row);
+  Note getNote(int row);
 
-  public Note removeNote(int row);
+  Note removeNote(int row);
 
-  public void clearNotes();
+  void clearNotes();
 
-  public TreeMap<Integer, Note> getAllNotes();
+  TreeMap<Integer, Note> getAllNotes();
 
 }

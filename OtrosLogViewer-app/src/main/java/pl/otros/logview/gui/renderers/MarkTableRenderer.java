@@ -23,7 +23,7 @@ import java.awt.*;
 
 public class MarkTableRenderer extends DefaultTableCellRenderer {
 
-	private JCheckBox checkBox;
+	private final JCheckBox checkBox;
 
 	public MarkTableRenderer() {
 		super();
@@ -36,8 +36,7 @@ public class MarkTableRenderer extends DefaultTableCellRenderer {
 		// super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 		if (value instanceof MarkerColors) {
-			MarkerColors note = (MarkerColors) value;
-			checkBox.setSelected(note != null);
+			checkBox.setSelected(true);
 		} else {
 			checkBox.setSelected(false);
 		}

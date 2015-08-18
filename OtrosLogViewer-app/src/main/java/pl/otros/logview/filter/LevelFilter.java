@@ -30,19 +30,19 @@ import java.util.logging.Level;
 
 public class LevelFilter extends AbstractLogFilter {
   private int passLevel = Level.ALL.intValue();
-  private JComboBox levelJCombo;
-  private JComboBox modeJCombo;
+  private final JComboBox levelJCombo;
+  private final JComboBox modeJCombo;
   private static final String NAME = "Level filter";
   private static final String DESCRIPTION = "Filtering events based on a level. It passes events with selected level or higher.";
-  private static LevelRenderer renderer = new LevelRenderer();
-  private JPanel gui;
+  private static final LevelRenderer renderer = new LevelRenderer();
+  private final JPanel gui;
   private FilterMode filterMode = FilterMode.HIGHER_OR_EQUAL;
 
   private enum FilterMode {
     LOWER_OR_EQUAL("Lower or equal (<=)"),
     EQUAL("Level equal (==)"),
     HIGHER_OR_EQUAL("Higher or equal (>=)");
-    private String toDisplay;
+    private final String toDisplay;
 
     FilterMode(String toDisplay) {
       this.toDisplay = toDisplay;
@@ -56,7 +56,7 @@ public class LevelFilter extends AbstractLogFilter {
 
   public LevelFilter() {
     super(NAME, DESCRIPTION);
-    Level[] levels = new Level[]{
+    Level[] levels = {
         RenamedLevel.FINEST_TRACE,
         RenamedLevel.FINER,
         RenamedLevel.FINE_DEBUG,
@@ -74,16 +74,13 @@ public class LevelFilter extends AbstractLogFilter {
     modeJCombo.setSelectedItem(filterMode);
     modeJCombo.setEditable(false);
 
-    ItemListener itemListener = new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        System.out.println(e.getStateChange());
-        if ((e.getStateChange() == ItemEvent.SELECTED)) {
-          levelJCombo.setBackground(renderer.getListCellRendererComponent(null, levelJCombo.getSelectedItem(), 0, false, false).getBackground());
-          passLevel = ((Level) levelJCombo.getSelectedItem()).intValue();
-          filterMode = (FilterMode) modeJCombo.getSelectedItem();
-          listener.valueChanged();
-        }
+    ItemListener itemListener = e -> {
+      System.out.println(e.getStateChange());
+      if ((e.getStateChange() == ItemEvent.SELECTED)) {
+        levelJCombo.setBackground(renderer.getListCellRendererComponent(null, levelJCombo.getSelectedItem(), 0, false, false).getBackground());
+        passLevel = ((Level) levelJCombo.getSelectedItem()).intValue();
+        filterMode = (FilterMode) modeJCombo.getSelectedItem();
+        listener.valueChanged();
       }
     };
 

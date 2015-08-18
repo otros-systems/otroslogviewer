@@ -40,7 +40,7 @@ public class NotEqualsRuleTest  {
      * getRule() with only one entry on stack should throw IllegalArgumentException.
      */
     @Test public void test1() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         try {
             NotEqualsRule.getRule(stack);
@@ -53,7 +53,7 @@ public class NotEqualsRuleTest  {
      * getRule() with bad field name should throw IllegalArgumentException.
      */
     @Test public void test2() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         stack.push("World");
         try {
@@ -67,7 +67,7 @@ public class NotEqualsRuleTest  {
      * getRule with "level" and "info".
      */
     @Test public void test3() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("level");
         stack.push("info");
         Rule rule = NotEqualsRule.getRule(stack);
@@ -82,12 +82,12 @@ public class NotEqualsRuleTest  {
      * getRule with "timestamp" and time.
      */
     @Test public void test4() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("timestamp");
         stack.push("2008-05-21 00:45:44");
         Rule rule = NotEqualsRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2009, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2009, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -98,7 +98,7 @@ public class NotEqualsRuleTest  {
      * getRule with "msg".
      */
     @Test public void test5() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = NotEqualsRule.getRule(stack);
@@ -113,7 +113,7 @@ public class NotEqualsRuleTest  {
      * getRule with "msg".
      */
     @Test public void test6() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Bonjour, Monde");
         Rule rule = NotEqualsRule.getRule(stack);
@@ -128,7 +128,7 @@ public class NotEqualsRuleTest  {
      * Check NotEqualsRule serialization.
      */
     @Test public void test7() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = (Rule) SerializationTestHelper.serializeClone(NotEqualsRule.getRule(stack));

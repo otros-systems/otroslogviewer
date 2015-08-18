@@ -8,7 +8,7 @@ public class ValidationResult {
 
   public ValidationResult() {
     super();
-    validationMessages = new ArrayList<String>();
+    validationMessages = new ArrayList<>();
   }
 
   public boolean isValidationIsCorrect() {

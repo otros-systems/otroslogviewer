@@ -18,15 +18,13 @@ package pl.otros.logview.filter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class FilterPanel extends JPanel {
 
-  private LogFilter logFilter;
-  private JCheckBox box;
-  private LogFilterValueChangeListener listener;
+  private final LogFilter logFilter;
+  private final JCheckBox box;
+  private final LogFilterValueChangeListener listener;
 
   public FilterPanel(LogFilter logFilter, LogFilterValueChangeListener listener) {
     super();
@@ -38,15 +36,11 @@ public class FilterPanel extends JPanel {
     logFilter.setValueChangeListener(listener);
     box = new JCheckBox(logFilter.getName());
     box.setSelected(logFilter.isEnable());
-    box.addChangeListener(new ChangeListener() {
-
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        boolean selected = box.isSelected();
-        // Ignore rest events like arm or isPressed
-        if (selected != FilterPanel.this.logFilter.isEnable()) {
-          update();
-        }
+    box.addChangeListener(e -> {
+      boolean selected = box.isSelected();
+      // Ignore rest events like arm or isPressed
+      if (selected != FilterPanel.this.logFilter.isEnable()) {
+        update();
       }
     });
 
@@ -64,7 +58,7 @@ public class FilterPanel extends JPanel {
     if (gui != null) {
       if (selected) {
         add(gui, "span, wrap, growx");
-        gui.setEnabled(selected);
+        gui.setEnabled(true);
       } else {
         remove(gui);
       }

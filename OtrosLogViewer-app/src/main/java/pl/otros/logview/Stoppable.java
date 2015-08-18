@@ -17,5 +17,5 @@ package pl.otros.logview;
 
 public interface Stoppable {
 
-  public void stop();
+  void stop();
 }

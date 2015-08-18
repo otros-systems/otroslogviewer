@@ -121,14 +121,13 @@ public class ColorRule extends AbstractRule implements Serializable {
    * {@inheritDoc}
    */
   public String toString() {
-    StringBuffer buf = new StringBuffer("color rule - expression: ");
-    buf.append(expression);
-    buf.append(", rule: ");
-    buf.append(rule);
-    buf.append(" bg: ");
-    buf.append(backgroundColor);
-    buf.append(" fg: ");
-    buf.append(foregroundColor);
-    return buf.toString();
+    String buf = "color rule - expression: " + expression +
+      ", rule: " +
+      rule +
+      " bg: " +
+      backgroundColor +
+      " fg: " +
+      foregroundColor;
+    return buf;
   }
 }

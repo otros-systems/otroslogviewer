@@ -40,21 +40,13 @@ public class BaseLoader {
    * @return
    */
   public <T> Collection<T> load(File dir, Class<T> type) {
-    Set<T> logImporters = new HashSet<T>();
+    Set<T> logImporters = new HashSet<>();
     if (!dir.exists()) {
       // dir not exist!
-      return new ArrayList<T>();
+      return new ArrayList<>();
     }
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        if (pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip")) {
-          return true;
-        }
-        return false;
-      }
-
+    File[] files = dir.listFiles(pathname -> {
+      return pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip");
     });
     logImporters.addAll(loadFromDir(dir, type));
     for (int i = 0; i < files.length; i++) {
@@ -64,7 +56,7 @@ public class BaseLoader {
   }
 
   public <T> Collection<T> loadFromDir(File file, Class<T> type) {
-    ArrayList<T> list = new ArrayList<T>();
+    ArrayList<T> list = new ArrayList<>();
     try {
       List<Class<T>> implementationClasses = getInterfaceImplementations(type, file);
 
@@ -83,7 +75,7 @@ public class BaseLoader {
   }
 
   public <T> Collection<T> loadFromJar(File file, Class<T> type) {
-    ArrayList<T> list = new ArrayList<T>();
+    ArrayList<T> list = new ArrayList<>();
     try {
       List<Class<T>> implementationClasses = getInterfaceImplementations(type, file);
       for (Class<?> class1 : implementationClasses) {
@@ -100,8 +92,8 @@ public class BaseLoader {
     return list;
   }
 
-  public <T> List<Class<T>> getInterfaceImplementations(Class<T> interfaceClass, File f) throws FileNotFoundException, IOException, ClassNotFoundException {
-    ArrayList<Class<T>> list = new ArrayList<Class<T>>();
+  public <T> List<Class<T>> getInterfaceImplementations(Class<T> interfaceClass, File f) throws IOException, ClassNotFoundException {
+    ArrayList<Class<T>> list = new ArrayList<>();
     List<String> classes = null;
     if (f.isDirectory()) {
       classes = getClassesFromDir(f);
@@ -124,9 +116,9 @@ public class BaseLoader {
 
   }
 
-  public List<String> getClassesFromDir(File dir) throws FileNotFoundException, IOException {
-    ArrayList<String> list = new ArrayList<String>();
-    ArrayList<File> fileList = new ArrayList<File>();
+  public List<String> getClassesFromDir(File dir) throws IOException {
+    ArrayList<String> list = new ArrayList<>();
+    ArrayList<File> fileList = new ArrayList<>();
     findClassesFiles(dir, fileList);
     int length = dir.getAbsolutePath().length();
     for (File file : fileList) {
@@ -137,13 +129,7 @@ public class BaseLoader {
   }
 
   private void findClassesFiles(File dir, ArrayList<File> list) {
-    File[] listFiles = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return pathname.isDirectory() || pathname.getName().endsWith("class");
-      }
-    });
+    File[] listFiles = dir.listFiles(pathname -> pathname.isDirectory() || pathname.getName().endsWith("class"));
     for (File file : listFiles) {
       if (file.isDirectory()) {
         findClassesFiles(file, list);
@@ -153,8 +139,8 @@ public class BaseLoader {
     }
   }
 
-  public List<String> getClassesFromJar(File jarFile) throws FileNotFoundException, IOException {
-    ArrayList<String> list = new ArrayList<String>();
+  public List<String> getClassesFromJar(File jarFile) throws IOException {
+    ArrayList<String> list = new ArrayList<>();
     JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile));
     JarEntry jarEntry;
     while (true) {

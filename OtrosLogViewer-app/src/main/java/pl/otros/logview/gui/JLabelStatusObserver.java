@@ -24,10 +24,10 @@ import java.awt.*;
 
 public class JLabelStatusObserver implements StatusObserver {
 
-  private Color colorNormal;
-  private Color colorWarning = Color.YELLOW;
-  private Color colorError = Color.RED;
-  private JLabel label;
+  private final Color colorNormal;
+  private final Color colorWarning = Color.YELLOW;
+  private final Color colorError = Color.RED;
+  private final JLabel label;
 
   public JLabelStatusObserver(JLabel label) {
     super();

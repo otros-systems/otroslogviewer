@@ -29,8 +29,8 @@ public class MapCompareTest {
 
 	@BeforeMethod
 	public void prepare() {
-		m1 = new HashMap<String, String>();
-		m2 = new HashMap<String, String>();
+		m1 = new HashMap<>();
+		m2 = new HashMap<>();
 
 	}
 

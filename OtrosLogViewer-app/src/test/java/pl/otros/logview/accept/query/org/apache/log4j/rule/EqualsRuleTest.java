@@ -41,7 +41,7 @@ public class EqualsRuleTest  {
      * getRule() with only one entry on stack should throw IllegalArgumentException.
      */
     @Test public void test1() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         try {
             EqualsRule.getRule(stack);
@@ -54,7 +54,7 @@ public class EqualsRuleTest  {
      * getRule() with bad field name should throw IllegalArgumentException.
      */
     @Test public void test2() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         stack.push("World");
         try {
@@ -68,7 +68,7 @@ public class EqualsRuleTest  {
      * getRule with "level" and "info" should return a LevelEqualsRule.
      */
     @Test public void test3() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("level");
         stack.push("info");
         Rule rule = EqualsRule.getRule(stack);
@@ -84,13 +84,13 @@ public class EqualsRuleTest  {
      * getRule with "timestamp" and time should return a TimestampEqualsRule.
      */
     @Test public void test4() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("timestamp");
         stack.push("2008-05-21 00:45:44");
         Rule rule = EqualsRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
         AssertJUnit.assertTrue(rule instanceof TimestampEqualsRule);
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -101,7 +101,7 @@ public class EqualsRuleTest  {
      * getRule with "msg" should return an EqualsRule.
      */
     @Test public void test5() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = EqualsRule.getRule(stack);
@@ -116,7 +116,7 @@ public class EqualsRuleTest  {
      * getRule with "msg" should return an EqualsRule.
      */
     @Test public void test6() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Bonjour, Monde");
         Rule rule = EqualsRule.getRule(stack);
@@ -131,7 +131,7 @@ public class EqualsRuleTest  {
      * Check EqualsRule serialization.
      */
     @Test public void test7() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         stack.push("Hello, World");
         Rule rule = (Rule) SerializationTestHelper.serializeClone(EqualsRule.getRule(stack));

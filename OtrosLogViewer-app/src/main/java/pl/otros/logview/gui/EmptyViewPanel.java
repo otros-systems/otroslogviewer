@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class EmptyViewPanel extends JPanel {
 
   private  static final Logger LOGGER = LoggerFactory.getLogger(EmptyViewPanel.class.getName());
-	private OtrosApplication otrosApplication;
+	private final OtrosApplication otrosApplication;
   private final JAnimatedLogo jLabel;
 
   public EmptyViewPanel(OtrosApplication otrosApplication) {
@@ -67,12 +67,7 @@ public class EmptyViewPanel extends JPanel {
 			}
 
 			private void initIntEDT() {
-				GuiUtils.runLaterInEdt(new Runnable() {
-					@Override
-					public void run() {
-						initGui();
-					}
-				});
+				GuiUtils.runLaterInEdt(EmptyViewPanel.this::initGui);
 			}
 		});
     jLabel.start();
@@ -99,13 +94,9 @@ public class EmptyViewPanel extends JPanel {
 
 	private void initGui() {
 		this.removeAll();
-		TreeSet<LogImporter> logImportersList = new TreeSet<LogImporter>(new Comparator<LogImporter>() {
-
-			@Override
-			public int compare(LogImporter o1, LogImporter o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		TreeSet<LogImporter> logImportersList = new TreeSet<>((o1, o2) -> {
+      return o1.getName().compareTo(o2.getName());
+    });
 		logImportersList.addAll(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
 		GridBagLayout bagLayout = new GridBagLayout();
 		GridBagConstraints bagConstraints = new GridBagConstraints();

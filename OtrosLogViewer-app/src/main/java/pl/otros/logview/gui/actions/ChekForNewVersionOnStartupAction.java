@@ -54,17 +54,13 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
     JPanel message = new JPanel(new GridLayout(4, 1, 4, 4));
     message.add(new JLabel(String.format("New version %s is available", current)));
     JButton button = new JButton("Open download page");
-    button.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          Desktop.getDesktop().browse(new URI("https://sourceforge.net/projects/otroslogviewer/files/?source=app"));
-        } catch (Exception e1) {
-          String msg = "Can't open browser with download page: " + e1.getMessage();
-          LOGGER.error(msg);
-          getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
-        }
+    button.addActionListener(e -> {
+      try {
+        Desktop.getDesktop().browse(new URI("https://sourceforge.net/projects/otroslogviewer/files/?source=app"));
+      } catch (Exception e1) {
+        String msg = "Can't open browser with download page: " + e1.getMessage();
+        LOGGER.error(msg);
+        getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
       }
     });
     message.add(button);

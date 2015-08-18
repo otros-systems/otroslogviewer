@@ -8,27 +8,13 @@ public abstract class EdtFuturesCallback<V> implements FutureCallback<V> {
 
 	@Override
 	public void onFailure(final Throwable t) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				EdtFuturesCallback.this.onFailureEdt(t);
-
-			}
-		});
+		SwingUtilities.invokeLater(() -> EdtFuturesCallback.this.onFailureEdt(t));
 
 	}
 
 	@Override
 	public void onSuccess(final V arg) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				EdtFuturesCallback.this.onSuccessEdt(arg);
-
-			}
-		});
+		SwingUtilities.invokeLater(() -> EdtFuturesCallback.this.onSuccessEdt(arg));
 
 	}
 

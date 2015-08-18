@@ -17,12 +17,12 @@ package pl.otros.logview.gui;
 
 public interface StatusObserver {
 
-  public static int LEVEL_NORMAL = 0;
-  public static int LEVEL_WARNING = 5;
-  public static int LEVEL_ERROR = 10;
+  int LEVEL_NORMAL = 0;
+  int LEVEL_WARNING = 5;
+  int LEVEL_ERROR = 10;
 
-  public void updateStatus(String text);
+  void updateStatus(String text);
 
-  public void updateStatus(String text, int level);
+  void updateStatus(String text, int level);
 
 }

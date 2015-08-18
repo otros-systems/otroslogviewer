@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
 
 public class RegexMarker extends PropertyFileAbstractMarker {
 
-  private String precondition;
-  private Pattern regexCondition;
+  private final String precondition;
+  private final Pattern regexCondition;
 
-  private boolean preconditionInclude = true;
+  private final boolean preconditionInclude = true;
 
-  private MarkerColors markerColors = MarkerColors.Aqua;
+  private final MarkerColors markerColors = MarkerColors.Aqua;
 
   public RegexMarker(Properties p) throws Exception {
     super(p);
@@ -61,7 +61,7 @@ public class RegexMarker extends PropertyFileAbstractMarker {
     String message = ignoreCase ? data.getMessage().toLowerCase() : data.getMessage();
 
     // Checking precondition for performance reason
-    if (preconditionInclude && !message.contains(precondition) || !preconditionInclude && message.contains(precondition)) {
+    if (preconditionInclude && !message.contains(precondition)) {
       return false;
     }
     boolean result = regexCondition.matcher(message).find();

@@ -22,15 +22,16 @@ import pl.otros.logview.gui.StatusObserver;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LogFilterValueChangeListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogFilterValueChangeListener.class.getName());
-  private TableRowSorter<LogDataTableModel> rowSorter;
-  private Collection<LogFilter> logFilters;
-  private StatusObserver observer;
+  private final TableRowSorter<LogDataTableModel> rowSorter;
+  private final Collection<LogFilter> logFilters;
+  private final StatusObserver observer;
   private final JTable table;
   private int lastKnownSelectedRow = -1;
 
@@ -51,13 +52,8 @@ public class LogFilterValueChangeListener {
 
     LOGGER.trace("Last selected row is {}", selectedRow);
 
-    ArrayList<LogFilter> enabledFiltersList = new ArrayList<LogFilter>();
-    for (LogFilter logFilter : logFilters) {
-      if (logFilter.isEnable()) {
-        enabledFiltersList.add(logFilter);
-        LOGGER.trace("Filter \"{}\" is in use", logFilter.getName());
-      }
-    }
+    List<LogFilter> enabledFiltersList = logFilters.stream().filter(LogFilter::isEnable).collect(Collectors.toList());
+    enabledFiltersList.forEach(logFilter -> LOGGER.trace("Filter \"{}\" is in use", logFilter.getName()));
 
     LogFilter[] enabledFilters = new LogFilter[enabledFiltersList.size()];
     enabledFilters = enabledFiltersList.toArray(enabledFilters);

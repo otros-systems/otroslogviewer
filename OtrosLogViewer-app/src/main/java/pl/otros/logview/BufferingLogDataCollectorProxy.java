@@ -24,39 +24,35 @@ import javax.swing.*;
 
 public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppable {
 
-  private LogDataCollector delegate;
+  private final LogDataCollector delegate;
   private ProxyLogDataCollector proxyLogDataCollector;
   private volatile boolean stop;
-  private DataConfiguration configuration;
+  private final DataConfiguration configuration;
 
   public BufferingLogDataCollectorProxy(LogDataCollector delegate, final long sleepTime, Configuration configuration) {
     super();
     this.delegate = delegate;
     this.configuration = new DataConfiguration(configuration);
     proxyLogDataCollector = new ProxyLogDataCollector();
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        while (!stop) {
-          if (BufferingLogDataCollectorProxy.this.configuration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
-            synchronized (BufferingLogDataCollectorProxy.this) {
-              LogData[] logData = proxyLogDataCollector.getLogData();
-              if (logData.length > 0) {
-                proxyLogDataCollector = new ProxyLogDataCollector();
-                addToDelegateInEDT(logData);
-              }
+    Runnable r = () -> {
+      while (!stop) {
+        if (BufferingLogDataCollectorProxy.this.configuration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
+          synchronized (BufferingLogDataCollectorProxy.this) {
+            LogData[] logData = proxyLogDataCollector.getLogData();
+            if (logData.length > 0) {
+              proxyLogDataCollector = new ProxyLogDataCollector();
+              addToDelegateInEDT(logData);
             }
           }
+        }
 
-          try {
-            Thread.sleep(sleepTime);
-          } catch (InterruptedException ignore) {
-          }
-
+        try {
+          Thread.sleep(sleepTime);
+        } catch (InterruptedException ignore) {
         }
 
       }
+
     };
     Thread t = new Thread(r, "BufferingLogDataCollectorProxy");
     t.setDaemon(true);
@@ -64,13 +60,7 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
   }
 
   protected void addToDelegateInEDT(final LogData[] logData) {
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        BufferingLogDataCollectorProxy.this.delegate.add(logData);
-      }
-    });
+    SwingUtilities.invokeLater(() -> BufferingLogDataCollectorProxy.this.delegate.add(logData));
   }
 
   @Override

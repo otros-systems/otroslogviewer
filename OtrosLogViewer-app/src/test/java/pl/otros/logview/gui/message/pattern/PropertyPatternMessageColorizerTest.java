@@ -88,7 +88,7 @@ public class PropertyPatternMessageColorizerTest {
 		String message = "a55(a)a";
 		Collection<MessageFragmentStyle> colorize = colorizer.colorize(message);
 		assertEquals(2, colorize.size());
-		ArrayList<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>(colorize);
+		ArrayList<MessageFragmentStyle> list = new ArrayList<>(colorize);
 		MessageFragmentStyle messageFragmentStyle = list.get(0);
 		MessageFragmentStyle messageFragmentStyle1 = list.get(1);
 

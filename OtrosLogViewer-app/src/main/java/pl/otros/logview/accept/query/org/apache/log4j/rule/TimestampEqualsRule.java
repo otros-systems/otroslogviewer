@@ -52,7 +52,7 @@ public class TimestampEqualsRule extends AbstractRule {
   /**
    * Date format.
    */
-  private static final SimpleDateFormat[] DATE_FORMATS = new SimpleDateFormat[] {//
+  private static final SimpleDateFormat[] DATE_FORMATS = {//
   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
       new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
       new SimpleDateFormat("yyyy-MM-dd HH"),//
@@ -63,7 +63,7 @@ public class TimestampEqualsRule extends AbstractRule {
 
   };
 
-  private static final long[] DATE_DURATIONS = new long[] {//
+  private static final long[] DATE_DURATIONS = {//
   SECOND,//
       MINUTE,//
       HOUR,//
@@ -75,12 +75,12 @@ public class TimestampEqualsRule extends AbstractRule {
   /**
    * Time format.
    */
-  private static final SimpleDateFormat[] TIME_FORMATS = new SimpleDateFormat[] {//
+  private static final SimpleDateFormat[] TIME_FORMATS = {//
   new SimpleDateFormat("HH:mm:ss"),//
       new SimpleDateFormat("HH:mm"), //
   };
 
-  private static final long[] TIME_DURATIONS = new long[] {//
+  private static final long[] TIME_DURATIONS = {//
   SECOND,//
       MINUTE,//
   };

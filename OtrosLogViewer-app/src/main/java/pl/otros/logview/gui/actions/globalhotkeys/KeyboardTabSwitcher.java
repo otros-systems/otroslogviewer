@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 
 public class KeyboardTabSwitcher implements KeyEventPostProcessor {
 
-  private JTabbedPane pane;
+  private final JTabbedPane pane;
 
   public KeyboardTabSwitcher(JTabbedPane pane) {
     super();

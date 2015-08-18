@@ -17,7 +17,7 @@ public class PropertyAcceptConditionTest {
 
     @BeforeMethod
 	public void before(){
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<>();
         map.put("key","value");
         logData = new LogDataBuilder().withProperties(map).build();
 

@@ -16,7 +16,7 @@ public class ExceptionERDC implements ErrorReportDataCollector {
 
   @Override
     public Map<String, String> collect(ErrorReportCollectingContext context) {
-        HashMap<String, String> r = new HashMap<String, String>();
+        HashMap<String, String> r = new HashMap<>();
         Throwable throwable = context.getThrowable();
         r.put(EXCEPTION, throwable.getClass().getName());
         r.put(MESSAGE, throwable.getMessage());

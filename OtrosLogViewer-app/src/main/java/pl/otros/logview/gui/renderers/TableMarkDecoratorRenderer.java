@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.renderers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.gui.MarkableTableModel;
 
@@ -22,15 +24,11 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TableMarkDecoratorRenderer implements TableCellRenderer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TableMarkDecoratorRenderer.class.getName());
-  private TableCellRenderer subjectRenderer;
+  private final TableCellRenderer subjectRenderer;
 
 
   public TableMarkDecoratorRenderer(TableCellRenderer subjectRenderer) {

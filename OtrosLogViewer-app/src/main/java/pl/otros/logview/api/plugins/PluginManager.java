@@ -32,14 +32,9 @@ public class PluginManager {
     private  static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class.getName());
     public Collection<PluginInfo> loadPlugins(File dirWithPlugins){
         BaseLoader baseLoader = new BaseLoader();
-        File[] dirs = dirWithPlugins.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.isDirectory();
-            }
-        });
+        File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
 
-        Collection<PluginInfo> pluginCollection = new ArrayList<PluginInfo>();
+        Collection<PluginInfo> pluginCollection = new ArrayList<>();
         for (File dir : dirs) {
             pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
             LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader.load(dir, PluginInfo.class).size(), dir.getAbsolutePath()));

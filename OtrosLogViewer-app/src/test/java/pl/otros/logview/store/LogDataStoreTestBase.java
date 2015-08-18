@@ -131,10 +131,10 @@ public void prepare() throws Exception {
     LogData ld2 = new LogDataBuilder().withId(2).withDate(new Date(2)).build();
     LogData ld3 = new LogDataBuilder().withId(3).withDate(new Date(3)).build();
     LogData ld4 = new LogDataBuilder().withId(4).withDate(new Date(4)).build();
-    LogData[] lds = new LogData[] { ld1, ld2, ld3, ld4 };
+    LogData[] lds = { ld1, ld2, ld3, ld4 };
 
     logDataStore.add(lds);
-    HashMap<Integer, LogData> logDataList = new HashMap<Integer, LogData>();
+    HashMap<Integer, LogData> logDataList = new HashMap<>();
     for (LogData logData : lds) {
       logDataList.put(logData.getId(), logData);
     }

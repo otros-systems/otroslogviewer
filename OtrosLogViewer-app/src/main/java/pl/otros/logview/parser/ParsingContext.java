@@ -41,7 +41,7 @@ public class ParsingContext {
     this.name = name;
     this.logSource = logSource;
     unmatchedLog = new StringBuilder();
-    customConextProperties = new HashMap<String, Object>();
+    customConextProperties = new HashMap<>();
   }
 
   public HashMap<String, Object> getCustomConextProperties() {

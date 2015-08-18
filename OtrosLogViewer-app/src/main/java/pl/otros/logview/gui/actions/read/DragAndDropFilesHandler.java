@@ -19,6 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.VFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
@@ -35,10 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for global drag-and-drop operations.
@@ -55,7 +54,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
   private static final long serialVersionUID = 3830464109280595888L;
 
   static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
-	private OtrosApplication otrosApplication;
+	private final OtrosApplication otrosApplication;
 
 
 	public DragAndDropFilesHandler(OtrosApplication otrosApplication) {
@@ -205,9 +204,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   private void tryToImportString(TransferSupport support) {
-    for (FileObject file : getFileObjects(support)) {
-      openLogFile(file);
-    }
+    getFileObjects(support).forEach(this::openLogFile);
   }
 
   private void tryToImportUrl(TransferSupport support) throws UnsupportedFlavorException, IOException, ClassNotFoundException {
@@ -232,19 +229,17 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   private List<FileObject> getFileObjects(TransferSupport support) {
-    List<FileObject> files = new ArrayList<FileObject>();
-    for (String uriString : getFileUris(support)) {
-      files.add(getFileObjectForLocalFile(getFileForUriString(uriString)));
-    }
-    return files;
+    return getFileUris(support).stream()
+      .map(uriString -> getFileObjectForLocalFile(getFileForUriString(uriString)))
+      .collect(Collectors.toList());
   }
 
   public List<String> getFileUris(TransferSupport support) {
-    BufferedReader reader = null;
-    List<String> files = new ArrayList<String>();
+    BufferedReader reader;
+    List<String> files = new ArrayList<>();
     try {
       reader = new BufferedReader(DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()));
-      String uri = null;
+      String uri;
       while ((uri = reader.readLine()) != null) {
         files.add(uri);
       }

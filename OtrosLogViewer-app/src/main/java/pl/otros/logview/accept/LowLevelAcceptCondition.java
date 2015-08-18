@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 public class LowLevelAcceptCondition extends AbstractAcceptContidion {
 
-  private Level level;
+  private final Level level;
 
   public LowLevelAcceptCondition() {
     level = Level.INFO;

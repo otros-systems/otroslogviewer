@@ -38,7 +38,7 @@ import pl.otros.logview.store.file.FileLogDataStore;
 public class GuiAppender extends AppenderBase<ILoggingEvent> {
 
   private static BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy;
-  private static final String[] ignoreClassesList = new String[]{//
+  private static final String[] ignoreClassesList = {//
     MemoryLogDataStore.class.getName(),//
     FileLogDataStore.class.getName(),//
     AbstractMemoryLogStore.class.getName(),//

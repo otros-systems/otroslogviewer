@@ -36,12 +36,12 @@ import org.slf4j.LoggerFactory;
 public class AutomaticMarkerLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AutomaticMarker.class.getName());
-  private static BaseLoader baseLoader = new BaseLoader();
+  private static final BaseLoader baseLoader = new BaseLoader();
 
   public static ArrayList<AutomaticMarker> loadInternalMarkers() throws IOException {
 
 
-    ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
+    ArrayList<AutomaticMarker> markers = new ArrayList<>();
     Properties p = new Properties();
     p.load(AutomaticMarkerLoader.class.getClassLoader().getResourceAsStream("markers.properties"));
     final Iterable<String> defaultMarkers = Splitter.on(',').split(p.getProperty("defaultMarkers"));
@@ -64,20 +64,14 @@ public class AutomaticMarkerLoader {
   }
 
   public static ArrayList<AutomaticMarker> load(File dir) {
-    ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
+    ArrayList<AutomaticMarker> markers = new ArrayList<>();
     markers.addAll(baseLoader.load(dir, AutomaticMarker.class));
     return markers;
   }
 
   public static ArrayList<AutomaticMarker> loadRegexMarkers(File dir) {
-    ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return pathname.isFile() && pathname.getName().endsWith(".regexMarker");
-      }
-    });
+    ArrayList<AutomaticMarker> markers = new ArrayList<>();
+    File[] files = dir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".regexMarker"));
     if (files != null) {
       for (File file : files) {
         try {
@@ -91,14 +85,8 @@ public class AutomaticMarkerLoader {
   }
 
   public static ArrayList<AutomaticMarker> loadStringMarkers(File dir) {
-    ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return pathname.isFile() && pathname.getName().endsWith(".stringMarker");
-      }
-    });
+    ArrayList<AutomaticMarker> markers = new ArrayList<>();
+    File[] files = dir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".stringMarker"));
     if (files != null) {
       for (File file : files) {
         try {
@@ -142,14 +130,8 @@ public class AutomaticMarkerLoader {
   }
 
   public static Collection<? extends AutomaticMarker> loadPatternMarker(File dir) {
-    ArrayList<AutomaticMarker> markers = new ArrayList<AutomaticMarker>();
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return pathname.isFile() && pathname.getName().endsWith(".marker");
-      }
-    });
+    ArrayList<AutomaticMarker> markers = new ArrayList<>();
+    File[] files = dir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".marker"));
     if (files != null) {
       for (File file : files) {
         try {

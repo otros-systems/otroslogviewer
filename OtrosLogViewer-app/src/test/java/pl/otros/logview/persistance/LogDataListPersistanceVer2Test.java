@@ -33,7 +33,7 @@ public class LogDataListPersistanceVer2Test {
 
   @Test
   public void testLogMessagesWithCarriageReturn() throws IOException {
-    List<LogData> list = new ArrayList<LogData>();
+    List<LogData> list = new ArrayList<>();
     LogData ld1 = new LogDataBuilder().withId(1).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message1\r\nLine2").withThread("T1").build();
     LogData ld2 = new LogDataBuilder().withId(2).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message2\r\nLine2").withThread("T1").build();
     list.add(ld1);
@@ -53,7 +53,7 @@ public class LogDataListPersistanceVer2Test {
 
   @Test
   public void testLogMessagesWithEmptyLastParams() throws IOException {
-    List<LogData> list = new ArrayList<LogData>();
+    List<LogData> list = new ArrayList<>();
     LogData ld1 = new LogDataBuilder().withId(1).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message1").build();
     LogData ld2 = new LogDataBuilder().withId(2).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message2").build();
     list.add(ld1);
@@ -73,12 +73,12 @@ public class LogDataListPersistanceVer2Test {
 
   @Test
   public void testLogDataWithProperties() throws IOException {
-    Map<String, String> properties = new HashMap<String, String>();
+    Map<String, String> properties = new HashMap<>();
     properties.put("key1", "value1");
     properties.put("key2", "value2");
     LogData logData = new LogDataBuilder().withId(1).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message1").withProperties(properties).build();
 
-    List<LogData> list = new ArrayList<LogData>();
+    List<LogData> list = new ArrayList<>();
     list.add(logData);
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -99,7 +99,7 @@ public class LogDataListPersistanceVer2Test {
   public void testLogDataWithoutProperties() throws IOException {
     LogData logData = new LogDataBuilder().withId(1).withDate(new Date()).withLevel(Level.INFO).withMessage("My Message1").build();
 
-    List<LogData> list = new ArrayList<LogData>();
+    List<LogData> list = new ArrayList<>();
     list.add(logData);
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -31,7 +31,7 @@ public class TipOfTheDay {
 
   private static final String GUI_SHOW_TIP_OF_THE_DAY = "gui.showTipOfTheDay";
   private static final Logger LOGGER = LoggerFactory.getLogger(TipOfTheDay.class.getName());
-  private DataConfiguration dataConfiguration;
+  private final DataConfiguration dataConfiguration;
 
   public TipOfTheDay(DataConfiguration dataConfiguration) {
     super();

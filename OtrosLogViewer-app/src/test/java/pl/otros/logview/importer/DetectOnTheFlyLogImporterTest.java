@@ -38,7 +38,7 @@ public class DetectOnTheFlyLogImporterTest {
 
   @BeforeMethod
 public void initialize() throws InitializationException, IOException {
-    logImporters = new ArrayList<LogImporter>();
+    logImporters = new ArrayList<>();
     logImporters.add(new LogImporterUsingParser(new JulSimpleFormmaterParser()));
     logImporters.add(new UtilLoggingXmlLogImporter());
     logImporters.add(new Log4jSerilizedLogImporter());

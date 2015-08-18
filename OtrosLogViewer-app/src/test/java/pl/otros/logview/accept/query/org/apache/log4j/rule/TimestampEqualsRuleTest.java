@@ -38,7 +38,7 @@ public class TimestampEqualsRuleTest {
    */
   @Test
   public void test1() {
-    String[] timeFormats = new String[] { //
+    String[] timeFormats = { //
     "2008-05-21 00:45:44",//
         "2008-05-21 00:45",//
         "2008-05-21 00",//
@@ -61,7 +61,7 @@ public class TimestampEqualsRuleTest {
   @Test
   public void test2() {
 
-    String[] timeFormats = new String[] {//
+    String[] timeFormats = {//
     "2008-05-21 00:45:46",//
         "2008-05-21 00:46",//
         "2008-05-21 01",//
@@ -112,7 +112,7 @@ public class TimestampEqualsRuleTest {
   }
 
   private LogData createLogData() {
-    return createLogData(new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44));
+    return createLogData(new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44));
   }
 
   private LogData createLogData(Calendar cal) {

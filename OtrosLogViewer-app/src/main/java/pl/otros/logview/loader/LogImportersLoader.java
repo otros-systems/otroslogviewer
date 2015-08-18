@@ -28,6 +28,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -36,10 +38,10 @@ import org.slf4j.LoggerFactory;
 public class LogImportersLoader {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(LogImportersLoader.class.getName());
-  private BaseLoader baseLoader = new BaseLoader();
+  private final BaseLoader baseLoader = new BaseLoader();
 
   public Collection<LogImporter> loadInternalLogImporters() throws InitializationException {
-    ArrayList<LogImporter> list = new ArrayList<LogImporter>();
+    ArrayList<LogImporter> list = new ArrayList<>();
 
     Properties p = new Properties();
 
@@ -69,21 +71,13 @@ public class LogImportersLoader {
   }
 
   public Collection<LogImporter> load(File dir) {
-    Set<LogImporter> logImporters = new HashSet<LogImporter>();
+    Set<LogImporter> logImporters = new HashSet<>();
     if (!dir.exists()) {
       // dir not exist!
-      return new ArrayList<LogImporter>();
+      return new ArrayList<>();
     }
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        if (pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip")) {
-          return true;
-        }
-        return false;
-      }
-
+    File[] files = dir.listFiles(pathname -> {
+      return pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip");
     });
     for (int i = 0; i < files.length; i++) {
       Collection<LogImporter> m = null;
@@ -107,11 +101,9 @@ public class LogImportersLoader {
   }
 
   private Collection<LogImporter> loadFromJar(File file) throws IOException, ClassNotFoundException {
-    ArrayList<LogImporter> importers = new ArrayList<LogImporter>();
+    ArrayList<LogImporter> importers = new ArrayList<>();
     Collection<LogImporter> implementationClasses = baseLoader.loadFromJar(file, LogImporter.class);
-    for (LogImporter logImporter : implementationClasses) {
-      importers.add(logImporter);
-    }
+    importers.addAll(implementationClasses.stream().collect(Collectors.toList()));
 
     Collection<LogParser> logParsers = baseLoader.loadFromJar(file, LogParser.class);
     for (LogParser logParser : logParsers) {
@@ -124,15 +116,8 @@ public class LogImportersLoader {
 
   public Collection<LogImporter> loadPropertyPatternFileFromDir(File dir)
   throws InitializationException {
-    ArrayList<LogImporter> logImporters = new ArrayList<LogImporter>();
-    File[] listFiles = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return (pathname.isFile() && pathname.getName().endsWith("pattern"));
-      }
-
-    });
+    ArrayList<LogImporter> logImporters = new ArrayList<>();
+    File[] listFiles = dir.listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith("pattern")));
     if (listFiles != null) {
       StringBuilder exceptionMessages = new StringBuilder();
       for (File file : listFiles) {
@@ -171,6 +156,6 @@ public class LogImportersLoader {
   // TODO
   private ArrayList<LogImporter> loadFromDir(File file) {
 
-    return new ArrayList<LogImporter>();
+    return new ArrayList<>();
   }
 }

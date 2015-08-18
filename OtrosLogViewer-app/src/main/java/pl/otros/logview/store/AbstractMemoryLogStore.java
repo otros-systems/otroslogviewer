@@ -113,7 +113,7 @@ public abstract class AbstractMemoryLogStore implements LogDataStore {
   }
 
   public TreeMap<Integer, Note> getAllNotes() {
-    TreeMap<Integer, Note> result = new TreeMap<Integer, Note>();
+    TreeMap<Integer, Note> result = new TreeMap<>();
     int count = getCount();
     for (int i = 0; i < count; i++) {
       Note note = getNote(i);

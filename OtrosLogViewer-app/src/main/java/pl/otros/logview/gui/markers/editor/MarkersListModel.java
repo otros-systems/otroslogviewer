@@ -28,20 +28,14 @@ import java.util.Comparator;
 
 public class MarkersListModel extends AbstractListModel implements PluginableElementEventListener<AutomaticMarker> {
 
-  private ArrayList<AutomaticMarker> list;
-  private Comparator<AutomaticMarker> makrerComparator;
-  private PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final ArrayList<AutomaticMarker> list;
+  private final Comparator<AutomaticMarker> makrerComparator;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public MarkersListModel(Collection<AutomaticMarker> markersList) {
     markersContainser = AllPluginables.getInstance().getMarkersContainser();
-    list = new ArrayList<AutomaticMarker>(markersList.size());
-    makrerComparator = new Comparator<AutomaticMarker>() {
-
-      @Override
-      public int compare(AutomaticMarker o1, AutomaticMarker o2) {
-        return o1.getName().compareTo(o2.getName());
-      }
-    };
+    list = new ArrayList<>(markersList.size());
+    makrerComparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
     list.addAll(markersList);
     Collections.sort(list, makrerComparator);
   }

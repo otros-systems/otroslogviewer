@@ -28,14 +28,14 @@ public class LogDataListPersistanceVer1 implements LogDataListPersistance {
   public List<LogData> loadLogsList(InputStream in) throws Exception {
     ObjectInputStream oin = new ObjectInputStream(in);
     TreeMap<Integer, LogData> list = (TreeMap<Integer, LogData>) oin.readObject();
-    ArrayList<LogData> r = new ArrayList<LogData>(list.size());
+    ArrayList<LogData> r = new ArrayList<>(list.size());
     r.addAll(list.values());
     return r;
   }
 
   @Override
   public void saveLogsList(OutputStream out, List<LogData> list) throws IOException {
-    TreeMap<Integer, LogData> m = new TreeMap<Integer, LogData>();
+    TreeMap<Integer, LogData> m = new TreeMap<>();
     for (int i = 0; i < list.size(); i++) {
       m.put(Integer.valueOf(i), list.get(i));
     }

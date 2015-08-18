@@ -28,7 +28,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
 
     private final OtrosApplication otrosApplication;
     private final LogDataTableModel dataTableModel;
-    private JXTable table;
+    private final JXTable table;
     private Optional<? extends ListenableScheduledFuture<?>> scheduledJump;
     private int delayMs;
 
@@ -58,12 +58,9 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
                 final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
                 final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
                 if (ideAvailable) {
-                    scheduledJump.transform(new Function<ListenableScheduledFuture<?>, Boolean>() {
-                        @Override
-                        public Boolean apply(ListenableScheduledFuture<?> input) {
-                            input.cancel(false);
-                            return Boolean.TRUE;
-                        }
+                    scheduledJump.transform(input -> {
+                        input.cancel(false);
+                        return Boolean.TRUE;
                     });
                     ListeningScheduledExecutorService scheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
                     delayMs = 300;

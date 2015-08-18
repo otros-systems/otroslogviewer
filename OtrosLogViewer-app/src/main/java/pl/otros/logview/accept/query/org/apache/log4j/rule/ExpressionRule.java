@@ -124,7 +124,7 @@ public class ExpressionRule extends AbstractRule {
     public Rule compileExpression(final String expression) {
       RuleFactory factory = RuleFactory.getInstance();
 
-      Stack<Object> stack = new Stack<Object>();
+      Stack<Object> stack = new Stack<>();
       InFixToPostFix.CustomTokenizer tokenizer = new InFixToPostFix.CustomTokenizer(expression);
 
       while (tokenizer.hasMoreTokens()) {

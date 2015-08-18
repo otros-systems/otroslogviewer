@@ -37,7 +37,7 @@ public final class ImportLogRunnable implements Runnable {
   private final LoadingInfo openFileObject;
   private final LogViewPanelWrapper panel;
   private final FileObject file;
-  private LogImporter importer;
+  private final LogImporter importer;
 
   public ImportLogRunnable(LoadingInfo openFileObject, LogViewPanelWrapper panel, FileObject file, LogImporter importer) {
     this.openFileObject = openFileObject;
@@ -65,13 +65,9 @@ public final class ImportLogRunnable implements Runnable {
     } catch (Exception e) {
       LOGGER.error( "Error when importing log", e);
     }
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        dataTableModel.fireTableDataChanged();
-        panel.switchToContentView();
-      }
+    SwingUtilities.invokeLater(() -> {
+      dataTableModel.fireTableDataChanged();
+      panel.switchToContentView();
     });
     watcher.updateFinish("Loaded");
     Utils.closeQuietly(openFileObject.getFileObject());

@@ -19,6 +19,6 @@ import pl.otros.logview.LogData;
 
 public interface LogDataParsedListener {
 
-  public void logDataParsed(LogData data, BatchProcessingContext context) throws Exception;
+  void logDataParsed(LogData data, BatchProcessingContext context) throws Exception;
 
 }

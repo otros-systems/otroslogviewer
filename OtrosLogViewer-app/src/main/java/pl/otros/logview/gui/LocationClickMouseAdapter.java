@@ -15,7 +15,7 @@ import java.io.IOException;
 class LocationClickMouseAdapter extends MouseAdapter {
   private static final Logger LOGGER = LoggerFactory.getLogger(LocationClickMouseAdapter.class.getName());
   private final OtrosApplication otrosApplication;
-  private JTextPane textPane;
+  private final JTextPane textPane;
 
   public LocationClickMouseAdapter(OtrosApplication otrosApplication, JTextPane textPane) {
     this.otrosApplication = otrosApplication;

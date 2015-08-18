@@ -37,7 +37,7 @@ public class MessageColorizerUtils {
    *          group to apply
    */
   public static Collection<MessageFragmentStyle> colorizeRegex(Style style, String text, Pattern regex, int group) {
-		ArrayList<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+		ArrayList<MessageFragmentStyle> list = new ArrayList<>();
 		Matcher matcher = regex.matcher(text);
     while (matcher.find()) {
       int start = matcher.start(group);

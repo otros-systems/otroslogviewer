@@ -40,12 +40,8 @@ public class BufferingLogDataCollectorProxyTest {
     delegate = new ProxyLogDataCollector();
     bufferingLogDataCollectorProxy = new BufferingLogDataCollectorProxy(delegate, sleepTime, configuration);
     // Initialize swing thread
-    SwingUtilities.invokeAndWait(new Runnable() {
+    SwingUtilities.invokeAndWait(() -> {
 
-      @Override
-      public void run() {
-
-      }
     });
   }
 
@@ -55,7 +51,7 @@ public class BufferingLogDataCollectorProxyTest {
     data1.setId(1);
     LogData data2 = new LogData();
     data2.setId(2);
-    LogData[] toAdd = new LogData[] { data1, data2 };
+    LogData[] toAdd = { data1, data2 };
     bufferingLogDataCollectorProxy.add(toAdd);
 
     AssertJUnit.assertArrayEquals(toAdd, bufferingLogDataCollectorProxy.getLogData());

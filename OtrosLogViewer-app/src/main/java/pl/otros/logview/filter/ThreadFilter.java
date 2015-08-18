@@ -22,8 +22,6 @@ import pl.otros.logview.LogData;
 import pl.otros.logview.gui.LogDataTableModel;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -32,28 +30,25 @@ import java.util.List;
 public class ThreadFilter extends AbstractLogFilter {
   private static final String NAME = "Thread Filter";
   private static final String DESCRIPTION = "Filtering events based on a thread.";
-  private JList jList;
-  private Set<String> selectedThread;
-  private JPanel panel;
-  private final DefaultListModel listModel;
+  private final JList<String> jList;
+  private final Set<String> selectedThread;
+  private final JPanel panel;
+  private final DefaultListModel<String> listModel;
 
   public ThreadFilter() {
     super(NAME, DESCRIPTION);
-    selectedThread = new HashSet<String>();
-    listModel = new DefaultListModel();
-    jList = new JList(listModel);
+    selectedThread = new HashSet<>();
+    listModel = new DefaultListModel<>();
+    jList = new JList<>(listModel);
     jList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    jList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-          selectedThread.clear();
-          Object[] selectedValues = jList.getSelectedValues();
-          for (Object selectedValue : selectedValues) {
-            selectedThread.add((String) selectedValue);
-          }
-          listener.valueChanged();
+    jList.addListSelectionListener(e -> {
+      if (!e.getValueIsAdjusting()) {
+        selectedThread.clear();
+        Object[] selectedValues = jList.getSelectedValues();
+        for (Object selectedValue : selectedValues) {
+          selectedThread.add((String) selectedValue);
         }
+        listener.valueChanged();
       }
     });
     JLabel jLabel = new JLabel("Threads:");
@@ -90,7 +85,7 @@ public class ThreadFilter extends AbstractLogFilter {
 
   private void invertSelection() {
     int[] selectedIndices = jList.getSelectedIndices();
-    ArrayList<Integer> inverted = new ArrayList<Integer>();
+    ArrayList<Integer> inverted = new ArrayList<>();
     for (int i = 0; i < listModel.getSize(); i++) {
       inverted.add(i);
     }
@@ -131,28 +126,21 @@ public class ThreadFilter extends AbstractLogFilter {
 
   private void reloadThreads() {
     LogData[] ld = collector.getLogData();
-    TreeSet<String> sortedThreads = new TreeSet<String>(new Comparator<String>() {
-      @Override
-      public int compare(String arg0, String arg1) {
-        return arg0.compareToIgnoreCase(arg1);
-      }
-    });
+    TreeSet<String> sortedThreads = new TreeSet<>(String::compareToIgnoreCase);
     for (LogData logData : ld) {
       sortedThreads.add(logData.getThread());
     }
-    for (String sortedThread : sortedThreads) {
-      if (!listModel.contains(sortedThread)) {
-        listModel.add(listModel.getSize(), sortedThread);
-      }
-    }
+    sortedThreads.stream()
+      .filter(sortedThread -> !listModel.contains(sortedThread))
+      .forEach(sortedThread -> listModel.add(listModel.getSize(), sortedThread));
     setThreadToFilter(selectedThread.toArray(new String[selectedThread.size()]));
   }
 
   public void setThreadToFilter(String... thread) {
-    List<Integer> indexToSelect = new ArrayList<Integer>();
+    List<Integer> indexToSelect = new ArrayList<>();
     for (String s : thread) {
       for (int i = 0; i < listModel.getSize(); i++) {
-        String elementAt = (String) listModel.getElementAt(i);
+        String elementAt = listModel.getElementAt(i);
         if (elementAt.equals(s)) {
           indexToSelect.add(i);
         }

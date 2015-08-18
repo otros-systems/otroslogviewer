@@ -92,7 +92,7 @@ public void prepareModel() {
     LogData ld1 = generateLogData(dataTableModel.getRowCount());
     LogData ld2 = generateLogData(dataTableModel.getRowCount() + 1);
     LogData ld3 = generateLogData(dataTableModel.getRowCount() + 2);
-    LogData[] lds = new LogData[] { ld1, ld2, ld3 };
+    LogData[] lds = { ld1, ld2, ld3 };
     int count = dataTableModel.getRowCount();
     dataTableModel.add(lds);
     int count2 = dataTableModel.getRowCount();
@@ -192,7 +192,7 @@ public void prepareModel() {
   public void testUnmarkRowsIntArray() {
     AssertJUnit.assertTrue(dataTableModel.isMarked(4));
     AssertJUnit.assertTrue(dataTableModel.isMarked(6));
-    dataTableModel.unmarkRows(new int[] { 4, 6 });
+    dataTableModel.unmarkRows(4, 6);
     AssertJUnit.assertFalse(dataTableModel.isMarked(4));
     AssertJUnit.assertFalse(dataTableModel.isMarked(6));
   }
@@ -200,7 +200,7 @@ public void prepareModel() {
   @Test
   public void testUnmarkRowsInt() {
     AssertJUnit.assertTrue(dataTableModel.isMarked(4));
-    dataTableModel.unmarkRows(new int[] { 4 });
+    dataTableModel.unmarkRows(4);
     boolean marked = dataTableModel.isMarked(4);
     AssertJUnit.assertFalse(marked);
   }

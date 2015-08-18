@@ -3,7 +3,7 @@ package pl.otros.logview.store.async;
 import pl.otros.logview.store.LogDataStore;
 
 class OperationClearNotes implements Runnable {
-  private LogDataStore logDataStore;
+  private final LogDataStore logDataStore;
 
   public OperationClearNotes(LogDataStore logDataStore) {
     this.logDataStore = logDataStore;

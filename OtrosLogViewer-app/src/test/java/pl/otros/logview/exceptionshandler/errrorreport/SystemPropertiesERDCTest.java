@@ -53,7 +53,7 @@ public class SystemPropertiesERDCTest {
     Properties p = new Properties();
     p.setProperty("a","b");
     p.setProperty("c","d");
-    HashMap<String, String> map = new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<>();
 
     //when
     erdc.fillValues(map, p);

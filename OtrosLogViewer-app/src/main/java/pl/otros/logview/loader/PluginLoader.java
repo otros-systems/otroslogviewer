@@ -35,14 +35,9 @@ public class PluginLoader {
 
 	protected Collection<PluginInfo> loadPlugins(File dirWithPlugins) {
 		BaseLoader baseLoader = new BaseLoader();
-		File[] dirs = dirWithPlugins.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				return file.isDirectory();
-			}
-		});
+		File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
 
-		Collection<PluginInfo> pluginCollection = new ArrayList<PluginInfo>();
+		Collection<PluginInfo> pluginCollection = new ArrayList<>();
 		for (File dir : dirs) {
 			pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
 			LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader
@@ -53,13 +48,13 @@ public class PluginLoader {
 	}
 
 	public Collection<PluginInfo> loadUserPlugins() {
-		ArrayList<PluginInfo> list = new ArrayList<PluginInfo>(
+		ArrayList<PluginInfo> list = new ArrayList<>(
 				loadPlugins(AllPluginables.USER_PLUGINS));
 		return list;
 	}
 
 	public Collection<PluginInfo> loadSystenPlugins() {
-		ArrayList<PluginInfo> list = new ArrayList<PluginInfo>(
+		ArrayList<PluginInfo> list = new ArrayList<>(
 				loadPlugins(AllPluginables.SYSTEM_PLUGINS));
 		return list;
 	}

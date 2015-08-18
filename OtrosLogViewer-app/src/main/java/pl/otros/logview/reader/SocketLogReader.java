@@ -31,10 +31,10 @@ public class SocketLogReader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SocketLogReader.class.getName());
   private ServerSocket serverSocket;
-  private StatusObserver observer;
+  private final StatusObserver observer;
   private final LogDataCollector logDataCollector;
   private final LogImporter logImporter;
-  private int port;
+  private final int port;
 
   public SocketLogReader(LogImporter logImporter, LogDataCollector logDataCollector, StatusObserver observer, int port) {
     super();
@@ -53,24 +53,20 @@ public class SocketLogReader {
 
   public void start() throws Exception {
     serverSocket = new ServerSocket(port);
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        try {
-          while (true) {
-            Socket s = serverSocket.accept();
-            SocketHandler handler = new SocketHandler(s);
-            Thread t = new Thread(handler, "Socket handler: " + s.getInetAddress() + ":" + s.getPort());
-            t.setDaemon(true);
-            t.start();
-          }
-        } catch (IOException e) {
-          if (isClosed()) {
-            LOGGER.info("Listening on socket closed.");
-          } else {
-            LOGGER.warn("Problem with listening on socket: " + e.getMessage());
-          }
+    Runnable r = () -> {
+      try {
+        while (true) {
+          Socket s = serverSocket.accept();
+          SocketHandler handler = new SocketHandler(s);
+          Thread t = new Thread(handler, "Socket handler: " + s.getInetAddress() + ":" + s.getPort());
+          t.setDaemon(true);
+          t.start();
+        }
+      } catch (IOException e) {
+        if (isClosed()) {
+          LOGGER.info("Listening on socket closed.");
+        } else {
+          LOGGER.warn("Problem with listening on socket: " + e.getMessage());
         }
       }
     };

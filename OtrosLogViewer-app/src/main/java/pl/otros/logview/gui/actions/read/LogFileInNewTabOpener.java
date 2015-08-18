@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 public class LogFileInNewTabOpener {
 
   static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
-  private LogImporterProvider importerProvider;
-	private OtrosApplication otrosApplication;
+  private final LogImporterProvider importerProvider;
+	private final OtrosApplication otrosApplication;
 
 	public LogFileInNewTabOpener(LogImporterProvider importerProvider, OtrosApplication otrosApplication) {
     this.importerProvider = importerProvider;

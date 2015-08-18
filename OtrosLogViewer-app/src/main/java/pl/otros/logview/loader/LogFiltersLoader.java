@@ -23,7 +23,7 @@ import java.util.Collection;
 public class LogFiltersLoader {
 
   public Collection<LogFilter> loadInternalFilters() {
-    ArrayList<LogFilter> list = new ArrayList<LogFilter>();
+    ArrayList<LogFilter> list = new ArrayList<>();
     list.add(new StringContainsFilter());
     list.add(new RegexFilter());
     list.add(new LevelFilter());

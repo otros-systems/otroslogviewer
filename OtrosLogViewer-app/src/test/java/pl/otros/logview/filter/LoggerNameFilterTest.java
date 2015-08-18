@@ -24,7 +24,7 @@ import pl.otros.logview.LogDataBuilder;
 
 public class LoggerNameFilterTest {
 
-  private LoggerNameFilter filter = new LoggerNameFilter();
+  private final LoggerNameFilter filter = new LoggerNameFilter();
 
   @BeforeMethod
 public void before() {

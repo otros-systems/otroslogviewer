@@ -16,7 +16,7 @@ public class ErrorReportSenderTest {
 
         //given
         ErrorReportSender sender = new ErrorReportSender();
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         values.put("key1", "value1");
         values.put("key2", "value2");
 
@@ -26,15 +26,15 @@ public class ErrorReportSenderTest {
         sender.addHttpPostParams(values, method);
 
         //then
-        assertEquals("value1", (String)method.getParameter("key1").getValue());
-        assertEquals("value2",(String) method.getParameter("key2").getValue());
+        assertEquals("value1", method.getParameter("key1").getValue());
+        assertEquals("value2", method.getParameter("key2").getValue());
     }
 
     @Test
     public void addHttpPostParamsIsNullSafe() {
         //given
         ErrorReportSender sender = new ErrorReportSender();
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         values.put("key2", null);
 
         PostMethod method = new PostMethod();

@@ -55,6 +55,5 @@ public class GoToDonatePageAction extends OtrosAction {
       LOGGER.info(String.format("Can't open donate url,  URI syntax error: %s", e1.getMessage()));
       JOptionPane.showMessageDialog(null, "Can't open donation page: " + e1.getMessage());
     }
-    ;
   }
 }

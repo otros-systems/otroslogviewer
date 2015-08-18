@@ -27,10 +27,10 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
   private static final Logger LOGGER = LoggerFactory.getLogger(MemoryLogDataStore.class.getName());
 
   protected ArrayList<LogData> list;
-  protected SortedSet<Date> s = new TreeSet<Date>();
+  protected SortedSet<Date> s = new TreeSet<>();
 
   public MemoryLogDataStore() {
-    list = new ArrayList<LogData>();
+    list = new ArrayList<>();
   }
 
   @Override

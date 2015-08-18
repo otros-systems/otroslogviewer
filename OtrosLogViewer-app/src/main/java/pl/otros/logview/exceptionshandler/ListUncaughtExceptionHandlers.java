@@ -18,18 +18,17 @@ package pl.otros.logview.exceptionshandler;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListUncaughtExceptionHandlers implements UncaughtExceptionHandler {
 
-	private List<UncaughtExceptionHandler> list;
+	private final List<UncaughtExceptionHandler> list;
 	
 
 	public ListUncaughtExceptionHandlers(UncaughtExceptionHandler...handlers){
-		list = new ArrayList<Thread.UncaughtExceptionHandler>();
-		for (UncaughtExceptionHandler uncaughtExceptionHandler : handlers) {
-			list.add(uncaughtExceptionHandler);
-		}
+		list = new ArrayList<>();
+		Collections.addAll(list, handlers);
 	}
 	
 	@Override

@@ -95,9 +95,8 @@ public class MessageFragmentStyle {
 		if (length != that.length) return false;
 		if (offset != that.offset) return false;
 		if (replace != that.replace) return false;
-		if (style != null ? !style.equals(that.style) : that.style != null) return false;
+		return !(style != null ? !style.equals(that.style) : that.style != null);
 
-		return true;
 	}
 
 	@Override

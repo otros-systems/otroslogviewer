@@ -33,10 +33,10 @@ import org.slf4j.LoggerFactory;
 public class MessageColorizerLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerLoader.class.getName());
-  private BaseLoader baseLoader = new BaseLoader();
+  private final BaseLoader baseLoader = new BaseLoader();
 
   public ArrayList<MessageColorizer> loadInternal() {
-    ArrayList<MessageColorizer> list = new ArrayList<MessageColorizer>();
+    ArrayList<MessageColorizer> list = new ArrayList<>();
     list.add(new SearchResultColorizer());
     list.add(new StackTraceColorizer());
     list.add(new SoapMessageColorizer());
@@ -50,15 +50,8 @@ public class MessageColorizerLoader {
   }
 
   public ArrayList<MessageColorizer> loadFromProperies(File dir) {
-    ArrayList<MessageColorizer> list = new ArrayList<MessageColorizer>();
-    File[] listFiles = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return (pathname.isFile() && pathname.getName().endsWith("pattern"));
-      }
-
-    });
+    ArrayList<MessageColorizer> list = new ArrayList<>();
+    File[] listFiles = dir.listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith("pattern")));
     if (listFiles != null) {
       for (File file : listFiles) {
         FileInputStream in = null;

@@ -35,7 +35,7 @@ public class SelectedThreadAcceptCondition extends SelectionAwareAcceptCondition
     protected void init() {
         name = "Selected thread";
         description = name;
-        threads = new TreeSet<String>();
+        threads = new TreeSet<>();
     }
 
     @Override

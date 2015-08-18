@@ -47,10 +47,10 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CopyStyledMessageDetailAction.class.getName());
 
-    private DateFormat dateFormat;
+    private final DateFormat dateFormat;
     private final PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer;
     private final PluginableElementsContainer<MessageFormatter> selectedMessageFormattersContainer;
-    private ExportToHtml exportToHtml;
+    private final ExportToHtml exportToHtml;
 
     public CopyStyledMessageDetailAction(OtrosApplication otrosApplication, DateFormat dateFormat, PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer, PluginableElementsContainer<MessageFormatter> selectedMessageFormattersContainer) {
         super(otrosApplication);
@@ -82,20 +82,17 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
 
     private PlainTextAndHtml convertToHtml(MessageUpdateUtils messageUpdateUtils, LogData logData) {
         final long start = System.currentTimeMillis();
-        CancelStatus cancelStatus = new CancelStatus() {
-            @Override
-            public boolean isCancelled() {
-                boolean b = start > System.currentTimeMillis() + 5000;
-                LOGGER.debug("Is cancelled: " + b);
-                return b;
-            }
+        CancelStatus cancelStatus = () -> {
+            boolean b = start > System.currentTimeMillis() + 5000;
+            LOGGER.debug("Is cancelled: " + b);
+            return b;
         };
         PlainTextAndHtml plainTextAndHtml = new PlainTextAndHtml();
         LogDataFormatter logDataFormatter = new LogDataFormatter(logData, dateFormat, messageUpdateUtils, selectedMessageColorizersContainer, selectedMessageFormattersContainer, cancelStatus,500*1000);
         try {
             List<TextChunkWithStyle> format = logDataFormatter.format();
             StringBuilder sb = new StringBuilder();
-            ArrayList<MessageFragmentStyle> styleArrayList = new ArrayList<MessageFragmentStyle>(format.size());
+            ArrayList<MessageFragmentStyle> styleArrayList = new ArrayList<>(format.size());
             for (TextChunkWithStyle textChunkWithStyle : format) {
                 if (textChunkWithStyle.getString() != null) {
                     sb.append(textChunkWithStyle.getString());

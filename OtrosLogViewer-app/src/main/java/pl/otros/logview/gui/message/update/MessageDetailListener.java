@@ -45,14 +45,14 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageDetailListener.class.getName());
   private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
-  private LogViewPanel logViewPanel;
-  private JTable table;
-  private JTextPane logDetailTextArea;
-  private LogDataTableModel dataTableModel;
-  private SimpleDateFormat dateFormat;
+  private final LogViewPanel logViewPanel;
+  private final JTable table;
+  private final JTextPane logDetailTextArea;
+  private final LogDataTableModel dataTableModel;
+  private final SimpleDateFormat dateFormat;
   private int maximumMessageSize = 400 * 1000;
   private FormatMessageDialogWorker messageFormatSwingWorker;
-  private DelayedSwingInvoke delayedSwingInvoke;
+  private final DelayedSwingInvoke delayedSwingInvoke;
 
   public MessageDetailListener(LogViewPanel logViewPanel, SimpleDateFormat dateFormat,
                                PluginableElementsContainer<MessageFormatter> formattersContainer, PluginableElementsContainer<MessageColorizer> colorizersContainer) {
@@ -65,8 +65,8 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
     this.formattersContainer = formattersContainer;
     this.colorizersContainer = colorizersContainer;
 
-    formattersContainer.addListener(new PluginableElementEventListenerImplementation<MessageFormatter>());
-    colorizersContainer.addListener(new PluginableElementEventListenerImplementation<MessageColorizer>());
+    formattersContainer.addListener(new PluginableElementEventListenerImplementation<>());
+    colorizersContainer.addListener(new PluginableElementEventListenerImplementation<>());
 
     delayedSwingInvoke = new DelayedSwingInvoke() {
       @Override

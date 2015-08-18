@@ -2,7 +2,7 @@ package pl.otros.logview.gui;
 
 public class ClassWrapper {
 
-    private String className;
+    private final String className;
 
     public ClassWrapper(String className) {
         this.className = className;
@@ -19,9 +19,8 @@ public class ClassWrapper {
 
         ClassWrapper that = (ClassWrapper) o;
 
-        if (className != null ? !className.equals(that.className) : that.className != null) return false;
+        return !(className != null ? !className.equals(that.className) : that.className != null);
 
-        return true;
     }
 
     @Override

@@ -4,8 +4,8 @@ import java.util.List;
 
 public class ColumnLayout {
 
-  private String name;
-  private List<String> columns;
+  private final String name;
+  private final List<String> columns;
 
   public ColumnLayout(String name, List<String> columns) {
     this.name = name;

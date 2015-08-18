@@ -16,8 +16,8 @@ public class ShowCallHierarchyActionTest {
   public void testFindCallHierarchyEvents() {
     ShowCallHierarchyAction callHierarchyAction = new ShowCallHierarchyAction(null,null,null);
     LogDataTableModel model = new LogDataTableModel();
-    ArrayList<Integer> listOfEvents2 = new ArrayList<Integer>();
-    ArrayList<Integer> listEntryEvents = new ArrayList<Integer>();
+    ArrayList<Integer> listOfEvents2 = new ArrayList<>();
+    ArrayList<Integer> listEntryEvents = new ArrayList<>();
     int selected = 4;
     Assert.fail("not implemented");
 

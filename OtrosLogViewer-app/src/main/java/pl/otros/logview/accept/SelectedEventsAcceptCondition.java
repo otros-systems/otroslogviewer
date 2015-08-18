@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class SelectedEventsAcceptCondition extends SelectionAwareAcceptCondition implements HasIcon {
 
-  protected Set<Integer> eventsIds = new HashSet<Integer>();
+  protected Set<Integer> eventsIds = new HashSet<>();
 
   public SelectedEventsAcceptCondition(JTable jTable, LogDataTableModel dataTableModel) {
     super(jTable, dataTableModel);
@@ -36,7 +36,7 @@ public class SelectedEventsAcceptCondition extends SelectionAwareAcceptCondition
   protected void init() {
     name = "Selected events";
     description = name;
-    eventsIds = new HashSet<Integer>();
+    eventsIds = new HashSet<>();
   }
 
   @Override

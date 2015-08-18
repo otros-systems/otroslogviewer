@@ -50,7 +50,7 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * Date format.
    */
-  private static final SimpleDateFormat[] DATE_FORMATS = new SimpleDateFormat[] {//
+  private static final SimpleDateFormat[] DATE_FORMATS = {//
   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
       new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
       new SimpleDateFormat("yyyy-MM-dd HH"),//
@@ -63,7 +63,7 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * Time format.
    */
-  private static final SimpleDateFormat[] TIME_FORMATS = new SimpleDateFormat[] {//
+  private static final SimpleDateFormat[] TIME_FORMATS = {//
   new SimpleDateFormat("HH:mm:ss"),//
       new SimpleDateFormat("HH:mm") //
   };

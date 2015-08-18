@@ -28,7 +28,7 @@ public class ConfTest {
 
   public static class ConfigurationLogListener implements ConfigurationListener {
 
-    private String name;
+    private final String name;
 
     public ConfigurationLogListener(String name) {
       this.name = name;

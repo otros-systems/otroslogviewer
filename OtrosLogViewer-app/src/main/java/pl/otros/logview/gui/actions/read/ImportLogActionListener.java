@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public abstract class ImportLogActionListener extends OtrosAction {
 
   static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
-	private String title;
+	private final String title;
 
   public ImportLogActionListener(OtrosApplication otrosApplication, String title) {
     super(otrosApplication);

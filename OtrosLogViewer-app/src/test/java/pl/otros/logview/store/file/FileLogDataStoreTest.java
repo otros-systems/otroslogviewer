@@ -15,20 +15,18 @@
  ******************************************************************************/
 package pl.otros.logview.store.file;
 
-import static org.testng.AssertJUnit.assertArrayEquals;
-import static org.testng.AssertJUnit.assertEquals;
 import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.Note;
 import pl.otros.logview.store.LogDataStore;
 import pl.otros.logview.store.LogDataStoreTestBase;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
+import static org.testng.AssertJUnit.assertArrayEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class FileLogDataStoreTest extends LogDataStoreTestBase {
 
@@ -36,7 +34,7 @@ public class FileLogDataStoreTest extends LogDataStoreTestBase {
   private FileLogDataStore dataStore;
 
   @Override
-  public LogDataStore getLogDataStore() throws FileNotFoundException, IOException {
+  public LogDataStore getLogDataStore() throws IOException {
     dataStore = new FileLogDataStore();
     logDatas = new LogData[10];
     for (int i = 0; i < logDatas.length; i++) {
@@ -54,19 +52,16 @@ public class FileLogDataStoreTest extends LogDataStoreTestBase {
   public void testIterator2() throws IOException {
     // given
     dataStore.add(logDatas);
-    Set<LogData> expected = new HashSet<LogData>();
-    for (LogData ld : logDatas) {
-      expected.add(ld);
-    }
+
 
     // when
-    ArrayList<LogData> acutal = new ArrayList<LogData>();
+    ArrayList<LogData> acutal = new ArrayList<>();
     for (LogData ld : dataStore) {
       acutal.add(ld);
     }
 
     // then
-    assertArrayEquals(logDatas, acutal.toArray(new LogData[0]));
+    assertArrayEquals(logDatas, acutal.toArray(new LogData[acutal.size()]));
 
   }
 

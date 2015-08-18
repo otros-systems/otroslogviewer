@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 public class OperationGetAllNotes implements Callable<TreeMap<Integer,Note>> {
 
 
-  private LogDataStore logDataStore;
+  private final LogDataStore logDataStore;
 
   public OperationGetAllNotes(LogDataStore logDataStore) {
     this.logDataStore = logDataStore;

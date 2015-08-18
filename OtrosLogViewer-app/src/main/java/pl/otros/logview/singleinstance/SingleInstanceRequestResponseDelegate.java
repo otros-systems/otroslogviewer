@@ -6,24 +6,18 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.VFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.AppProperties;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SingleInstanceRequestResponseDelegate implements RequestDelegate, ResponseDelegate {
 
@@ -57,7 +51,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         sb.append(p);
         sb.append("\n");
       }
-      sb.append("PATH " + new AppProperties().getCurrentDir()).append("\n");
+      sb.append("PATH ").append(new AppProperties().getCurrentDir()).append("\n");
       LOGGER.info("writing to socket \"" + sb.toString() + "\n");
       PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
       printWriter.print(sb.toString());
@@ -76,7 +70,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
   @Override
   public void responseAction(Socket socket) {
     final StringBuilder sb = new StringBuilder();
-    List<String> filesList = new ArrayList<String>();
+    List<String> filesList = new ArrayList<>();
     String path = null;
     try {
       LOGGER.info("Someone is calling us!");
@@ -112,7 +106,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
   }
 
   public static void openFilesFromStartArgs(final OtrosApplication otrosApplication, List<String> filesList, String path) {
-    ArrayList<FileObject> fileObjects = new ArrayList<FileObject>();
+    ArrayList<FileObject> fileObjects = new ArrayList<>();
     for (String file : filesList) {
       try {
         FileObject fo = VFS.getManager().resolveFile(new File(path), file);
@@ -121,18 +115,15 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         LOGGER.error( "Cant resolve " + file + " in path " + path, e);
       }
     }
-    final FileObject[] files = fileObjects.toArray(new FileObject[0]);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        JFrame applicationJFrame = null;
-        if (otrosApplication != null) {
-          applicationJFrame = otrosApplication.getApplicationJFrame();
-          OtrosSwingUtils.frameToFront(applicationJFrame);
-        }
-        if (files.length > 0) {
-          new TailMultipleFilesIntoOneView(otrosApplication).openFileObjectsIntoOneView(files, applicationJFrame);
-        }
+    final FileObject[] files = fileObjects.toArray(new FileObject[fileObjects.size()]);
+    SwingUtilities.invokeLater(() -> {
+      JFrame applicationJFrame = null;
+      if (otrosApplication != null) {
+        applicationJFrame = otrosApplication.getApplicationJFrame();
+        OtrosSwingUtils.frameToFront(applicationJFrame);
+      }
+      if (files.length > 0) {
+        new TailMultipleFilesIntoOneView(otrosApplication).openFileObjectsIntoOneView(files, applicationJFrame);
       }
     });
   }

@@ -16,9 +16,9 @@ public class Renderers {
 
   public static Renderers instance;
   private final DateRenderer dateRenderer;
-  private ClassWrapperRenderer classWrapperRenderer;
-  private LevelRenderer levelRenderer;
-  private StringRenderer stringRenderer;
+  private final ClassWrapperRenderer classWrapperRenderer;
+  private final LevelRenderer levelRenderer;
+  private final StringRenderer stringRenderer;
 
   private Renderers(OtrosApplication otrosApplication) {
     final DataConfiguration configuration = otrosApplication.getConfiguration();
@@ -27,22 +27,19 @@ public class Renderers {
     levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
     dateRenderer = new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
     stringRenderer = new StringRenderer();
-    configuration.addConfigurationListener(new ConfigurationListener() {
-      @Override
-      public void configurationChanged(ConfigurationEvent event) {
-        if (event.isBeforeUpdate()) {
-          return;
-        }
-        final String property = event.getPropertyName();
-        final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
-        if (property.equals(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS)) {
-          classWrapperRenderer.reloadConfiguration(value);
-        } else if (property.equals(LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
-          final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
-          levelRenderer.setMode(mode);
-        } else if (property.equals(LOG_TABLE_FORMAT_DATE_FORMAT)) {
-          dateRenderer.setDateFormatter(new SimpleDateFormat(value));
-        }
+    configuration.addConfigurationListener(event -> {
+      if (event.isBeforeUpdate()) {
+        return;
+      }
+      final String property = event.getPropertyName();
+      final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
+      if (property.equals(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS)) {
+        classWrapperRenderer.reloadConfiguration(value);
+      } else if (property.equals(LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
+        final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
+        levelRenderer.setMode(mode);
+      } else if (property.equals(LOG_TABLE_FORMAT_DATE_FORMAT)) {
+        dateRenderer.setDateFormatter(new SimpleDateFormat(value));
       }
     });
   }

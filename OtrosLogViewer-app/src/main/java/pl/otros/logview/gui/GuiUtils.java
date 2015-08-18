@@ -29,19 +29,15 @@ public class GuiUtils {
     for (int i = 0; i < count; i++) {
       items[i] = root.getItem(i);
     }
-    Arrays.sort(items, new Comparator<JMenuItem>() {
-
-      @Override
-      public int compare(JMenuItem m1, JMenuItem m2) {
-        if (m1.getClass().equals(m2.getClass())) {
-          return m1.getText().toLowerCase().compareTo(m2.getText().toLowerCase());
-        } else if (m1 instanceof JMenu && !(m2 instanceof JMenu)) {
-          return -1;
-        } else if (m2 instanceof JMenu && !(m1 instanceof JMenu)) {
-          return 1;
-        }
-        return 0;
+    Arrays.sort(items, (m1, m2) -> {
+      if (m1.getClass().equals(m2.getClass())) {
+        return m1.getText().toLowerCase().compareTo(m2.getText().toLowerCase());
+      } else if (m1 instanceof JMenu && !(m2 instanceof JMenu)) {
+        return -1;
+      } else if (m2 instanceof JMenu && !(m1 instanceof JMenu)) {
+        return 1;
       }
+      return 0;
     });
     root.removeAll();
     for (JMenuItem menuItem : items) {

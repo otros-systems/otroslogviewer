@@ -27,22 +27,16 @@ import java.util.Set;
 
 public class FilteredTableModel extends AbstractTableModel {
 
-  private LogDataTableModel logDataTableModel;
-  private Set<LogFilter> appliedFilters;
+  private final LogDataTableModel logDataTableModel;
+  private final Set<LogFilter> appliedFilters;
   private int[] modelToView;
   private int[] viewToModel;
 
   public FilteredTableModel(LogDataTableModel logDataTableModel) {
     super();
     this.logDataTableModel = logDataTableModel;
-    appliedFilters = new HashSet<LogFilter>();
-    logDataTableModel.addTableModelListener(new TableModelListener() {
-
-      @Override
-      public void tableChanged(TableModelEvent e) {
-        doFiltering();
-      }
-    });
+    appliedFilters = new HashSet<>();
+    logDataTableModel.addTableModelListener(e -> doFiltering());
     doFiltering();
   }
 

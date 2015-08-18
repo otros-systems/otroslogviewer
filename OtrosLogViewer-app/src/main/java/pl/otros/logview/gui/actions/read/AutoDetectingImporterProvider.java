@@ -28,7 +28,7 @@ import java.util.Collection;
 public class AutoDetectingImporterProvider implements LogImporterProvider {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AutoDetectingImporterProvider.class.getName());
-  private Collection<LogImporter> importers;
+  private final Collection<LogImporter> importers;
 
   public AutoDetectingImporterProvider(Collection<LogImporter> importers) {
     this.importers = importers;

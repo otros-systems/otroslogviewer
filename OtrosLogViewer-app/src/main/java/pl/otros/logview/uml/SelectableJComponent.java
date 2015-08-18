@@ -22,15 +22,15 @@ import java.util.LinkedList;
 
 public class SelectableJComponent extends JComponent {
 
-  private ArrayList<ShapeWithColor> shapesWithColor;
-  private ArrayList<StringShape> stringList;
+  private final ArrayList<ShapeWithColor> shapesWithColor;
+  private final ArrayList<StringShape> stringList;
 
-  private LinkedList<ExtraPainter> extraPaintersBefore;
+  private final LinkedList<ExtraPainter> extraPaintersBefore;
 
   public SelectableJComponent() {
-    shapesWithColor = new ArrayList<ShapeWithColor>();
-    stringList = new ArrayList<StringShape>();
-    extraPaintersBefore = new LinkedList<ExtraPainter>();
+    shapesWithColor = new ArrayList<>();
+    stringList = new ArrayList<>();
+    extraPaintersBefore = new LinkedList<>();
   }
 
   @Override

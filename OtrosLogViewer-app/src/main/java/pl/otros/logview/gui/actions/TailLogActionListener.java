@@ -92,13 +92,7 @@ public class TailLogActionListener extends OtrosAction {
     BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy = new BufferingLogDataCollectorProxy(panel.getDataTableModel(), 2000,
         panel.getConfiguration());
     openFileObjectInTailMode(panel, loadingInfo, bufferingLogDataCollectorProxy);
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        panel.switchToContentView();
-      }
-    });
+    SwingUtilities.invokeLater(panel::switchToContentView);
   }
 
   protected TableColumns[] determineTableColumnsToUse(LoadingInfo loadingInfo, LogImporter importer) {
@@ -121,40 +115,35 @@ public class TailLogActionListener extends OtrosAction {
                                        final ParsingContext parsingContext) {
     {
 
-      Runnable r = new Runnable() {
-
-        @Override
-        public void run() {
-          importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
-          panel.getStatsTable().setModel(importStats);
-          panel.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
-              new ParsingContextStopperForClosingTab(parsingContext)));
-          importer.initParsingContext(parsingContext);
-          try {
-            loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-          } catch (FileSystemException e1) {
-            LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
-          }
-          while (parsingContext.isParsingInProgress()) {
-            try {
-              importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-              if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
-                break;
-              }
-              Thread.sleep(1000);
-
-              Utils.reloadFileObject(loadingInfo);
-            } catch (Exception e) {
-              LOGGER.warn("Exception in tailing loop: " + e.getMessage());
-            }
-          }
-          LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
-          parsingContext.setParsingInProgress(false);
-          LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
-          getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-          Utils.closeQuietly(loadingInfo.getFileObject());
+      Runnable r = () -> {
+        importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
+        panel.getStatsTable().setModel(importStats);
+        panel.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
+            new ParsingContextStopperForClosingTab(parsingContext)));
+        importer.initParsingContext(parsingContext);
+        try {
+          loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
+        } catch (FileSystemException e1) {
+          LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
         }
+        while (parsingContext.isParsingInProgress()) {
+          try {
+            importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
+            if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+              break;
+            }
+            Thread.sleep(1000);
 
+            Utils.reloadFileObject(loadingInfo);
+          } catch (Exception e) {
+            LOGGER.warn("Exception in tailing loop: " + e.getMessage());
+          }
+        }
+        LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
+        parsingContext.setParsingInProgress(false);
+        LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
+        getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
+        Utils.closeQuietly(loadingInfo.getFileObject());
       };
       Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
       t.setDaemon(true);
@@ -180,13 +169,13 @@ public class TailLogActionListener extends OtrosAction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
-    private List<SoftReference<Stoppable>> referencesList;
+    private final List<SoftReference<Stoppable>> referencesList;
 
     public ReadingStopperForRemove(Stoppable... stoppables) {
       super();
-      referencesList = new ArrayList<SoftReference<Stoppable>>();
+      referencesList = new ArrayList<>();
       for (Stoppable stoppable : stoppables) {
-        referencesList.add(new SoftReference<Stoppable>(stoppable));
+        referencesList.add(new SoftReference<>(stoppable));
       }
     }
 
@@ -209,7 +198,7 @@ public class TailLogActionListener extends OtrosAction {
   public static class ParsingContextStopperForClosingTab implements Stoppable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParsingContextStopperForClosingTab.class.getName());
-    private ParsingContext context;
+    private final ParsingContext context;
 
     public ParsingContextStopperForClosingTab(ParsingContext context) {
       super();

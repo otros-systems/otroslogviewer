@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class SearchResultColorizer extends AbstractPluginableElement implements MessageColorizer {
 
-	private Color color = Color.YELLOW;
+	private final Color color = Color.YELLOW;
 	private String searchString = "";
 	private SearchMode searchMode;
 
@@ -62,7 +62,7 @@ public class SearchResultColorizer extends AbstractPluginableElement implements 
 
 	@Override
 	public Collection<MessageFragmentStyle> colorize(String textToColorize) throws BadLocationException {
-		Collection<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+		Collection<MessageFragmentStyle> list = new ArrayList<>();
 		if (StringUtils.isEmpty(searchString)) {
 			return list;
 		}
@@ -81,7 +81,7 @@ public class SearchResultColorizer extends AbstractPluginableElement implements 
 	}
 
 	private Collection<MessageFragmentStyle> colorizeString(String textToColorize, Style searchStyle, String toHighlight) {
-		ArrayList<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+		ArrayList<MessageFragmentStyle> list = new ArrayList<>();
 		String text = textToColorize.toLowerCase();
 		toHighlight = toHighlight.toLowerCase();
 		int idx = 0;

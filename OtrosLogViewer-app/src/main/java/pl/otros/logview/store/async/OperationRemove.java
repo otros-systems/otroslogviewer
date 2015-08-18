@@ -4,7 +4,7 @@ import pl.otros.logview.store.LogDataStore;
 
 class OperationRemove implements Runnable {
   private final int[] ids;
-  private LogDataStore logDataStore;
+  private final LogDataStore logDataStore;
 
   public OperationRemove(LogDataStore logDataStore, int... ids) {
     this.logDataStore = logDataStore;

@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class RegexMatcher implements SearchMatcher {
 
   private static final String DOT_ALL_SUFFIX = ".*";
-  private Pattern pattern;
+  private final Pattern pattern;
 
   public RegexMatcher(String regex) {
     super();
@@ -45,11 +45,11 @@ public class RegexMatcher implements SearchMatcher {
 
   @Override
   public ArrayList<String> getFoundTextFragments(LogData logData) {
-    HashSet<String> result = new HashSet<String>();
+    HashSet<String> result = new HashSet<>();
     Matcher matcher = pattern.matcher(logData.getMessage());
     while (matcher.find()) {
       result.add(matcher.group());
     }
-    return new ArrayList<String>(result);
+    return new ArrayList<>(result);
   }
 }

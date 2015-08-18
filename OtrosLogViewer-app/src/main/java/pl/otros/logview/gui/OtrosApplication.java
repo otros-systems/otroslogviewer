@@ -47,13 +47,13 @@ public class OtrosApplication {
   private JMenu pluginsMenu;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private AppProperties appProperties;
-  private List<MenuActionProvider> menuActionProviders;
+  private final List<MenuActionProvider> menuActionProviders;
 
 
   private Services services;
 
   public OtrosApplication(){
-    menuActionProviders=new ArrayList<MenuActionProvider>();
+    menuActionProviders= new ArrayList<>();
     appProperties = new AppProperties();
   }
 
@@ -201,7 +201,7 @@ public class OtrosApplication {
    * @return
    */
   public List<MenuActionProvider> getLogViewPanelMenuActionProvider(){
-    return new ArrayList<MenuActionProvider>(menuActionProviders);
+    return new ArrayList<>(menuActionProviders);
   }
 }
 

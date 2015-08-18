@@ -24,7 +24,7 @@ import java.util.SortedSet;
 
 public class StackTraceFinderTest {
 
-  private StackTraceFinder finder = new StackTraceFinder();
+  private final StackTraceFinder finder = new StackTraceFinder();
 
   @Test
   public void testFindStackTraces() throws IOException {

@@ -83,7 +83,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
   }
 
   private Map<String, String> toMap(LogData logData) {
-    Map<String, String> m = new HashMap<String, String>();
+    Map<String, String> m = new HashMap<>();
     m.put(HEADER_ID, Integer.toString(logData.getId()));
     m.put(HEADER_CLASS, logData.getClazz());
     m.put(HEADER_LEVEL, logData.getLevel().toString());
@@ -125,7 +125,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
   }
 
   private ArrayList<String> getSaveMapOrder() {
-    ArrayList<String> m = new ArrayList<String>();
+    ArrayList<String> m = new ArrayList<>();
     m.add(HEADER_ID);
     m.add(HEADER_TIMESTAMP);
     m.add(HEADER_MESSAGE);
@@ -155,13 +155,13 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
     BufferedReader bin = new BufferedReader(new InputStreamReader(in, "UTF-8"));
     String line = bin.readLine();
     String[] split = line.split(FIELD_SEPERATOR_TO_SPLIT);
-    HashMap<String, Integer> fieldMapping = new HashMap<String, Integer>();
+    HashMap<String, Integer> fieldMapping = new HashMap<>();
     for (int i = 0; i < split.length; i++) {
       String string = split[i];
       fieldMapping.put(string, Integer.valueOf(i));
     }
 
-    ArrayList<LogData> list = new ArrayList<LogData>();
+    ArrayList<LogData> list = new ArrayList<>();
     while ((line = bin.readLine()) != null) {
       String[] params = line.split(FIELD_SEPERATOR_TO_SPLIT);
       // Splitting 1|1317761093265|My Message1|||INFO||| will give only 6 params!
@@ -200,7 +200,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
       Properties pr = new Properties();
       try {
         pr.load(new ByteArrayInputStream(p.getBytes()));
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         for (Object key : pr.keySet()) {
           m.put((String) key, (String) pr.get(key));
         }

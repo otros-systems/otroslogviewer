@@ -10,9 +10,9 @@ import javax.swing.*;
 
 public class ValidationView2 extends AbstractConfigView {
   private static final String VALIDATION_NAME = "validation.name";
-  private JPanel jPanel;
-  private JTextField tfName;
-  private JTextField tfAge;
+  private final JPanel jPanel;
+  private final JTextField tfName;
+  private final JTextField tfAge;
 
   public ValidationView2() {
     super("validView", "Validation view 2", "View with validation,");

@@ -76,35 +76,31 @@ public class ImportLogActionListener extends  OtrosAction {
             tableColumnsToUse,getOtrosApplication());
         String tabName = Utils.getFileObjectShortName(file);
           getOtrosApplication().addClosableTab(tabName,file.getName().getFriendlyURI(),Icons.FOLDER_OPEN,panel,true);
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
+          ProgressWatcher watcher = null;
+          final ProxyLogDataCollector collector = new ProxyLogDataCollector();
+          ParsingContext parsingContext = new ParsingContext(file.getName().getFriendlyURI(), file.getName().getBaseName());
+          importStats = new LogImportStats(file.getName().getFriendlyURI());
+          panel.getStatsTable().setModel(importStats);
+          watcher = new ProgressWatcher(openFileObject.getObserableInputStreamImpl(), panel, file);
+          Thread t = new Thread(watcher, "Log loader: " + file.getName().toString());
+          t.setDaemon(true);
+          t.start();
+          panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObserableInputStreamImpl()));
+          importer.initParsingContext(parsingContext);
+          importer.importLogs(openFileObject.getContentInputStream(), collector, parsingContext);
+          final LogDataTableModel dataTableModel = panel.getDataTableModel();
+          LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
+          dataTableModel.add(collector.getLogData());
+          SwingUtilities.invokeLater(new Runnable() {
 
-          @Override
-          public void run() {
-            ProgressWatcher watcher = null;
-            final ProxyLogDataCollector collector = new ProxyLogDataCollector();
-            ParsingContext parsingContext = new ParsingContext(file.getName().getFriendlyURI(), file.getName().getBaseName());
-            importStats = new LogImportStats(file.getName().getFriendlyURI());
-            panel.getStatsTable().setModel(importStats);
-            watcher = new ProgressWatcher(openFileObject.getObserableInputStreamImpl(), panel, file);
-            Thread t = new Thread(watcher, "Log loader: " + file.getName().toString());
-            t.setDaemon(true);
-            t.start();
-            panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObserableInputStreamImpl()));
-            importer.initParsingContext(parsingContext);
-            importer.importLogs(openFileObject.getContentInputStream(), collector, parsingContext);
-            final LogDataTableModel dataTableModel = panel.getDataTableModel();
-            LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
-            dataTableModel.add(collector.getLogData());
-            SwingUtilities.invokeLater(new Runnable() {
-
-              @Override
-              public void run() {
-                panel.switchToContentView();
-              }
-            });
-            watcher.updateFinish("Loaded");
-            Utils.closeQuietly(openFileObject.getFileObject());
-          }
+            @Override
+            public void run() {
+              panel.switchToContentView();
+            }
+          });
+          watcher.updateFinish("Loaded");
+          Utils.closeQuietly(openFileObject.getFileObject());
         };
         Thread t = new Thread(r);
         t.start();
@@ -132,13 +128,13 @@ public class ImportLogActionListener extends  OtrosAction {
 
   private class ProgressWatcher implements Runnable {
 
-    private ObservableInputStreamImpl in;
-    private JProgressBar progressBar;
+    private final ObservableInputStreamImpl in;
+    private final JProgressBar progressBar;
     private boolean refreshProgress = true;
-    private LogViewPanelWrapper frame;
-    private FileObject fileName;
-    private NumberFormat npf = NumberFormat.getPercentInstance();
-    private NumberFormat nbf = NumberFormat.getIntegerInstance();
+    private final LogViewPanelWrapper frame;
+    private final FileObject fileName;
+    private final NumberFormat npf = NumberFormat.getPercentInstance();
+    private final NumberFormat nbf = NumberFormat.getIntegerInstance();
 
     public ProgressWatcher(ObservableInputStreamImpl in, LogViewPanelWrapper frame, FileObject fileName) {
       super();
@@ -183,32 +179,22 @@ public class ImportLogActionListener extends  OtrosAction {
     }
 
     public void updateNotDetermined(final String message) {
-      Runnable r = new Runnable() {
-
-        @Override
-        public void run() {
-          progressBar.setIndeterminate(true);
-          progressBar.setString(message);
-        }
-
+      Runnable r = () -> {
+        progressBar.setIndeterminate(true);
+        progressBar.setString(message);
       };
 
       SwingUtilities.invokeLater(r);
     }
 
     public void updateProgress(final String message, final int current, final int min, final int max) {
-      Runnable r = new Runnable() {
-
-        @Override
-        public void run() {
-          progressBar.setIndeterminate(false);
-          progressBar.setMaximum(max);
-          progressBar.setMinimum(min);
-          progressBar.setValue(current);
-          progressBar.setString(message);
-          // refreshProgress = false;
-
-        }
+      Runnable r = () -> {
+        progressBar.setIndeterminate(false);
+        progressBar.setMaximum(max);
+        progressBar.setMinimum(min);
+        progressBar.setValue(current);
+        progressBar.setString(message);
+        // refreshProgress = false;
 
       };
       try {
@@ -222,20 +208,15 @@ public class ImportLogActionListener extends  OtrosAction {
     }
 
     public void updateFinish(final String message) {
-      Runnable r = new Runnable() {
+      Runnable r = () -> {
+        progressBar.setIndeterminate(false);
 
-        @Override
-        public void run() {
-          progressBar.setIndeterminate(false);
-
-          progressBar.setMaximum(1);
-          progressBar.setMinimum(0);
-          progressBar.setValue(1);
-          progressBar.setString(message);
-          frame.switchToContentView();
-          refreshProgress = false;
-        }
-
+        progressBar.setMaximum(1);
+        progressBar.setMinimum(0);
+        progressBar.setValue(1);
+        progressBar.setString(message);
+        frame.switchToContentView();
+        refreshProgress = false;
       };
       SwingUtilities.invokeLater(r);
 
@@ -247,11 +228,11 @@ public class ImportLogActionListener extends  OtrosAction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
-    private SoftReference<Stoppable> reference;
+    private final SoftReference<Stoppable> reference;
 
     public ReadingStopperForRemove(Stoppable stoppable) {
       super();
-      reference = new SoftReference<Stoppable>(stoppable);
+      reference = new SoftReference<>(stoppable);
     }
 
     @Override

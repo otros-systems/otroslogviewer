@@ -16,7 +16,7 @@ public class RandomTipOfTheDayModelTest {
 
 	@BeforeMethod
 	public void prepare() {
-		ArrayList<Tip> tips = new ArrayList<TipOfTheDayModel.Tip>();
+		ArrayList<Tip> tips = new ArrayList<>();
 		for (int i = 0; i < TIPS_SIZE; i++) {
 			tips.add(new DefaultTip(Integer.toString(i), Integer.toString(i)));
 

@@ -39,9 +39,9 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
 
   private static final String ICON_PATH = "img/java.png";
 
-  private ParserDescription pd;
+  private final ParserDescription pd;
 
-  private LevelParser[] levelParser = new LevelParser[] { 
+  private final LevelParser[] levelParser = {
     new LevelParser(Locale.ENGLISH), 
     new LevelParser(Locale.GERMAN), 
     new LevelParser(new Locale("es")),
@@ -176,7 +176,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
 
   @Override
   public void initParsingContext(ParsingContext parsingContext) {
-    SimpleDateFormat[] datePatterns = new SimpleDateFormat[] { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
+    SimpleDateFormat[] datePatterns = { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
         new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
         new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
         new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))

@@ -17,8 +17,8 @@ package pl.otros.logview.batch;
 
 public interface BatchProcessingListener {
 
-  public void processingStarted(BatchProcessingContext batchProcessingContext) throws Exception;
+  void processingStarted(BatchProcessingContext batchProcessingContext) throws Exception;
 
-  public void processingFinished(BatchProcessingContext batchProcessingContext) throws Exception;
+  void processingFinished(BatchProcessingContext batchProcessingContext) throws Exception;
 
 }

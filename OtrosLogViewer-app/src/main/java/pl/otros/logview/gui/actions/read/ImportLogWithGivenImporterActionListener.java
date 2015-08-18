@@ -42,13 +42,7 @@ public class ImportLogWithGivenImporterActionListener extends ImportLogActionLis
 
   @Override
   protected LogImporterProvider getLogImporterProvider() {
-    return new LogImporterProvider() {
-
-      @Override
-      public LogImporter getLogImporter(LoadingInfo openFileObject) {
-        return importer;
-      }
-    };
+    return openFileObject -> importer;
   }
 
 }

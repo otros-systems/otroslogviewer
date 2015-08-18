@@ -70,7 +70,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
 	}
 
   public void openFileObjectsIntoOneView(FileObject[] files, Object guiSource) {
-    ArrayList<LoadingInfo> list = new ArrayList<LoadingInfo>();
+    ArrayList<LoadingInfo> list = new ArrayList<>();
     for (final FileObject file : files) {
         try {
             list.add(Utils.openFileObject(file, true));
@@ -88,13 +88,13 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     loadingInfos = list.toArray(loadingInfos);
 
     Collection<LogImporter> elements = AllPluginables.getInstance().getLogImportersContainer().getElements();
-    LogImporter[] importers = elements.toArray(new LogImporter[0]);
+    LogImporter[] importers = elements.toArray(new LogImporter[elements.size()]);
     String[] names = new String[elements.size()];
     for (int i = 0; i < names.length; i++) {
       names[i] = importers[i].getName();
     }
 
-    TableColumns[] visibleColumns = new TableColumns[]{
+    TableColumns[] visibleColumns = {
         TableColumns.ID,//
         TableColumns.TIME,//
         TableColumns.LEVEL,//
@@ -143,13 +143,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
           new ParsingContextStopperForClosingTab(parsingContext)));
     }
 
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        logViewPanelWrapper.switchToContentView();
-      }
-    });
+    SwingUtilities.invokeLater(logViewPanelWrapper::switchToContentView);
   }
 
   private FileObject[] getFileObjects(ActionEvent e) {

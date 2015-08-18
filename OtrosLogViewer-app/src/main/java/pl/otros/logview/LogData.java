@@ -183,10 +183,8 @@ public class LogData implements Serializable {
       return false;
     if (!MapCompare.areMapsEquals(properties, logData.properties))
       return false;
-    if (thread != null ? !thread.equals(logData.thread) : logData.thread != null)
-      return false;
+    return !(thread != null ? !thread.equals(logData.thread) : logData.thread != null);
 
-    return true;
   }
 
   @Override
@@ -253,13 +251,12 @@ public class LogData implements Serializable {
   @Override
   public String toString() {
     final int maxLen = 10;
-    StringBuilder builder = new StringBuilder();
-    builder.append("LogData [date=").append(date).append(", level=").append(level).append(", messageId=").append(messageId).append(", clazz=").append(clazz)
-        .append(", method=").append(method).append(", file=").append(file).append(", line=").append(line).append(", ndc=").append(ndc).append(", thread=")
-        .append(thread).append(", loggerName=").append(loggerName).append(", message=").append(message).append(", id=").append(id).append(", properties=")
-        .append(properties != null ? toString(properties.entrySet(), maxLen) : null).append(", note=").append(note).append(", marked=").append(marked)
-        .append(", markerColors=").append(markerColors).append(", logSource=").append(logSource).append("]");
-    return builder.toString();
+    String builder = "LogData [date=" + date + ", level=" + level + ", messageId=" + messageId + ", clazz=" + clazz +
+      ", method=" + method + ", file=" + file + ", line=" + line + ", ndc=" + ndc + ", thread=" +
+      thread + ", loggerName=" + loggerName + ", message=" + message + ", id=" + id + ", properties=" +
+      (properties != null ? toString(properties.entrySet(), maxLen) : null) + ", note=" + note + ", marked=" + marked +
+      ", markerColors=" + markerColors + ", logSource=" + logSource + "]";
+    return builder;
   }
 
   private String toString(Collection<?> collection, int maxLen) {

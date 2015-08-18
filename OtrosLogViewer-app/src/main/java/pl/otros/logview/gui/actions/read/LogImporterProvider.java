@@ -20,5 +20,5 @@ import pl.otros.logview.io.LoadingInfo;
 
 public interface LogImporterProvider {
 
-  public abstract LogImporter getLogImporter(LoadingInfo openFileObject);
+  LogImporter getLogImporter(LoadingInfo openFileObject);
 }

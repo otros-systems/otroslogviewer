@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class PossibleLogImporters {
     private LogImporter logImporter;
-    private List<LogImporter> availableImporters = new ArrayList<LogImporter>();
+    private List<LogImporter> availableImporters = new ArrayList<>();
 
     public List<LogImporter> getAvailableImporters() {
         return availableImporters;

@@ -24,7 +24,7 @@ import java.util.Date;
 
 public class DateRenderer implements TableCellRenderer {
 
-  private JLabel label = new JLabel();
+  private final JLabel label = new JLabel();
   private DateFormat dateFormatter = null;
 
   public DateRenderer() {

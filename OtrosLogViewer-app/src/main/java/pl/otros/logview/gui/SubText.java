@@ -76,9 +76,7 @@ public class SubText implements Comparable<SubText> {
     SubText other = (SubText) obj;
     if (end != other.end)
       return false;
-    if (start != other.start)
-      return false;
-    return true;
+    return start == other.start;
   }
 
 }

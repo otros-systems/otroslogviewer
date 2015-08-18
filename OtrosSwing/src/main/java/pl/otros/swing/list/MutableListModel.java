@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class MutableListModel<T> extends AbstractListModel {
 
-  private ArrayList<T> list;
+  private final ArrayList<T> list;
 
   public MutableListModel() {
-    list = new ArrayList<T>();
+    list = new ArrayList<>();
   }
 
   @Override
@@ -56,7 +56,7 @@ public class MutableListModel<T> extends AbstractListModel {
   }
 
   public List<T> getList() {
-    return new ArrayList<T>(list);
+    return new ArrayList<>(list);
   }
 
 }

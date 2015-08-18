@@ -5,6 +5,6 @@ import pl.otros.logview.gui.services.tasks.TaskSchedulerService;
 
 public interface Services {
 
-  public JumpToCodeService getJumpToCodeService();
-  public TaskSchedulerService getTaskSchedulerService();
+  JumpToCodeService getJumpToCodeService();
+  TaskSchedulerService getTaskSchedulerService();
 }

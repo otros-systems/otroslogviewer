@@ -22,7 +22,7 @@ public class ExceptionMarker extends AbstractAutomaticMarker {
 
   private static final String NAME = "'Exception' in message";
   private static final String DESCRIPTION = "Marks/unmarks logs with 'exception' in message";
-  private static final String[] GROUPS = new String[] { "", "Errors" };
+  private static final String[] GROUPS = { "", "Errors" };
 
   public ExceptionMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

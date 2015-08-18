@@ -5,7 +5,7 @@ import pl.otros.logview.store.LogDataStore;
 import java.util.concurrent.Callable;
 
 class OperationGetLimit implements Callable<Integer> {
-  private LogDataStore logDataStore;
+  private final LogDataStore logDataStore;
 
   public OperationGetLimit(LogDataStore logDataStore) {
     this.logDataStore = logDataStore;

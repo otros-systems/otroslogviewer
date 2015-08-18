@@ -23,8 +23,8 @@ import java.util.HashSet;
 
 public class EnableDisableComponetsForTabs implements ChangeListener {
 
-  private HashSet<Component> componets = new HashSet<Component>();
-  private JTabbedPane tabbedPane;
+  private final HashSet<Component> componets = new HashSet<>();
+  private final JTabbedPane tabbedPane;
 
   public EnableDisableComponetsForTabs(JTabbedPane tabbedPane) {
     super();

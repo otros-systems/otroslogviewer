@@ -10,7 +10,7 @@ public class DesktopERDC implements ErrorReportDataCollector {
 
 	@Override
 	public Map<String, String> collect(ErrorReportCollectingContext context) {
-		HashMap<String, String> r = new HashMap<String, String>();
+		HashMap<String, String> r = new HashMap<>();
 		NumberFormat nf = NumberFormat.getIntegerInstance();
 		GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] devices = g.getScreenDevices();

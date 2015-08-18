@@ -5,8 +5,8 @@ import pl.otros.logview.store.LogDataStore;
 import java.util.concurrent.Callable;
 
 class OperationIsMarked implements Callable<Boolean> {
-  private LogDataStore logDataStore;
-  private int row;
+  private final LogDataStore logDataStore;
+  private final int row;
 
   public OperationIsMarked(LogDataStore logDataStore, int row) {
     this.logDataStore = logDataStore;

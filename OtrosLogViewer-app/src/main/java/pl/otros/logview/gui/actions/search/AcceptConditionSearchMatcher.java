@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class AcceptConditionSearchMatcher implements SearchMatcher {
 
-  private AcceptCondition acceptCondition;
+  private final AcceptCondition acceptCondition;
 
   public AcceptConditionSearchMatcher(AcceptCondition acceptCondition) {
     this.acceptCondition = acceptCondition;
@@ -35,7 +35,7 @@ public class AcceptConditionSearchMatcher implements SearchMatcher {
 
   @Override
   public ArrayList<String> getFoundTextFragments(LogData logData) {
-    return new ArrayList<String>();
+    return new ArrayList<>();
   }
 
 }

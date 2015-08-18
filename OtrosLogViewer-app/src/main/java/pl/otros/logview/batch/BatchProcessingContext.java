@@ -39,7 +39,7 @@ public class BatchProcessingContext {
 
   private FileObject currentFile;
   private List<FileObject> allFiles;
-  private HashMap<String, Object> attributes = new HashMap<String, Object>();
+  private final HashMap<String, Object> attributes = new HashMap<>();
   private DataConfiguration configuration;
   private boolean verbose;
   private LogDataStore dataStore;

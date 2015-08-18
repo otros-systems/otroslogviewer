@@ -10,15 +10,15 @@ public class OtrosJTextWithRulerScrollPane<T extends JTextComponent> extends JPa
    *
    */
   private static final long serialVersionUID = 1L;
-  private T jTextComponent;
-  private JScrollPane jScrollPane;
-  private RulerBar rulerBar;
-  private DefualtMarkerModel markerModel;
+  private final T jTextComponent;
+  private final JScrollPane jScrollPane;
+  private final RulerBar rulerBar;
+  private final DefaultMarkerModel markerModel;
 
   public OtrosJTextWithRulerScrollPane(T jTextComponent) {
     super(new BorderLayout());
     this.jTextComponent = jTextComponent;
-    markerModel = new DefualtMarkerModel();
+    markerModel = new DefaultMarkerModel();
     rulerBar = new RulerBar(markerModel);
     jScrollPane = new JScrollPane(jTextComponent);
     this.add(jScrollPane);
@@ -37,7 +37,7 @@ public class OtrosJTextWithRulerScrollPane<T extends JTextComponent> extends JPa
     return rulerBar;
   }
 
-  protected DefualtMarkerModel getMarkerModel() {
+  protected DefaultMarkerModel getMarkerModel() {
     return markerModel;
   }
 

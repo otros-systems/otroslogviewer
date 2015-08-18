@@ -29,7 +29,7 @@ public class SearchByLevel extends OtrosAction {
   private JTable table;
   private int lastRow = 0;
   private int direction = 1;
-  private int minLevel;
+  private final int minLevel;
 
   public SearchByLevel(OtrosApplication otrosApplication,int direction, Level minLevel) {
     super(otrosApplication);

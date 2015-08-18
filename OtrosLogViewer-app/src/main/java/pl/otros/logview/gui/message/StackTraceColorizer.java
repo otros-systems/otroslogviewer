@@ -43,7 +43,7 @@ public class StackTraceColorizer implements MessageColorizer {
   private Style styleMethod;
   private Style styleFile;
   private Style styleCodeComment;
-  private StackTraceFinder stackTraceFinder;
+  private final StackTraceFinder stackTraceFinder;
   private StyleContext styleContext;
 
   public StackTraceColorizer() {
@@ -83,7 +83,7 @@ public class StackTraceColorizer implements MessageColorizer {
   @Override
   public Collection<MessageFragmentStyle> colorize(String message) throws BadLocationException {
     initStyles();
-    Collection<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+    Collection<MessageFragmentStyle> list = new ArrayList<>();
     SortedSet<SubText> foundStackTraces = stackTraceFinder.findStackTraces(message);
     for (SubText subText : foundStackTraces) {
       list.add(new MessageFragmentStyle(subText.getStart(), subText.getLength(), styleStackTrace, false));
@@ -102,7 +102,7 @@ public class StackTraceColorizer implements MessageColorizer {
   }
 
   public Collection<MessageFragmentStyle> colorizeStackTraceRegex(Style style, String text, Pattern regex, int group) {
-    ArrayList<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+    ArrayList<MessageFragmentStyle> list = new ArrayList<>();
     Matcher matcher = regex.matcher(text);
     while (matcher.find()) {
       LocationInfo locationInfo = LocationInfo.parse(matcher.group(0));

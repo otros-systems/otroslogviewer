@@ -15,8 +15,8 @@ import java.util.concurrent.ExecutionException;
 
 public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
-  private LogDataStore logDataStore;
-  private ListeningExecutorService service;
+  private final LogDataStore logDataStore;
+  private final ListeningExecutorService service;
 
   public MemoryAsyncLogDataStore(ListeningExecutorService service, LogDataStore logDataStore) {
     this.service = service;
@@ -84,13 +84,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public void add(final LogData... logDatas) {
-    service.submit(new Runnable() {
-      @Override
-      public void run() {
-        logDataStore.add(logDatas);
-
-      }
-    });
+    service.submit(() -> logDataStore.add(logDatas));
   }
 
   @Override

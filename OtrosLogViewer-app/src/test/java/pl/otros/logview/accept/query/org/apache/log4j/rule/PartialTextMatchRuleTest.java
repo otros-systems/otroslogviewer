@@ -38,7 +38,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test1() {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("Hello");
 	try {
 	    PartialTextMatchRule.getRule(stack);
@@ -52,7 +52,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test2() {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("Hello");
 	stack.push("World");
 	try {
@@ -67,7 +67,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test3() {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("level");
 	stack.push("nfo");
 	Rule rule = PartialTextMatchRule.getRule(stack);
@@ -82,7 +82,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test4() {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("msg");
 	stack.push("World");
 	Rule rule = PartialTextMatchRule.getRule(stack);
@@ -97,7 +97,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test5() {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("msg");
 	stack.push("Bonjour, Monde");
 	Rule rule = PartialTextMatchRule.getRule(stack);
@@ -112,7 +112,7 @@ public class PartialTextMatchRuleTest {
      */
     @Test
     public void test6() throws IOException, ClassNotFoundException {
-	Stack<Object> stack = new Stack<Object>();
+	Stack<Object> stack = new Stack<>();
 	stack.push("msg");
 	stack.push("World");
 	Rule rule = (Rule) SerializationTestHelper.serializeClone(PartialTextMatchRule.getRule(stack));

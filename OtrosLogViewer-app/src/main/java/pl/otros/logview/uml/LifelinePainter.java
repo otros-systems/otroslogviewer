@@ -19,8 +19,8 @@ import java.awt.*;
 
 public class LifelinePainter implements ExtraPainter {
 
-  private int[] xPositions;
-  private Color color;
+  private final int[] xPositions;
+  private final Color color;
 
   public LifelinePainter(int[] positions, Color color) {
     super();

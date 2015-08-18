@@ -41,31 +41,31 @@ import java.util.Properties;
 
 public class StringRegexMarkerEditor extends JPanel {
 
-  private JButton loadButton;
-  private JButton saveButton;
-  private JButton saveAsButton;
-  private JButton newButton;
-  private JFileChooser chooser;
-  private MarkerFileFilter fileFilterString;
-  private SaveEnableListener saveEnableListener;
+  private final JButton loadButton;
+  private final JButton saveButton;
+  private final JButton saveAsButton;
+  private final JButton newButton;
+  private final JFileChooser chooser;
+  private final MarkerFileFilter fileFilterString;
+  private final SaveEnableListener saveEnableListener;
 
-  private JTextField condition;
-  private JTextField file;
-  private JTextField preCondition;
-  private JCheckBox ignoreCase;
-  private JCheckBox include;
-  private JTextField groups;
-  private JTextField name;
-  private JTextField description;
-  private JComboBox type;
-  private JComboBox colors;
-  private JLabel preConditionLabel = new JLabel("Precondition:");
-  private JLabel includeLabel = new JLabel("(Pre)condition matches:");
+  private final JTextField condition;
+  private final JTextField file;
+  private final JTextField preCondition;
+  private final JCheckBox ignoreCase;
+  private final JCheckBox include;
+  private final JTextField groups;
+  private final JTextField name;
+  private final JTextField description;
+  private final JComboBox<String> type;
+  private final JComboBox<MarkerColors> colors;
+  private final JLabel preConditionLabel = new JLabel("Precondition:");
+  private final JLabel includeLabel = new JLabel("(Pre)condition matches:");
 
-  private JTextField[] testFields;
+  private final JTextField[] testFields;
 
-  private JLabel[] testResults;
-  private PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final JLabel[] testResults;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public StringRegexMarkerEditor() {
     markersContainser = AllPluginables.getInstance().getMarkersContainser();
@@ -90,17 +90,13 @@ public class StringRegexMarkerEditor extends JPanel {
     newButton.addActionListener(new NewMarkerActionListener());
 
     type = new JComboBox(new String[] { "String matcher", "Regex matcher" });
-    type.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent arg0) {
-        if (type.getSelectedIndex() == 0) {
-          preConditionLabel.setEnabled(false);
-          preCondition.setEnabled(false);
-        } else {
-          preConditionLabel.setEnabled(true);
-          preCondition.setEnabled(true);
-        }
+    type.addActionListener(arg0 -> {
+      if (type.getSelectedIndex() == 0) {
+        preConditionLabel.setEnabled(false);
+        preCondition.setEnabled(false);
+      } else {
+        preConditionLabel.setEnabled(true);
+        preCondition.setEnabled(true);
       }
     });
     type.addActionListener(testAfterChangeActionListener);
@@ -361,10 +357,7 @@ public class StringRegexMarkerEditor extends JPanel {
 
     @Override
     public boolean accept(File f) {
-      if (f.isDirectory() || f.getName().endsWith(suffix)) {
-        return true;
-      }
-      return false;
+      return f.isDirectory() || f.getName().endsWith(suffix);
     }
 
     @Override

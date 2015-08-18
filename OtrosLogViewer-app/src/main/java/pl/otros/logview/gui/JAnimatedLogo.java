@@ -56,8 +56,8 @@ public class JAnimatedLogo extends JLabel {
 
   class LogoIcon implements Icon {
 
-    private int size = 23;
-    private int inset = 2;
+    private final int size = 23;
+    private final int inset = 2;
 
     @Override
     public int getIconHeight() {

@@ -17,10 +17,10 @@ package pl.otros.logview;
 
 public interface LogDataCollector {
 
-  public abstract void add(LogData... logDatas);
+  void add(LogData... logDatas);
 
-  public abstract LogData[] getLogData();
+  LogData[] getLogData();
 
-  public abstract int clear();
+  int clear();
 
 }

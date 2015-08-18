@@ -23,9 +23,10 @@ public enum MarkerColors {
       Color.WHITE, new Color(0x11, 0x66, 0)), Lime(Color.BLACK, new Color(0x22, 255, 0)), Aqua(Color.BLACK, new Color(0, 255, 255)), Pink(Color.BLACK,
       Color.PINK), Purple(Color.WHITE, new Color(0x80, 0, 0x80)), Brown(Color.WHITE, new Color(150, 75, 0)), Orange(Color.BLACK, Color.ORANGE);
 
-  private Color background, foreground;
+  private final Color background;
+  private final Color foreground;
 
-  private MarkerColors(Color foreground, Color background) {
+  MarkerColors(Color foreground, Color background) {
     this.background = background;
     this.foreground = foreground;
 

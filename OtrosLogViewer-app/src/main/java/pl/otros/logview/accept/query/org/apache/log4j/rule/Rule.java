@@ -40,7 +40,7 @@ public interface Rule {
    * <p>
    * What True/False means can be client-specific.
    * 
-   * @param e
+   * @param ld
    *          LoggingEvent this instance will evaluate
    * @param matches
    *          a Map of event field keys to Sets of matching strings (may be null) which will be updated during execution of this method to include field and

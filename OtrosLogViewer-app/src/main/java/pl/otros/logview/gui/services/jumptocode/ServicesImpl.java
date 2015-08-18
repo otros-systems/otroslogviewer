@@ -6,8 +6,8 @@ import pl.otros.logview.gui.services.tasks.TaskSchedulerService;
 import pl.otros.logview.gui.services.tasks.TaskSchedulerServiceImpl;
 
 public class ServicesImpl implements Services {
-  private JumpToCodeService jumpToCodeService;
-  private TaskSchedulerServiceImpl taskSchedulerService;
+  private final JumpToCodeService jumpToCodeService;
+  private final TaskSchedulerServiceImpl taskSchedulerService;
 
   public ServicesImpl(OtrosApplication otrosApplication) {
     jumpToCodeService = new JumpToCodeServiceImpl(otrosApplication.getConfiguration());

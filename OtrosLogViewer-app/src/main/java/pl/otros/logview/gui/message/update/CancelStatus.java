@@ -19,5 +19,5 @@ package pl.otros.logview.gui.message.update;
 /**
  */
 public interface CancelStatus {
-    public boolean isCancelled();
+    boolean isCancelled();
 }

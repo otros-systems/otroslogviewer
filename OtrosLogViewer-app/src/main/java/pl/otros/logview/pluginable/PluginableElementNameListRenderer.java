@@ -21,7 +21,7 @@ import java.awt.*;
 
 public class PluginableElementNameListRenderer extends DefaultListCellRenderer implements TableCellRenderer {
 
-  private static JList list = new JList();
+  private static final JList list = new JList();
 
   @Override
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

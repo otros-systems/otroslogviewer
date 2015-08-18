@@ -27,14 +27,14 @@ import java.text.NumberFormat;
 
 public class ProgressWatcher implements Runnable {
 
-  private ObservableInputStreamImpl in;
-  private JProgressBar progressBar;
+  private final ObservableInputStreamImpl in;
+  private final JProgressBar progressBar;
   private boolean refreshProgress = true;
-  private LogViewPanelWrapper frame;
-  private FileObject fileName;
-  private NumberFormat npf = NumberFormat.getPercentInstance();
-  private NumberFormat nbf = NumberFormat.getIntegerInstance();
-  private LogImportStats importStats;
+  private final LogViewPanelWrapper frame;
+  private final FileObject fileName;
+  private final NumberFormat npf = NumberFormat.getPercentInstance();
+  private final NumberFormat nbf = NumberFormat.getIntegerInstance();
+  private final LogImportStats importStats;
 
   public ProgressWatcher(ObservableInputStreamImpl in, LogViewPanelWrapper frame, FileObject fileName, LogImportStats importStats) {
     super();
@@ -81,32 +81,22 @@ public class ProgressWatcher implements Runnable {
   }
 
   public void updateNotDetermined(final String message) {
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        progressBar.setIndeterminate(true);
-        progressBar.setString(message);
-      }
-
+    Runnable r = () -> {
+      progressBar.setIndeterminate(true);
+      progressBar.setString(message);
     };
 
     SwingUtilities.invokeLater(r);
   }
 
   public void updateProgress(final String message, final int current, final int min, final int max) {
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        progressBar.setIndeterminate(false);
-        progressBar.setMaximum(max);
-        progressBar.setMinimum(min);
-        progressBar.setValue(current);
-        progressBar.setString(message);
-        // refreshProgress = false;
-
-      }
+    Runnable r = () -> {
+      progressBar.setIndeterminate(false);
+      progressBar.setMaximum(max);
+      progressBar.setMinimum(min);
+      progressBar.setValue(current);
+      progressBar.setString(message);
+      // refreshProgress = false;
 
     };
     try {
@@ -120,20 +110,15 @@ public class ProgressWatcher implements Runnable {
   }
 
   public void updateFinish(final String message) {
-    Runnable r = new Runnable() {
+    Runnable r = () -> {
+      progressBar.setIndeterminate(false);
 
-      @Override
-      public void run() {
-        progressBar.setIndeterminate(false);
-
-        progressBar.setMaximum(1);
-        progressBar.setMinimum(0);
-        progressBar.setValue(1);
-        progressBar.setString(message);
-        frame.switchToContentView();
-        refreshProgress = false;
-      }
-
+      progressBar.setMaximum(1);
+      progressBar.setMinimum(0);
+      progressBar.setValue(1);
+      progressBar.setString(message);
+      frame.switchToContentView();
+      refreshProgress = false;
     };
     SwingUtilities.invokeLater(r);
 

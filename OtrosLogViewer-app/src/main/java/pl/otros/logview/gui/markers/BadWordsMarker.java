@@ -22,7 +22,7 @@ public class BadWordsMarker extends AbstractAutomaticMarker implements Automatic
 
   private static final String NAME = "Containing words 'Null', 'Error', 'Fail', 'Exception', 'Severe'";
   private static final String DESCRIPTION = "Marks/unmakrs logs with 'Null', 'Error', 'Fail' , 'Exception', 'Severe' in message";
-  private static final String[] GROUPS = new String[] { "", "Errors" };
+  private static final String[] GROUPS = { "", "Errors" };
 
   public BadWordsMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

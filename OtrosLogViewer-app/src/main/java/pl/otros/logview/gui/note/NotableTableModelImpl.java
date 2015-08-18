@@ -24,13 +24,13 @@ import java.util.TreeMap;
 
 public class NotableTableModelImpl implements NotableTableModel {
 
-  private TreeMap<Integer, Note> notes;
+  private final TreeMap<Integer, Note> notes;
   private static final Note EMPTY_NOTE = new Note("");
-  private Set<NoteObserver> noteObservers;
+  private final Set<NoteObserver> noteObservers;
 
   public NotableTableModelImpl() {
-    notes = new TreeMap<Integer, Note>();
-    noteObservers = new HashSet<NoteObserver>();
+    notes = new TreeMap<>();
+    noteObservers = new HashSet<>();
   }
 
   @Override
@@ -52,7 +52,7 @@ public class NotableTableModelImpl implements NotableTableModel {
 
   @Override
   public TreeMap<Integer, Note> getAllNotes() {
-    TreeMap<Integer, Note> copy = new TreeMap<Integer, Note>();
+    TreeMap<Integer, Note> copy = new TreeMap<>();
     copy.putAll(notes);
     return copy;
   }

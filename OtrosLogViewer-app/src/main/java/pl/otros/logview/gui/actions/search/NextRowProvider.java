@@ -22,6 +22,6 @@ public interface NextRowProvider {
    * 
    * @return
    */
-  public int getNextRow();
+  int getNextRow();
 
 }

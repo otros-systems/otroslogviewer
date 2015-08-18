@@ -28,7 +28,7 @@ public class LevelLowerAcceptCondition extends AbstractAcceptContidion implement
 
   protected Level level;
   protected Icon icon;
-  private int levelIntValue;
+  private final int levelIntValue;
 
   public LevelLowerAcceptCondition(Level level) {
     super();
@@ -40,7 +40,7 @@ public class LevelLowerAcceptCondition extends AbstractAcceptContidion implement
   }
 
   private void createIcon() {
-    Level[] levels = new Level[] { Level.FINEST,//
+    Level[] levels = { Level.FINEST,//
         Level.FINER,//
         Level.FINE,//
         Level.CONFIG,//
@@ -48,7 +48,7 @@ public class LevelLowerAcceptCondition extends AbstractAcceptContidion implement
         Level.WARNING,//
         Level.SEVERE,//
     };
-    ArrayList<Icon> iconsList = new ArrayList<Icon>();
+    ArrayList<Icon> iconsList = new ArrayList<>();
     for (Level l:levels) {
       if (l.intValue() < levelIntValue) {
         iconsList.add(LevelRenderer.getIconByLevel(l));

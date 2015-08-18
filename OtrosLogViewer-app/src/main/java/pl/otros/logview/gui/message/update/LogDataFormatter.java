@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +49,9 @@ public class LogDataFormatter {
   public static final String NEW_LINE = "\n";
   private static final Logger LOGGER = LoggerFactory.getLogger(LogDataFormatter.class.getName());
 
-    private LogData ld;
-    private ArrayList<TextChunkWithStyle> chunks = new ArrayList<TextChunkWithStyle>();
-    private DateFormat dateFormat;
+    private final LogData ld;
+    private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
+    private final DateFormat dateFormat;
     private Style defaultStyle = null;
     private Style mainStyle = null;
     private Style classMethodStyle = null;
@@ -57,17 +59,17 @@ public class LogDataFormatter {
     private Style propertyNameStyle = null;
     private Style propertyValueStyle = null;
 
-    private StyleContext sc;
+    private final StyleContext sc;
 
 
 
   private int maximumMessageSize;
 
-    private PluginableElementsContainer<MessageColorizer> colorizersContainer;
-    private PluginableElementsContainer<MessageFormatter> formattersContainer;
-    private CancelStatus cancelStatus;
+    private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
+    private final PluginableElementsContainer<MessageFormatter> formattersContainer;
+    private final CancelStatus cancelStatus;
 
-    private MessageUpdateUtils messageUtils;
+    private final MessageUpdateUtils messageUtils;
 
 
     public LogDataFormatter(LogData logData, //
@@ -178,7 +180,7 @@ public class LogDataFormatter {
 
 
         Collection<MessageColorizer> colorizers = colorizersContainer.getElements();
-        ArrayList<MessageFragmentStyle> messageFragmentStyles = new ArrayList<MessageFragmentStyle>();
+        ArrayList<MessageFragmentStyle> messageFragmentStyles = new ArrayList<>();
         for (MessageColorizer messageColorizer : colorizers) {
             if (messageColorizer.getPluginableId().equals(SearchResultColorizer.class.getName())) {
                 continue;
@@ -186,9 +188,7 @@ public class LogDataFormatter {
             messageFragmentStyles.addAll(messageUtils.colorizeMessageWithTimeLimit(s1, charsBeforeMessage, messageColorizer, 5));
         }
 
-        for (MessageFragmentStyle messageFragmentStyle : messageFragmentStyles) {
-            chunks.add(new TextChunkWithStyle(null, messageFragmentStyle));
-        }
+      chunks.addAll(messageFragmentStyles.stream().map(messageFragmentStyle -> new TextChunkWithStyle(null, messageFragmentStyle)).collect(Collectors.toList()));
 
         chunks.add(new TextChunkWithStyle("\nMarked: ", boldArialStyle));
         if (ld.isMarked()) {

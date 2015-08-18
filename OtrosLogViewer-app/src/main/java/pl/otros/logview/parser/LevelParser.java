@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 public class LevelParser {
 
-  private HashMap<String, Level> levels;
+  private final HashMap<String, Level> levels;
 
   public LevelParser(Locale locale) {
     levels = new HashMap<>(8);

@@ -28,14 +28,14 @@ import java.util.logging.Level;
 
 public class TestUtils {
 
-  private static final Level[] LEVELS = new Level[] { Level.FINE, Level.FINER, Level.FINEST, Level.CONFIG, Level.INFO, Level.WARNING, Level.SEVERE };
+  private static final Level[] LEVELS = { Level.FINE, Level.FINER, Level.FINEST, Level.CONFIG, Level.INFO, Level.WARNING, Level.SEVERE };
 
-  private static final String LOGGERS[] = new String[] { "com.test.class1", "com.test.class2", "com.test2.class3", "com.test2.class1", "com.test2.class1",
+  private static final String LOGGERS[] = { "com.test.class1", "com.test.class2", "com.test2.class3", "com.test2.class1", "com.test2.class1",
       "com.ad.cd", };
 
-  private static final String THREADS[] = new String[] { "deamon", "connection watcher", "main", "socket listener 1", "socket listener 2", };
+  private static final String THREADS[] = { "deamon", "connection watcher", "main", "socket listener 1", "socket listener 2", };
 
-  private static final String METHODS[] = new String[] { "met2", "m34", "main", "superMethod", "wow", };
+  private static final String METHODS[] = { "met2", "m34", "main", "superMethod", "wow", };
 
   private static final Random RANDOM = new Random(System.currentTimeMillis());
   private static int id = 0;

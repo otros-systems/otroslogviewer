@@ -25,9 +25,9 @@ import java.awt.*;
 
 public class NoteRenderer extends DefaultTableCellRenderer {
 
-  private ImageIcon iconEmpty;
-  private ImageIcon iconExist;
-  private JLabel label;
+  private final ImageIcon iconEmpty;
+  private final ImageIcon iconExist;
+  private final JLabel label;
 
   public NoteRenderer() {
     label = new JLabel();
@@ -42,7 +42,7 @@ public class NoteRenderer extends DefaultTableCellRenderer {
     // super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     if (value instanceof Note) {
       Note note = (Note) value;
-      if (note == null || StringUtils.isBlank(note.getNote())) {
+      if (StringUtils.isBlank(note.getNote())) {
         label.setIcon(iconEmpty);
         label.setText("");
       } else {

@@ -95,12 +95,7 @@ public class ClassWrapperRendererTest {
   public void testAbbreviatePackagesToSingleLetter(String clazz,int width, String expected) {
     //given
     final FontMetrics fontMetrics = Mockito.mock(FontMetrics.class);
-    Mockito.when(fontMetrics.stringWidth(Matchers.anyString())).thenAnswer(new Answer<Integer>() {
-      @Override
-      public Integer answer(InvocationOnMock invocation) throws Throwable {
-        return ((String)invocation.getArguments()[0]).length();
-      }
-    });
+    Mockito.when(fontMetrics.stringWidth(Matchers.anyString())).thenAnswer(invocation -> ((String)invocation.getArguments()[0]).length());
 
     //when
     final String actual = underTest.abbreviatePackagesToSingleLetter(clazz, width, fontMetrics);

@@ -24,7 +24,7 @@ public class StringContainsSearchMatcherTest {
 
   private LogData logData;
   private LogData logDataUpperCase;
-  private StringContainsSearchMatcher matcher = new StringContainsSearchMatcher("ala");
+  private final StringContainsSearchMatcher matcher = new StringContainsSearchMatcher("ala");
 
   @BeforeMethod
 public void setup() {

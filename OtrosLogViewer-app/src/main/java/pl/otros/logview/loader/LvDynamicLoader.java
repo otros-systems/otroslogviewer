@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +46,9 @@ public class LvDynamicLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LvDynamicLoader.class.getName());
   private static LvDynamicLoader instance = null;
-  private LogImportersLoader logImportersLoader;
-  private LogFiltersLoader logFiltersLoader;
-  private MessageColorizerLoader messageColorizerLoader;
+  private final LogImportersLoader logImportersLoader;
+  private final LogFiltersLoader logFiltersLoader;
+  private final MessageColorizerLoader messageColorizerLoader;
   private StatusObserver statusObserver;
 
   public static LvDynamicLoader getInstance() {
@@ -61,13 +63,13 @@ public class LvDynamicLoader {
     return instance;
   }
 
-  private Collection<AutomaticMarker> automaticMarkers;
-  private Collection<LogImporter> logImporters;
-  private Collection<LogFilter> logFilters;
-  private Collection<MessageColorizer> messageColorizers;
-  private Collection<MessageFormatter> messageFormatters;
-  private Collection<Plugin> pluginInfos; 
-  private BaseLoader baseLoader;
+  private final Collection<AutomaticMarker> automaticMarkers;
+  private final Collection<LogImporter> logImporters;
+  private final Collection<LogFilter> logFilters;
+  private final Collection<MessageColorizer> messageColorizers;
+  private final Collection<MessageFormatter> messageFormatters;
+  private final Collection<Plugin> pluginInfos;
+  private final BaseLoader baseLoader;
 
   private LvDynamicLoader() {
     super();
@@ -76,12 +78,12 @@ public class LvDynamicLoader {
     logFiltersLoader = new LogFiltersLoader();
     messageColorizerLoader = new MessageColorizerLoader();
 
-    automaticMarkers = new ArrayList<AutomaticMarker>();
-    logImporters = new ArrayList<LogImporter>();
-    logFilters = new ArrayList<LogFilter>();
-    messageColorizers = new ArrayList<MessageColorizer>();
-    messageFormatters = new ArrayList<MessageFormatter>();
-    pluginInfos = new ArrayList<Plugin>();
+    automaticMarkers = new ArrayList<>();
+    logImporters = new ArrayList<>();
+    logFilters = new ArrayList<>();
+    messageColorizers = new ArrayList<>();
+    messageFormatters = new ArrayList<>();
+    pluginInfos = new ArrayList<>();
   }
 
   public void loadAll() throws IOException, InitializationException {
@@ -116,11 +118,8 @@ private void loadPlugins() {
 	pluginInfos.add(new StackTraceFormatterPlugin());
 	pluginInfos.addAll(baseLoader.load(AllPluginables.USER_PLUGINS, Plugin.class));
     pluginInfos.addAll(baseLoader.load(AllPluginables.SYSTEM_PLUGINS, Plugin.class));
-    ArrayList<PluginablePluginAdapter> pluList = new ArrayList<PluginablePluginAdapter>();
-    for (Plugin pluginInfo : pluginInfos) {
-		pluList.add(new PluginablePluginAdapter(pluginInfo));
-	}
-    addElementsToList(AllPluginables.getInstance().getPluginsInfoContainer(), pluList, 0);
+    ArrayList<PluginablePluginAdapter> pluList = pluginInfos.stream().map(PluginablePluginAdapter::new).collect(Collectors.toCollection(ArrayList::new));
+  addElementsToList(AllPluginables.getInstance().getPluginsInfoContainer(), pluList, 0);
 }
 
   private void loadMessageFormatter() {
@@ -207,7 +206,7 @@ private void loadPlugins() {
   protected <T extends PluginableElement> void addElementsToList(PluginableElementsContainer<T> container, Collection<T> list, int... versions) {
     for (T element : list) {
       // if pluginable element is wrong e.g. do not have method
-      Set<Integer> versionsSet = new HashSet<Integer>();
+      Set<Integer> versionsSet = new HashSet<>();
       for (int i : versions) {
         versionsSet.add(i);
       }

@@ -1,6 +1,8 @@
 package pl.otros.logview.gui;
 
 import org.jdesktop.swingx.JXTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.swing.table.ColumnLayout;
 import pl.otros.swing.table.TablesUtils;
@@ -12,8 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
 
 class ApplyColumnLayoutAction extends AbstractAction {
   private final Logger LOGGER = LoggerFactory.getLogger(ApplyColumnLayoutAction.class.getName());
@@ -30,8 +31,8 @@ class ApplyColumnLayoutAction extends AbstractAction {
   public void actionPerformed(ActionEvent actionEvent) {
     List<String> colNames = columnLayout.getColumns();
     LOGGER.debug(String.format("Retrieved %d col names: <<%s>>", colNames.size(), colNames.toString()));
-    List<TableColumns> visCols = new ArrayList<TableColumns>();
-    Map<String, TableColumns> colNameToEnum = new HashMap<String, TableColumns>();
+    List<TableColumns> visCols = new ArrayList<>();
+    Map<String, TableColumns> colNameToEnum = new HashMap<>();
     for (TableColumns tcEnum : TableColumns.values()) {
       colNameToEnum.put(tcEnum.getName(), tcEnum);
     }
@@ -45,9 +46,7 @@ class ApplyColumnLayoutAction extends AbstractAction {
       TableColumns tcs = (TableColumns) o;
       table.getColumnExt(tcs).setVisible(false);
     }
-    for (String colName : colNames) {
-      visCols.add(colNameToEnum.get(colName));
-    }
+    visCols.addAll(colNames.stream().map(colNameToEnum::get).collect(Collectors.toList()));
     TablesUtils.showOnlyThisColumns(table, visCols.toArray(new TableColumns[visCols.size()]));
     TablesUtils.sortColumnsInOrder(columnLayout, table);
     LOGGER.debug("Column changes applied");

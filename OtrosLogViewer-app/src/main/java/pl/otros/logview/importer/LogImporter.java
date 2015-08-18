@@ -25,29 +25,29 @@ import java.util.Properties;
 
 public interface LogImporter extends PluginableElement {
 
-  public static final int LOG_IMPORTER_VERSION_1 = 1;
+  int LOG_IMPORTER_VERSION_1 = 1;
 
-  public final String PARSER_CLASS = "parser.class";
+  String PARSER_CLASS = "parser.class";
 
-  public final String PARSER_DISPLAYABLE_NAME = "parser.displayableName";
-  public final String PARSER_MNEMONIC = "parser.mnemonic";
-  public final String PARSER_KEY_STROKE_ACCELELATOR = "parser.keyStrokeAccelelator";
-  public final String PARSER_ICON = "parser.icon";
+  String PARSER_DISPLAYABLE_NAME = "parser.displayableName";
+  String PARSER_MNEMONIC = "parser.mnemonic";
+  String PARSER_KEY_STROKE_ACCELELATOR = "parser.keyStrokeAccelelator";
+  String PARSER_ICON = "parser.icon";
 
-  public void init(Properties properties) throws InitializationException;
+  void init(Properties properties) throws InitializationException;
 
   /**
    * Initialize parsing context specific resources, which are not thread safe (i.e. DateFormat)
    * 
    * @param parsingContext
    */
-  public void initParsingContext(ParsingContext parsingContext);
+  void initParsingContext(ParsingContext parsingContext);
 
-  public void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext);
+  void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext);
 
-  public String getKeyStrokeAccelelator();
+  String getKeyStrokeAccelelator();
 
-  public int getMnemonic();
+  int getMnemonic();
 
-  public Icon getIcon();
+  Icon getIcon();
 }

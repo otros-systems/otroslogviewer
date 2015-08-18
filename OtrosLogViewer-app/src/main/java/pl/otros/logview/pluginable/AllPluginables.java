@@ -25,13 +25,13 @@ import java.io.File;
 
 public class AllPluginables {
 
-  private PluginableElementsContainer<LogImporter> logImportersContainer;
-  private PluginableElementsContainer<AutomaticMarker> markersContainer;
-  private PluginableElementsContainer<MessageColorizer> messageColorizers;
-  private PluginableElementsContainer<MessageFormatter> messageFormatters;
+  private final PluginableElementsContainer<LogImporter> logImportersContainer;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainer;
+  private final PluginableElementsContainer<MessageColorizer> messageColorizers;
+  private final PluginableElementsContainer<MessageFormatter> messageFormatters;
   private PluginableElementsContainer<LogFilter> logFiltersContainer;
-  private PluginableElementsContainer<PluginablePluginAdapter> pluginsInfoContainer;
-  private PluginableElementsContainer<PluginableElement> allPluginables;
+  private final PluginableElementsContainer<PluginablePluginAdapter> pluginsInfoContainer;
+  private final PluginableElementsContainer<PluginableElement> allPluginables;
 
   public static final File USER_CONFIGURATION_DIRECTORY = new File(System.getProperty("user.home") + File.separator + ".otroslogviewer");
   public static final File USER_MARKERS = new File(USER_CONFIGURATION_DIRECTORY, "plugins" + File.separator + "markers");
@@ -41,21 +41,21 @@ public class AllPluginables {
   public static final File USER_PLUGINS = new File(USER_CONFIGURATION_DIRECTORY, "plugins" + File.separator + "plugins");
 public static final File SYSTEM_PLUGINS = new File("plugins" + File.separator + "plugins");
 
-  private static AllPluginables instance = new AllPluginables();
+  private static final AllPluginables instance = new AllPluginables();
 
   public static AllPluginables getInstance() {
     return instance;
   }
 
   public AllPluginables() {
-    markersContainer = new PluginableElementsContainer<AutomaticMarker>();
-    messageColorizers = new PluginableElementsContainer<MessageColorizer>();
-    messageFormatters = new PluginableElementsContainer<MessageFormatter>();
-    logFiltersContainer = new PluginableElementsContainer<LogFilter>();
-    logFiltersContainer = new PluginableElementsContainer<LogFilter>();
-    logImportersContainer = new PluginableElementsContainer<LogImporter>();
-    allPluginables = new PluginableElementsContainer<PluginableElement>();
-    pluginsInfoContainer = new PluginableElementsContainer<PluginablePluginAdapter>();
+    markersContainer = new PluginableElementsContainer<>();
+    messageColorizers = new PluginableElementsContainer<>();
+    messageFormatters = new PluginableElementsContainer<>();
+    logFiltersContainer = new PluginableElementsContainer<>();
+    logFiltersContainer = new PluginableElementsContainer<>();
+    logImportersContainer = new PluginableElementsContainer<>();
+    allPluginables = new PluginableElementsContainer<>();
+    pluginsInfoContainer = new PluginableElementsContainer<>();
   }
 
   public PluginableElementsContainer<LogImporter> getLogImportersContainer() {

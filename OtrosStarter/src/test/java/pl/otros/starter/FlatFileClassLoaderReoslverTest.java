@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  */
 public class FlatFileClassLoaderReoslverTest {
 
-    private FlatFileClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
+    private final FlatFileClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
 
     @Test
     public void testGetClassPathUrls() throws Exception {

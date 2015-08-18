@@ -8,6 +8,6 @@ public interface ErrorReportDataCollector {
 	 * 
 	 * @return  Map of key/values for error report
 	 */
-	public Map<String, String> collect(ErrorReportCollectingContext context);
+	Map<String, String> collect(ErrorReportCollectingContext context);
 
 }

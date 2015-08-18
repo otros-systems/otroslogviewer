@@ -38,7 +38,7 @@ public class ExportToHtml {
     }
 
     public String format(String text, Collection<MessageFragmentStyle> styles, String title, HTML_MODE html_mode) {
-        HashMap<String, Map<String, String>> stylesMap = new HashMap<String, Map<String, String>>();
+        HashMap<String, Map<String, String>> stylesMap = new HashMap<>();
         for (MessageFragmentStyle mfs : styles) {
             Map<String, String> styleMapToCss = styleToCssMap(mfs);
             stylesMap.put(mfs.getStyle().getName(), styleMapToCss);
@@ -89,7 +89,7 @@ public class ExportToHtml {
 
     private ArrayList<HtmlSpanFragment> createHtmlSpanTag(Collection<MessageFragmentStyle> styles, HTML_MODE html_mode) {
         int id = 0;
-        ArrayList<HtmlSpanFragment> htmlSpanFragments = new ArrayList<HtmlSpanFragment>();
+        ArrayList<HtmlSpanFragment> htmlSpanFragments = new ArrayList<>();
         for (MessageFragmentStyle mfs : styles) {
             id++;
             LOGGER.trace(String.format("Creating span [id=%d] for style %s", id, mfs.getStyle().getName()));
@@ -133,7 +133,7 @@ public class ExportToHtml {
 
     protected Map<String, String> styleToCssMap(MessageFragmentStyle mfs) {
         Style style = mfs.getStyle();
-        HashMap<String, Object> attributes = new HashMap<String, Object>();
+        HashMap<String, Object> attributes = new HashMap<>();
         Enumeration<?> attributeNames = style.getAttributeNames();
         while (attributeNames.hasMoreElements()) {
             Object nextElement = attributeNames.nextElement();
@@ -141,7 +141,7 @@ public class ExportToHtml {
                     style.getAttribute(nextElement));
         }
 
-        Map<String, String> cssMap = new HashMap<String, String>();
+        Map<String, String> cssMap = new HashMap<>();
 
 
         if (attributes.get("family") != null) {

@@ -21,9 +21,9 @@ import java.awt.event.KeyEvent;
 
 public class FocusComponentOnHotKey implements KeyEventPostProcessor {
 
-  private JComponent component;
-  private int keyCode;
-  private int modifiers;
+  private final JComponent component;
+  private final int keyCode;
+  private final int modifiers;
 
   public FocusComponentOnHotKey(JComponent component, int keyCode, int modifiers) {
     super();

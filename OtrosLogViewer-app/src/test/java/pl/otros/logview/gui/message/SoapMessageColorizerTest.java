@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class SoapMessageColorizerTest {
 
-	private SoapMessageColorizer colorizer = new SoapMessageColorizer();
+	private final SoapMessageColorizer colorizer = new SoapMessageColorizer();
 
 	protected String loadResources(String resources) throws IOException {
 		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources);
@@ -38,7 +38,7 @@ public class SoapMessageColorizerTest {
 	public void testColorize() throws Exception {
 		String message = loadResources("soap/soap.1.request.xml");
 		Collection<MessageFragmentStyle> colorize = colorizer.colorize(message);
-		HashMap<Integer, MessageFragmentStyle> map = new HashMap<Integer, MessageFragmentStyle>(colorize.size());
+		HashMap<Integer, MessageFragmentStyle> map = new HashMap<>(colorize.size());
 		for (MessageFragmentStyle messageFragmentStyle : colorize) {
 			map.put(Integer.valueOf(messageFragmentStyle.getOffset()), messageFragmentStyle);
 		}

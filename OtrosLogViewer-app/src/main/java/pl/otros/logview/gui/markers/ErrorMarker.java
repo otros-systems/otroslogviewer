@@ -22,7 +22,7 @@ public class ErrorMarker extends AbstractAutomaticMarker {
 
   private static final String NAME = "'Error' in message";
   private static final String DESCRIPTION = "Marks/unmarks logs with 'error' in message";
-  private static final String[] GROUPS = new String[] { "", "Errors" };
+  private static final String[] GROUPS = { "", "Errors" };
 
   public ErrorMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

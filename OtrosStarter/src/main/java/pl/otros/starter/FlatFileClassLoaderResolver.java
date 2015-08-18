@@ -35,7 +35,7 @@ public class FlatFileClassLoaderResolver implements ClassLoaderResolver {
   @Override
   public URL[] getClassPathUrls(InputStream inputStream) throws IOException {
     String olvHome = System.getProperty("OLV_HOME");
-    ArrayList<URL> result = new ArrayList<URL>();
+    ArrayList<URL> result = new ArrayList<>();
     BufferedReader bin = new BufferedReader(new InputStreamReader(inputStream));
     String line = null;
     while ((line = bin.readLine()) != null) {
@@ -44,12 +44,12 @@ public class FlatFileClassLoaderResolver implements ClassLoaderResolver {
       try {
         result.add(f.toURI().toURL());
       } catch (MalformedURLException e) {
-        LOGGER.severe(String.format("Can't add resources %s:", line, e.getMessage()));
+        LOGGER.severe(String.format("Can't add resources %s: %s", line, e.getMessage()));
       }
 
     }
 
-    return result.toArray(new URL[0]);
+    return result.toArray(new URL[result.size()]);
 
   }
 }

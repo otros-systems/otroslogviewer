@@ -39,7 +39,7 @@ public class OrRuleTest  {
      * OrRule.getRule(Stack) throws exception if only one rule provided.
      */
     @Test public void test1() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         try {
             OrRule.getRule(stack);
@@ -52,7 +52,7 @@ public class OrRuleTest  {
      * OrRule.getRule(Stack) throws exception if non-rules are provided.
      */
     @Test public void test2() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         stack.push("World");
         try {
@@ -66,12 +66,12 @@ public class OrRuleTest  {
      * Test Or of Level and Time.
      */
     @Test public void test3() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
         Rule rule = OrRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -82,12 +82,12 @@ public class OrRuleTest  {
      * Test Or of Level and Time when Level does not match.
      */
     @Test public void test4() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
         Rule rule = OrRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);
@@ -98,12 +98,12 @@ public class OrRuleTest  {
      * Test Or of Level and Time when Time does not match.
      */
     @Test public void test5() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2009-05-21 00:44:45"));
         Rule rule = OrRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -115,12 +115,12 @@ public class OrRuleTest  {
      * Test Or of Level and Time when Time and Level do not match.
      */
     @Test public void test6() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2009-05-21 00:44:45"));
         Rule rule = OrRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);
@@ -131,12 +131,12 @@ public class OrRuleTest  {
      * Test deserialized Or.
      */
     @Test public void test7() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(OrRule.getRule(stack));
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -148,12 +148,12 @@ public class OrRuleTest  {
      * Test deserialized Or when neither rule match.
      */
     @Test public void test8() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         stack.push(TimestampInequalityRule.getRule(">=", "2009-05-21 00:44:45"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(OrRule.getRule(stack));
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);

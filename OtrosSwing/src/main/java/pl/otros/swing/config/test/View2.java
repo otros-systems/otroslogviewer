@@ -8,10 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class View2 extends AbstractConfigView {
-  private JCheckBox jCheckBox;
-  private JTextArea textArea;
-  private JLabel label;
-  private JPanel p;
+  private final JCheckBox jCheckBox;
+  private final JTextArea textArea;
+  private final JLabel label;
+  private final JPanel p;
 
   public View2() {
     super("view2", "View 2", "View 2 desc sdfs df.as.df d.as f.s");

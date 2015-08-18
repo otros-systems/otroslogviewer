@@ -40,7 +40,7 @@ public class ClearMarkingsAction extends OtrosAction {
     LogDataTableModel dataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
     int rowCount = dataTableModel.getRowCount();
     LOGGER.info(String.format("Started action of clearing marks, have %d rows to check.", rowCount));
-    ArrayList<Integer> markedRows = new ArrayList<Integer>();
+    ArrayList<Integer> markedRows = new ArrayList<>();
     for (int i = 0; i < rowCount; i++) {
       if (dataTableModel.isMarked(i)) {
         markedRows.add(i);

@@ -69,7 +69,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   private final JEditorPane packageAbbreviationTa;
   private final JList columnLayoutsList;
   private MutableListModel<ColumnLayout> columnLayoutListModel;
-  private OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
   private JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog;
 
   public LogTableFormatConfigView(final OtrosApplication otrosApplication) {
@@ -90,12 +90,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     final JTextField exampleTextField = new JTextField(20);
     exampleTextField.setEditable(false);
     addLabel("Format example", 'e', exampleTextField, panel);
-    dateFormatRadio.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        exampleTextField.setText(new SimpleDateFormat(dateFormatRadio.getSelectedItem().toString()).format(new Date()));
-      }
-    });
+    dateFormatRadio.addActionListener(e -> exampleTextField.setText(new SimpleDateFormat(dateFormatRadio.getSelectedItem().toString()).format(new Date())));
     dateFormatRadio.setSelectedIndex(0);
     radioGroup = new JXRadioGroup(LevelRenderer.Mode.values());
     addLabel("Level display", 'l', radioGroup, panel);
@@ -113,7 +108,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
     //Column layouts
     final JPanel columnLayoutsPanel = new JPanel(new BorderLayout());
-    columnLayoutListModel = new MutableListModel<ColumnLayout>();
+    columnLayoutListModel = new MutableListModel<>();
 
     columnLayoutsList = new JList(columnLayoutListModel);
     columnLayoutsList.setToolTipText("Click right mouse button to edit or delete");
@@ -143,13 +138,10 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         }
       }
     };
-    columnLayoutsList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        boolean selected = columnLayoutsList.getSelectedIndices().length > 0;
-        renameAction.setEnabled(selected);
-        deleteAction.setEnabled(selected);
-      }
+    columnLayoutsList.addListSelectionListener(listSelectionEvent -> {
+      boolean selected = columnLayoutsList.getSelectedIndices().length > 0;
+      renameAction.setEnabled(selected);
+      deleteAction.setEnabled(selected);
     });
     renameAction.setEnabled(false);
     deleteAction.setEnabled(false);
@@ -223,7 +215,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   }
 
   public static List<ColumnLayout> loadColumnLayouts(Configuration configuration) {
-    List<ColumnLayout> layouts = new ArrayList<ColumnLayout>();
+    List<ColumnLayout> layouts = new ArrayList<>();
     DataConfiguration dc = new DataConfiguration(configuration);
     final int count = dc.getInt(COL_LAYOUT + ".count", 0);
     for (int i = 0; i < count; i++) {
@@ -276,10 +268,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       return;
     }
     JPanel messagePanel = new JPanel(new BorderLayout());
-    final MutableListModel<ColumnLayout> listModel = new MutableListModel<ColumnLayout>();
-    for (ColumnLayout columnLayout : columnLayouts) {
-      listModel.add(columnLayout);
-    }
+    final MutableListModel<ColumnLayout> listModel = new MutableListModel<>();
+    columnLayouts.forEach(listModel::add);
 
     final JList jList = new JList(listModel);
     jList.setCellRenderer(new ColumnLayoutRenderer());
@@ -346,11 +336,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     packageAbbreviationTa.setText(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, DEFAULT_ABBREVIATION_HEADER));
     packageAbbreviationTa.setCaretPosition(packageAbbreviationTa.getText().length());
 
-    columnLayoutListModel = new MutableListModel<ColumnLayout>();
+    columnLayoutListModel = new MutableListModel<>();
     columnLayoutsList.setModel(columnLayoutListModel);
-    for (ColumnLayout layout : loadColumnLayouts(configuration)) {
-      columnLayoutListModel.add(layout);
-    }
+    loadColumnLayouts(configuration).forEach(columnLayoutListModel::add);
   }
 
   @Override
@@ -385,7 +373,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       try {
-        List<ColumnLayout> list = new ArrayList<ColumnLayout>();
+        List<ColumnLayout> list = new ArrayList<>();
         final Object[] selectedValues = LogTableFormatConfigView.this.columnLayoutsList.getSelectedValues();
         if (selectedValues.length == 0) {
           list.addAll(columnLayoutListModel.getList());

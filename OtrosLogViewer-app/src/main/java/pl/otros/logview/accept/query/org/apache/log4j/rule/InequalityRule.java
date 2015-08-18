@@ -128,7 +128,7 @@ public class InequalityRule extends AbstractRule {
   public boolean evaluate(final LogData event, Map matches) {
     long first = 0;
     try {
-      first = new Long(RESOLVER.getValue(field, event).toString()).longValue();
+      first = Long.parseLong(RESOLVER.getValue(field, event).toString());
     } catch (NumberFormatException nfe) {
       return false;
     }
@@ -136,7 +136,7 @@ public class InequalityRule extends AbstractRule {
     long second = 0;
 
     try {
-      second = new Long(value).longValue();
+      second = Long.parseLong(value);
     } catch (NumberFormatException nfe) {
       return false;
     }

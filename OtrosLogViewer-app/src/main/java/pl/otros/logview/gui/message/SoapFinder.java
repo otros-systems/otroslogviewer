@@ -26,7 +26,7 @@ public class SoapFinder {
   // static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/2003/05/soap-envelope\"", Pattern.MULTILINE);
   static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/\\d+/\\d+/soap-envelope\"", Pattern.MULTILINE);
   // http://www.w3.org/2002/06/soap-envelope
-  static Pattern[] patterns = new Pattern[] { p1, p2 };
+  static Pattern[] patterns = { p1, p2 };
 
   public String findSoapTag(String string) {
     String result = null;
@@ -43,7 +43,7 @@ public class SoapFinder {
   }
 
   public SortedSet<SubText> findSoaps(String text) {
-    SortedSet<SubText> set = new TreeSet<SubText>();
+    SortedSet<SubText> set = new TreeSet<>();
     String tag = findSoapTag(text);
     if (tag == null) {
       return set;

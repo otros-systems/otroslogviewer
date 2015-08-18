@@ -28,8 +28,8 @@ public class StackTraceFinder {
   private static final Pattern exceptionLine = Pattern.compile("(\\s*at\\s+([\\w\\d\\.]*\\.)?([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))");
 
   public SortedSet<SubText> findStackTraces(String text) {
-    SortedSet<SubText> set = new TreeSet<SubText>();
-    LinkedList<Integer> newLineIndexes = new LinkedList<Integer>();
+    SortedSet<SubText> set = new TreeSet<>();
+    LinkedList<Integer> newLineIndexes = new LinkedList<>();
     newLineIndexes.add(0);
     int newLineIndex = -1;
     while ((newLineIndex = StringUtils.indexOf(text, '\n', newLineIndex + 1)) > -1) {

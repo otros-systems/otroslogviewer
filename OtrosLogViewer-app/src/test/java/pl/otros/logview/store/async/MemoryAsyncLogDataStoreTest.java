@@ -30,14 +30,14 @@ public class MemoryAsyncLogDataStoreTest {
   public static final int LOG_EVENT_COUNT = 1000;
   public static final String TEST_THREAD_POOL_NAME = "TestThreadPoolName";
   MemoryAsyncLogDataStore store;
-  private String[] classes = new String[]{
+  private final String[] classes = {
       "com.package.p1.Class",
       "com.package.p1.Dao",
       "com.package.p1.Bean",
       "com.package.p2.ExtraBean",
       "com.package.p2.Class",
   };
-  private String[] threads = new String[]{
+  private final String[] threads = {
       "t1",
       "t3",
       "tsfsa",
@@ -48,23 +48,15 @@ public class MemoryAsyncLogDataStoreTest {
   @BeforeMethod
   public void setUp() throws Exception {
     ExecutorService executorService =
-        Executors.newSingleThreadExecutor(new ThreadFactory() {
-          @Override
-          public Thread newThread(Runnable r) {
-            return new Thread(r, TEST_THREAD_POOL_NAME);
-          }
-        });
+        Executors.newSingleThreadExecutor(r -> new Thread(r, TEST_THREAD_POOL_NAME));
     ListeningExecutorService service = MoreExecutors.listeningDecorator(executorService);
     final MemoryLogDataStore memorylogDataStore = new MemoryLogDataStore();
     LogDataStore logDataStore = (LogDataStore) Proxy.newProxyInstance(memorylogDataStore.getClass().getClassLoader(),
-        new Class[]{LogDataStore.class}, new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        String logStoreThreadName = Thread.currentThread().getName();
-        AssertJUnit.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
-        return method.invoke(memorylogDataStore, args);
-      }
-    });
+        new Class[]{LogDataStore.class}, (proxy, method, args) -> {
+          String logStoreThreadName = Thread.currentThread().getName();
+          AssertJUnit.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
+          return method.invoke(memorylogDataStore, args);
+        });
 
 
     store = new MemoryAsyncLogDataStore(service, logDataStore);

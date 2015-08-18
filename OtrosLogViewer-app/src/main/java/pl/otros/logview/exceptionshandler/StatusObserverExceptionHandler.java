@@ -26,7 +26,7 @@ public class StatusObserverExceptionHandler implements UncaughtExceptionHandler 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StatusObserverExceptionHandler.class.getName());
 	
-	private StatusObserver statusObserver;
+	private final StatusObserver statusObserver;
 	
 	public StatusObserverExceptionHandler(StatusObserver statusObserver) {
 		super();

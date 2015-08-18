@@ -27,13 +27,7 @@ public abstract class AbstractSwingUncaughtExceptionHandler implements UncaughtE
 		if (SwingUtilities.isEventDispatchThread()){
 			uncaughtExceptionInSwingEDT(arg0, arg1);
 		} else {
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					uncaughtExceptionInSwingEDT(arg0, arg1);
-				}
-			});
+			SwingUtilities.invokeLater(() -> uncaughtExceptionInSwingEDT(arg0, arg1));
 		}
 	}
 	

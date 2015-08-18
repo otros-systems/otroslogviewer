@@ -39,15 +39,15 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FormatMessageDialogWorker.class.getName());
 
-  private LogData ld;
-  private ArrayList<TextChunkWithStyle> chunks = new ArrayList<TextChunkWithStyle>();
-  private SimpleDateFormat dateFormat;
+  private final LogData ld;
+  private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
+  private final SimpleDateFormat dateFormat;
 
-  private OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane;
+  private final OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane;
   private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
-  private MessageUpdateUtils messageUtils;
-  private int maximumMessageSize;
+  private final MessageUpdateUtils messageUtils;
+  private final int maximumMessageSize;
 
 
   public FormatMessageDialogWorker(LogData logData, //
@@ -94,7 +94,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
   protected void updateChanges(List<TextChunkWithStyle> chunks) {
     LOGGER.trace("Start updating view with chunks, size: " + chunks.size());
     StyledDocument document = otrosJTextWithRulerScrollPane.getjTextComponent().getStyledDocument();
-    List<MessageFragmentStyle> searchResultPositions = new ArrayList<MessageFragmentStyle>();
+    List<MessageFragmentStyle> searchResultPositions = new ArrayList<>();
     int i = 0;
     for (TextChunkWithStyle chunk : chunks) {
       LOGGER.trace("Updating with chunk " + i++);

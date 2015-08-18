@@ -28,26 +28,26 @@ import org.slf4j.LoggerFactory;
 public class LogImportStats extends AbstractTableModel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogImportStats.class.getName());
-  private String fileName;
+  private final String fileName;
 
-  private NumberFormat speedFormat = NumberFormat.getInstance();
-  private NumberFormat downloadedFormat = NumberFormat.getIntegerInstance();
-  private LinkedList<Long> dates;
-  private LinkedList<Long> loaded;
+  private final NumberFormat speedFormat = NumberFormat.getInstance();
+  private final NumberFormat downloadedFormat = NumberFormat.getIntegerInstance();
+  private final LinkedList<Long> dates;
+  private final LinkedList<Long> loaded;
   private static final int STATS_SIZE = 100;
   private final DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.getDefault());
   private long max;
   private long downlaoded;
   private long timeleft;
   private float speedKbPerSecond;
-  private Date eta = new Date();
-  private String[] rowsNames = new String[] { "File", "Downloaded", "ETA", "Time left", "Speed [kb/s]" };
+  private final Date eta = new Date();
+  private final String[] rowsNames = { "File", "Downloaded", "ETA", "Time left", "Speed [kb/s]" };
 
   public LogImportStats(String fileName) {
     super();
     this.fileName = fileName;
-    dates = new LinkedList<Long>();
-    loaded = new LinkedList<Long>();
+    dates = new LinkedList<>();
+    loaded = new LinkedList<>();
     speedFormat.setGroupingUsed(true);
     speedFormat.setMaximumFractionDigits(2);
     speedFormat.setMinimumFractionDigits(2);
@@ -105,13 +105,7 @@ public class LogImportStats extends AbstractTableModel {
     } catch (Exception e) {
       // LOGGER.error("GOD, why? " + e.getMessage());
     }
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        fireTableRowsUpdated(0, getRowCount());
-      }
-    });
+    SwingUtilities.invokeLater(() -> fireTableRowsUpdated(0, getRowCount()));
   }
 
   private void updateEtaAndSpeed() {

@@ -39,7 +39,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
   protected MigLayout layout;
   protected boolean ignoreCase = true;
   protected JCheckBox caseInsensetiveCheckBox;
-  private DelayedSwingInvoke deleyedSwingInvoke;
+  private final DelayedSwingInvoke deleyedSwingInvoke;
 
   public AbstractStringBasedFilter(String name, String description, String labelText) {
     super(name, description);
@@ -82,13 +82,9 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
       }
     });
 
-    caseInsensetiveCheckBox.addChangeListener(new ChangeListener() {
-
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        ignoreCase = caseInsensetiveCheckBox.isSelected();
-        performFiltering();
-      }
+    caseInsensetiveCheckBox.addChangeListener(e -> {
+      ignoreCase = caseInsensetiveCheckBox.isSelected();
+      performFiltering();
     });
 
   }

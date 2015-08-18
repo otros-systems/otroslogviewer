@@ -79,22 +79,22 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanel.class.getName());
     private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
     private final MessageDetailListener messageDetailListener;
-    private Font menuLabelFont;
-    private JPanel filtersPanel;
-    private JPanel logsTablePanel;
-    private JPanel logsMarkersPanel;
-    private JPanel leftPanel;
+    private final Font menuLabelFont;
+    private final JPanel filtersPanel;
+    private final JPanel logsTablePanel;
+    private final JPanel logsMarkersPanel;
+    private final JPanel leftPanel;
     private JMenu automaticMarkersMenu;
     private JMenu automaticUnmarkersMenu;
-    private LogDataTableModel dataTableModel;
-    private OtrosApplication otrosApplication;
-    private FullWidthJTextPane logDetailTextArea;
-    private JXTable table;
-    private TableRowSorter<LogDataTableModel> sorter;
-    private StatusObserver statusObserver;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private JTabbedPane jTabbedPane;
-    private JTextArea notes;
+    private final LogDataTableModel dataTableModel;
+    private final OtrosApplication otrosApplication;
+    private final FullWidthJTextPane logDetailTextArea;
+    private final JXTable table;
+    private final TableRowSorter<LogDataTableModel> sorter;
+    private final StatusObserver statusObserver;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private final JTabbedPane jTabbedPane;
+    private final JTextArea notes;
     //  private JScrollPane scrollPane;
     private FocusOnThisThreadAction focusOnThisThreadAction;
     private FocusOnEventsAfter focusOnEventsAfter;
@@ -103,18 +103,18 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     private FocusOnSelectedLoggerNameAction focusOnSelectedLoggerNameAction;
     private IgnoreSelectedEventsClasses ignoreSelectedEventsClasses;
     private ShowCallHierarchyAction showCallHierarchyAction;
-    private PluginableElementsContainer<AutomaticMarker> markersContainer;
-    private PluginableElementsContainer<LogFilter> logFiltersContainer;
-    private PluginableElementsContainer<MessageColorizer> messageColorizersContainer;
-    private PluginableElementsContainer<MessageFormatter> messageFormattersContainer;
-    private PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer;
-    private PluginableElementsContainer<MessageFormatter> selectedMessageFormattersContainer;
-    private JToolBar messageDetailToolbar;
+    private final PluginableElementsContainer<AutomaticMarker> markersContainer;
+    private final PluginableElementsContainer<LogFilter> logFiltersContainer;
+    private final PluginableElementsContainer<MessageColorizer> messageColorizersContainer;
+    private final PluginableElementsContainer<MessageFormatter> messageFormattersContainer;
+    private final PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer;
+    private final PluginableElementsContainer<MessageFormatter> selectedMessageFormattersContainer;
+    private final JToolBar messageDetailToolbar;
     private List<AcceptCondition> acceptConditionList;
     private PropertyFilter propertyFilter;
     private FilterPanel propertyFilterPanel;
     private Collection<LogFilter> filtersList;
-    private DataConfiguration configuration;
+    private final DataConfiguration configuration;
     private LogData displayedLogData;
 
     public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, final OtrosApplication otrosApplication) {
@@ -130,16 +130,12 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         logFiltersContainer = allPluginable.getLogFiltersContainer();
         messageColorizersContainer = allPluginable.getMessageColorizers();
         messageFormattersContainer = allPluginable.getMessageFormatters();
-        selectedMessageColorizersContainer = new PluginableElementsContainer<MessageColorizer>();
-        selectedMessageFormattersContainer = new PluginableElementsContainer<MessageFormatter>();
-        for (MessageColorizer messageColorizer : messageColorizersContainer.getElements()) {
-            selectedMessageColorizersContainer.addElement(messageColorizer);
-        }
-        for (MessageFormatter messageFormatter : messageFormattersContainer.getElements()) {
-            selectedMessageFormattersContainer.addElement(messageFormatter);
-        }
-        messageColorizersContainer.addListener(new SynchronizePluginableContainerListener<MessageColorizer>(selectedMessageColorizersContainer));
-        messageFormattersContainer.addListener(new SynchronizePluginableContainerListener<MessageFormatter>(selectedMessageFormattersContainer));
+        selectedMessageColorizersContainer = new PluginableElementsContainer<>();
+        selectedMessageFormattersContainer = new PluginableElementsContainer<>();
+        messageColorizersContainer.getElements().forEach(selectedMessageColorizersContainer::addElement);
+        messageFormattersContainer.getElements().forEach(selectedMessageFormattersContainer::addElement);
+        messageColorizersContainer.addListener(new SynchronizePluginableContainerListener<>(selectedMessageColorizersContainer));
+        messageFormattersContainer.addListener(new SynchronizePluginableContainerListener<>(selectedMessageFormattersContainer));
 
 
         menuLabelFont = new JLabel().getFont().deriveFont(Font.BOLD);
@@ -179,7 +175,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                                 }
                                 newLayoutName = newLayoutName.trim();
                                 LOGGER.info(String.format("Saving New column layout '%s'", newLayoutName));
-                                ArrayList<String> visibleColNames = new ArrayList<String>();
+                                ArrayList<String> visibleColNames = new ArrayList<>();
                                 for (TableColumn tc : table.getColumns()) {
                                     Object o = tc.getIdentifier();
                                     if (!(o instanceof TableColumns)) {
@@ -231,31 +227,25 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(renderers.getLevelRenderer()));
         table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(renderers.getDateRenderer()));
         final TimeDeltaRenderer timeDeltaRenderer = new TimeDeltaRenderer();
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                final int[] selectedRows = table.getSelectedRows();
-                if (selectedRows.length > 0) {
-                    final int selectedRow = selectedRows[selectedRows.length - 1];
-                    final Date selectedDate = dataTableModel.getLogData(table.convertRowIndexToModel(selectedRow)).getDate();
-                    timeDeltaRenderer.setSelectedTimestamp(selectedDate);
-                    table.repaint();
-                }
+        table.getSelectionModel().addListSelectionListener(listSelectionEvent -> {
+            final int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length > 0) {
+                final int selectedRow = selectedRows[selectedRows.length - 1];
+                final Date selectedDate = dataTableModel.getLogData(table.convertRowIndexToModel(selectedRow)).getDate();
+                timeDeltaRenderer.setSelectedTimestamp(selectedDate);
+                table.repaint();
             }
         });
         table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
-        ((EventSource) configuration.getConfiguration()).addConfigurationListener(new ConfigurationListener() {
-            @Override
-            public void configurationChanged(ConfigurationEvent ce) {
-                if (ce.getType() == AbstractConfiguration.EVENT_SET_PROPERTY && !ce.isBeforeUpdate()) {
-                    if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT)) {
-                        table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
-                        updateTimeColumnSize();
-                    } else if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
-                        table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly))));
-                        updateLevelColumnSize();
-                    }
+        ((EventSource) configuration.getConfiguration()).addConfigurationListener(ce -> {
+            if (ce.getType() == AbstractConfiguration.EVENT_SET_PROPERTY && !ce.isBeforeUpdate()) {
+                if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT)) {
+                    table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
+                    updateTimeColumnSize();
+                } else if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
+                    table.setDefaultRenderer(Level.class, new TableMarkDecoratorRenderer(new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly))));
+                    updateLevelColumnSize();
                 }
             }
         });
@@ -266,7 +256,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         table.setDefaultEditor(Note.class, new NoteTableEditor());
         table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
         table.setDefaultRenderer(ClassWrapper.class, new TableMarkDecoratorRenderer(renderers.getClassWrapperRenderer()));
-        sorter = new TableRowSorter<LogDataTableModel>(dataTableModel);
+        sorter = new TableRowSorter<>(dataTableModel);
         for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
             sorter.setSortable(i, false);
         }
@@ -314,21 +304,11 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         splitPaneLogsTableAndDetails.setOneTouchExpandable(true);
         splitPane.setDividerLocation(leftPanel.getPreferredSize().width + 10);
 
-        PopupListener popupListener = new PopupListener(new Callable<JPopupMenu>() {
-            @Override
-            public JPopupMenu call() throws Exception {
-                return initTableContextMenu();
-            }
-        });
+        PopupListener popupListener = new PopupListener(this::initTableContextMenu);
         table.addMouseListener(popupListener);
         table.addKeyListener(popupListener);
 
-        PopupListener popupListenerMessageDetailMenu = new PopupListener(new Callable<JPopupMenu>() {
-            @Override
-            public JPopupMenu call() throws Exception {
-                return initMessageDetailPopupMenu();
-            }
-        });
+        PopupListener popupListenerMessageDetailMenu = new PopupListener(this::initMessageDetailPopupMenu);
         logDetailTextArea.addMouseListener(popupListenerMessageDetailMenu);
         logDetailTextArea.addKeyListener(popupListenerMessageDetailMenu);
 
@@ -346,7 +326,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
     private void initAcceptConditions() {
-        acceptConditionList = new ArrayList<AcceptCondition>();
+        acceptConditionList = new ArrayList<>();
         acceptConditionList.add(new SelectedEventsAcceptCondition(table, dataTableModel));
         acceptConditionList.add(new LowerIdAcceptCondition(table, dataTableModel));
         acceptConditionList.add(new HigherIdAcceptCondition(table, dataTableModel));
@@ -424,7 +404,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         Collection<LogFilter> loadedFilters = logFiltersContainer.getElements();
 
         // Reload filters, every instance of filter is connected to listeners, data table etc.
-        filtersList = new ArrayList<LogFilter>();
+        filtersList = new ArrayList<>();
         for (LogFilter logFilter : loadedFilters) {
             try {
                 LogFilter filter = logFilter.getClass().newInstance();
@@ -557,9 +537,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                 if (actions == null) {
                     continue;
                 }
-                for (OtrosAction action : actions) {
-                    menu.add(action);
-                }
+                actions.forEach(menu::add);
             } catch (Exception e) {
                 LOGGER.error("Cant get action from from provider " + menuActionProvider, e);
             }
@@ -577,7 +555,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
     private Map<String, Set<String>> getPropertiesOfSelectedLogEvents() {
-        Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> result = new HashMap<>();
         int[] selectedRows = getSelectedRowsInModel();
         for (int i : selectedRows) {
             LogData logData = dataTableModel.getLogData(i);
@@ -587,7 +565,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
             }
             for (String s : properties.keySet()) {
                 if (!result.containsKey(s)) {
-                    result.put(s, new TreeSet<String>());
+                    result.put(s, new TreeSet<>());
                 }
                 result.get(s).add(properties.get(s));
             }
@@ -634,8 +612,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
 
     public void updateMarkerMenu(Collection<AutomaticMarker> markers) {
-        HashMap<String, JMenu> marksGroups = new HashMap<String, JMenu>();
-        HashMap<String, JMenu> unmarksGroups = new HashMap<String, JMenu>();
+        HashMap<String, JMenu> marksGroups = new HashMap<>();
+        HashMap<String, JMenu> unmarksGroups = new HashMap<>();
 
         automaticMarkersMenu.removeAll();
         automaticUnmarkersMenu.removeAll();
@@ -678,21 +656,18 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
 
         final DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(new String[]{});
-        String[] values = new String[]{
+        String[] values = {
                 "10kB", "100kB", "200kB", "300kB", "400kB", "500kB", "600kB", "700kB", "800kB", "900kB", "1MB", "2MB", "3MB", "4MB", "5MB"
         };
         for (String value : values) {
             defaultComboBoxModel.addElement(value);
         }
         final JXComboBox messageMaximumSize = new JXComboBox(defaultComboBoxModel);
-        messageMaximumSize.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String max = (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
-                configuration.setProperty(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, max);
-                messageDetailListener.setMaximumMessageSize((int) new FileSize(max).getBytes());
+        messageMaximumSize.addActionListener(e -> {
+            String max = (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
+            configuration.setProperty(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, max);
+            messageDetailListener.setMaximumMessageSize((int) new FileSize(max).getBytes());
 
-            }
         });
 
 
@@ -706,13 +681,10 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         }
 
         final JCheckBox wrapText = new JCheckBox(Icons.SCROLL_HORIZONTAL);
-        wrapText.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logDetailTextArea.setFullWidth(wrapText.isSelected());
-                final ImageIcon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(Icons.SCROLL_HORIZONTAL.getImage())) : Icons.SCROLL_HORIZONTAL;
-                wrapText.setIcon(imageIcon);
-            }
+        wrapText.addActionListener(e -> {
+            logDetailTextArea.setFullWidth(wrapText.isSelected());
+            final ImageIcon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(Icons.SCROLL_HORIZONTAL.getImage())) : Icons.SCROLL_HORIZONTAL;
+            wrapText.setIcon(imageIcon);
         });
         wrapText.setToolTipText("Enable/disable line wrapping");
         wrapText.setSelected(configuration.getBoolean(ConfKeys.MESSAGE_DETAIL_SCROLL_HORIZONTAL, true));
@@ -727,7 +699,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
                                                                   pluginableElementsContainer) {
         final JPopupMenu popupMenu = new JPopupMenu(menuTitle);
         popupMenu.add(new JLabel(menuTitle));
-        ArrayList<PluginableElement> elements = new ArrayList<PluginableElement>(pluginableElementsContainer.getElements());
+        ArrayList<PluginableElement> elements = new ArrayList<>(pluginableElementsContainer.getElements());
         Collections.sort(elements, new PluginableElementNameComparator());
         for (final PluginableElement pluginableElement : elements) {
             addMessageFormatterOrColorizerToMenu(popupMenu, pluginableElement, selectedPluginableElementsContainer);
@@ -741,15 +713,11 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
             final JCheckBoxMenuItem boxMenuItem = new JCheckBoxMenuItem(pluginable.getName(), selectedPluginableContainer.contains(pluginable));
             boxMenuItem.setToolTipText(pluginable.getDescription());
             menu.add(boxMenuItem);
-            boxMenuItem.addChangeListener(new ChangeListener() {
-
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    if (boxMenuItem.isSelected() && !selectedPluginableContainer.contains(pluginable)) {
-                        selectedPluginableContainer.addElement(pluginable);
-                    } else if (!boxMenuItem.isSelected() && selectedPluginableContainer.contains(pluginable)) {
-                        selectedPluginableContainer.removeElement(pluginable);
-                    }
+            boxMenuItem.addChangeListener(e -> {
+                if (boxMenuItem.isSelected() && !selectedPluginableContainer.contains(pluginable)) {
+                    selectedPluginableContainer.addElement(pluginable);
+                } else if (!boxMenuItem.isSelected() && selectedPluginableContainer.contains(pluginable)) {
+                    selectedPluginableContainer.removeElement(pluginable);
                 }
             });
         }
