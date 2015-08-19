@@ -25,16 +25,13 @@ import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

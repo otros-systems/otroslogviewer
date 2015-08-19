@@ -28,7 +28,6 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.util.Comparator;
 import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

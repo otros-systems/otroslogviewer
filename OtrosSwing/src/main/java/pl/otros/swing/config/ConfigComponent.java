@@ -9,11 +9,8 @@ import org.jdesktop.swingx.JXList;
 import pl.otros.swing.config.provider.ConfigurationProvider;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 

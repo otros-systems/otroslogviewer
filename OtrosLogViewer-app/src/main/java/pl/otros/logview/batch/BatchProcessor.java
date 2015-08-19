@@ -33,7 +33,6 @@ import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.pluginable.AllPluginables;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;

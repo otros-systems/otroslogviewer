@@ -20,8 +20,6 @@ import pl.otros.logview.LogDataCollector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StreamProcessingLogDataCollector implements LogDataCollector {
 

@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;

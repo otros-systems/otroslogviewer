@@ -19,7 +19,6 @@ package pl.otros.starter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

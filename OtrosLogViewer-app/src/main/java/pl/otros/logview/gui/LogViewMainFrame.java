@@ -78,8 +78,6 @@ import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;

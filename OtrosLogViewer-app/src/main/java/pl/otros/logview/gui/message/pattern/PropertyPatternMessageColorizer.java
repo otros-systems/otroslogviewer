@@ -26,7 +26,6 @@ import pl.otros.logview.gui.message.MessageFragmentStyle;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;

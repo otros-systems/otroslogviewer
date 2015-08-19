@@ -25,7 +25,6 @@ import pl.otros.logview.store.file.FileLogDataStore;
 
 import java.util.Iterator;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 

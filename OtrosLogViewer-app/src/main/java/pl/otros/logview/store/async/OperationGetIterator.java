@@ -1,7 +1,6 @@
 package pl.otros.logview.store.async;
 
 import pl.otros.logview.LogData;
-import pl.otros.logview.Note;
 import pl.otros.logview.store.LogDataStore;
 
 import java.util.Iterator;

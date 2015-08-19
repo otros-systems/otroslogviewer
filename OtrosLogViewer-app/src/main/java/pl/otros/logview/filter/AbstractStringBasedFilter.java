@@ -19,8 +19,6 @@ import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;

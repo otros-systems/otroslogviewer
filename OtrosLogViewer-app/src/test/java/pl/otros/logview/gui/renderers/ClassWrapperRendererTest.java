@@ -3,8 +3,6 @@ package pl.otros.logview.gui.renderers;
 import com.google.common.base.Joiner;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

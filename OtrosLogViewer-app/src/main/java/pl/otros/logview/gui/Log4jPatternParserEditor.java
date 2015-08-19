@@ -33,13 +33,10 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

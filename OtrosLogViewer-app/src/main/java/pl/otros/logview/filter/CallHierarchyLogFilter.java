@@ -18,8 +18,6 @@ package pl.otros.logview.filter;
 import pl.otros.logview.LogData;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Collection;
 import java.util.HashSet;

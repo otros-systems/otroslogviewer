@@ -21,8 +21,6 @@ import pl.otros.logview.gui.LogDataTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Properties;
 
 public class MarkNoteFilter extends AbstractLogFilter {

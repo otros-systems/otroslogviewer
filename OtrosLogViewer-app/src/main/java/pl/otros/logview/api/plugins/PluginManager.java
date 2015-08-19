@@ -19,7 +19,6 @@ package pl.otros.logview.api.plugins;
 import pl.otros.logview.loader.BaseLoader;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.slf4j.Logger;

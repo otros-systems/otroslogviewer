@@ -16,7 +16,6 @@
 package pl.otros.logview.gui.message;
 
 import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;

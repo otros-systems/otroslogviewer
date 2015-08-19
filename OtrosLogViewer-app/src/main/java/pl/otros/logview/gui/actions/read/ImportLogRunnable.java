@@ -26,8 +26,7 @@ import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.store.LogDataStore;
 
 import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

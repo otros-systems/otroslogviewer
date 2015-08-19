@@ -23,8 +23,7 @@ import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

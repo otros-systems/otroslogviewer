@@ -19,7 +19,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class GuiUtils {
 

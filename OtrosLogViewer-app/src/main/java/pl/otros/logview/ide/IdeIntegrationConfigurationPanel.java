@@ -16,10 +16,8 @@ import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

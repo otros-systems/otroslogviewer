@@ -3,8 +3,7 @@ package pl.otros.logview.ide;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 
 import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

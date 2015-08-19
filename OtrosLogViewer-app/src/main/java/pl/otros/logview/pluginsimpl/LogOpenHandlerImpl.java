@@ -24,8 +24,7 @@ import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,7 +23,6 @@ import pl.otros.logview.gui.message.StackTraceColorizer;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;

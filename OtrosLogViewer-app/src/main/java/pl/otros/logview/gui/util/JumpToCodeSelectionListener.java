@@ -1,6 +1,5 @@
 package pl.otros.logview.gui.util;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;

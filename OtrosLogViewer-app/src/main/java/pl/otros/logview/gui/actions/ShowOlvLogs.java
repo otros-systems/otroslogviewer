@@ -23,8 +23,6 @@ import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.logging.GuiAppender;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 
 public class ShowOlvLogs extends OtrosAction {
 

@@ -20,7 +20,6 @@ package pl.otros.starter;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

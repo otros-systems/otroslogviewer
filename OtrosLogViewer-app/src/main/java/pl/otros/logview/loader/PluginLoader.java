@@ -20,7 +20,6 @@ import pl.otros.logview.api.plugins.PluginInfo;
 import pl.otros.logview.pluginable.AllPluginables;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.slf4j.Logger;

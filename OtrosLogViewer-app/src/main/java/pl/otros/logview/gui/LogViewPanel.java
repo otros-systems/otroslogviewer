@@ -19,8 +19,6 @@ package pl.otros.logview.gui;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
@@ -57,21 +55,15 @@ import pl.otros.swing.text.FullWidthJTextPane;
 import pl.otros.vfs.browser.table.FileSize;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 public class LogViewPanel extends JPanel implements LogDataCollector {

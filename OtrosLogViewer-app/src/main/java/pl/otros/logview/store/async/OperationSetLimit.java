@@ -2,8 +2,6 @@ package pl.otros.logview.store.async;
 
 import pl.otros.logview.store.LogDataStore;
 
-import java.util.concurrent.Callable;
-
 class OperationSetLimit implements Runnable {
   private final LogDataStore logDataStore;
   private final int limit;

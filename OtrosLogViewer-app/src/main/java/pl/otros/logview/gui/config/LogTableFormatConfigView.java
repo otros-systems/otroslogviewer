@@ -29,8 +29,6 @@ import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;

@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pl.otros.logview.gui.message.LocationInfo;

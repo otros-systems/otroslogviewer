@@ -13,15 +13,12 @@ import pl.otros.logview.Note;
 import pl.otros.logview.store.LogDataStore;
 import pl.otros.logview.store.MemoryLogDataStore;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
 

@@ -18,7 +18,6 @@ package pl.otros.logview.gui.message;
 import pl.otros.logview.pluginable.PluginableElement;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import java.util.Collection;
 
 public interface MessageColorizer extends PluginableElement {

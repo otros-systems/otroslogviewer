@@ -16,7 +16,6 @@
 
 package pl.otros.logview.gui.message;
 
-import javax.swing.text.AttributeSet;
 import javax.swing.text.Style;
 
 /**
