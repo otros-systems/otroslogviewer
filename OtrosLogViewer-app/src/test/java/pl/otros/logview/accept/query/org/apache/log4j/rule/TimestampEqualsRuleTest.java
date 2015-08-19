@@ -107,7 +107,7 @@ public class TimestampEqualsRuleTest {
     try {
       TimestampEqualsRule.getRule("2008/May/21");
       Assert.fail("IllegalArgumentException expected to be thrown");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 

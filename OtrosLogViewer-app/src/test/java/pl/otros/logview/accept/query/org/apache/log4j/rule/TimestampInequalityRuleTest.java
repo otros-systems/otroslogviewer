@@ -42,7 +42,7 @@ public class TimestampInequalityRuleTest {
     try {
       TimestampInequalityRule.getRule(">", "now");
       Assert.fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -54,7 +54,7 @@ public class TimestampInequalityRuleTest {
     try {
       TimestampInequalityRule.getRule(">", "2008/May/20");
       Assert.fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 

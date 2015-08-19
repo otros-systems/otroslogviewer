@@ -45,6 +45,7 @@ public class AndRuleTest {
 	    AndRule.getRule(stack);
 	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
+      //Success
 	}
     }
 
@@ -60,7 +61,8 @@ public class AndRuleTest {
 	    AndRule.getRule(stack);
 	    Assert.fail("Should have thrown IllegalArgumentException");
 	} catch (IllegalArgumentException ex) {
-	}
+	  //success
+  }
     }
 
     /**

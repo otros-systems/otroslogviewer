@@ -43,7 +43,7 @@ public class PartialTextMatchRuleTest {
 	try {
 	    PartialTextMatchRule.getRule(stack);
 	    Assert.fail("Should have thrown IllegalArgumentException");
-	} catch (IllegalArgumentException ex) {
+	} catch (IllegalArgumentException ignored) {
 	}
     }
 
@@ -58,7 +58,7 @@ public class PartialTextMatchRuleTest {
 	try {
 	    PartialTextMatchRule.getRule(stack);
 	    Assert.fail("Should have thrown IllegalArgumentException");
-	} catch (IllegalArgumentException ex) {
+	} catch (IllegalArgumentException ignored) {
 	}
     }
 

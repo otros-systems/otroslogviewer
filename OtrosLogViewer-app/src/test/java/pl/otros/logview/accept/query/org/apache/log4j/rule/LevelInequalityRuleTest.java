@@ -40,7 +40,7 @@ public class LevelInequalityRuleTest {
     try {
       LevelInequalityRule.getRule(">", "emergency");
       Assert.fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 

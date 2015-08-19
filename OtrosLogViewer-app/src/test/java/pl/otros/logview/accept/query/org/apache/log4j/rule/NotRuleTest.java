@@ -44,7 +44,7 @@ public class NotRuleTest  {
         try {
             NotRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -57,7 +57,7 @@ public class NotRuleTest  {
         try {
             NotRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 

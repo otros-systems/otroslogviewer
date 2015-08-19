@@ -102,7 +102,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       try {
         pl.parse(s);
         return true;
-      } catch (ParseException e) {
+      } catch (ParseException ignored) {
       }
     }
     return false;
@@ -121,7 +121,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
         int dateLength = pl.format(date).length();
         sb.replace(0, dateLength + 1, "");
         break;
-      } catch (ParseException e) {
+      } catch (ParseException ignored) {
       }
     }
     if (date == null) {

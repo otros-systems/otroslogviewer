@@ -87,7 +87,7 @@ public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
     try {
       datePattern.parse(s);
       return true;
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
     return false;
   }
