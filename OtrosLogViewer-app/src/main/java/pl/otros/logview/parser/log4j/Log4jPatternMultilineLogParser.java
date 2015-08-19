@@ -434,7 +434,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     // ?  The propertyNames list is never used.
     List<String> propertyNames = new ArrayList<>();
     while (index > -1) {
-      if (current.indexOf(PROP_START) > -1 && current.indexOf(PROP_END) > -1) {
+      if (current.contains(PROP_START) && current.indexOf(PROP_END) > -1) {
         index = current.indexOf(PROP_START);
         String longPropertyName = current.substring(current.indexOf(PROP_START), current.indexOf(PROP_END) + 1);
         String shortProp = getShortPropertyName(longPropertyName);

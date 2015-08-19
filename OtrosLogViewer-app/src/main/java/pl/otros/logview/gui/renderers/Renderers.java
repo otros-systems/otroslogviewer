@@ -31,13 +31,17 @@ public class Renderers {
       }
       final String property = event.getPropertyName();
       final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
-      if (property.equals(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS)) {
-        classWrapperRenderer.reloadConfiguration(value);
-      } else if (property.equals(LOG_TABLE_FORMAT_LEVEL_RENDERER)) {
-        final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
-        levelRenderer.setMode(mode);
-      } else if (property.equals(LOG_TABLE_FORMAT_DATE_FORMAT)) {
-        dateRenderer.setDateFormatter(new SimpleDateFormat(value));
+      switch (property) {
+        case LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS:
+          classWrapperRenderer.reloadConfiguration(value);
+          break;
+        case LOG_TABLE_FORMAT_LEVEL_RENDERER:
+          final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
+          levelRenderer.setMode(mode);
+          break;
+        case LOG_TABLE_FORMAT_DATE_FORMAT:
+          dateRenderer.setDateFormatter(new SimpleDateFormat(value));
+          break;
       }
     });
   }

@@ -105,7 +105,7 @@ public class PartialTextMatchRule extends AbstractRule {
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public boolean evaluate(final LogData event, Map matches) {
     Object p2 = RESOLVER.getValue(field, event);
-    boolean result = ((p2 != null) && (value != null) && (p2.toString().toLowerCase().indexOf(value.toLowerCase()) > -1));
+    boolean result = ((p2 != null) && (value != null) && (p2.toString().toLowerCase().contains(value.toLowerCase())));
     if (result && matches != null) {
       Set entries = (Set) matches.get(field.toUpperCase());
       if (entries == null) {
