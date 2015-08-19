@@ -225,8 +225,8 @@ public final class LoggingEventFieldResolver {
         // case-specific match didn't work, try case insensitive match
         String lowerPropKey = propName.toLowerCase();
         Set entrySet = properties.entrySet();
-        for (Iterator iter = entrySet.iterator(); iter.hasNext();) {
-          Map.Entry thisEntry = (Map.Entry) iter.next();
+        for (Object anEntrySet : entrySet) {
+          Map.Entry thisEntry = (Map.Entry) anEntrySet;
           if (thisEntry.getKey().toString().equalsIgnoreCase(lowerPropKey)) {
             propValue = thisEntry.getValue();
           }

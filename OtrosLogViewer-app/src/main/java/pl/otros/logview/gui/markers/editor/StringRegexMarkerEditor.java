@@ -199,8 +199,8 @@ public class StringRegexMarkerEditor extends JPanel {
   }
 
   private void testMarker() {
-    for (int i = 0; i < testResults.length; i++) {
-      testResults[i].setText("?");
+    for (JLabel testResult : testResults) {
+      testResult.setText("?");
     }
     try {
       AutomaticMarker marker = null;

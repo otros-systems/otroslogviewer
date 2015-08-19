@@ -48,10 +48,10 @@ public class TimestampEqualsRuleTest {
         "2008-05-21T00",//
     };
 
-    for (int i = 0; i < timeFormats.length; i++) {
-      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
+    for (String timeFormat : timeFormats) {
+      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormat);
       LogData event = createLogData();
-      AssertJUnit.assertTrue(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertTrue(String.format("Wrong result for time format %s", timeFormat), rule.evaluate(event, null));
     }
   }
 
@@ -71,10 +71,10 @@ public class TimestampEqualsRuleTest {
         "2008-05-21T01",//
     };
 
-    for (int i = 0; i < timeFormats.length; i++) {
-      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
+    for (String timeFormat : timeFormats) {
+      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormat);
       LogData event = createLogData();
-      AssertJUnit.assertFalse(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertFalse(String.format("Wrong result for time format %s", timeFormat), rule.evaluate(event, null));
     }
 
   }

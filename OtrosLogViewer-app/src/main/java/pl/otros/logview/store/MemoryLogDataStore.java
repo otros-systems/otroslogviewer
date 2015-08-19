@@ -41,8 +41,7 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
   @Override
   public void add(LogData... logDatas) {
     Arrays.sort(logDatas, logDataTimeComparator);
-    for (int i = 0; i < logDatas.length; i++) {
-      LogData logData = logDatas[i];
+    for (LogData logData : logDatas) {
       logData.setId(getNextLogId());
       if (list.size() == 0 || logDataTimeComparator.compare(logData, list.get(list.size() - 1)) >= 0) {
         list.add(logData);

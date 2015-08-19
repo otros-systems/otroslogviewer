@@ -209,8 +209,8 @@ public class MarkerEditor extends JPanel {
     regexPreCondition
         .setToolTipText("Part of string from regular expression for increase performance. For example if you regular exrepssion is \".*return: \\d+\" set precondition to \"return\".");
     regexPreConditionInclude.setToolTipText("Disable if you want to mark rows that does not contains precondition value.");
-    for (int i = 0; i < testStringTextArea.length; i++) {
-      testStringTextArea[i].setToolTipText("Enter part of log message to test if marker works as you want.");
+    for (JTextArea aTestStringTextArea : testStringTextArea) {
+      aTestStringTextArea.setToolTipText("Enter part of log message to test if marker works as you want.");
     }
 
   }
@@ -342,8 +342,8 @@ public class MarkerEditor extends JPanel {
   }
 
   private void testMarker() {
-    for (int i = 0; i < testResults.length; i++) {
-      testResults[i].setText("?");
+    for (JLabel testResult : testResults) {
+      testResult.setText("?");
     }
     try {
       AutomaticMarker marker = null;

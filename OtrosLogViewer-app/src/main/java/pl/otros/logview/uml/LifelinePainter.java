@@ -31,11 +31,11 @@ public class LifelinePainter implements ExtraPainter {
   @Override
   public void paint(Graphics g, Rectangle view) {
     g.setColor(color);
-    for (int i = 0; i < xPositions.length; i++) {
-      if (xPositions[i] > view.x && xPositions[i] < view.x + view.width) {
+    for (int xPosition : xPositions) {
+      if (xPosition > view.x && xPosition < view.x + view.width) {
         double y = view.getY();
         while (y < view.getY() + view.getHeight()) {
-          g.drawLine(xPositions[i], (int) y, xPositions[i], (int) y + 5);
+          g.drawLine(xPosition, (int) y, xPosition, (int) y + 5);
           y += 10;
         }
 

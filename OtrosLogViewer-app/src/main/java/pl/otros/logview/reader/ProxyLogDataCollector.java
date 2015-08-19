@@ -29,8 +29,8 @@ public class ProxyLogDataCollector implements LogDataCollector {
   }
 
   public void add(LogData... logDatas) {
-    for (int i = 0; i < logDatas.length; i++) {
-      list.addLast(logDatas[i]);
+    for (LogData logData : logDatas) {
+      list.addLast(logData);
     }
 
   }

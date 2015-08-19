@@ -16,6 +16,8 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.actions.OtrosAction;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
@@ -23,8 +25,6 @@ import pl.otros.vfs.browser.SelectionMode;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class ImportLogActionListener extends OtrosAction {
 
@@ -51,9 +51,8 @@ public abstract class ImportLogActionListener extends OtrosAction {
 
   private void openSelectedFiles(JOtrosVfsBrowserDialog chooser) {
     final FileObject[] files = chooser.getSelectedFiles();
-    for (int i = 0; i < files.length; i++) {
-      final FileObject file = files[i];
-      new LogFileInNewTabOpener(getLogImporterProvider(), getOtrosApplication() ).open(file);
+    for (final FileObject file : files) {
+      new LogFileInNewTabOpener(getLogImporterProvider(), getOtrosApplication()).open(file);
     }
   }
 

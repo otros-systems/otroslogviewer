@@ -76,22 +76,22 @@ public class LogImportersLoader {
     File[] files = dir.listFiles(pathname -> {
       return pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip");
     });
-    for (int i = 0; i < files.length; i++) {
+    for (File file : files) {
       Collection<LogImporter> m = null;
       try {
-        if (files[i].isDirectory()) {
-          m = loadFromDir(files[i]);
+        if (file.isDirectory()) {
+          m = loadFromDir(file);
         } else {
-          m = loadFromJar(files[i]);
+          m = loadFromJar(file);
         }
         logImporters.addAll(m);
 
       } catch (IOException e) {
         // TODO Auto-generated catch block
-        LOGGER.error( "IOException", e);
+        LOGGER.error("IOException", e);
       } catch (ClassNotFoundException e) {
         // TODO Auto-generated catch block
-        LOGGER.error( "ClassNotFoundException", e);
+        LOGGER.error("ClassNotFoundException", e);
       }
     }
     return logImporters;

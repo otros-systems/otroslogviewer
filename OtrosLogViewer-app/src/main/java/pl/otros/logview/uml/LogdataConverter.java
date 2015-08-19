@@ -188,8 +188,8 @@ public class LogdataConverter {
 
   private LinkedList<String> getActors2(LogData[] datas) {
     LinkedHashSet<String> map = new LinkedHashSet<>();
-    for (int i = 0; i < datas.length; i++) {
-      String clazz = datas[i].getClazz();
+    for (LogData data : datas) {
+      String clazz = data.getClazz();
       if (!map.contains(clazz)) {
         map.add(clazz);
       }

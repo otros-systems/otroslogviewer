@@ -64,8 +64,8 @@ public class TailLogActionListener extends OtrosAction {
       return;
     }
     final FileObject[] files = chooser.getSelectedFiles();
-    for (int i = 0; i < files.length; i++) {
-      openFileObjectInTailMode(files[i]);
+    for (FileObject file : files) {
+      openFileObjectInTailMode(file);
     }
   }
 

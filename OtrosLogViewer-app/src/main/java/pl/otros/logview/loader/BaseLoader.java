@@ -15,15 +15,18 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BaseLoader {
 
@@ -49,8 +52,8 @@ public class BaseLoader {
       return pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip");
     });
     logImporters.addAll(loadFromDir(dir, type));
-    for (int i = 0; i < files.length; i++) {
-      logImporters.addAll(loadFromJar(files[i], type));
+    for (File file : files) {
+      logImporters.addAll(loadFromJar(file, type));
     }
     return logImporters;
   }

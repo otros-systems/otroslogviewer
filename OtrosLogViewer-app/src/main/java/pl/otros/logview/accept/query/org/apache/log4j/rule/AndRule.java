@@ -102,8 +102,8 @@ public class AndRule extends AbstractRule {
     Map tempMatches2 = new HashMap();
     boolean result = firstRule.evaluate(event, tempMatches1) && secondRule.evaluate(event, tempMatches2);
     if (result) {
-      for (Iterator iter = tempMatches1.entrySet().iterator(); iter.hasNext();) {
-        Map.Entry entry = (Map.Entry) iter.next();
+      for (Object o : tempMatches1.entrySet()) {
+        Map.Entry entry = (Map.Entry) o;
         Object key = entry.getKey();
         Set value = (Set) entry.getValue();
         Set mainSet = (Set) matches.get(key);
@@ -113,8 +113,8 @@ public class AndRule extends AbstractRule {
         }
         mainSet.addAll(value);
       }
-      for (Iterator iter = tempMatches2.entrySet().iterator(); iter.hasNext();) {
-        Map.Entry entry = (Map.Entry) iter.next();
+      for (Object o : tempMatches2.entrySet()) {
+        Map.Entry entry = (Map.Entry) o;
         Object key = entry.getKey();
         Set value = (Set) entry.getValue();
         Set mainSet = (Set) matches.get(key);

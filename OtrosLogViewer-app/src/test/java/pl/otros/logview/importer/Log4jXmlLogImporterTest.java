@@ -59,8 +59,8 @@ public class Log4jXmlLogImporterTest {
     assertEquals(logDatas[2].getLevel(), Level.WARNING);
     assertEquals(logDatas[2].getMessage(), "warn level");
 
-    for (int i = 0; i < logDatas.length; i++) {
-      assertEquals(logDatas[i].getLogSource(), parsingContext.getLogSource());
+    for (LogData logData : logDatas) {
+      assertEquals(logData.getLogSource(), parsingContext.getLogSource());
     }
 
   }

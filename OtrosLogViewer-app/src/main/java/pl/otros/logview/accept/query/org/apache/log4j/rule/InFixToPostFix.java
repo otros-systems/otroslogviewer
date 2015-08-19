@@ -238,16 +238,14 @@ public class InFixToPostFix {
           pos = handleProperty(input, pos, linkedList);
         }
         boolean operatorFound = false;
-        for (Iterator<String> iter = operators.iterator(); iter.hasNext();) {
-          String operator = iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, pos, operator)) {
             operatorFound = true;
             pos = handle(pos, linkedList, operator);
           }
         }
         boolean keywordFound = false;
-        for (Iterator<String> iter = keywords.iterator(); iter.hasNext();) {
-          String keyword = iter.next();
+        for (String keyword : keywords) {
           if (nextValueIs(input, pos, keyword)) {
             keywordFound = true;
             pos = handle(pos, linkedList, keyword);
@@ -307,8 +305,7 @@ public class InFixToPostFix {
           linkedList.add(text);
           return newPos;
         }
-        for (Iterator iter = operators.iterator(); iter.hasNext();) {
-          String operator = (String) iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, newPos, operator)) {
             linkedList.add(text);
             return newPos;
@@ -340,8 +337,7 @@ public class InFixToPostFix {
           linkedList.add(propertyName);
           return propertyPos;
         }
-        for (Iterator iter = operators.iterator(); iter.hasNext();) {
-          String operator = (String) iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, propertyPos, operator)) {
             linkedList.add(propertyName);
             return propertyPos;

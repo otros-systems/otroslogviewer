@@ -75,32 +75,31 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       long length = randomAccessFile.length();
       LOGGER.trace(String.format("Setting position in file %s to %d", randomAccessFile.getFD().toString(), length));
       randomAccessFile.seek(length);
-      for (int i = 0; i < logDatas.length; i++) {
+      for (LogData logData1 : logDatas) {
         byteArrayOutputStream = new ByteArrayOutputStream();
         oout = new ObjectOutputStream(byteArrayOutputStream);
-        logDatas[i].setId(getNextLogId());
-        int logDataId = logDatas[i].getId();
+        logData1.setId(getNextLogId());
+        int logDataId = logData1.getId();
         long positionInFile = randomAccessFile.length();
 
-        oout.writeObject(logDatas[i]);
+        oout.writeObject(logData1);
         oout.flush();
 
         randomAccessFile.writeInt(byteArrayOutputStream.size());
         randomAccessFile.write(byteArrayOutputStream.toByteArray());
         newLogDataPosition.put(Integer.valueOf(logDataId), Long.valueOf(positionInFile));
 
-        marks.put(Integer.valueOf(logDataId), logDatas[i].isMarked());
-        marksColor.put(Integer.valueOf(logDataId), logDatas[i].getMarkerColors());
+        marks.put(Integer.valueOf(logDataId), logData1.isMarked());
+        marksColor.put(Integer.valueOf(logDataId), logData1.getMarkerColors());
 
-        if (logDatas[i].getNote() != null) {
-          notable.addNoteToRow(logDataId, logDatas[i].getNote());
+        if (logData1.getNote() != null) {
+          notable.addNoteToRow(logDataId, logData1.getNote());
         }
       }
       storeIdFilePositionMapping.putAll(newLogDataPosition);
 
       // TODO sorting by date!
-      for (int i = 0; i < logDatas.length; i++) {
-        LogData logData = logDatas[i];
+      for (LogData logData : logDatas) {
         // logDatasId.add(new IdAndDate(Integer.valueOf(logDatas[i].getId()), logDatas[i].getDate()));
         if (logDatasId.size() == 0 || logData.getDate().compareTo(logDatasId.get(logDatasId.size() - 1).date) >= 0) {
           logDatasId.add(new IdAndDate(Integer.valueOf(logData.getId()), logData.getDate()));

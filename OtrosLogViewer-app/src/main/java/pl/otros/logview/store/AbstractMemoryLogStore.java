@@ -48,9 +48,9 @@ public abstract class AbstractMemoryLogStore implements LogDataStore {
 
   @Override
   public void markRows(MarkerColors markerColor, int... rows) {
-    for (int i = 0; i < rows.length; i++) {
-      getLogData(rows[i]).setMarked(true);
-      getLogData(rows[i]).setMarkerColors(markerColor);
+    for (int row : rows) {
+      getLogData(row).setMarked(true);
+      getLogData(row).setMarkerColors(markerColor);
     }
   }
 

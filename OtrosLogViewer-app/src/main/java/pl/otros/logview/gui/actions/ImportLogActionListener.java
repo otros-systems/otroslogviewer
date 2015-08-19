@@ -16,6 +16,8 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.Stoppable;
 import pl.otros.logview.gui.*;
 import pl.otros.logview.gui.table.TableColumns;
@@ -38,8 +40,6 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ImportLogActionListener extends  OtrosAction {
 
@@ -62,8 +62,7 @@ public class ImportLogActionListener extends  OtrosAction {
       return;
     }
     final FileObject[] files = chooser.getSelectedFiles();
-    for (int i = 0; i < files.length; i++) {
-      final FileObject file = files[i];
+    for (final FileObject file : files) {
       try {
         TableColumns[] tableColumnsToUse = TableColumns.ALL_WITHOUT_LOG_SOURCE;
         if (importer instanceof TableColumnNameSelfDescribable) {
@@ -72,10 +71,10 @@ public class ImportLogActionListener extends  OtrosAction {
         }
 
         final LoadingInfo openFileObject = Utils.openFileObject(file);
-        final LogViewPanelWrapper panel = new LogViewPanelWrapper(files[i].getName().getBaseName(), openFileObject.getObserableInputStreamImpl(),
-            tableColumnsToUse,getOtrosApplication());
+        final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), openFileObject.getObserableInputStreamImpl(),
+          tableColumnsToUse, getOtrosApplication());
         String tabName = Utils.getFileObjectShortName(file);
-          getOtrosApplication().addClosableTab(tabName,file.getName().getFriendlyURI(),Icons.FOLDER_OPEN,panel,true);
+        getOtrosApplication().addClosableTab(tabName, file.getName().getFriendlyURI(), Icons.FOLDER_OPEN, panel, true);
         Runnable r = () -> {
           ProgressWatcher watcher = null;
           final ProxyLogDataCollector collector = new ProxyLogDataCollector();
@@ -92,13 +91,7 @@ public class ImportLogActionListener extends  OtrosAction {
           final LogDataTableModel dataTableModel = panel.getDataTableModel();
           LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
           dataTableModel.add(collector.getLogData());
-          SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-              panel.switchToContentView();
-            }
-          });
+          SwingUtilities.invokeLater(panel::switchToContentView);
           watcher.updateFinish("Loaded");
           Utils.closeQuietly(openFileObject.getFileObject());
         };
@@ -107,7 +100,6 @@ public class ImportLogActionListener extends  OtrosAction {
       } catch (Exception e1) {
         LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
         JOptionPane.showMessageDialog(null, "Error loading log: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        continue;
       }
 
     }
