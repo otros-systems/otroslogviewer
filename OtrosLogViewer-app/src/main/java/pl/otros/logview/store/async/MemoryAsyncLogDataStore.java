@@ -29,9 +29,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
   public int getCount() {
     try {
       return service.submit(new OperationGetCount(logDataStore)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return 0;
@@ -69,9 +67,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
   public int getLimit() {
     try {
       return service.submit(new OperationGetLimit(logDataStore)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return 0;
@@ -97,9 +93,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
   public int clear() {
     try {
       return service.submit(new OperationClear(logDataStore)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return 0;
@@ -125,9 +119,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
   public void clearNotes() {
     try {
       service.submit(new OperationClearNotes(logDataStore)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
 
@@ -143,9 +135,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
     try {
       T t = service.submit(task).get();
       return t;
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return null;
@@ -155,9 +145,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
   public Iterator<LogData> iterator() {
     try {
       return service.submit(new OperationGetIterator(logDataStore)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return null;
@@ -168,9 +156,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
     //TODO filter support
     try {
       return service.submit(new OperationIsMarked(logDataStore, row)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return false;
@@ -181,9 +167,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
     //TODO filter support
     try {
       return service.submit(new OperationGetMarkerColors(logDataStore, row)).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
     return null;

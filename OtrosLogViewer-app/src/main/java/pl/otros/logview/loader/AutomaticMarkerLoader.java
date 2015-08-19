@@ -48,11 +48,7 @@ public class AutomaticMarkerLoader {
         Class<?> c = AutomaticMarkerLoader.class.getClassLoader().loadClass(line);
         AutomaticMarker am = (AutomaticMarker) c.newInstance();
         markers.add(am);
-      } catch (ClassNotFoundException e) {
-        LOGGER.error( "Error loading class " + line, e);
-      } catch (InstantiationException e) {
-        LOGGER.error( "Error loading class " + line, e);
-      } catch (IllegalAccessException e) {
+      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
         LOGGER.error( "Error loading class " + line, e);
       }
     }

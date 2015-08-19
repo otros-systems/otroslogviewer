@@ -250,10 +250,7 @@ public class LogViewMainFrame extends JFrame {
         String[] batchArgs = new String[args.length - 1];
         System.arraycopy(args, 1, batchArgs, 0, batchArgs.length);
         BatchProcessor.main(batchArgs);
-      } catch (IOException e) {
-        System.err.println("Error during batch processing: " + e.getMessage());
-        e.printStackTrace();
-      } catch (ConfigurationException e) {
+      } catch (IOException | ConfigurationException e) {
         System.err.println("Error during batch processing: " + e.getMessage());
         e.printStackTrace();
       }

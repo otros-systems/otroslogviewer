@@ -96,9 +96,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
 			decoder = XMLDecoder.class.newInstance();
 			parsingContext.getCustomConextProperties().put(
 					LOG4J_XML_LOG_IMPORTER_DECODER, decoder);
-		} catch (InstantiationException e) {
-			throw new RuntimeException("Cant create XMLDecoder", e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("Cant create XMLDecoder", e);
 		}
 	}

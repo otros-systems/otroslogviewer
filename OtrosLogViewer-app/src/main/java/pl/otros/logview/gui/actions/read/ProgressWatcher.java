@@ -101,9 +101,7 @@ public class ProgressWatcher implements Runnable {
     };
     try {
       SwingUtilities.invokeAndWait(r);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
+    } catch (InterruptedException | InvocationTargetException e) {
       e.printStackTrace();
     }
 

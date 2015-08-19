@@ -250,9 +250,7 @@ public class MessageColorizerBrowser extends JPanel {
       mc.setTestMessage(editor.getTextToColorize());
       fout = new FileOutputStream(selectedFile);
       mc.store(fout);
-    } catch (ConfigurationException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
+    } catch (ConfigurationException | FileNotFoundException e) {
       e.printStackTrace();
     } finally {
       IOUtils.closeQuietly(fout);
