@@ -25,7 +25,7 @@ import javax.swing.*;
 public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppable {
 
   private final LogDataCollector delegate;
-  private ProxyLogDataCollector proxyLogDataCollector;
+  private final ProxyLogDataCollector proxyLogDataCollector;
   private volatile boolean stop;
   private final DataConfiguration configuration;
 

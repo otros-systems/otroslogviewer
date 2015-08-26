@@ -59,7 +59,7 @@ public class MessageColorizerBrowser extends JPanel {
   private final JToolBar toolBar;
   private final JButton useButton;
   private final JButton saveButton;
-  private JButton saveAsButton;
+  private final JButton saveAsButton;
   private final JButton deleteButton;
 
   private JFileChooser chooser;
@@ -76,7 +76,7 @@ public class MessageColorizerBrowser extends JPanel {
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 
     listModel = new PluginableElementListModel<>(container);
-    jList = new JList(listModel);
+    jList = new JList<>(listModel);
     jList.setCellRenderer(new PluginableElementNameListRenderer());
     cardLayout = new CardLayout();
     contentPanel = new JPanel(cardLayout);
@@ -104,11 +104,7 @@ public class MessageColorizerBrowser extends JPanel {
       }
     });
 
-    JButton createNew = new JButton("Create new", Icons.ADD);
-    createNew.addActionListener(e -> {
-      saveAsButton.setEnabled(false);
-      createNew();
-    });
+
 
     saveButton = new JButton("Save and use", Icons.DISK);
     saveButton.addActionListener(new ActionListener() {
@@ -188,6 +184,13 @@ public class MessageColorizerBrowser extends JPanel {
 
     deleteAction = new DeleteSelected(otrosApplication);
     deleteButton = new JButton(deleteAction);
+
+
+    JButton createNew = new JButton("Create new", Icons.ADD);
+    createNew.addActionListener(e -> {
+      saveAsButton.setEnabled(false);
+      createNew();
+    });
 
     toolBar.setFloatable(false);
     toolBar.add(createNew);

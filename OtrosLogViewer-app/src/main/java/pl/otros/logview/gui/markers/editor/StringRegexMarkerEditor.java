@@ -51,7 +51,7 @@ public class StringRegexMarkerEditor extends JPanel {
 
   private final JTextField condition;
   private final JTextField file;
-  private JTextField preCondition;
+  private final JTextField preCondition;
   private final JCheckBox ignoreCase;
   private final JCheckBox include;
   private final JTextField groups;
@@ -65,10 +65,10 @@ public class StringRegexMarkerEditor extends JPanel {
   private final JTextField[] testFields;
 
   private final JLabel[] testResults;
-  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainer;
 
   public StringRegexMarkerEditor() {
-    markersContainser = AllPluginables.getInstance().getMarkersContainser();
+    markersContainer = AllPluginables.getInstance().getMarkersContainser();
     saveEnableListener = new SaveEnableListener();
     chooser = new JFileChooser("./plugins/markers");
     chooser.setMultiSelectionEnabled(false);
@@ -89,18 +89,11 @@ public class StringRegexMarkerEditor extends JPanel {
     newButton = new JButton("New");
     newButton.addActionListener(new NewMarkerActionListener());
 
-    type = new JComboBox(new String[] { "String matcher", "Regex matcher" });
-    type.addActionListener(arg0 -> {
-      if (type.getSelectedIndex() == 0) {
-        preConditionLabel.setEnabled(false);
-        preCondition.setEnabled(false);
-      } else {
-        preConditionLabel.setEnabled(true);
-        preCondition.setEnabled(true);
-      }
-    });
+    type = new JComboBox<>(new String[] { "String matcher", "Regex matcher" });
+
     type.addActionListener(testAfterChangeActionListener);
     type.addActionListener(saveEnableListener);
+
     int testLines = 3;
     testFields = new JTextField[3];
     testResults = new JLabel[3];
@@ -125,8 +118,19 @@ public class StringRegexMarkerEditor extends JPanel {
     include.addActionListener(testAfterChangeActionListener);
     groups = new JTextField(20);
 
-    colors = new JComboBox(MarkerColors.values());
+    colors = new JComboBox<>(MarkerColors.values());
     colors.setRenderer(new MarkerColorsComboBoxRenderer());
+
+
+    type.addActionListener(arg0 -> {
+      if (type.getSelectedIndex() == 0) {
+        preConditionLabel.setEnabled(false);
+        preCondition.setEnabled(false);
+      } else {
+        preConditionLabel.setEnabled(true);
+        preCondition.setEnabled(true);
+      }
+    });
 
     c.gridwidth = 1;
     c.insets = new Insets(4, 4, 4, 4);
@@ -417,7 +421,7 @@ public class StringRegexMarkerEditor extends JPanel {
       newMarker = new RegexMarker(p);
     }
 
-    markersContainser.addElement(newMarker);
+    markersContainer.addElement(newMarker);
   }
 
   private Properties getMarkerProperties() {
