@@ -15,11 +15,14 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.importer.*;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
-import pl.otros.logview.parser.JulSimpleFormmaterParser;
+import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.LogParser;
+import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
@@ -28,9 +31,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogImportersLoader {
 
@@ -46,7 +46,7 @@ public class LogImportersLoader {
     xmlLogImporter2.init(p);
     list.add(xmlLogImporter2);
 
-    JulSimpleFormmaterParser julSimpleFormmaterParser = new JulSimpleFormmaterParser();
+    JulSimpleFormatterParser julSimpleFormmaterParser = new JulSimpleFormatterParser();
     LogImporterUsingParser julImporter = new LogImporterUsingParser(julSimpleFormmaterParser);
     julImporter.init(p);
     list.add(julImporter);
@@ -73,11 +73,9 @@ public class LogImportersLoader {
       // dir not exist!
       return new ArrayList<>();
     }
-    File[] files = dir.listFiles(pathname -> {
-      return pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip");
-    });
+    File[] files = dir.listFiles(pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip"));
     for (File file : files) {
-      Collection<LogImporter> m = null;
+      Collection<LogImporter> m;
       try {
         if (file.isDirectory()) {
           m = loadFromDir(file);
@@ -133,7 +131,12 @@ public class LogImportersLoader {
             LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);
             logImporter.init(p);
             logImporters.add(logImporter);
-          } else {
+          } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE,"").equals("json")){
+            final JsonLogParser jsonLogParser = new JsonLogParser();
+            jsonLogParser.init(p);
+            logImporters.add(new LogImporterUsingParser(jsonLogParser));
+          }
+          else {
             LOGGER.error( "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
           }
         } catch (Exception e) {

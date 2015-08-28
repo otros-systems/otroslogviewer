@@ -31,11 +31,11 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 
-public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
+public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
 
   private static final String DATE_PATTERNS = "DATE_PATTERNS";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormmaterParser.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormatterParser.class.getName());
 
   private static final String ICON_PATH = "img/java.png";
 
@@ -48,7 +48,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
     new LevelParser(new Locale("fr"))
 };
 
-  public JulSimpleFormmaterParser() {
+  public JulSimpleFormatterParser() {
     pd = new ParserDescription();
     pd.setDisplayName("JUL simple formatter");
     pd.setDescription("Parse logs formatted by java.util.logging with SimpleFormatter");
