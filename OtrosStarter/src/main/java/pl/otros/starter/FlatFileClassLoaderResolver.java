@@ -35,9 +35,9 @@ public class FlatFileClassLoaderResolver implements ClassLoaderResolver {
   @Override
   public URL[] getClassPathUrls(InputStream inputStream) throws IOException {
     String olvHome = System.getProperty("OLV_HOME");
-    ArrayList<URL> result = new ArrayList<>();
+    ArrayList<URL> result = new ArrayList<URL>();
     BufferedReader bin = new BufferedReader(new InputStreamReader(inputStream));
-    String line = null;
+    String line;
     while ((line = bin.readLine()) != null) {
       File f = new File(olvHome,line);
 
