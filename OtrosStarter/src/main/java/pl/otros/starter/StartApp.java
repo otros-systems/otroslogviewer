@@ -16,6 +16,7 @@
 
 package pl.otros.starter;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,6 +32,17 @@ public class StartApp {
   private static final Logger LOGGER = Logger.getLogger(StartApp.class.getName());
 
   public static void main(String[] args) throws IOException {
+
+
+    final String runningJava = System.getProperty("java.version");
+    final JavaVersion javaVersion = JavaVersion.fromString(runningJava);
+
+    final int compareTo = javaVersion.compareTo(new JavaVersion(1, 8, 0));
+    if (compareTo < 0) {
+      System.err.println("Java version have to be at least 1.8, you version is " + runningJava);
+      JOptionPane.showMessageDialog(null, "Java version have to at least 1.8, your version is " + runningJava, "Java is too old", JOptionPane.ERROR_MESSAGE);
+    }
+
     ClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
     String olvHome = System.getProperty("OLV_HOME");
     InputStream in = new FileInputStream(new File(olvHome, "classpath.txt"));
