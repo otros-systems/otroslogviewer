@@ -11,6 +11,11 @@ import java.text.ParseException;
 import java.util.Optional;
 import java.util.Properties;
 
+/**
+ * Parser of log in json format. It can skip if between json object are some junk (from standard output). From properties
+ * are taken mappings from Json ~xpath to LogData fields. For example if Json field logMessage contains information about
+ * message, it should be written as message=logMessage
+ */
 public class JsonLogParser extends AbstractPluginableElement implements LogParser {
 
   private final ParserDescription parserDescription;
@@ -18,7 +23,7 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
 
 
   public JsonLogParser() {
-    super("Json", "Json log parser");
+    super("Json parser", "Json log parser");
     parserDescription = new ParserDescription();
     parserDescription.setDisplayName(name);
     parserDescription.setDescription(description);

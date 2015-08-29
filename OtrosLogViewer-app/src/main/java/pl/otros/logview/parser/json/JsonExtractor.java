@@ -1,6 +1,7 @@
 package pl.otros.logview.parser.json;
 
 import com.google.common.base.Splitter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.util.Validator;
@@ -14,8 +15,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 public class JsonExtractor {
 
+  public static final String VALUES_SEPARATOR = ".";
   private String propertyLevel;
   private List<String> propertyKeysToMdc;
   private String propertyMessage;
@@ -52,11 +56,17 @@ public class JsonExtractor {
     }
   }
 
+  /**
+   * Tries to parse log event in json form using selected date format
+   * @param s  log fragment
+   * @param dateFormat instance of DateFormat
+   * @return Optional of LogData if log event can be extracted, empty if not.
+   */
   Optional<LogData> parseJsonLog(String s, DateFormat dateFormat) {
     try {
       Validator.validate(s);
       final JSONObject jsonObject = new JSONObject(s);
-      final Map<String, String> map = toMap(jsonObject, new HashMap<>(), "");
+      final Map<String, String> map = toMap(jsonObject);
       return mapToLogData(map, dateFormat);
     } catch (JSONException e) {
       return Optional.empty();
@@ -64,6 +74,22 @@ public class JsonExtractor {
     }
   }
 
+  /**
+   * Tries convert json object in map form to log data
+   * @param map json object in map form, names as xpath separated by dots are keys.
+   *            <code>
+   *            {"a": "value1"
+   *             "b": {
+   *               "c": "value2"
+   *             }
+   *            }
+   *            </code>
+   *            will be represented by map
+   *            a   -> value1,
+   *            b.c -> value2
+   * @param dateParser date format
+   * @return Optional of LogData in case of success or Optional.empty in case of error
+   */
   Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
     LogDataBuilder builder = new LogDataBuilder();
 
@@ -91,28 +117,37 @@ public class JsonExtractor {
     }
   }
 
+  /**
+   * Get list of fields and populate values into map (if value for key is not empty
+   * @param map map to fill
+   * @param keys list of xpaths in json files
+   * @return map populated by additional xpath values
+   */
   static Map<String, String> extractMdc(Map<String, String> map, List<String> keys) {
     return keys.stream()
-      .filter(key -> {
-          final String orDefault = map.getOrDefault(key, "");
-          return orDefault.trim().length() != 0;
-        }
+      .filter(key -> isNotBlank(map.getOrDefault(key, ""))
       )
       .collect(Collectors.toMap(key -> key, map::get));
   }
 
+  /**
+   * Convert Json object to map representation. Nested object are represented by keys like xpath (dot separated)
+   * @param j Json object t convert
+   * @return map representation of json object
+   * @throws JSONException
+   */
   public static Map<String, String> toMap(JSONObject j) throws JSONException {
-    return toMap(j, new HashMap<>(), "");
+    return toMap(j, new HashMap<>(), StringUtils.EMPTY);
   }
 
-  public static Map<String, String> toMap(JSONObject j, Map<String, String> map, String prefix) throws JSONException {
+  private static Map<String, String> toMap(JSONObject j, Map<String, String> map, String prefix) throws JSONException {
     final Iterator<String> keys = j.keys();
     while (keys.hasNext()) {
       final String key = keys.next();
       final Object o = j.get(key);
       if (o instanceof JSONObject) {
         JSONObject jso = (JSONObject) o;
-        toMap(jso, map, prefix + key + ".");
+        toMap(jso, map, prefix + key + VALUES_SEPARATOR);
       } else {
         map.put(prefix + key, j.getString(key));
       }

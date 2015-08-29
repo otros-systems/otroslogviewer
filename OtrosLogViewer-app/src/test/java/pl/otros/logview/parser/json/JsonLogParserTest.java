@@ -21,17 +21,23 @@ public class JsonLogParserTest {
   @DataProvider(name = "testParse")
   public Object[][] dataProvider() {
     return new Object[][]{
-      new Object[]{"json.log", "Single line per log event"},
-      new Object[]{"json-formatted.log", "Human readable format"},
-      new Object[]{"json-formatted-withJunk.log", "Human readable format with junk lines"},
-      new Object[]{"json-withJunk.log", "Single line per log event with junk lines"},
+      new Object[]{"json.log", "Single line per log event",getProperties()},
+      new Object[]{"json-formatted.log", "Human readable format",getProperties()},
+      new Object[]{"json-formatted-withJunk.log", "Human readable format with junk lines",getProperties()},
+      new Object[]{"json-withJunk.log", "Single line per log event with junk lines",getProperties()},
+      new Object[]{"json.-timestamp.log", "With date formatted as timestamp",getPropertiesTimestamp()},
     };
   }
 
-  @Test(dataProvider = "dataProvider")
-  public void testParse(String fileName, String desc) throws Exception {
-    //Given
+  private Properties getPropertiesTimestamp() {
     final Properties properties = getProperties();
+    properties.put("dateFormat","timestamp");
+    return properties;
+  }
+
+  @Test(dataProvider = "dataProvider")
+  public void testParse(String fileName, String desc, Properties properties) throws Exception {
+    //Given
     final JsonLogParser jsonParser = new JsonLogParser();
     jsonParser.init(properties);
     final ParsingContext parsingContext = new ParsingContext();
