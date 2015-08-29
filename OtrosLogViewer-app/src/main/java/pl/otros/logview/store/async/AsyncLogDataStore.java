@@ -26,35 +26,35 @@ import java.util.TreeMap;
 
 public interface AsyncLogDataStore extends MarkableTableModel, Iterable<LogData>, LogDataCollector {
 
-  public int getCount();
+  int getCount();
 
   @Async
-  public ListenableFuture remove(int... ids);
+  ListenableFuture remove(int... ids);
 
   @Async
-  public ListenableFuture<FilterResult> filter(LogDataFilter filter);
+  ListenableFuture<FilterResult> filter(LogDataFilter filter);
 
   @Async
-  public ListenableFuture<SearchResult> search(SearchCriteria searchCriteria);
+  ListenableFuture<SearchResult> search(SearchCriteria searchCriteria);
 
-  public LogData getLogData(int row);
+  LogData getLogData(int row);
 
-  public Integer getLogDataIdInRow(int row);
+  Integer getLogDataIdInRow(int row);
 
-  public int getLimit();
+  int getLimit();
 
-  public void setLimit(int limit);
+  void setLimit(int limit);
 
-  public int clear();
+  int clear();
 
-  public void addNoteToRow(int row, Note note);
+  void addNoteToRow(int row, Note note);
 
-  public Note getNote(int row);
+  Note getNote(int row);
 
-  public Note removeNote(int row);
+  Note removeNote(int row);
 
-  public void clearNotes();
+  void clearNotes();
 
-  public TreeMap<Integer, Note> getAllNotes();
+  TreeMap<Integer, Note> getAllNotes();
 
 }

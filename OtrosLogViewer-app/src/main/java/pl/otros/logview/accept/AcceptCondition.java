@@ -19,9 +19,9 @@ import pl.otros.logview.LogData;
 
 public interface AcceptCondition {
 
-  public boolean accept(LogData data);
+  boolean accept(LogData data);
 
-  public String getName();
+  String getName();
 
-  public String getDescription();
+  String getDescription();
 }

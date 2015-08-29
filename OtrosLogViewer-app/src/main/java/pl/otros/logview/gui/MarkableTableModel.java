@@ -19,12 +19,12 @@ import pl.otros.logview.MarkerColors;
 
 public interface MarkableTableModel {
 
-  public abstract boolean isMarked(int row);
+  boolean isMarked(int row);
 
-  public abstract MarkerColors getMarkerColors(int row);
+  MarkerColors getMarkerColors(int row);
 
-  public abstract void markRows(MarkerColors markerColors, int... rows);
+  void markRows(MarkerColors markerColors, int... rows);
 
-  public abstract void unmarkRows(int... rows);
+  void unmarkRows(int... rows);
 
 }

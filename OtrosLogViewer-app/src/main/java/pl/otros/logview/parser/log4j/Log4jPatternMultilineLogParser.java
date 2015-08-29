@@ -150,13 +150,13 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   public static final String PROPERTY_TYPE = "type";
   public static final String PROPERTY_CHARSET = "charset";
 
-  private final List<String> keywords = new ArrayList<String>();
+  private final List<String> keywords = new ArrayList<>();
   // private SimpleDateFormat dateFormat;
   // private Rule expressionRule;
-  private String[] emptyException = new String[] { "" };
-  private Map<String, Level> customLevelDefinitionMap = new HashMap<String, Level>();
+  private final String[] emptyException = { "" };
+  private final Map<String, Level> customLevelDefinitionMap = new HashMap<>();
   private boolean appendNonMatches;
-  private List<String> matchingKeywords = new ArrayList<String>();
+  private final List<String> matchingKeywords = new ArrayList<>();
 
   private static final String PROP_START = "PROP(";
   private static final String PROP_END = ")";
@@ -197,7 +197,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   private Pattern exceptionPattern;
   private String timestampPatternText;
 
-  private ParserDescription parserDescription;
+  private final ParserDescription parserDescription;
 
   public Log4jPatternMultilineLogParser() {
     keywords.add(TIMESTAMP);
@@ -321,9 +321,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     }
     String[] additionalLines = ctx.getUnmatchedLog().toString().split("\n");
     String[] exception = new String[additionalLines.length - exceptionLine];
-    for (int i = 0; i < exception.length; i++) {
-      exception[i] = additionalLines[i + exceptionLine];
-    }
+    System.arraycopy(additionalLines, exceptionLine, exception, 0, exception.length);
     return exception;
   }
 
@@ -424,7 +422,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     // if custom level definitions exist, parse them
     updateCustomLevelDefinitionMap();
 
-    List<String> buildingKeywords = new ArrayList<String>();
+    List<String> buildingKeywords = new ArrayList<>();
 
     String newPattern = logFormat;
 
@@ -434,16 +432,16 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     // with an empty string,
     // we'll rebuild the pattern later
     // ?  The propertyNames list is never used.
-    List<String> propertyNames = new ArrayList<String>();
+    List<String> propertyNames = new ArrayList<>();
     while (index > -1) {
-      if (current.indexOf(PROP_START) > -1 && current.indexOf(PROP_END) > -1) {
+      if (current.contains(PROP_START) && current.indexOf(PROP_END) > -1) {
         index = current.indexOf(PROP_START);
         String longPropertyName = current.substring(current.indexOf(PROP_START), current.indexOf(PROP_END) + 1);
         String shortProp = getShortPropertyName(longPropertyName);
         buildingKeywords.add(shortProp);
         propertyNames.add(longPropertyName);
         current = current.substring(longPropertyName.length() + 1 + index);
-        newPattern = singleReplace(newPattern, longPropertyName, new Integer(buildingKeywords.size() - 1).toString());
+        newPattern = singleReplace(newPattern, longPropertyName, Integer.toString(buildingKeywords.size() - 1));
       } else {
         // no properties
         index = -1;
@@ -462,7 +460,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
       int index2 = newPattern.indexOf(keyword);
       if (index2 > -1) {
         buildingKeywords.add(keyword);
-        newPattern = singleReplace(newPattern, keyword, new Integer(buildingKeywords.size() - 1).toString());
+        newPattern = singleReplace(newPattern, keyword, Integer.toString(buildingKeywords.size() - 1));
       }
     }
 
@@ -494,7 +492,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     newPattern = newPattern.replaceAll(Pattern.quote(PATTERN_WILDCARD), REGEXP_DEFAULT_WILDCARD);
     // use buildingKeywords here to ensure correct order
     for (int i = 0; i < buildingKeywords.size(); i++) {
-      String keyword = (String) buildingKeywords.get(i);
+      String keyword = buildingKeywords.get(i);
       // make the final keyword greedy (we're assuming it's the message)
       if (i == (buildingKeywords.size() - 1)) {
         newPattern = singleReplace(newPattern, String.valueOf(i), GREEDY_GROUP);
@@ -761,11 +759,9 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
       // Allow for optional capture fields.
       // This is used by rePattern now, but traditional patterns could be
       // enhanced to support optional fields too.
-      for (Map.Entry<String, Object> entry :
-              (Set<Map.Entry<String, Object>>)
-              processEvent(eventMatcher.toMatchResult()).entrySet())
-          if (entry.getValue() != null)  // We never write null key
-              logEventParsingProperties.put(entry.getKey(), entry.getValue());
+      // We never write null key
+      ((Set<Map.Entry<String, Object>>)
+        processEvent(eventMatcher.toMatchResult()).entrySet()).stream().filter(entry -> entry.getValue() != null).forEach(entry -> logEventParsingProperties.put(entry.getKey(), entry.getValue()));
     } else if (exceptionMatcher.matches()) {
       // an exception line
       if (parsingContext.getUnmatchedLog().length() > 0)
@@ -865,7 +861,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
         // if custom level definitions exist, parse them
         updateCustomLevelDefinitionMap();
 
-        Map<Integer, String> groupMap = new HashMap<Integer, String>();
+        Map<Integer, String> groupMap = new HashMap<>();
         Enumeration<String> e =
                 (Enumeration<String>) properties.propertyNames();
         String key = null, val = null;
@@ -924,7 +920,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
      * Seems to be no intentionto share the functionality so it doesn't
      * belong in any *Util* class.
      */
-    ArrayList<TableColumns> list = new ArrayList<TableColumns>();
+    ArrayList<TableColumns> list = new ArrayList<>();
     if (matchingKeywords.contains(Log4jPatternMultilineLogParser.CLASS))
       list.add(TableColumns.CLASS);
     if (matchingKeywords.contains(Log4jPatternMultilineLogParser.TIMESTAMP))
@@ -953,6 +949,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     if (!keywords.containsAll(matchingKeywords)) 
         list.add(TableColumns.PROPERTIES);
 
-    return list.toArray(new TableColumns[0]);
+    return list.toArray(new TableColumns[list.size()]);
   }
 }

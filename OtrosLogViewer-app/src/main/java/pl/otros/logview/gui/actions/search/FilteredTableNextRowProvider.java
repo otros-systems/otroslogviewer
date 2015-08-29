@@ -19,9 +19,9 @@ import javax.swing.*;
 
 public class FilteredTableNextRowProvider implements NextRowProvider {
 
-  private JTable table;
+  private final JTable table;
   private int rowSearchStart;
-  private int increase;
+  private final int increase;
   private int currentRow = 0;
   private int rowsChecked;
 

@@ -15,14 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.importer;
 
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNotNull;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.TestUtils;
-import pl.otros.logview.parser.JulSimpleFormmaterParser;
+import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.reader.ProxyLogDataCollector;
 
@@ -30,14 +28,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+
 public class JulSimpleFormmaterParserTest {
 
   LogImporterUsingParser importerUsingParser;
-  JulSimpleFormmaterParser parser;
+  JulSimpleFormatterParser parser;
 
   @BeforeMethod
 public void init() {
-    parser = new JulSimpleFormmaterParser();
+    parser = new JulSimpleFormatterParser();
     importerUsingParser = new LogImporterUsingParser(parser);
   }
 

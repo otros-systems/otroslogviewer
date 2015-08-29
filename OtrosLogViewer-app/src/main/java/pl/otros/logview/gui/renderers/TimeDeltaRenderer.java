@@ -14,7 +14,7 @@ public class TimeDeltaRenderer implements TableCellRenderer {
   public static final int HOUR = 60 * MINUTE;
 
   private Date selectedTimestamp;
-  private JLabel label;
+  private final JLabel label;
 
   public TimeDeltaRenderer() {
     label  = new JLabel();

@@ -38,14 +38,14 @@ public class MarkersEditor extends JPanel {
   private static final String CARD_LAYOUT_PROPERTIES_BASED = "PROP_BASED";
   private static final String CARD_LAYOUT_NO_SELECTION = "EMPTY";
 
-  private JList markersList;
-  private MarkerEditor editor;
-  private CardLayout cardLayout;
+  private final JList markersList;
+  private final MarkerEditor editor;
+  private final CardLayout cardLayout;
   private JPanel southPanel;
   private JButton buttonNew;
   private JButton buttonSave;
-  private MarkersListModel markersListModel;
-  private PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final MarkersListModel markersListModel;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public MarkersEditor() {
     final JPanel editorPanel = new JPanel();

@@ -22,8 +22,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,12 +33,13 @@ public class TimeFilter extends AbstractLogFilter {
   private static final String DESCRIPTION = "Filtering events based on event time.";
 
   private Date start, end;
-  private SpinnerDateModel startM, endM;
-  private JPanel gui;
-  private ChangeListner changeListner;
+  private final SpinnerDateModel startM;
+  private final SpinnerDateModel endM;
+  private final JPanel gui;
+  private final ChangeListner changeListner;
   private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private JCheckBox startEnable;
-  private JCheckBox endEnable;
+  private final JCheckBox startEnable;
+  private final JCheckBox endEnable;
 
   public TimeFilter() {
     super(NAME, DESCRIPTION);
@@ -54,22 +53,9 @@ public class TimeFilter extends AbstractLogFilter {
     endM.setValue(end);
     endM.addChangeListener(changeListner);
     startEnable = new JCheckBox("Show after date:");
-    startEnable.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        listener.valueChanged();
-
-      }
-    });
+    startEnable.addActionListener(e -> listener.valueChanged());
     endEnable = new JCheckBox("Show before date:");
-    endEnable.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        listener.valueChanged();
-      }
-    });
+    endEnable.addActionListener(e -> listener.valueChanged());
     gui = new JPanel(new GridLayout(4, 1));
     JSpinner startSpinner = new JSpinner(startM);
     JSpinner endSpinner = new JSpinner(endM);

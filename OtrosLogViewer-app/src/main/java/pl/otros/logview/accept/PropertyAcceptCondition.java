@@ -8,8 +8,8 @@ import pl.otros.logview.LogData;
  */
 public class PropertyAcceptCondition extends AbstractAcceptContidion {
 
-    private String propertyKey;
-    private String propertyValue;
+    private final String propertyKey;
+    private final String propertyValue;
 
     public PropertyAcceptCondition(String propertyKey, String propertyValue) {
         this.propertyKey = propertyKey;

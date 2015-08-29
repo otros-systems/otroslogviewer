@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class JumpToCodeClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(JumpToCodeClient.class.getName());
-  private HttpClient client;
-  private Configuration configuration;
-  private Cache<LocationInfo, Boolean> locationInfoCache;
-  private Cache<LocationInfo, String> locationSourceCache;
-  private Cache<String, Ide> ideCache;
+  private final HttpClient client;
+  private final Configuration configuration;
+  private final Cache<LocationInfo, Boolean> locationInfoCache;
+  private final Cache<LocationInfo, String> locationSourceCache;
+  private final Cache<String, Ide> ideCache;
 
   public JumpToCodeClient(Configuration configuration) {
     this.configuration = configuration;
@@ -40,12 +40,9 @@ public class JumpToCodeClient {
 
   public String getContent(final LocationInfo locationInfo) throws IOException {
     try {
-      return locationSourceCache.get(locationInfo, new Callable<String>() {
-        @Override
-        public String call() throws Exception {
-          HttpMethod httpMethod = buildMethod(getUrl(), locationInfo, HttpOperation.GET_SOURCE);
-          return executeAndGetContent(httpMethod);
-        }
+      return locationSourceCache.get(locationInfo, () -> {
+        HttpMethod httpMethod = buildMethod(getUrl(), locationInfo, HttpOperation.GET_SOURCE);
+        return executeAndGetContent(httpMethod);
       });
     } catch (ExecutionException e) {
       return "";
@@ -120,19 +117,16 @@ public class JumpToCodeClient {
       return false;
     }
     try {
-      return locationInfoCache.get(locationInfo, new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws Exception {
-          LOGGER.trace("Checking if " + locationInfo + " is jumpable.");
-          HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.TEST);
-          try {
-            int execute = execute(method);
-            LOGGER.trace("HTTP status line is " + execute);
-            return (execute == HttpStatus.SC_OK);
-          } catch (IOException e) {
-            LOGGER.trace("IOException when checking if location if jumpable", e);
-            return false;
-          }
+      return locationInfoCache.get(locationInfo, () -> {
+        LOGGER.trace("Checking if " + locationInfo + " is jumpable.");
+        HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.TEST);
+        try {
+          int execute = execute(method);
+          LOGGER.trace("HTTP status line is " + execute);
+          return (execute == HttpStatus.SC_OK);
+        } catch (IOException e) {
+          LOGGER.trace("IOException when checking if location if jumpable", e);
+          return false;
         }
       });
     } catch (ExecutionException e) {
@@ -198,7 +192,7 @@ public class JumpToCodeClient {
   }
 
   private class GetIdeCallable implements Callable<Ide> {
-    private String url;
+    private final String url;
 
     private GetIdeCallable(String url) {
       this.url = url;

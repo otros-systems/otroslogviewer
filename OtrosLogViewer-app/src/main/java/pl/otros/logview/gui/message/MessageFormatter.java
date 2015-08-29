@@ -19,10 +19,10 @@ import pl.otros.logview.pluginable.PluginableElement;
 
 public interface MessageFormatter extends PluginableElement {
 
-  public static int MESSAGE_FORMATTER_VERSION_1 = 1;
+  int MESSAGE_FORMATTER_VERSION_1 = 1;
 
-  public abstract boolean formattingNeeded(String message);
+  boolean formattingNeeded(String message);
 
-  public abstract String format(String message);
+  String format(String message);
 
 }

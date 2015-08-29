@@ -33,13 +33,10 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +56,7 @@ public class Log4jPatternParserEditor extends JPanel {
   private Font heading2Font;
 
   private JLabel logFileContentLabel;
-	private OtrosApplication otrosApplication;
+	private final OtrosApplication otrosApplication;
 
 	public Log4jPatternParserEditor(OtrosApplication otrosApplication) {
 		this.otrosApplication = otrosApplication;
@@ -212,41 +209,27 @@ public class Log4jPatternParserEditor extends JPanel {
   }
 
   public void createActions() {
-    loadLog.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          selectLogFileAndLoad();
-        } catch (IOException e1) {
-          LOGGER.error("Error loading file " + e1.getMessage());
-          LOGGER.error("Error loading file: " + e1.getMessage(),e1);
-        }
+    loadLog.addActionListener(e -> {
+      try {
+        selectLogFileAndLoad();
+      } catch (IOException e1) {
+        LOGGER.error("Error loading file " + e1.getMessage());
+        LOGGER.error("Error loading file: " + e1.getMessage(),e1);
       }
     });
-    testParser.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          testParser();
-        } catch (InitializationException e1){
-          LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
-          JOptionPane.showMessageDialog(Log4jPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
-              JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e1) {
-          LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
-        }
+    testParser.addActionListener(e -> {
+      try {
+        testParser();
+      } catch (InitializationException e1){
+        LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
+        JOptionPane.showMessageDialog(Log4jPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
+            JOptionPane.ERROR_MESSAGE);
+      } catch (Exception e1) {
+        LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
       }
     });
 
-    saveParser.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        saveParser();
-      }
-    });
+    saveParser.addActionListener(e -> saveParser());
   }
 
   protected void saveParser() {

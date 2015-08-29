@@ -19,6 +19,6 @@ import pl.otros.logview.gui.table.TableColumns;
 
 public interface TableColumnNameSelfDescribable {
 
-  public TableColumns[] getTableColumnsToUse();
+  TableColumns[] getTableColumnsToUse();
 
 }

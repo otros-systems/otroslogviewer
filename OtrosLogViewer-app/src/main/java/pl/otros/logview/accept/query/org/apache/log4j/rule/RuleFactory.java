@@ -38,7 +38,7 @@ public final class RuleFactory {
   /**
    * Rules.
    */
-  private static final Collection<String> RULES = new LinkedList<String>();
+  private static final Collection<String> RULES = new LinkedList<>();
   /**
    * AND operator literal.
    */

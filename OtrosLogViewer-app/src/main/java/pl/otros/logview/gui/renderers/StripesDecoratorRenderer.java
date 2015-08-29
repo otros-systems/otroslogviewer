@@ -21,7 +21,7 @@ import java.awt.*;
 
 public class StripesDecoratorRenderer implements TableCellRenderer {
 
-  private TableCellRenderer subjectRenderer;
+  private final TableCellRenderer subjectRenderer;
 
   public StripesDecoratorRenderer(TableCellRenderer subjectRenderer) {
     super();

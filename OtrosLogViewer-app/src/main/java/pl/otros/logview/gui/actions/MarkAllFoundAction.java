@@ -90,7 +90,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
       return 0;
     }
 
-    ArrayList<Integer> toMark = new ArrayList<Integer>();
+    ArrayList<Integer> toMark = new ArrayList<>();
     for (int i = 0; i < table.getRowCount(); i++) {
       int row = table.convertRowIndexToModel(i);
       if (searchMatcher.matches(dataTableModel.getLogData(row))) {

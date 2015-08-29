@@ -28,7 +28,7 @@ import java.util.HashSet;
  */
 public class StringContainsSearchMatcher implements SearchMatcher {
 
-  private String searchChar;
+  private final String searchChar;
 
   public StringContainsSearchMatcher(String searchChar) {
     this.searchChar = searchChar.toLowerCase();
@@ -41,7 +41,7 @@ public class StringContainsSearchMatcher implements SearchMatcher {
 
   @Override
   public ArrayList<String> getFoundTextFragments(LogData logData) {
-    HashSet<String> result = new HashSet<String>();
+    HashSet<String> result = new HashSet<>();
     String message = logData.getMessage();
     String messageLc = message.toLowerCase();
     int idx = 0;
@@ -50,7 +50,7 @@ public class StringContainsSearchMatcher implements SearchMatcher {
       idx++;
     }
 
-    return new ArrayList<String>(result);
+    return new ArrayList<>(result);
   }
 
 }

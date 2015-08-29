@@ -33,7 +33,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
   private static final Logger LOGGER = LoggerFactory.getLogger(LogImporterUsingParser.class.getName());
   private LogParser parser = null;
 
-  private ParserDescription pd;
+  private final ParserDescription pd;
 
   public LogImporterUsingParser(LogParser parser) {
     super();

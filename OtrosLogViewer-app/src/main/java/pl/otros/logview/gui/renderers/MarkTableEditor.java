@@ -23,8 +23,8 @@ import java.awt.*;
 
 public class MarkTableEditor extends DefaultCellEditor {
 
-  private JCheckBox checkBox;
-	private OtrosApplication otrosApplication;
+  private final JCheckBox checkBox;
+	private final OtrosApplication otrosApplication;
 
   public MarkTableEditor(OtrosApplication otrosApplication) {
     super(new JCheckBox());

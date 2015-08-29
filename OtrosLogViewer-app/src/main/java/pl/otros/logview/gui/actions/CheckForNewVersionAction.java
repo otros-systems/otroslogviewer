@@ -20,8 +20,6 @@ import pl.otros.logview.gui.StatusObserver;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,17 +54,13 @@ public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
     JPanel panel = new JPanel(new GridLayout(2, 1));
     panel.add(new JLabel("Your version is " + running + ", current version is " + current));
     JButton button = new JButton("Open download page");
-    button.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
-        } catch (Exception e1) {
-          String msg = "Can't open browser with download page: " + e1.getMessage();
-          LOGGER.error(msg);
-          getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
-        }
+    button.addActionListener(e -> {
+      try {
+        Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
+      } catch (Exception e1) {
+        String msg = "Can't open browser with download page: " + e1.getMessage();
+        LOGGER.error(msg);
+        getOtrosApplication().getStatusObserver().updateStatus(msg, StatusObserver.LEVEL_ERROR);
       }
     });
     panel.add(button);

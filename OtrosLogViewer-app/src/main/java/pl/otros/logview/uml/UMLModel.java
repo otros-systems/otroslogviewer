@@ -26,14 +26,15 @@ import java.util.LinkedList;
 public class UMLModel {
 
   private int yPosition;
-  private LinkedList<String> actors;
-  private SelectableJComponent cContent, cHeader;
-  private JScrollPane spContent;
-  private JPanel panel;
-  private HashMap<String, Integer> actorPosition;
-  private HashMap<String, Integer> actorActivation;
-  private LogUmlMapper logUmlMapper;
-  private UMLModelData data;
+  private final LinkedList<String> actors;
+  private final SelectableJComponent cContent;
+  private final SelectableJComponent cHeader;
+  private final JScrollPane spContent;
+  private final JPanel panel;
+  private final HashMap<String, Integer> actorPosition;
+  private final HashMap<String, Integer> actorActivation;
+  private final LogUmlMapper logUmlMapper;
+  private final UMLModelData data;
 
   public UMLModel(LinkedList<String> actors) {
     this.actors = actors;
@@ -44,8 +45,8 @@ public class UMLModel {
 
     cHeader = new SelectableJComponent();
     cHeader.setBackground(data.backgroudColor);
-    actorPosition = new LinkedHashMap<String, Integer>();
-    actorActivation = new HashMap<String, Integer>();
+    actorPosition = new LinkedHashMap<>();
+    actorActivation = new HashMap<>();
     logUmlMapper = new LogUmlMapper();
 
     int[] xPositions = new int[actors.size()];
@@ -149,7 +150,7 @@ public class UMLModel {
         - data.messageArrowSize)));
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x, yPosition + data.yStep, xArrowHead2, yPosition + data.yStep
         + data.messageArrowSize)));
-    cContent.addString(new StringShape(message, data.messageFont, (int) (x + data.distanceBetweenActors / 2), yPosition + data.yStep / 2,
+    cContent.addString(new StringShape(message, data.messageFont, x + data.distanceBetweenActors / 2, yPosition + data.yStep / 2,
         data.messageStringColor));
     step();
   }

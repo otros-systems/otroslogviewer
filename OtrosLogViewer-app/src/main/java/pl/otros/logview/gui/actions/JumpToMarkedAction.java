@@ -24,10 +24,10 @@ import java.awt.event.ActionEvent;
 
 public class JumpToMarkedAction extends OtrosAction {
 
-  private Direction direction;
+  private final Direction direction;
 
   public enum Direction {
-    FORWARD, BACKWARD;
+    FORWARD, BACKWARD
   }
 
   public JumpToMarkedAction(OtrosApplication otrosApplication, Direction direction) {

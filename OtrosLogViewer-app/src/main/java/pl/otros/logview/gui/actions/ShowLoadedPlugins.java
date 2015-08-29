@@ -31,8 +31,8 @@ import java.awt.event.ActionEvent;
 public class ShowLoadedPlugins extends OtrosAction {
 
 
-  private JComponent loadedComponents;
-  private JTextArea textArea;
+  private final JComponent loadedComponents;
+  private final JTextArea textArea;
 
   public ShowLoadedPlugins(OtrosApplication otrosApplication) {
     super(otrosApplication);

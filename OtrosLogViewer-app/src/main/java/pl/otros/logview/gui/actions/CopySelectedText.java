@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 /**
  */
 public class CopySelectedText extends OtrosAction {
-  private JTextPane logDetailTextArea;
+  private final JTextPane logDetailTextArea;
 
   public CopySelectedText(OtrosApplication otrosApplication, JTextPane logDetailTextArea) {
     super(otrosApplication);

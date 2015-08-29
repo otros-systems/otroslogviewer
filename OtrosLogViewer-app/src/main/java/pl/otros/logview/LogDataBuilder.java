@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 public class LogDataBuilder {
 
-  private LogData ld;
+  private final LogData ld;
 
   public LogDataBuilder() {
     ld = new LogData();

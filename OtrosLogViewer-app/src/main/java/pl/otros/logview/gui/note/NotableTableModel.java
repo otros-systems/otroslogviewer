@@ -21,24 +21,24 @@ import java.util.TreeMap;
 
 public interface NotableTableModel {
 
-  public void addNoteToRow(int row, Note note);
+  void addNoteToRow(int row, Note note);
 
-  public Note getNote(int row);
+  Note getNote(int row);
 
-  public Note removeNote(int row);
+  Note removeNote(int row);
 
-  public Note removeNote(int row, boolean notify);
+  Note removeNote(int row, boolean notify);
 
-  public void clearNotes();
+  void clearNotes();
 
-  public TreeMap<Integer, Note> getAllNotes();
+  TreeMap<Integer, Note> getAllNotes();
 
-  public void addNoteObserver(NoteObserver observer);
+  void addNoteObserver(NoteObserver observer);
 
-  public void removeNoteObserver(NoteObserver observer);
+  void removeNoteObserver(NoteObserver observer);
 
-  public void removeAllNoteObserver();
+  void removeAllNoteObserver();
 
-  public void notifyAllNoteObservers(NoteEvent noteEvent);
+  void notifyAllNoteObservers(NoteEvent noteEvent);
 
 }

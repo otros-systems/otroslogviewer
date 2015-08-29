@@ -48,9 +48,9 @@ public abstract class AbstractMemoryLogStore implements LogDataStore {
 
   @Override
   public void markRows(MarkerColors markerColor, int... rows) {
-    for (int i = 0; i < rows.length; i++) {
-      getLogData(rows[i]).setMarked(true);
-      getLogData(rows[i]).setMarkerColors(markerColor);
+    for (int row : rows) {
+      getLogData(row).setMarked(true);
+      getLogData(row).setMarkerColors(markerColor);
     }
   }
 
@@ -113,7 +113,7 @@ public abstract class AbstractMemoryLogStore implements LogDataStore {
   }
 
   public TreeMap<Integer, Note> getAllNotes() {
-    TreeMap<Integer, Note> result = new TreeMap<Integer, Note>();
+    TreeMap<Integer, Note> result = new TreeMap<>();
     int count = getCount();
     for (int i = 0; i < count; i++) {
       Note note = getNote(i);

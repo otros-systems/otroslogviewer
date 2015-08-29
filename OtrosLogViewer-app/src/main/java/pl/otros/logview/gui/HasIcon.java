@@ -19,6 +19,6 @@ import javax.swing.*;
 
 public interface HasIcon {
 
-  public Icon getIcon();
+  Icon getIcon();
 
 }

@@ -3,8 +3,6 @@ package pl.otros.logview.gui.renderers;
 import com.google.common.base.Joiner;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -95,12 +93,7 @@ public class ClassWrapperRendererTest {
   public void testAbbreviatePackagesToSingleLetter(String clazz,int width, String expected) {
     //given
     final FontMetrics fontMetrics = Mockito.mock(FontMetrics.class);
-    Mockito.when(fontMetrics.stringWidth(Matchers.anyString())).thenAnswer(new Answer<Integer>() {
-      @Override
-      public Integer answer(InvocationOnMock invocation) throws Throwable {
-        return ((String)invocation.getArguments()[0]).length();
-      }
-    });
+    Mockito.when(fontMetrics.stringWidth(Matchers.anyString())).thenAnswer(invocation -> ((String)invocation.getArguments()[0]).length());
 
     //when
     final String actual = underTest.abbreviatePackagesToSingleLetter(clazz, width, fontMetrics);

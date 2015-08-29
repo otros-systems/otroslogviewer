@@ -34,8 +34,8 @@ import java.util.Properties;
 
 public class NewMarkerAction extends AbstractAction {
 
-  private JFileChooser chooser;
-  private File markersFolder = AllPluginables.USER_MARKERS;
+  private final JFileChooser chooser;
+  private final File markersFolder = AllPluginables.USER_MARKERS;
 
   public NewMarkerAction() {
     super();
@@ -71,7 +71,7 @@ public class NewMarkerAction extends AbstractAction {
     JButton save = new JButton("Save");
     save.addActionListener(new ActionListener() {
 
-      private PluginableElementsContainer<AutomaticMarker> markersContainser = AllPluginables.getInstance().getMarkersContainser();;
+      private final PluginableElementsContainer<AutomaticMarker> markersContainser = AllPluginables.getInstance().getMarkersContainser();
 
       @Override
       public void actionPerformed(ActionEvent arg0) {

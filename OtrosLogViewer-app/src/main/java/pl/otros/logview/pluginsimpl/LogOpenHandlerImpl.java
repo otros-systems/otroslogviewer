@@ -24,8 +24,7 @@ import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class LogOpenHandlerImpl implements LogOpenHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogOpenHandlerImpl.class.getName());
 
-  private PluginContext pluginContext;
+  private final PluginContext pluginContext;
 
   public LogOpenHandlerImpl(PluginContext pluginContext) {
     this.pluginContext = pluginContext;
@@ -49,7 +48,7 @@ public class LogOpenHandlerImpl implements LogOpenHandler {
 
   @Override
   public void openLogs(String tabName, String... uris) {
-    ArrayList<FileObject> list = new ArrayList<FileObject>();
+    ArrayList<FileObject> list = new ArrayList<>();
     for (String uri : uris) {
       try {
         list.add(VFSUtils.resolveFileObject(uri));

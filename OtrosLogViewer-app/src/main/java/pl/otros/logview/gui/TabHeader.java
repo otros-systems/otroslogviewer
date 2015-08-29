@@ -18,7 +18,6 @@ package pl.otros.logview.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -34,11 +33,11 @@ public class TabHeader extends JPanel {
   private static final long serialVersionUID = 1L;
   private static final Icon NORMAL_ICON = Icons.TAB_HEADER_NORMAL;
   private static final Icon HOVER_ICON = Icons.TAB_HEADER_HOVER;
-  private JTabbedPane jTabbedPane;
+  private final JTabbedPane jTabbedPane;
 
-  private JButton iconButton;
-  private JLabel label;
-  private JTextField editor;
+  private final JButton iconButton;
+  private final JLabel label;
+  private final JTextField editor;
   private int len;
   private Dimension dim;
 
@@ -62,12 +61,7 @@ public class TabHeader extends JPanel {
       }
     });
     iconButton.setToolTipText("Close tab");
-    iconButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        closeTab();
-      }
-    });
+    iconButton.addActionListener(e -> closeTab());
     label = new JLabel(name, icon, SwingConstants.LEFT);
     label.setToolTipText(tooltip);
     label.addMouseListener(new MouseAdapter() {

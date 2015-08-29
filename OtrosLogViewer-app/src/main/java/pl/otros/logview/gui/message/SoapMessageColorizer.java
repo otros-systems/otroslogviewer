@@ -27,7 +27,7 @@ public class SoapMessageColorizer implements MessageColorizer {
 
   private static final String NAME = "Soap message";
 
-  private SoapFinder soapFinder = new SoapFinder();
+  private final SoapFinder soapFinder = new SoapFinder();
 
   protected Style styleElementName;
 	protected Style styleAttribtuteName;
@@ -96,7 +96,7 @@ public class SoapMessageColorizer implements MessageColorizer {
 
   @Override
   public Collection<MessageFragmentStyle> colorize(String message) throws BadLocationException {
-		List<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+		List<MessageFragmentStyle> list = new ArrayList<>();
 
     SortedSet<SubText> findSoaps = soapFinder.findSoaps(message);
     for (SubText subText : findSoaps) {

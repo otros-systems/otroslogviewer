@@ -34,11 +34,11 @@ public class FocusOnSelectedClassesAction extends FocusOnThisAbstractAction<Clas
 
 	@Override
 	public void action(ActionEvent e, ClassFilter filter, LogData... selectedLogData) {
-		HashSet<String> classes = new HashSet<String>();
+		HashSet<String> classes = new HashSet<>();
 		for (LogData logData : selectedLogData) {
 			classes.add(logData.getClazz());
 		}
-		filter.focusOn(classes.toArray(new String[0]));
+		filter.focusOn(classes.toArray(new String[classes.size()]));
 	}
 
 }

@@ -11,7 +11,7 @@ public class SystemPropertiesERDC implements ErrorReportDataCollector {
 
   @Override
 	public Map<String, String> collect(ErrorReportCollectingContext context) {
-		Map<String, String> r = new HashMap<String, String>();
+		Map<String, String> r = new HashMap<>();
 		Properties properties = System.getProperties();
 		fillValues(r, properties);
 		return r ;

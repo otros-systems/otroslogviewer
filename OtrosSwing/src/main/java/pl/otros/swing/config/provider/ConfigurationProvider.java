@@ -5,5 +5,5 @@ import org.apache.commons.configuration.ConfigurationException;
 import pl.otros.swing.config.ConfigView;
 
 public interface ConfigurationProvider {
-  public Configuration getConfigurationForView(ConfigView configView) throws ConfigurationException;
+  Configuration getConfigurationForView(ConfigView configView) throws ConfigurationException;
 }

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CompoundIcon implements Icon {
 
-  private List<Icon> icons;
+  private final List<Icon> icons;
   private int width;
   private int height;
 

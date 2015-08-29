@@ -37,7 +37,7 @@ public class CmdLineConfig {
   public String dirWithJars = null;
 
   @Parameter(description = "Files or URLs")
-  public List<String> files = new ArrayList<String>();
+  public List<String> files = new ArrayList<>();
 
   @Parameter(names = {"-s"}, description = "Display available classes from dir with jars")
   public boolean showImplementations = false;
@@ -45,7 +45,7 @@ public class CmdLineConfig {
   @Parameter(names = { "-h", "-help" }, description = "Display help")
   public boolean printHelp = false;
 
-  private JCommander jCommander;
+  private final JCommander jCommander;
 
   public CmdLineConfig() {
     jCommander = new JCommander(this);

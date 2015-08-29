@@ -18,10 +18,10 @@ package pl.otros.logview;
 public class RuntimeUtils {
 
   public static boolean isRunningOnWindows() {
-    return System.getProperty("os.name").toLowerCase().indexOf("win") != -1;
+    return System.getProperty("os.name").toLowerCase().contains("win");
   }
 
   public static boolean isRunningOnLinux() {
-    return System.getProperty("os.name").toLowerCase().indexOf("linux") != -1;
+    return System.getProperty("os.name").toLowerCase().contains("linux");
   }
 }

@@ -39,7 +39,7 @@ public abstract class AbstractRule implements Rule, Serializable {
   /**
    * PropertySupport instance.
    */
-  private PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
+  private final PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
 
   /**
    * Add property change listener.

@@ -38,7 +38,7 @@ public class LogInvestiagionPersitanceUtilTest {
       m.getMarks().put(i, i % 2 == 0 ? true : false);
       m.getMarksColor().put(Integer.valueOf(i), MarkerColors.values()[i % MarkerColors.values().length]);
     }
-    HashSet<Integer> visibleColumns = new HashSet<Integer>();
+    HashSet<Integer> visibleColumns = new HashSet<>();
     visibleColumns.add(Integer.valueOf(3));
     visibleColumns.add(Integer.valueOf(4));
     m.setVisibleColumns(visibleColumns);

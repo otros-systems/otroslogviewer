@@ -16,6 +16,8 @@
 package pl.otros.logview.store.file;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
@@ -26,8 +28,6 @@ import pl.otros.logview.store.LogDataStore;
 
 import java.io.*;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataStore {
 
@@ -40,10 +40,10 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
   protected TreeMap<Integer, MarkerColors> marksColor;
   protected NotableTableModel notable;
 
-  public FileLogDataStore() throws FileNotFoundException, IOException {
+  public FileLogDataStore() throws IOException {
     init();
-    marks = new TreeMap<Integer, Boolean>();
-    marksColor = new TreeMap<Integer, MarkerColors>();
+    marks = new TreeMap<>();
+    marksColor = new TreeMap<>();
     notable = new NotableTableModelImpl();
   }
 
@@ -51,8 +51,8 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     File createTempFile = File.createTempFile("OLV_", "_");
     createTempFile.deleteOnExit();
     randomAccessFile = new RandomAccessFile(createTempFile, "rw");
-    storeIdFilePositionMapping = new HashMap<Integer, Long>(INITIAL_MAPPING_SIZE);
-    logDatasId = new ArrayList<IdAndDate>(INITIAL_MAPPING_SIZE);
+    storeIdFilePositionMapping = new HashMap<>(INITIAL_MAPPING_SIZE);
+    logDatasId = new ArrayList<>(INITIAL_MAPPING_SIZE);
   }
 
   @Override
@@ -71,36 +71,35 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     ByteArrayOutputStream byteArrayOutputStream = null;
     Arrays.sort(logDatas, logDataTimeComparator);
     try {
-      HashMap<Integer, Long> newLogDataPosition = new HashMap<Integer, Long>(logDatas.length);
+      HashMap<Integer, Long> newLogDataPosition = new HashMap<>(logDatas.length);
       long length = randomAccessFile.length();
       LOGGER.trace(String.format("Setting position in file %s to %d", randomAccessFile.getFD().toString(), length));
       randomAccessFile.seek(length);
-      for (int i = 0; i < logDatas.length; i++) {
+      for (LogData logData1 : logDatas) {
         byteArrayOutputStream = new ByteArrayOutputStream();
         oout = new ObjectOutputStream(byteArrayOutputStream);
-        logDatas[i].setId(getNextLogId());
-        int logDataId = logDatas[i].getId();
+        logData1.setId(getNextLogId());
+        int logDataId = logData1.getId();
         long positionInFile = randomAccessFile.length();
 
-        oout.writeObject(logDatas[i]);
+        oout.writeObject(logData1);
         oout.flush();
 
         randomAccessFile.writeInt(byteArrayOutputStream.size());
         randomAccessFile.write(byteArrayOutputStream.toByteArray());
         newLogDataPosition.put(Integer.valueOf(logDataId), Long.valueOf(positionInFile));
 
-        marks.put(Integer.valueOf(logDataId), logDatas[i].isMarked());
-        marksColor.put(Integer.valueOf(logDataId), logDatas[i].getMarkerColors());
+        marks.put(Integer.valueOf(logDataId), logData1.isMarked());
+        marksColor.put(Integer.valueOf(logDataId), logData1.getMarkerColors());
 
-        if (logDatas[i].getNote() != null) {
-          notable.addNoteToRow(logDataId, logDatas[i].getNote());
+        if (logData1.getNote() != null) {
+          notable.addNoteToRow(logDataId, logData1.getNote());
         }
       }
       storeIdFilePositionMapping.putAll(newLogDataPosition);
 
       // TODO sorting by date!
-      for (int i = 0; i < logDatas.length; i++) {
-        LogData logData = logDatas[i];
+      for (LogData logData : logDatas) {
         // logDatasId.add(new IdAndDate(Integer.valueOf(logDatas[i].getId()), logDatas[i].getDate()));
         if (logDatasId.size() == 0 || logData.getDate().compareTo(logDatasId.get(logDatasId.size() - 1).date) >= 0) {
           logDatasId.add(new IdAndDate(Integer.valueOf(logData.getId()), logData.getDate()));
@@ -175,11 +174,11 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
 
   @Override
   public LogData[] getLogData() {
-    ArrayList<LogData> list = new ArrayList<LogData>(getCount());
+    ArrayList<LogData> list = new ArrayList<>(getCount());
     for (LogData ld : this) {
       list.add(ld);
     }
-    return list.toArray(new LogData[0]);
+    return list.toArray(new LogData[list.size()]);
   }
 
   @Override
@@ -205,7 +204,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
 
   private class LogDataIterator implements Iterator<LogData> {
 
-    private Iterator<IdAndDate> idsIterator;
+    private final Iterator<IdAndDate> idsIterator;
 
     public LogDataIterator(Iterator<IdAndDate> idsIterator) {
       this.idsIterator = idsIterator;

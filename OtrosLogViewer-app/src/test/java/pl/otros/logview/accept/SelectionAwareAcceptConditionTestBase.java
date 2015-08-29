@@ -25,7 +25,7 @@ public class SelectionAwareAcceptConditionTestBase {
 
   protected JTable table;
   protected LogDataTableModel dataTableModel;
-  protected String[] classes = new String[] { "a.a.A", "a.a.B", "a.b.A" };
+  protected String[] classes = { "a.a.A", "a.a.B", "a.b.A" };
 
   public SelectionAwareAcceptConditionTestBase() {
     super();

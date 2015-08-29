@@ -24,9 +24,9 @@ import java.awt.event.AdjustmentListener;
 
 public class LogViewTableWithUMLSynchronizer implements AdjustmentListener, ListSelectionListener {
 
-  private JTable table;
-  private LogUmlMapper logUmlMapper;
-  private UMLModel umlModel;
+  private final JTable table;
+  private final LogUmlMapper logUmlMapper;
+  private final UMLModel umlModel;
 
   public LogViewTableWithUMLSynchronizer(JTable table2, UMLModel umlModel) {
     this.table = table2;

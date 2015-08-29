@@ -67,6 +67,7 @@ public class StartSocketListener extends OtrosAction {
 
     getOtrosApplication().addClosableTab("Socket listener","Socket listener",Icons.PLUGIN_CONNECT,logViewPanelWrapper,true);
 
+    //TODO solve this warning
     SocketLogReader logReader = null;
     if (logReader == null || logReader.isClosed()) {
       logReader = new SocketLogReader(chooseLogImporter.logImporter, logDataCollector, observer, chooseLogImporter.port);
@@ -84,7 +85,7 @@ public class StartSocketListener extends OtrosAction {
 
   private LogImporterAndPort chooseLogImporter() {
     Collection<LogImporter> elements = AllPluginables.getInstance().getLogImportersContainer().getElements();
-    LogImporter[] importers = elements.toArray(new LogImporter[0]);
+    LogImporter[] importers = elements.toArray(new LogImporter[elements.size()]);
     String[] names = new String[elements.size()];
     for (int i = 0; i < names.length; i++) {
       names[i] = importers[i].getName();
@@ -124,8 +125,8 @@ public class StartSocketListener extends OtrosAction {
 
   public static class LogImporterAndPort {
 
-    private int port;
-    private LogImporter logImporter;
+    private final int port;
+    private final LogImporter logImporter;
 
     public LogImporterAndPort(LogImporter logImporter, int port) {
       this.logImporter = logImporter;

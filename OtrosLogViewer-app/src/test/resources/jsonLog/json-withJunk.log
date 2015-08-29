@@ -1,0 +1,8 @@
+Junk before logging
+{"level":"TRACE","logger":"logger0","thread":"main0","message":"some message0","location":{"method":"method0","file":"file0","line":"0","class":"a.Some0"},"tags":["tag0"],"hostname":"host0","user":"root0","@version":"1","@timestamp":"2010-08-24T20:43:33.511+0000","appId":"special_system0"}
+{"level":"DEBUG","logger":"logger1","thread":"main1","message":"some message1","location":{"method":"method1","file":"file1","line":"1","class":"a.Some1"},"tags":["tag1"],"hostname":"host1","user":"root1","@version":"1","@timestamp":"2011-08-24T20:43:33.511+0000","appId":"special_system1"}
+junk in the middle
+{"level":"INFO ","logger":"logger2","thread":"main2","message":"some message2","location":{"method":"method2","file":"file2","line":"2","class":"a.Some2"},"tags":["tag2"],"hostname":"host2","user":"root2","@version":"1","@timestamp":"2012-08-24T20:43:33.511+0000","appId":"special_system2"}
+{"level":"wARN ","logger":"logger3","thread":"main3","message":"some message3","location":{"method":"method3","file":"file3","line":"3","class":"a.Some3"},"tags":["tag3"],"hostname":"host3","user":"root3","@version":"1","@timestamp":"2013-08-24T20:43:41.867+0000","appId":"special_system3"}
+{"level":"ERROR","logger":"logger4","thread":"main4","message":"some message4","location":{"method":"method4","file":"file4","line":"4","class":"a.Some4"},"tags":["tag4"],"hostname":"host4","user":"root4","@version":"1","@timestamp":"2014-08-24T20:43:41.867+0000","appId":"special_system4"}
+Junk after all

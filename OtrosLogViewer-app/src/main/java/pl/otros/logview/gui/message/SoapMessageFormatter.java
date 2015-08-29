@@ -48,8 +48,8 @@ public class SoapMessageFormatter implements MessageFormatter {
   private static final int PATTERN_MULTIREF_VALUES_GROUP_ID = 1;
   private static final int PATTERN_MULTIREF_VALUES_GROUP_SCHEMA_DEF = 2;
   private static final int PATTERN_MULTIREF_VALUES_GROUP_VALUE = 3;
-  private int formantIndent = 2;
-  private SoapFinder soapFinder = new SoapFinder();
+  private final int formantIndent = 2;
+  private final SoapFinder soapFinder = new SoapFinder();
   private boolean removeMultiRefs = false;
   private boolean removeXsiForNilElements;
 
@@ -145,7 +145,7 @@ public class SoapMessageFormatter implements MessageFormatter {
     HashMap<String, SubText> multiRefTagSchemas = extractMultiRef(message, PATTERN_MULTIREF_VALUES, PATTERN_MULTIREF_VALUES_GROUP_ID, PATTERN_MULTIREF_VALUES_GROUP_SCHEMA_DEF);
     StringBuilder sb = new StringBuilder(message);
     Set<String> stringSet = multiRefDefinition.keySet();
-    ArrayList<String> sortedKeys = new ArrayList<String>(stringSet);
+    ArrayList<String> sortedKeys = new ArrayList<>(stringSet);
     Collections.sort(sortedKeys);
     for (String id : sortedKeys) {
       //replace reference with value
@@ -177,7 +177,7 @@ public class SoapMessageFormatter implements MessageFormatter {
   }
 
   protected HashMap<String, SubText> extractMultiRef(String message, Pattern pattern, int idGroup, int valueGroup) {
-    HashMap<String, SubText> multiRefs = new HashMap<String, SubText>();
+    HashMap<String, SubText> multiRefs = new HashMap<>();
     Matcher matcher2 = pattern.matcher(message);
     while (matcher2.find()) {
       String id = matcher2.group(idGroup);

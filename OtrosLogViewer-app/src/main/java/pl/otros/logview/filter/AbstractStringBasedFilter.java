@@ -19,8 +19,6 @@ import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -39,7 +37,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
   protected MigLayout layout;
   protected boolean ignoreCase = true;
   protected JCheckBox caseInsensetiveCheckBox;
-  private DelayedSwingInvoke deleyedSwingInvoke;
+  private final DelayedSwingInvoke deleyedSwingInvoke;
 
   public AbstractStringBasedFilter(String name, String description, String labelText) {
     super(name, description);
@@ -82,13 +80,9 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
       }
     });
 
-    caseInsensetiveCheckBox.addChangeListener(new ChangeListener() {
-
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        ignoreCase = caseInsensetiveCheckBox.isSelected();
-        performFiltering();
-      }
+    caseInsensetiveCheckBox.addChangeListener(e -> {
+      ignoreCase = caseInsensetiveCheckBox.isSelected();
+      performFiltering();
     });
 
   }

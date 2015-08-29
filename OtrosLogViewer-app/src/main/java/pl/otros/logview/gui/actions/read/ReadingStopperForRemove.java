@@ -27,11 +27,11 @@ public class ReadingStopperForRemove implements HierarchyListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ReadingStopperForRemove.class.getName());
 
-  private SoftReference<Stoppable> reference;
+  private final SoftReference<Stoppable> reference;
 
   public ReadingStopperForRemove(Stoppable stoppable) {
     super();
-    reference = new SoftReference<Stoppable>(stoppable);
+    reference = new SoftReference<>(stoppable);
   }
 
   @Override

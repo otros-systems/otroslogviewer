@@ -32,7 +32,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString(),false);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertTrue(evaluate);
@@ -44,7 +44,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("brown",false);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertFalse(evaluate);
@@ -56,7 +56,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("true",false);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertTrue(evaluate);
@@ -68,7 +68,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("true",false);
 	
 	// when
-	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
 	
 	// then
 	assertFalse(evaluate);
@@ -80,7 +80,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("false",false);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertFalse(evaluate);
@@ -92,7 +92,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("false",false);
 	
 	// when
-	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
 	
 	// then
 	assertTrue(evaluate);
@@ -106,7 +106,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString(),true);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertTrue(evaluate);
@@ -118,7 +118,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("brown",true);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertFalse(evaluate);
@@ -130,7 +130,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("true",true);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertTrue(evaluate);
@@ -142,7 +142,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("true",true);
 	
 	// when
-	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
 	
 	// then
 	assertFalse(evaluate);
@@ -154,7 +154,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("false",true);
 
 	// when
-	boolean evaluate = rule.evaluate(ldBlack, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
 
 	// then
 	assertFalse(evaluate);
@@ -166,7 +166,7 @@ public class MarkEqualsRuleTest {
 	Rule rule = MarkEqualsRule.getRule("false",true);
 	
 	// when
-	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<Object, Object>());
+	boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
 	
 	// then
 	assertTrue(evaluate);

@@ -24,8 +24,8 @@ import java.util.List;
 
 public interface LogDataListPersistance {
 
-  public abstract void saveLogsList(OutputStream out, List<LogData> list) throws IOException;
+  void saveLogsList(OutputStream out, List<LogData> list) throws IOException;
 
-  public abstract List<LogData> loadLogsList(InputStream in) throws Exception;
+  List<LogData> loadLogsList(InputStream in) throws Exception;
 
 }

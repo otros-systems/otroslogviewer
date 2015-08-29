@@ -27,13 +27,13 @@ import java.util.List;
  */
 public class RandomTipOfTheDayModel implements TipOfTheDayModel {
 
-  private TipOfTheDayModel model;
-  private List<Integer> randomMapping;
+  private final TipOfTheDayModel model;
+  private final List<Integer> randomMapping;
 
   public RandomTipOfTheDayModel(TipOfTheDayModel model) {
     super();
     this.model = model;
-    randomMapping = new ArrayList<Integer>();
+    randomMapping = new ArrayList<>();
     for (int i = 0; i < model.getTipCount(); i++) {
       randomMapping.add(Integer.valueOf(i));
     }

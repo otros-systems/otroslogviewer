@@ -35,8 +35,8 @@ public class ClassFilter extends AbstractLogFilter {
     private JTree tree;
     private DefaultMutableTreeNode rootNode;
     private HashMap<Clazz, DefaultMutableTreeNode> clazzNodeMap;
-    private HashSet<String> ignoreList = new HashSet<String>();
-    private HashSet<String> focusList = new HashSet<String>();
+    private final HashSet<String> ignoreList = new HashSet<>();
+    private final HashSet<String> focusList = new HashSet<>();
     private Mode mode = Mode.IGNORE_MODE;
 
     private enum Mode {
@@ -114,7 +114,7 @@ public class ClassFilter extends AbstractLogFilter {
         tree = new JTree(rootNode);
         tree.setCellRenderer(new TreeRenderer());
 
-        clazzNodeMap = new HashMap<Clazz, DefaultMutableTreeNode>();
+        clazzNodeMap = new HashMap<>();
         clazzNodeMap.put(new Clazz("root"), rootNode);
         initPopup();
     }
@@ -149,13 +149,13 @@ public class ClassFilter extends AbstractLogFilter {
     private void reloadClasses() {
         LogData[] ld = collector.getLogData();
 
-        Set<String> classesSet = new TreeSet<String>();
+        Set<String> classesSet = new TreeSet<>();
         for (LogData aLd : ld) {
             classesSet.add(aLd.getClazz());
         }
 
         // prepare packages nodes
-        TreeSet<String> packages = new TreeSet<String>();
+        TreeSet<String> packages = new TreeSet<>();
         for (String string : classesSet) {
             Clazz clazz = new Clazz(string);
             String pack = clazz.pack;
@@ -208,8 +208,8 @@ public class ClassFilter extends AbstractLogFilter {
 
     private static class Clazz implements Comparable<Clazz> {
 
-        private String pack;
-        private String clazz;
+        private final String pack;
+        private final String clazz;
 
         public Clazz(String packageClazz) {
             if (packageClazz.length() == 0) {
@@ -270,8 +270,8 @@ public class ClassFilter extends AbstractLogFilter {
 
     private class AddToListAction implements ActionListener {
 
-        private HashSet<String> list;
-        private Mode mode;
+        private final HashSet<String> list;
+        private final Mode mode;
 
         public AddToListAction(HashSet<String> list, Mode mode) {
             this.list = list;
@@ -294,7 +294,7 @@ public class ClassFilter extends AbstractLogFilter {
 
     public class RemoveFromListAction implements ActionListener {
 
-        private HashSet<String> list;
+        private final HashSet<String> list;
 
         public RemoveFromListAction(HashSet<String> list) {
             super();
@@ -316,7 +316,7 @@ public class ClassFilter extends AbstractLogFilter {
 
     public class ClearListAction extends AbstractAction {
 
-        private HashSet<String>[] lists;
+        private final HashSet<String>[] lists;
 
         public ClearListAction(HashSet<String>... lists) {
             this.lists = lists;
@@ -336,13 +336,13 @@ public class ClassFilter extends AbstractLogFilter {
 
     private class TreeRenderer extends DefaultTreeCellRenderer {
 
-        private ImageIcon clazzIcon;
-        private ImageIcon clazzIgnoredIcon;
-        private ImageIcon packageOpenIcon;
-        private ImageIcon packageOpenIgnoreIcon;
-        private ImageIcon packageClosedIcon;
-        private ImageIcon packageClosedIgnoredIcon;
-        private Color background;
+        private final ImageIcon clazzIcon;
+        private final ImageIcon clazzIgnoredIcon;
+        private final ImageIcon packageOpenIcon;
+        private final ImageIcon packageOpenIgnoreIcon;
+        private final ImageIcon packageClosedIcon;
+        private final ImageIcon packageClosedIgnoredIcon;
+        private final Color background;
 
         public TreeRenderer() {
             clazzIcon = Icons.CLASS;

@@ -22,15 +22,15 @@ import java.util.LinkedList;
 
 public class ProxyLogDataCollector implements LogDataCollector {
 
-  private LinkedList<LogData> list;
+  private final LinkedList<LogData> list;
 
   public ProxyLogDataCollector() {
-    list = new LinkedList<LogData>();
+    list = new LinkedList<>();
   }
 
   public void add(LogData... logDatas) {
-    for (int i = 0; i < logDatas.length; i++) {
-      list.addLast(logDatas[i]);
+    for (LogData logData : logDatas) {
+      list.addLast(logData);
     }
 
   }

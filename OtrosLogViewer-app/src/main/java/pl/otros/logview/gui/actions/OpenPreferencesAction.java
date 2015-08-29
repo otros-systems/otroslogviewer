@@ -34,7 +34,7 @@ public class OpenPreferencesAction extends OtrosAction {
         getOtrosApplication().getStatusObserver().updateStatus("Configuration saved");
       }
     };
-    ConfigView[] configViews = new ConfigView[]{
+    ConfigView[] configViews = {
         new LogTableFormatConfigView(getOtrosApplication()),
         new IdeIntegrationConfigView(getOtrosApplication()),
         new VersionCheckConfigView()

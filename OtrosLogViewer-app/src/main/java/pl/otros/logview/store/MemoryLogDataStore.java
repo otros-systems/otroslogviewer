@@ -27,10 +27,10 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
   private static final Logger LOGGER = LoggerFactory.getLogger(MemoryLogDataStore.class.getName());
 
   protected ArrayList<LogData> list;
-  protected SortedSet<Date> s = new TreeSet<Date>();
+  protected SortedSet<Date> s = new TreeSet<>();
 
   public MemoryLogDataStore() {
-    list = new ArrayList<LogData>();
+    list = new ArrayList<>();
   }
 
   @Override
@@ -41,8 +41,7 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
   @Override
   public void add(LogData... logDatas) {
     Arrays.sort(logDatas, logDataTimeComparator);
-    for (int i = 0; i < logDatas.length; i++) {
-      LogData logData = logDatas[i];
+    for (LogData logData : logDatas) {
       logData.setId(getNextLogId());
       if (list.size() == 0 || logDataTimeComparator.compare(logData, list.get(list.size() - 1)) >= 0) {
         list.add(logData);

@@ -23,19 +23,17 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
 public class SearchModeValidatorDocumentListener implements DocumentListener {
 
   protected static final int EDIT_FILTER_ACTION_DELAY = 1000;
   protected long lastTextFieldEditTime = 0;
-  private JTextField textField;
+  private final JTextField textField;
   protected Color editingColor = new Color(255, 255, 143);
   protected Color normalColor = null;
   protected Color errorColor = Color.RED;
-  private StatusObserver statusObserver;
+  private final StatusObserver statusObserver;
   private boolean enable = true;
   private SearchMode searchMode;
 
@@ -68,27 +66,23 @@ public class SearchModeValidatorDocumentListener implements DocumentListener {
     lastTextFieldEditTime = System.currentTimeMillis();
     if (enable) {
       textField.setBackground(editingColor);
-      Timer timer = new Timer(EDIT_FILTER_ACTION_DELAY, new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          if (enable && System.currentTimeMillis() - lastTextFieldEditTime >= EDIT_FILTER_ACTION_DELAY) {
-            if (SearchMode.REGEX.equals(searchMode)) {
-              try {
-                Pattern.compile(textField.getText().trim());
-                textField.setBackground(normalColor);
-              } catch (Exception e1) {
-                textField.setBackground(errorColor);
-                statusObserver.updateStatus(String.format("Error in regular expression: %s", e1.getMessage()), StatusObserver.LEVEL_ERROR);
-              }
-            } else if (SearchMode.QUERY.equals(searchMode)) {
-              try {
-                new QueryAcceptCondition(textField.getText().trim());
-                textField.setBackground(normalColor);
-              } catch (Exception e1) {
-                textField.setBackground(errorColor);
-                statusObserver.updateStatus(String.format("Error in validating query: %s", e1.getMessage()), StatusObserver.LEVEL_ERROR);
-              }
+      Timer timer = new Timer(EDIT_FILTER_ACTION_DELAY, e -> {
+        if (enable && System.currentTimeMillis() - lastTextFieldEditTime >= EDIT_FILTER_ACTION_DELAY) {
+          if (SearchMode.REGEX.equals(searchMode)) {
+            try {
+              Pattern.compile(textField.getText().trim());
+              textField.setBackground(normalColor);
+            } catch (Exception e1) {
+              textField.setBackground(errorColor);
+              statusObserver.updateStatus(String.format("Error in regular expression: %s", e1.getMessage()), StatusObserver.LEVEL_ERROR);
+            }
+          } else if (SearchMode.QUERY.equals(searchMode)) {
+            try {
+              new QueryAcceptCondition(textField.getText().trim());
+              textField.setBackground(normalColor);
+            } catch (Exception e1) {
+              textField.setBackground(errorColor);
+              statusObserver.updateStatus(String.format("Error in validating query: %s", e1.getMessage()), StatusObserver.LEVEL_ERROR);
             }
           }
         }
@@ -106,7 +100,7 @@ public class SearchModeValidatorDocumentListener implements DocumentListener {
     this.enable = enable;
     if (!enable) {
       textField.setBackground(normalColor);
-    } else if (enable && textField.getText().length() > 0) {
+    } else if (textField.getText().length() > 0) {
       invokeDocumentChange();
     }
   }

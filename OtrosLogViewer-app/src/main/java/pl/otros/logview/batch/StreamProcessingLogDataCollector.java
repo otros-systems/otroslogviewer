@@ -20,14 +20,12 @@ import pl.otros.logview.LogDataCollector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StreamProcessingLogDataCollector implements LogDataCollector {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StreamProcessingLogDataCollector.class.getName());
-  private LogDataParsedListener logDataParsedListener;
-  private BatchProcessingContext batchProcessingContext;
+  private final LogDataParsedListener logDataParsedListener;
+  private final BatchProcessingContext batchProcessingContext;
 
 
   public StreamProcessingLogDataCollector(LogDataParsedListener logDataParsedListener, BatchProcessingContext batchProcessingContext) {

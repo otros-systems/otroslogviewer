@@ -37,11 +37,11 @@ public class ExistsRuleTest  {
      * getRule() with no entry on stack should throw IllegalArgumentException.
      */
     @Test public void test1() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         try {
             ExistsRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -49,12 +49,12 @@ public class ExistsRuleTest  {
      * getRule() with bad field name should throw IllegalArgumentException.
      */
     @Test public void test2() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         try {
             ExistsRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -62,7 +62,7 @@ public class ExistsRuleTest  {
      * getRule with "msg".
      */
     @Test public void test3() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         Rule rule = ExistsRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
@@ -76,7 +76,7 @@ public class ExistsRuleTest  {
      * getRule with "msg".
      */
     @Test public void test4() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         Rule rule = ExistsRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
@@ -90,7 +90,7 @@ public class ExistsRuleTest  {
      * getRule with "msg".
      */
     @Test public void test5() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("msg");
         Rule rule = (Rule) SerializationTestHelper.serializeClone(ExistsRule.getRule(stack));
         AssertJUnit.assertEquals(0, stack.size());

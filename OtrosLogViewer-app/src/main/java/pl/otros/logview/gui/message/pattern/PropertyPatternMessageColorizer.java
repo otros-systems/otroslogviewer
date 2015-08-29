@@ -26,7 +26,6 @@ import pl.otros.logview.gui.message.MessageFragmentStyle;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -103,7 +102,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
 
 	@Override
 	public Collection<MessageFragmentStyle> colorize(String message) throws BadLocationException {
-		Collection<MessageFragmentStyle> list = new ArrayList<MessageFragmentStyle>();
+		Collection<MessageFragmentStyle> list = new ArrayList<>();
 		StyleContext styleContext = new StyleContext();
 		for (int i = 0; i <= groupCount; i++) {
 			if (StyleProperties.isStyleForGroupDeclared(i, configuration)) {

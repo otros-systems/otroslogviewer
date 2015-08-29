@@ -173,8 +173,7 @@ public class LocationInfo {
     if (className != null ? !className.equals(that.className) : that.className != null) return false;
     if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
     if (method != null ? !method.equals(that.method) : that.method != null) return false;
-    if (packageName != null ? !packageName.equals(that.packageName) : that.packageName != null) return false;
-    return true;
+    return !(packageName != null ? !packageName.equals(that.packageName) : that.packageName != null);
   }
 
   @Override

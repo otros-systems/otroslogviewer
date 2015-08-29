@@ -20,11 +20,11 @@ import java.awt.*;
 
 public class ColorIcon implements Icon {
 
-  private Color background;
-  private Color foreground;
-  private int width;
-  private int height;
-  private char[] chars = new char[] { 'A', 'b' };
+  private final Color background;
+  private final Color foreground;
+  private final int width;
+  private final int height;
+  private final char[] chars = { 'A', 'b' };
 
   public ColorIcon(Color background, Color foreground) {
     this(background, foreground, 16, 16);

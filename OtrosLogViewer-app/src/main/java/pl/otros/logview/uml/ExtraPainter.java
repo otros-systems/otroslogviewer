@@ -19,6 +19,6 @@ import java.awt.*;
 
 public interface ExtraPainter {
 
-  public void paint(Graphics g, Rectangle view);
+  void paint(Graphics g, Rectangle view);
 
 }

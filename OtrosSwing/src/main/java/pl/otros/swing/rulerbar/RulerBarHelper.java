@@ -12,8 +12,8 @@ public class RulerBarHelper {
 
   public static <T extends JTextComponent> OtrosJTextWithRulerScrollPane<T> wrapTextComponent(
       T textComponent) {
-    OtrosJTextWithRulerScrollPane<T> otrosJTextWithRulerScrollPane = new OtrosJTextWithRulerScrollPane<T>(
-        textComponent);
+    OtrosJTextWithRulerScrollPane<T> otrosJTextWithRulerScrollPane = new OtrosJTextWithRulerScrollPane<>(
+      textComponent);
     otrosJTextWithRulerScrollPane.getRulerBar().addMarkerClickListener(
         new ScrollToSelectedMarker());
     return otrosJTextWithRulerScrollPane;

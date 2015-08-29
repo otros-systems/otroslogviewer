@@ -18,6 +18,8 @@ package pl.otros.logview.gui.message.editor;
 import jsyntaxpane.DefaultSyntaxKit;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.StatusObserver;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFragmentStyle;
@@ -37,8 +39,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MessageColorizerEditor extends JPanel {
 
@@ -48,19 +48,19 @@ public class MessageColorizerEditor extends JPanel {
 
   private static String defualtContent;
 
-  private JEditorPane editorPane;
+  private final JEditorPane editorPane;
 
-  private JTextPane textPane;
+  private final JTextPane textPane;
 
-  private DelayedSwingInvoke deleyedSwingInvoke;
-  private PluginableElementsContainer<MessageColorizer> container;
+  private final DelayedSwingInvoke deleyedSwingInvoke;
+  private final PluginableElementsContainer<MessageColorizer> container;
 
-  private StatusObserver statusObserver;
+  private final StatusObserver statusObserver;
 
   private PluginableElementListModel<MessageColorizer> listModel;
 
   private String file;
-  private JLabel label;
+  private final JLabel label;
 
   public MessageColorizerEditor(PluginableElementsContainer<MessageColorizer> container, StatusObserver observer) {
     this.container = container;

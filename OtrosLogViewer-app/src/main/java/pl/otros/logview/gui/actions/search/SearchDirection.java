@@ -16,5 +16,5 @@
 package pl.otros.logview.gui.actions.search;
 
 public enum SearchDirection {
-  REVERSE, FORWARD;
+  REVERSE, FORWARD
 }

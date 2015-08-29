@@ -23,15 +23,15 @@ import java.util.Properties;
 
 public interface LogParser {
 
-  public static int LOG_PARSER_VERSION_1 = 1;
+  int LOG_PARSER_VERSION_1 = 1;
 
-  public void init(Properties properties) throws InitializationException;
+  void init(Properties properties) throws InitializationException;
 
-  public void initParsingContext(ParsingContext parsingContext);
+  void initParsingContext(ParsingContext parsingContext);
 
-  public LogData parse(String line, ParsingContext parsingContext) throws ParseException;
+  LogData parse(String line, ParsingContext parsingContext) throws ParseException;
 
-  public ParserDescription getParserDescription();
+  ParserDescription getParserDescription();
 
-  public int getVersion();
+  int getVersion();
 }

@@ -25,7 +25,6 @@ import pl.otros.logview.store.file.FileLogDataStore;
 
 import java.util.Iterator;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +33,8 @@ public class CachedLogStore implements LogDataStore {
   protected FileLogDataStore fileLogDataStore;
   // protected ConcurrentMap<Integer, LogData> cache;
   protected Cache<Integer, LogData> cache;
-  private int initialCapicity = 5000;
-  private long maximumSize = 20000;
+  private final int initialCapicity = 5000;
+  private final long maximumSize = 20000;
 
   public CachedLogStore(FileLogDataStore fileLogDataStore) {
     super();
@@ -87,14 +86,7 @@ public class CachedLogStore implements LogDataStore {
     final Integer logDataIdInRow = fileLogDataStore.getLogDataIdInRow(row);
     LogData logData = null;
     try {
-      logData = cache.get(logDataIdInRow, new Callable<LogData>() {
-
-        @Override
-        public LogData call() throws Exception {
-          return fileLogDataStore.getLogData(row);
-        }
-
-      });
+      logData = cache.get(logDataIdInRow, () -> fileLogDataStore.getLogData(row));
       logData.setMarked(fileLogDataStore.isMarked(row));
       logData.setMarkerColors(fileLogDataStore.getMarkerColors(row));
       logData.setNote(fileLogDataStore.getNote(row));

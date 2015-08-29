@@ -21,37 +21,23 @@ import pl.otros.logview.gui.LogDataTableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Properties;
 
 public class MarkNoteFilter extends AbstractLogFilter {
 
   private static final String NAME = "Mark/Note filter";
   private static final String DESCRIPTION = "Filtering events based on a mark or a note.";
-  private JComboBox noteComboBox = new JComboBox(new Object[] { "N/A", "Yes", "No" });
-  private JComboBox markComboBox = new JComboBox(new Object[] { "N/A", "Yes", "No" });
-  private JPanel gui;
+  private final JComboBox noteComboBox = new JComboBox(new Object[] { "N/A", "Yes", "No" });
+  private final JComboBox markComboBox = new JComboBox(new Object[] { "N/A", "Yes", "No" });
+  private final JPanel gui;
 
   public MarkNoteFilter() {
     super(NAME, DESCRIPTION);
     noteComboBox.setBorder(BorderFactory.createTitledBorder("With note:"));
-    noteComboBox.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        listener.valueChanged();
-      }
-    });
+    noteComboBox.addActionListener(e -> listener.valueChanged());
 
     markComboBox.setBorder(BorderFactory.createTitledBorder("Marked:"));
-    markComboBox.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        listener.valueChanged();
-      }
-    });
+    markComboBox.addActionListener(e -> listener.valueChanged());
 
     gui = new JPanel(new GridLayout(2, 1));
     gui.add(noteComboBox);

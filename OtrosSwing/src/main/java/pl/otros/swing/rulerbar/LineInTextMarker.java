@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class LineInTextMarker extends Marker {
 
-  private int caretPosition;
-  private JTextComponent textComponent;
+  private final int caretPosition;
+  private final JTextComponent textComponent;
 
   public LineInTextMarker(String message, Color color, float percentValue,
                           int caretPosition, JTextComponent jTextPane) {

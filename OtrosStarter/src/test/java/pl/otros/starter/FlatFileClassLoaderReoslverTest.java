@@ -20,7 +20,6 @@ package pl.otros.starter;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,7 +32,7 @@ import org.testng.annotations.Test;
  */
 public class FlatFileClassLoaderReoslverTest {
 
-    private FlatFileClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
+    private final FlatFileClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
 
     @Test
     public void testGetClassPathUrls() throws Exception {

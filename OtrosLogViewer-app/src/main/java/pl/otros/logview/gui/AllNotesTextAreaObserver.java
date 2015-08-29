@@ -25,7 +25,7 @@ import java.util.TreeMap;
 
 public class AllNotesTextAreaObserver implements NoteObserver {
 
-  private JTextArea allNotesTextArea;
+  private final JTextArea allNotesTextArea;
 
   public AllNotesTextAreaObserver(JTextArea allNotesTextArea) {
     super();
@@ -39,7 +39,7 @@ public class AllNotesTextAreaObserver implements NoteObserver {
     TreeMap<Integer, Note> allNotes = model.getAllNotes();
     for (Integer idx : allNotes.keySet()) {
       Note note = allNotes.get(idx);
-      sb.append(idx + ": " + note.getNote());
+      sb.append(idx).append(": ").append(note.getNote());
       sb.append('\n');
     }
     if (sb.length() == 0) {

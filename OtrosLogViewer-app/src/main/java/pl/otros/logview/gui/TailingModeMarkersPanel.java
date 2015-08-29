@@ -30,8 +30,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,12 +39,12 @@ import java.util.TreeSet;
 
 public class TailingModeMarkersPanel extends JPanel implements PluginableElementEventListener<AutomaticMarker>, TableModelListener {
 
-  private LogDataTableModel dataTableModel;
-  private JComboBox selectedGroup;
-  private DefaultComboBoxModel boxModel;
-  private JTable table;
-  private SelectedMarkersTableModel defaultTableModel;
-  private PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final LogDataTableModel dataTableModel;
+  private final JComboBox selectedGroup;
+  private final DefaultComboBoxModel boxModel;
+  private final JTable table;
+  private final SelectedMarkersTableModel defaultTableModel;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public TailingModeMarkersPanel(LogDataTableModel logDataTableModel) {
     super(new MigLayout("wrap 2", "[] [grow]", ""));
@@ -56,7 +54,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     table = new JTable(defaultTableModel);
     table.getColumnModel().getColumn(0).setMaxWidth(16);
 
-    TableRowSorter<SelectedMarkersTableModel> rowSorter = new TableRowSorter<SelectedMarkersTableModel>(defaultTableModel);
+    TableRowSorter<SelectedMarkersTableModel> rowSorter = new TableRowSorter<>(defaultTableModel);
     MarkersRowFilter markersRowFilter = new MarkersRowFilter();
     rowSorter.setRowFilter(markersRowFilter);
     table.setRowSorter(rowSorter);
@@ -66,13 +64,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
     boxModel = new DefaultComboBoxModel();
     selectedGroup = new JComboBox(boxModel);
-    selectedGroup.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        defaultTableModel.fireTableDataChanged();
-      }
-    });
+    selectedGroup.addActionListener(e -> defaultTableModel.fireTableDataChanged());
 
     logDataTableModel.addTableModelListener(this);
     markersContainser = AllPluginables.getInstance().getMarkersContainser();
@@ -100,7 +92,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
       boxModel.addElement("--ALL--");
     }
 
-    TreeSet<String> groups = new TreeSet<String>();
+    TreeSet<String> groups = new TreeSet<>();
     for (AutomaticMarker automaticMarker : markers) {
       for (String g : automaticMarker.getMarkerGroups()) {
         if (g.length() > 0) {
@@ -108,11 +100,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
         }
       }
     }
-    for (String string : groups) {
-      if (boxModel.getIndexOf(string) < 0) {
-        boxModel.addElement(string);
-      }
-    }
+    groups.stream().filter(string -> boxModel.getIndexOf(string) < 0).forEach(boxModel::addElement);
     for (int i = boxModel.getSize() - 1; i > 0; i--) {
       if (!groups.contains(boxModel.getElementAt(i))) {
         boxModel.removeElementAt(i);
@@ -146,18 +134,14 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     final HashSet<AutomaticMarker> selected = defaultTableModel.getSelected();
 
     if (e.getType() == TableModelEvent.INSERT) {
-      SwingUtilities.invokeLater(new Runnable() {
-
-        @Override
-        public void run() {
-          int firstRow = e.getFirstRow();
-          int lastRow = e.getLastRow();
-          for (int i = firstRow; i <= lastRow; i++) {
-            LogData logData = dataTableModel.getLogData(i);
-            for (AutomaticMarker m : selected) {
-              if (m.toMark(logData)) {
-                dataTableModel.markRows(m.getColors(), i);
-              }
+      SwingUtilities.invokeLater(() -> {
+        int firstRow = e.getFirstRow();
+        int lastRow = e.getLastRow();
+        for (int i = firstRow; i <= lastRow; i++) {
+          LogData logData = dataTableModel.getLogData(i);
+          for (AutomaticMarker m : selected) {
+            if (m.toMark(logData)) {
+              dataTableModel.markRows(m.getColors(), i);
             }
           }
         }
@@ -182,12 +166,12 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
   class SelectedMarkersTableModel extends AbstractTableModel implements PluginableElementEventListener<AutomaticMarker> {
 
-    private final List<AutomaticMarker> data = new ArrayList<AutomaticMarker>();
-    private HashSet<AutomaticMarker> selected = new HashSet<AutomaticMarker>();
+    private final List<AutomaticMarker> data = new ArrayList<>();
+    private final HashSet<AutomaticMarker> selected = new HashSet<>();
 
     public HashSet<AutomaticMarker> getSelected() {
       synchronized (data) {
-        return new HashSet<AutomaticMarker>(selected);
+        return new HashSet<>(selected);
       }
     }
 

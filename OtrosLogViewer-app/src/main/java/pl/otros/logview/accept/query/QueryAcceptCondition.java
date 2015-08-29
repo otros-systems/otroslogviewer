@@ -28,8 +28,8 @@ public class QueryAcceptCondition implements AcceptCondition {
 
   private static final String DESCRIPTION = "Query - desc";
   private static final String NAME = "Query";
-  private String query;
-  private Rule rule;
+  private final String query;
+  private final Rule rule;
 
   public QueryAcceptCondition(String query) throws RuleException {
     super();
@@ -43,7 +43,7 @@ public class QueryAcceptCondition implements AcceptCondition {
 
   @Override
   public boolean accept(LogData data) {
-    HashMap<Object, Object> matches = new HashMap<Object, Object>();
+    HashMap<Object, Object> matches = new HashMap<>();
     boolean evaluate = rule.evaluate(data, matches);
     return evaluate;
   }

@@ -22,7 +22,7 @@ import pl.otros.logview.filter.LogFilter;
 import java.util.Collection;
 
 public class FilteredAcceptCondition extends  AbstractAcceptContidion{
-  private Collection<LogFilter> filtersList;
+  private final Collection<LogFilter> filtersList;
 
   public FilteredAcceptCondition(Collection<LogFilter> filtersList) {
     this.filtersList = filtersList;

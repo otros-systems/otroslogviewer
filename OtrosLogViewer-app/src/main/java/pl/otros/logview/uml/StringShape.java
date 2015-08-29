@@ -21,9 +21,9 @@ public class StringShape {
 
   private String string;
   private Font font;
-  private int centerX;
-  private int centerY;
-  private Color color;
+  private final int centerX;
+  private final int centerY;
+  private final Color color;
 
   public StringShape(String string, Font font, int centerX, int centerY, Color color) {
     super();

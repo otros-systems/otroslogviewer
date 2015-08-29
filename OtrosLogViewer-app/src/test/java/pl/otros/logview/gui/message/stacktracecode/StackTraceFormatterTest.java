@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pl.otros.logview.gui.message.LocationInfo;
@@ -33,17 +31,14 @@ public class StackTraceFormatterTest {
     public void testFormat() throws Exception {
         //given
         final JumpToCodeService mock = Mockito.mock(JumpToCodeService.class);
-        Mockito.when(mock.getContent(Mockito.any(LocationInfo.class))).thenAnswer(new Answer<String>() {
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                LocationInfo li = (LocationInfo) invocation.getArguments()[0];
+        Mockito.when(mock.getContent(Mockito.any(LocationInfo.class))).thenAnswer(invocation -> {
+            LocationInfo li = (LocationInfo) invocation.getArguments()[0];
 //                System.out.println("Calling for " + li);
-                if (li.getLineNumber()>0){
-                    return li.getLineNumber() + ": code";
-                } else {
-                    return "";
+            if (li.getLineNumber()>0){
+                return li.getLineNumber() + ": code";
+            } else {
+                return "";
 
-                }
             }
         });
         final StackTraceFormatter formatter = new StackTraceFormatter(mock);

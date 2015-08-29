@@ -12,22 +12,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
+import static javax.swing.JFrame.*;
+
 public class RulerBarDemo {
 
 
   /**
-   * @param args
+   * @param args - ignored
    * @throws IOException
    */
   public static void main(String[] args) throws IOException {
     JFrame f = new JFrame("RulerBar demo");
     JToolBar bar = new JToolBar();
-    Color[] colors = new Color[]{
+    Color[] colors = {
         Color.MAGENTA, Color.YELLOW, Color.BLACK, Color.CYAN, Color.GRAY, Color.BLUE, Color.WHITE, Color.ORANGE, Color.PINK, Color.RED
     };
-    final JComboBox box = new JComboBox(colors);
+    final JComboBox<Color> box = new JComboBox<>(colors);
 
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
     final String text = readText();

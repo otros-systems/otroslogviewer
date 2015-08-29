@@ -38,7 +38,7 @@ public class TimestampEqualsRuleTest {
    */
   @Test
   public void test1() {
-    String[] timeFormats = new String[] { //
+    String[] timeFormats = { //
     "2008-05-21 00:45:44",//
         "2008-05-21 00:45",//
         "2008-05-21 00",//
@@ -48,10 +48,10 @@ public class TimestampEqualsRuleTest {
         "2008-05-21T00",//
     };
 
-    for (int i = 0; i < timeFormats.length; i++) {
-      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
+    for (String timeFormat : timeFormats) {
+      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormat);
       LogData event = createLogData();
-      AssertJUnit.assertTrue(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertTrue(String.format("Wrong result for time format %s", timeFormat), rule.evaluate(event, null));
     }
   }
 
@@ -61,7 +61,7 @@ public class TimestampEqualsRuleTest {
   @Test
   public void test2() {
 
-    String[] timeFormats = new String[] {//
+    String[] timeFormats = {//
     "2008-05-21 00:45:46",//
         "2008-05-21 00:46",//
         "2008-05-21 01",//
@@ -71,10 +71,10 @@ public class TimestampEqualsRuleTest {
         "2008-05-21T01",//
     };
 
-    for (int i = 0; i < timeFormats.length; i++) {
-      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormats[i]);
+    for (String timeFormat : timeFormats) {
+      TimestampEqualsRule rule = (TimestampEqualsRule) TimestampEqualsRule.getRule(timeFormat);
       LogData event = createLogData();
-      AssertJUnit.assertFalse(String.format("Wrong result for time format %s", timeFormats[i]), rule.evaluate(event, null));
+      AssertJUnit.assertFalse(String.format("Wrong result for time format %s", timeFormat), rule.evaluate(event, null));
     }
 
   }
@@ -107,12 +107,12 @@ public class TimestampEqualsRuleTest {
     try {
       TimestampEqualsRule.getRule("2008/May/21");
       Assert.fail("IllegalArgumentException expected to be thrown");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
   private LogData createLogData() {
-    return createLogData(new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44));
+    return createLogData(new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44));
   }
 
   private LogData createLogData(Calendar cal) {

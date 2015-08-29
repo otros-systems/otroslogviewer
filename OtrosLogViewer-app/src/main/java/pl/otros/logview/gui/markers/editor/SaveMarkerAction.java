@@ -31,8 +31,8 @@ import java.util.Properties;
 
 public class SaveMarkerAction extends AbstractAction {
 
-  private MarkerEditor editor;
-  private PluginableElementsContainer<AutomaticMarker> markersContainser;
+  private final MarkerEditor editor;
+  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public SaveMarkerAction(MarkerEditor editor) {
     super();

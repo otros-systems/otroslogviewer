@@ -35,7 +35,7 @@ public class SelectedClassAcceptCondition extends SelectionAwareAcceptCondition 
     @Override
     protected void init() {
         name = "Selected classes";
-        classes = new HashSet<String>();
+        classes = new HashSet<>();
     }
 
     public boolean accept(LogData data) {

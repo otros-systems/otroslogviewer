@@ -90,8 +90,8 @@ public class NotRule extends AbstractRule {
     Map tempMatches = new HashMap();
     boolean result = !(rule.evaluate(event, tempMatches));
     if (result) {
-      for (Iterator iter = tempMatches.entrySet().iterator(); iter.hasNext();) {
-        Map.Entry entry = (Map.Entry) iter.next();
+      for (Object o : tempMatches.entrySet()) {
+        Map.Entry entry = (Map.Entry) o;
         Object key = entry.getKey();
         Set value = (Set) entry.getValue();
         Set mainSet = (Set) matches.get(key);

@@ -25,7 +25,7 @@ import java.awt.event.KeyEvent;
 
 public class MarkRowBySpaceKeyListener extends KeyAdapter  {
 
-	private OtrosApplication otrosApplication;
+	private final OtrosApplication otrosApplication;
 
 	public MarkRowBySpaceKeyListener(OtrosApplication otrosApplication) {
     super();

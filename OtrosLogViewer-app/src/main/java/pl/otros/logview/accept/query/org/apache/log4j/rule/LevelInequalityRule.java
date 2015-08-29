@@ -51,7 +51,7 @@ public class LevelInequalityRule {
    * Populate list of levels.
    */
   private static void populateLevels() {
-    levelList = new LinkedList<String>();
+    levelList = new LinkedList<>();
 
     levelList.add(Level.SEVERE.toString());
     levelList.add(Level.WARNING.toString());

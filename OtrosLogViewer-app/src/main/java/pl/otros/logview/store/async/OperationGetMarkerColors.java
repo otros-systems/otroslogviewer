@@ -6,8 +6,8 @@ import pl.otros.logview.store.LogDataStore;
 import java.util.concurrent.Callable;
 
 class OperationGetMarkerColors implements Callable<MarkerColors> {
-  private LogDataStore logDataStore;
-  private int row;
+  private final LogDataStore logDataStore;
+  private final int row;
 
   public OperationGetMarkerColors(LogDataStore logDataStore, int row) {
     this.logDataStore = logDataStore;

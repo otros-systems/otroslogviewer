@@ -24,7 +24,7 @@ import java.awt.event.ActionListener;
 
 public class ShowStringRegexMarkerEditorActionListener implements ActionListener {
 
-  private JFrame parent;
+  private final JFrame parent;
 
   public ShowStringRegexMarkerEditorActionListener(JFrame parent) {
     super();

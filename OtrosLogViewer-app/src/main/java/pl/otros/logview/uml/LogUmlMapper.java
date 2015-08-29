@@ -20,10 +20,10 @@ import java.util.LinkedHashMap;
 
 public class LogUmlMapper {
 
-  private LinkedHashMap<Integer, Point> idToPointMap;
+  private final LinkedHashMap<Integer, Point> idToPointMap;
 
   public LogUmlMapper() {
-    idToPointMap = new LinkedHashMap<Integer, Point>();
+    idToPointMap = new LinkedHashMap<>();
   }
 
   public void addMapping(int logId, Point p) {

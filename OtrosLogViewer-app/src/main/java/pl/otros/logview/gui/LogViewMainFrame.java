@@ -77,8 +77,6 @@ import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
@@ -116,6 +114,7 @@ public class LogViewMainFrame extends JFrame {
   private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
+  private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
   private PersistedSuggestionSource searchSuggestionSource;
 
@@ -197,12 +196,7 @@ public class LogViewMainFrame extends JFrame {
     cardLayoutPanel.add(logsTabbedPane, CARD_LAYOUT_LOGS_TABLE);
     EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication);
     final JScrollPane jScrollPane = new JScrollPane(emptyViewPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        jScrollPane.getVerticalScrollBar().setValue(0);
-      }
-    });
+    SwingUtilities.invokeLater(() -> jScrollPane.getVerticalScrollBar().setValue(0));
     cardLayoutPanel.add(jScrollPane, CARD_LAYOUT_EMPTY);
     cardLayout.show(cardLayoutPanel, CARD_LAYOUT_EMPTY);
     enableDisableComponetsForTabs.stateChanged(null);
@@ -257,10 +251,7 @@ public class LogViewMainFrame extends JFrame {
         String[] batchArgs = new String[args.length - 1];
         System.arraycopy(args, 1, batchArgs, 0, batchArgs.length);
         BatchProcessor.main(batchArgs);
-      } catch (IOException e) {
-        System.err.println("Error during batch processing: " + e.getMessage());
-        e.printStackTrace();
-      } catch (ConfigurationException e) {
+      } catch (IOException | ConfigurationException e) {
         System.err.println("Error during batch processing: " + e.getMessage());
         e.printStackTrace();
       }
@@ -447,14 +438,11 @@ public class LogViewMainFrame extends JFrame {
       }
 
       private void reloadMenuBar() {
-        GuiUtils.runLaterInEdt(new Runnable() {
-          @Override
-          public void run() {
-            initMenu();
-            //without validating tree menu bar is inactive
-            synchronized (LogViewMainFrame.this.getTreeLock()) {
-              LogViewMainFrame.this.validateTree();
-            }
+        GuiUtils.runLaterInEdt(() -> {
+          initMenu();
+          //without validating tree menu bar is inactive
+          synchronized (LogViewMainFrame.this.getTreeLock()) {
+            LogViewMainFrame.this.validateTree();
           }
         });
       }
@@ -584,14 +572,11 @@ public class LogViewMainFrame extends JFrame {
     JButton markAllFoundButton = new JButton(markAllFoundAction);
     final JComboBox markColor = new JComboBox(MarkerColors.values());
     markFound.setSelected(configuration.getBoolean("gui.markFound", true));
-    markFound.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        boolean selected = markFound.isSelected();
-        searchActionForward.setMarkFound(selected);
-        searchActionBackward.setMarkFound(selected);
-        configuration.setProperty("gui.markFound", markFound.isSelected());
-      }
+    markFound.addChangeListener(e -> {
+      boolean selected = markFound.isSelected();
+      searchActionForward.setMarkFound(selected);
+      searchActionBackward.setMarkFound(selected);
+      configuration.setProperty("gui.markFound", markFound.isSelected());
     });
     markColor.setRenderer(new MarkerColorsComboBoxRenderer());
 //		markColor.addActionListener(new ActionListener() {
@@ -606,16 +591,13 @@ public class LogViewMainFrame extends JFrame {
 //				otrosApplication.setSelectedMarkColors(markerColors);
 //			}
 //		});
-    markColor.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
-        searchActionForward.setMarkerColors(markerColors);
-        searchActionBackward.setMarkerColors(markerColors);
-        markAllFoundAction.setMarkerColors(markerColors);
-        configuration.setProperty("gui.markColor", markColor.getSelectedItem());
-        otrosApplication.setSelectedMarkColors(markerColors);
-      }
+    markColor.addItemListener(e -> {
+      MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
+      searchActionForward.setMarkerColors(markerColors);
+      searchActionBackward.setMarkerColors(markerColors);
+      markAllFoundAction.setMarkerColors(markerColors);
+      configuration.setProperty("gui.markColor", markColor.getSelectedItem());
+      otrosApplication.setSelectedMarkColors(markerColors);
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
     buttonSearch = new JButton(searchActionForward);
@@ -737,7 +719,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.setMnemonic(KeyEvent.VK_T);
     JMenuItem closeAll = new JMenuItem(new CloseAllTabsAction(otrosApplication));
     enableDisableComponetsForTabs.addComponet(closeAll);
-    ArrayList<SocketLogReader> logReaders = new ArrayList<SocketLogReader>();
+    ArrayList<SocketLogReader> logReaders = new ArrayList<>();
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
@@ -771,19 +753,9 @@ public class LogViewMainFrame extends JFrame {
     menu.add(new JSeparator());
     boolean storeOnDisk = StringUtils.equalsIgnoreCase(System.getProperty("cacheEvents"), "true");
     JRadioButtonMenuItem radioButtonMemory = new JRadioButtonMenuItem("Memory - faster, more memory required", !storeOnDisk);
-    radioButtonMemory.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        System.setProperty("cacheEvents", Boolean.FALSE.toString());
-      }
-    });
+    radioButtonMemory.addActionListener(e -> System.setProperty("cacheEvents", Boolean.FALSE.toString()));
     JRadioButtonMenuItem radioButtonDisk = new JRadioButtonMenuItem("Disk with caching - slower, less memory required", storeOnDisk);
-    radioButtonDisk.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        System.setProperty("cacheEvents", Boolean.TRUE.toString());
-      }
-    });
+    radioButtonDisk.addActionListener(e -> System.setProperty("cacheEvents", Boolean.TRUE.toString()));
     final ButtonGroup buttonGroup = new ButtonGroup();
     buttonGroup.add(radioButtonDisk);
     buttonGroup.add(radioButtonMemory);
@@ -823,19 +795,13 @@ public class LogViewMainFrame extends JFrame {
     QueryFilter queryFilter = new QueryFilter();
     allPluginables.getLogFiltersContainer().addElement(queryFilter);
     JButton b = new JButton("Throw exception");
-    b.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (System.currentTimeMillis() % 2 == 0) {
-          throw new RuntimeException("Exception swing action!");
-        } else {
-          new Thread(new Runnable() {
-            @Override
-            public void run() {
-              throw new RuntimeException("Exception from tread!");
-            }
-          }).start();
-        }
+    b.addActionListener(e -> {
+      if (System.currentTimeMillis() % 2 == 0) {
+        throw new RuntimeException("Exception swing action!");
+      } else {
+        new Thread(() -> {
+          throw new RuntimeException("Exception from tread!");
+        }).start();
       }
     });
     menu.add(b);

@@ -25,14 +25,14 @@ import static pl.otros.logview.gui.Icons.*;
 public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
 
   private static final Dimension ICON_DIMENSION = new Dimension(16, 16);
-  private static Color colorSevere = Color.RED;
-  private static Color colorWarning = Color.ORANGE;
-  private static Color colorInfo = Color.GREEN;
-  private static Color colorConfig = new Color(154, 255, 154);
-  private static Color colorFine = new Color(204, 204, 204);
-  private static Color colorFiner = new Color(170, 170, 170);
-  private static Color colorFinest = new Color(136, 136, 136);
-  private JLabel label = new JLabel();
+  private static final Color colorSevere = Color.RED;
+  private static final Color colorWarning = Color.ORANGE;
+  private static final Color colorInfo = Color.GREEN;
+  private static final Color colorConfig = new Color(154, 255, 154);
+  private static final Color colorFine = new Color(204, 204, 204);
+  private static final Color colorFiner = new Color(170, 170, 170);
+  private static final Color colorFinest = new Color(136, 136, 136);
+  private final JLabel label = new JLabel();
   private Mode mode = Mode.IconsOnly;
 
   public LevelRenderer() {

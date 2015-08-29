@@ -4,16 +4,16 @@ import java.util.List;
 
 public interface MarkerModel {
 
-  public void addMarker(Marker... marker);
+  void addMarker(Marker... marker);
 
-  public void clear();
+  void clear();
 
-  public List<Marker> getMarkers();
+  List<Marker> getMarkers();
 
-  public void addMarkerModelListener(MarkerModelListener listener);
+  void addMarkerModelListener(MarkerModelListener listener);
 
-  public void removeMarkerModelListener(MarkerModelListener listener);
+  void removeMarkerModelListener(MarkerModelListener listener);
 
-  public void clearMarkerModelListener();
+  void clearMarkerModelListener();
 
 }

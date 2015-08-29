@@ -7,14 +7,12 @@ import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.ValidationResult;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateFormatView extends AbstractConfigView {
-  private JPanel p;
-  private JComboBox combobox;
+  private final JPanel p;
+  private final JComboBox combobox;
 
   public DateFormatView() {
     super("DateFormat", "Date format", "Format of the date");
@@ -32,12 +30,7 @@ public class DateFormatView extends AbstractConfigView {
     final JTextField exampleTextField = new JTextField(20);
     exampleTextField.setEditable(false);
     addLabel("Format example", 'e', exampleTextField);
-    combobox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        exampleTextField.setText(new SimpleDateFormat((String) combobox.getSelectedItem()).format(new Date()));
-      }
-    });
+    combobox.addActionListener(e -> exampleTextField.setText(new SimpleDateFormat((String) combobox.getSelectedItem()).format(new Date())));
   }
 
   private void addLabel(String string, char c, JComponent jComponent) {

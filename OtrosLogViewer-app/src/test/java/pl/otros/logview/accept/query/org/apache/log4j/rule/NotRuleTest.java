@@ -40,11 +40,11 @@ public class NotRuleTest  {
      * NotRule.getRule(Stack) throws exception if only one rule provided.
      */
     @Test public void test1() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         try {
             NotRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -52,12 +52,12 @@ public class NotRuleTest  {
      * NotRule.getRule(Stack) throws exception if non-rules are provided.
      */
     @Test public void test2() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push("Hello");
         try {
             NotRule.getRule(stack);
             Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -65,11 +65,11 @@ public class NotRuleTest  {
      * Test Not of LevelEqualsRule.
      */
     @Test public void test3() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = NotRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -80,11 +80,11 @@ public class NotRuleTest  {
      * Test Not of Level when Level does not match.
      */
     @Test public void test4() {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = NotRule.getRule(stack);
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);
@@ -96,11 +96,11 @@ public class NotRuleTest  {
      * Test deserialized Not.
      */
     @Test public void test5() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(NotRule.getRule(stack));
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.INFO,
                 "Hello, World", null);
@@ -112,11 +112,11 @@ public class NotRuleTest  {
      * Test deserialized Not.
      */
     @Test public void test6() throws IOException, ClassNotFoundException {
-        Stack<Object> stack = new Stack<Object>();
+        Stack<Object> stack = new Stack<>();
         stack.push(LevelEqualsRule.getRule("INFO"));
         Rule rule = (Rule) SerializationTestHelper.serializeClone(NotRule.getRule(stack));
         AssertJUnit.assertEquals(0, stack.size());
-        Calendar cal = new GregorianCalendar(2008, 04, 21, 00, 45, 44);
+        Calendar cal = new GregorianCalendar(2008, 4, 21, 0, 45, 44);
         LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger",
                 Logger.getRootLogger(), cal.getTimeInMillis(), Level.WARN,
                 "Hello, World", null);

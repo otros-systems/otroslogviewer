@@ -35,7 +35,7 @@ public class SearchAction extends OtrosAction {
 
 		private final String name;
 
-		private SearchMode(String name) {
+		SearchMode(String name) {
 			this.name = name;
 		}
 
@@ -47,7 +47,7 @@ public class SearchAction extends OtrosAction {
 
 	private SearchMode searchMode = SearchMode.STRING_CONTAINS;
 	private boolean markFound = false;
-	private SearchEngine searchEngine;
+	private final SearchEngine searchEngine;
 	private MarkerColors markerColors = MarkerColors.Aqua;
 	private final SearchDirection searchDirection;
   private final SearchListener searchListener;
@@ -126,6 +126,7 @@ public class SearchAction extends OtrosAction {
 				lvPanel.getDataTableModel().markRows(markerColors, table.convertRowIndexToModel(row));
 			}
 
+			assert searchMatcher != null;
 			scrollToSearchResult(searchMatcher.getFoundTextFragments(lvPanel.getDataTableModel().getLogData(table.convertRowIndexToModel(row))), lvPanel
 					.getLogViewPanel().getLogDetailTextArea());
 		} else {

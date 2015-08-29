@@ -25,16 +25,13 @@ import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +40,7 @@ public class ShowErrorDialogExceptionHandler extends
         UncaughtExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowErrorDialogExceptionHandler.class.getName());
-    private OtrosApplication otrosApplication;
+    private final OtrosApplication otrosApplication;
     private JTextField emailTextField;
     private JTextArea commentTextArea;
     private JCheckBox checkBoxUseProxy;
@@ -56,11 +53,11 @@ public class ShowErrorDialogExceptionHandler extends
     private JLabel labelProxyPort;
     private JLabel labelProxyUser;
     private JLabel labelProxyPassword;
-    private Set<String> caughtStackTraces;
+    private final Set<String> caughtStackTraces;
 
     public ShowErrorDialogExceptionHandler(OtrosApplication otrosApplication) {
         this.otrosApplication = otrosApplication;
-        caughtStackTraces = new HashSet<String>();
+        caughtStackTraces = new HashSet<>();
     }
 
     @Override
@@ -114,28 +111,25 @@ public class ShowErrorDialogExceptionHandler extends
 
     private void logErrorReport(Map<String, String> errorReportData) {
         LOGGER.info("Dumping information about running application. Have " + errorReportData.size() + " properties");
-        TreeSet<String> keys = new TreeSet<String>(errorReportData.keySet());
+        TreeSet<String> keys = new TreeSet<>(errorReportData.keySet());
         for (String key : keys) {
             LOGGER.info(String.format("%s: %s", key, errorReportData.get(key)));
         }
     }
 
     private void sendReportInNewBackground(final Map<String, String> stringStringMap) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                ErrorReportSender errorReportSender = new ErrorReportSender();
-                if (checkBoxUseProxy.isSelected()) {
-                    errorReportSender.setProxy(proxyTf.getText());
-                    errorReportSender.setPassword(new String(proxyPasswordField.getPassword()));
-                    errorReportSender.setUser(proxyUser.getText());
-                    errorReportSender.setProxyPort(proxyPortModel.getNumber().intValue());
-                }
-                try {
-                    errorReportSender.sendReport(stringStringMap);
-                } catch (IOException e) {
-                    LOGGER.error( "Cant send error report", e);
-                }
+        Runnable r = () -> {
+            ErrorReportSender errorReportSender = new ErrorReportSender();
+            if (checkBoxUseProxy.isSelected()) {
+                errorReportSender.setProxy(proxyTf.getText());
+                errorReportSender.setPassword(new String(proxyPasswordField.getPassword()));
+                errorReportSender.setUser(proxyUser.getText());
+                errorReportSender.setProxyPort(proxyPortModel.getNumber().intValue());
+            }
+            try {
+                errorReportSender.sendReport(stringStringMap);
+            } catch (IOException e) {
+                LOGGER.error( "Cant send error report", e);
             }
         };
         new Thread(r, "Error sending thread").start();
@@ -147,7 +141,7 @@ public class ShowErrorDialogExceptionHandler extends
         ctx.setThread(thread);
         ctx.setThrowable(throwable);
         ctx.setOtrosApplication(otrosApplication);
-        ArrayList<ErrorReportDataCollector> collectors = new ArrayList<ErrorReportDataCollector>();
+        ArrayList<ErrorReportDataCollector> collectors = new ArrayList<>();
         collectors.add(new RuntimeInfoERDC());
         collectors.add(new SystemPropertiesERDC());
         collectors.add(new DesktopERDC());
@@ -155,7 +149,7 @@ public class ShowErrorDialogExceptionHandler extends
         collectors.add(new OtrosAppERDC());
         collectors.add(new UuidERDC());
 
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         for (ErrorReportDataCollector errorReportDataCollector : collectors) {
             try {
             map.putAll(errorReportDataCollector.collect(ctx));
@@ -209,12 +203,7 @@ public class ShowErrorDialogExceptionHandler extends
         jPanel.add(labelProxyPassword);
         jPanel.add(proxyPasswordField, "grow");
 
-        checkBoxUseProxy.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setProxyEnabled(checkBoxUseProxy.isSelected());
-            }
-        });
+        checkBoxUseProxy.addChangeListener(e -> setProxyEnabled(checkBoxUseProxy.isSelected()));
         DataConfiguration c = otrosApplication.getConfiguration();
         proxyTf.setText(c.getString(ConfKeys.HTTP_PROXY_HOST, ""));
         proxyUser.setText(c.getString(ConfKeys.HTTP_PROXY_USER, ""));

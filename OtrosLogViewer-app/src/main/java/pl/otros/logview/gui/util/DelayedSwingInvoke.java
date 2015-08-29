@@ -16,8 +16,6 @@
 package pl.otros.logview.gui.util;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class DelayedSwingInvoke {
 
@@ -34,13 +32,9 @@ public abstract class DelayedSwingInvoke {
 
   public void performAction() {
     lastTextFieldEditTime = System.currentTimeMillis();
-    Timer timer = new Timer(actionDelay, new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (System.currentTimeMillis() - lastTextFieldEditTime >= actionDelay) {
-          performActionHook();
-        }
+    Timer timer = new Timer(actionDelay, e -> {
+      if (System.currentTimeMillis() - lastTextFieldEditTime >= actionDelay) {
+        performActionHook();
       }
     });
     timer.setRepeats(false);

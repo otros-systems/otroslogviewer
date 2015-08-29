@@ -31,24 +31,24 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 
-public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
+public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
 
   private static final String DATE_PATTERNS = "DATE_PATTERNS";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormmaterParser.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormatterParser.class.getName());
 
   private static final String ICON_PATH = "img/java.png";
 
-  private ParserDescription pd;
+  private final ParserDescription pd;
 
-  private LevelParser[] levelParser = new LevelParser[] { 
+  private final LevelParser[] levelParser = {
     new LevelParser(Locale.ENGLISH), 
     new LevelParser(Locale.GERMAN), 
     new LevelParser(new Locale("es")),
     new LevelParser(new Locale("fr"))
 };
 
-  public JulSimpleFormmaterParser() {
+  public JulSimpleFormatterParser() {
     pd = new ParserDescription();
     pd.setDisplayName("JUL simple formatter");
     pd.setDescription("Parse logs formatted by java.util.logging with SimpleFormatter");
@@ -102,7 +102,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
       try {
         pl.parse(s);
         return true;
-      } catch (ParseException e) {
+      } catch (ParseException ignored) {
       }
     }
     return false;
@@ -121,7 +121,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
         int dateLength = pl.format(date).length();
         sb.replace(0, dateLength + 1, "");
         break;
-      } catch (ParseException e) {
+      } catch (ParseException ignored) {
       }
     }
     if (date == null) {
@@ -176,7 +176,7 @@ public class JulSimpleFormmaterParser implements MultiLineLogParser, TableColumn
 
   @Override
   public void initParsingContext(ParsingContext parsingContext) {
-    SimpleDateFormat[] datePatterns = new SimpleDateFormat[] { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
+    SimpleDateFormat[] datePatterns = { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
         new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
         new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
         new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))

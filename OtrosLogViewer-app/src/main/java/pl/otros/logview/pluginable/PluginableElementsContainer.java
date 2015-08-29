@@ -22,16 +22,16 @@ import java.util.HashSet;
 
 public class PluginableElementsContainer<T extends PluginableElement> {
 
-  private HashSet<PluginableElementEventListener<T>> listeners;
-  private HashMap<String, T> elements;
+  private final HashSet<PluginableElementEventListener<T>> listeners;
+  private final HashMap<String, T> elements;
 
   public PluginableElementsContainer() {
-    listeners = new HashSet<PluginableElementEventListener<T>>();
-    elements = new HashMap<String, T>();
+    listeners = new HashSet<>();
+    elements = new HashMap<>();
   }
 
   public Collection<T> getElements() {
-    return new ArrayList<T>(elements.values());
+    return new ArrayList<>(elements.values());
   }
 
   public T getElement(String pluginableId) {

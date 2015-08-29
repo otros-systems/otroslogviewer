@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 
 public class RemoveByAcceptanceCriteria extends OtrosAction {
 
-	private AcceptCondition acceptCondition;
+	private final AcceptCondition acceptCondition;
 
 	public RemoveByAcceptanceCriteria(AcceptCondition acceptCondition, OtrosApplication otrosApplication) {
 		this(acceptCondition, otrosApplication, (Icon) null);

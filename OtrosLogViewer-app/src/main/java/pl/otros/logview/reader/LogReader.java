@@ -20,9 +20,9 @@ import java.io.InputStream;
 
 public interface LogReader {
 
-  public void init(InputStream in) throws Exception;
+  void init(InputStream in) throws Exception;
 
-  public void close() throws IOException;
+  void close() throws IOException;
 
-  public String readLine() throws IOException;
+  String readLine() throws IOException;
 }

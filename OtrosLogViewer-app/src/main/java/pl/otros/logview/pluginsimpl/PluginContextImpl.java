@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 public class PluginContextImpl implements PluginContext {
   private static final Logger LOGGER = LoggerFactory.getLogger(PluginContextImpl.class.getName());
 
-  private OtrosApplication application;
-  private LogOpenHandler logOpenHandler;
+  private final OtrosApplication application;
+  private final LogOpenHandler logOpenHandler;
 
 
   public PluginContextImpl(OtrosApplication application) {

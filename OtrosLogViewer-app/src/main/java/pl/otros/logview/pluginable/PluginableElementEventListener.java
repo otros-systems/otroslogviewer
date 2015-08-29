@@ -17,10 +17,10 @@ package pl.otros.logview.pluginable;
 
 public interface PluginableElementEventListener<T extends PluginableElement> {
 
-  public void elementAdded(T element);
+  void elementAdded(T element);
 
-  public void elementRemoved(T element);
+  void elementRemoved(T element);
 
-  public void elementChanged(T element);
+  void elementChanged(T element);
 
 }

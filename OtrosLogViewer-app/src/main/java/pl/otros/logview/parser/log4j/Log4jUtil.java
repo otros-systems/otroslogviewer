@@ -64,7 +64,7 @@ public class Log4jUtil {
     ld.setProperties(IMMUTABLE_EMPTY_MAP);
     Map properties = event.getProperties();
     if (properties != null) {
-      Map<String, String> props = new HashMap<String, String>(properties.size());
+      Map<String, String> props = new HashMap<>(properties.size());
       for (Object key : properties.keySet()) {
         String value = (String) properties.get(key);
         if (StringUtils.isNotBlank(value)) {
@@ -116,7 +116,7 @@ public class Log4jUtil {
 
     String parserPattern = p.getProperty(CONVERSION_PATTERN, "");
 
-    Map<Character, String> conversionCharacters = new HashMap<Character, String>();
+    Map<Character, String> conversionCharacters = new HashMap<>();
     conversionCharacters.put('C', "CLASS");
     conversionCharacters.put('c', "CLASS");
     conversionCharacters.put('d', "TIMESTAMP");

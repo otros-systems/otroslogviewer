@@ -9,8 +9,8 @@ import pl.otros.swing.config.InMainConfig;
 import java.io.File;
 
 public class ConfigurationProviderImpl implements ConfigurationProvider {
-  private Configuration mainConfiguration;
-  private File parent;
+  private final Configuration mainConfiguration;
+  private final File parent;
 
   public ConfigurationProviderImpl(Configuration mainConfiguration, File dir) {
     super();

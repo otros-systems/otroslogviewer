@@ -43,13 +43,13 @@ public class QueryAcceptConditionTest {
 	public void prepare() throws RuleException {
 		ldCurrentTimeLevelInfo = new LogDataBuilder().withMessage("ab")
 				.withId(2).withDate(new Date()).withLevel(Level.INFO).build();
-		Calendar cal = new GregorianCalendar(2011, 12, 01, 12, 00, 00);
+		Calendar cal = new GregorianCalendar(2011, 12, 1, 12, 0, 0);
 		ld_2011_12_01_120000 = new LogDataBuilder().withMessage("a").withId(2)
 				.withDate(new Date(cal.getTimeInMillis()))
 				.withLevel(Level.INFO).build();
 		ldWarning = new LogDataBuilder().withMessage("vab").withId(2)
 				.withDate(new Date()).withLevel(Level.WARNING).build();
-		Map<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new HashMap<>();
 		properties.put("key", "value");
 		properties.put("secondKey", "value2");
 		ldWithProperties = new LogDataBuilder().withMessage("with properties")

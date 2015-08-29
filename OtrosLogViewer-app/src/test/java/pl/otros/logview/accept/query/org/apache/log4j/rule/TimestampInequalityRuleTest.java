@@ -42,7 +42,7 @@ public class TimestampInequalityRuleTest {
     try {
       TimestampInequalityRule.getRule(">", "now");
       Assert.fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -54,7 +54,7 @@ public class TimestampInequalityRuleTest {
     try {
       TimestampInequalityRule.getRule(">", "2008/May/20");
       Assert.fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -75,7 +75,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void test3() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(TimestampInequalityRule.getRule(">=", "2008-05-21 00:44:45"));
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
@@ -86,7 +86,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void test4() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(TimestampInequalityRule.getRule("<", "2008-05-21 00:44:44"));
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
@@ -94,7 +94,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00:44:45");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
@@ -102,7 +102,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime2() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00:44:44");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
@@ -110,7 +110,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime3() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00:44");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
@@ -118,7 +118,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime4() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00:44");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }
@@ -126,7 +126,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime5() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21T00");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 01, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 1, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
@@ -134,7 +134,7 @@ public class TimestampInequalityRuleTest {
   @Test
   public void testRuleWithTBetweenDateAndTime6() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule("<", "2008-05-21T00");
-    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 00, 45, 44);
+    Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 0, 45, 44);
     LogData logData = createLogData(cal);
     AssertJUnit.assertFalse(rule.evaluate(logData, null));
   }

@@ -45,7 +45,7 @@ public class NotLevelEqualsRule extends AbstractRule {
   /**
    * List of levels.
    */
-  private static List<String> levelList = new LinkedList<String>();
+  private static List<String> levelList = new LinkedList<>();
 
   static {
     populateLevels();
@@ -66,7 +66,7 @@ public class NotLevelEqualsRule extends AbstractRule {
    * Populate list of levels.
    */
   private static void populateLevels() {
-    levelList = new LinkedList<String>();
+    levelList = new LinkedList<>();
 
     levelList.add(Level.SEVERE.toString());
     levelList.add(Level.WARNING.toString());

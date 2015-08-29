@@ -20,6 +20,8 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.gui.*;
 import pl.otros.logview.gui.actions.TailLogActionListener.ParsingContextStopperForClosingTab;
@@ -41,8 +43,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
 
 public class ConnectToSocketHubAppenderAction extends OtrosAction {
 
@@ -51,9 +52,8 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
 
 	private BufferingLogDataCollectorProxy logDataCollector;
-	private LogViewPanelWrapper logViewPanelWrapper;
 
-	private String host = "127.0.0.1";
+  private String host = "127.0.0.1";
 	private int port = 50000;
 	private Socket socket;
 
@@ -74,7 +74,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 			return;
 		}
 
-		logViewPanelWrapper = new LogViewPanelWrapper("Socket", null, TableColumns.values(), getOtrosApplication());
+    LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper("Socket", null, TableColumns.values(), getOtrosApplication());
 
 		logViewPanelWrapper.goToLiveMode();
 		BaseConfiguration configuration = new BaseConfiguration();
@@ -97,44 +97,40 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 					logDataCollector);
 			logViewPanelWrapper.addHierarchyListener(readingStopperForRemove);
 
-            getOtrosApplication().addClosableTab(hostPort,hostPort,Icons.PLUGIN_CONNECT,logViewPanelWrapper,true);
+            getOtrosApplication().addClosableTab(hostPort,hostPort,Icons.PLUGIN_CONNECT, logViewPanelWrapper,true);
 
-			Runnable r = new Runnable() {
-
-				@Override
-				public void run() {
-					InetAddress inetAddress = socket.getInetAddress();
-					int port2 = socket.getPort();
-					InputStream inputStream = null;
-					Socket s = socket;
-					while (parsingContext.isParsingInProgress()) {
-						try {
-							inputStream = s.getInputStream();
-							BufferedInputStream bin = new BufferedInputStream(inputStream);
-							LOGGER.info(String.format("Connect to SocketHubAppender to %s:%d", inetAddress.getHostAddress(), port2));
-							logImporter.importLogs(bin, logDataCollector, parsingContext);
-							getOtrosApplication().getStatusObserver().updateStatus("Loading logs from Log4j SocketHubAppender finished", StatusObserver.LEVEL_WARNING);
-						} catch (IOException e1) {
-							LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e1.getMessage()));
-						}
-						try {
-							LOGGER.debug("Reconnecting in " + RECONNECT_TIME + "ms");
-							Thread.sleep(RECONNECT_TIME);
-						} catch (InterruptedException e) {
-							LOGGER.warn("Waiting thread interrupted" + e.getMessage());
-						}
-						if (parsingContext.isParsingInProgress()) {
-							try {
-								LOGGER.debug(String.format("Connecting to Log4j SocketHubAppender at %s:%d", inetAddress.getHostName(), port2));
-								s = new Socket(inetAddress, port2);
-							} catch (IOException e) {
-								LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e.getMessage()));
-							}
-						}
-					}
-					LOGGER.info(String.format("Importing from %s:%d is finished", inetAddress.getHostName(), port2));
-				}
-			};
+			Runnable r = () -> {
+        InetAddress inetAddress = socket.getInetAddress();
+        int port2 = socket.getPort();
+        InputStream inputStream = null;
+        Socket s = socket;
+        while (parsingContext.isParsingInProgress()) {
+          try {
+            inputStream = s.getInputStream();
+            BufferedInputStream bin = new BufferedInputStream(inputStream);
+            LOGGER.info(String.format("Connect to SocketHubAppender to %s:%d", inetAddress.getHostAddress(), port2));
+            logImporter.importLogs(bin, logDataCollector, parsingContext);
+            getOtrosApplication().getStatusObserver().updateStatus("Loading logs from Log4j SocketHubAppender finished", StatusObserver.LEVEL_WARNING);
+          } catch (IOException e1) {
+            LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e1.getMessage()));
+          }
+          try {
+            LOGGER.debug("Reconnecting in " + RECONNECT_TIME + "ms");
+            Thread.sleep(RECONNECT_TIME);
+          } catch (InterruptedException e) {
+            LOGGER.warn("Waiting thread interrupted" + e.getMessage());
+          }
+          if (parsingContext.isParsingInProgress()) {
+            try {
+              LOGGER.debug(String.format("Connecting to Log4j SocketHubAppender at %s:%d", inetAddress.getHostName(), port2));
+              s = new Socket(inetAddress, port2);
+            } catch (IOException e) {
+              LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e.getMessage()));
+            }
+          }
+        }
+        LOGGER.info(String.format("Importing from %s:%d is finished", inetAddress.getHostName(), port2));
+      };
 			new Thread(r, hostPort).start();
 
 		} catch (Exception e) {
@@ -149,11 +145,8 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 		List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
 		configuration.getInt(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES_MAX_COUNT,20);
 
-		Vector<String> recent = new Vector<String>();
-		for (Object o: list1){
-			recent.add(o.toString());
-		}
-		
+		Vector<String> recent = list1.stream().map(Object::toString).collect(Collectors.toCollection(Vector::new));
+
 		JXComboBox box = new JXComboBox(recent);
 		box.setEditable(true);
 		AutoCompleteDecorator.decorate(box);

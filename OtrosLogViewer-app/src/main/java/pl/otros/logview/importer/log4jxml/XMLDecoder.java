@@ -149,13 +149,11 @@ public class XMLDecoder {
       /**
        * resetting the length of the StringBuffer is dangerous, particularly on some JDK 1.4 impls, there's a known Bug that causes a memory leak
        */
-      StringBuffer buf = new StringBuffer(1024);
+      String buf = BEGINPART +
+        data +
+        ENDPART;
 
-      buf.append(BEGINPART);
-      buf.append(data);
-      buf.append(ENDPART);
-
-      InputSource inputSource = new InputSource(new StringReader(buf.toString()));
+      InputSource inputSource = new InputSource(new StringReader(buf));
       document = docBuilder.parse(inputSource);
     } catch (Exception e) {
       e.printStackTrace();
@@ -187,7 +185,7 @@ public class XMLDecoder {
     Vector events;
     try {
       while ((line = reader.readLine()) != null) {
-        StringBuffer buffer = new StringBuffer(line);
+        StringBuilder buffer = new StringBuilder(line);
         for (int i = 0; i < 1000; i++) {
           buffer.append(reader.readLine()).append("\n");
         }

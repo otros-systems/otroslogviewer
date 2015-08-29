@@ -30,7 +30,7 @@ public class SynchronizePluginableContainerListenerTest {
   @BeforeMethod
 public void setup() {
     d = mock(PluginableElementsContainer.class);
-    s = new SynchronizePluginableContainerListener<PluginableElement>(d);
+    s = new SynchronizePluginableContainerListener<>(d);
   }
 
   @Test

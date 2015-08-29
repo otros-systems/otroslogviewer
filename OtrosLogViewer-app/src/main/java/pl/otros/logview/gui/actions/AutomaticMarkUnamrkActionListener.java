@@ -33,7 +33,7 @@ public class AutomaticMarkUnamrkActionListener implements ActionListener {
   private AutomaticMarker automaticMarker;
   private boolean mode = true;
 
-  private StatusObserver observer;
+  private final StatusObserver observer;
 
   public AutomaticMarkUnamrkActionListener(LogDataTableModel dataTableModel, AutomaticMarker automaticMarker, boolean mode, StatusObserver observer) {
     super();
@@ -46,7 +46,7 @@ public class AutomaticMarkUnamrkActionListener implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     int size = dataTableModel.getRowCount();
-    ArrayList<Integer> rows = new ArrayList<Integer>();
+    ArrayList<Integer> rows = new ArrayList<>();
     for (int i = 0; i < size; i++) {
       LogData l = dataTableModel.getLogData(i);
       if (automaticMarker.toMark(l)) {

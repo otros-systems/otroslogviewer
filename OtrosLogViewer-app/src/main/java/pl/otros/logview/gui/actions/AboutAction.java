@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.JAnimatedLogo;
@@ -25,24 +27,20 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AboutAction extends OtrosAction {
 
 	private String build = "?";
 	private static final Logger LOGGER = LoggerFactory.getLogger(AboutAction.class.getName());
-	private JTextPane textArea;
+	private final JTextPane textArea;
 
 	private Style defaultStyle = null;
 	private Style mainStyle = null;
 	private Style licenceStyle = null;
 	private Style titleStyle = null;
-	private StyleContext sc;
-	private JAnimatedLogo animatedLogo;
-	private JPanel panel;
+	private final StyleContext sc;
+	private final JAnimatedLogo animatedLogo;
+	private final JPanel panel;
 
 	public AboutAction(OtrosApplication otrosApplication) {
 		super(otrosApplication);

@@ -17,12 +17,12 @@ package pl.otros.logview.pluginable;
 
 public interface PluginableElement {
 
-  public String getName();
+  String getName();
 
-  public String getDescription();
+  String getDescription();
 
-  public String getPluginableId();
+  String getPluginableId();
 
-  public int getApiVersion();
+  int getApiVersion();
 
 }

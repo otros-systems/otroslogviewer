@@ -17,5 +17,5 @@ package pl.otros.logview.gui.note;
 
 public interface NoteObserver {
 
-  public void update(NoteEvent noteEvent);
+  void update(NoteEvent noteEvent);
 }

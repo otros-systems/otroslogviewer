@@ -17,10 +17,10 @@ package pl.otros.logview.gui.markers;
 
 public interface MarkersEventListener {
 
-  public void markerAdded(AutomaticMarker marker);
+  void markerAdded(AutomaticMarker marker);
 
-  public void markerRemoved(AutomaticMarker marker);
+  void markerRemoved(AutomaticMarker marker);
 
-  public void markerChanged(AutomaticMarker marker);
+  void markerChanged(AutomaticMarker marker);
 
 }

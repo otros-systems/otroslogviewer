@@ -22,7 +22,7 @@ import java.awt.*;
 
 public class NoteTableEditor extends DefaultCellEditor {
 
-  private JTextField tf;
+  private final JTextField tf;
 
   public NoteTableEditor() {
     super(new JTextField());

@@ -21,8 +21,8 @@ import java.awt.event.KeyEvent;
 
 public class SearchFieldKeyListener extends KeyAdapter {
 
-  private SearchAction searchAction;
-  private JTextField searchTextField;
+  private final SearchAction searchAction;
+  private final JTextField searchTextField;
 
   public SearchFieldKeyListener(SearchAction searchAction, JTextField searchTextField) {
     super();

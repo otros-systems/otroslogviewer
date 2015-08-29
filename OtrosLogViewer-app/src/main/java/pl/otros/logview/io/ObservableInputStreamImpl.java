@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 public class ObservableInputStreamImpl extends InputStream implements ObservableStream, Stoppable {
 
-  private InputStream src;
+  private final InputStream src;
   private long current = 0;
   private volatile boolean stop = false;
 

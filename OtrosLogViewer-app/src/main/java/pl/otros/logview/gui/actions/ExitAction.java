@@ -23,7 +23,7 @@ import java.awt.event.WindowEvent;
 
 public class ExitAction extends WindowAdapter implements ActionListener {
 
-  private JFrame frame;
+  private final JFrame frame;
   private boolean doConfirm = true;
 
   public ExitAction(JFrame frame) {

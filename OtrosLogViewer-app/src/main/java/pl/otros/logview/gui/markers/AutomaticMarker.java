@@ -21,12 +21,12 @@ import pl.otros.logview.pluginable.PluginableElement;
 
 public interface AutomaticMarker extends PluginableElement {
 
-  public static int AUTOMATIC_MARKER_VERSION_1 = 1;
+  int AUTOMATIC_MARKER_VERSION_1 = 1;
 
-  public boolean toMark(LogData data);
+  boolean toMark(LogData data);
 
-  public String[] getMarkerGroups();
+  String[] getMarkerGroups();
 
-  public MarkerColors getColors();
+  MarkerColors getColors();
 
 }

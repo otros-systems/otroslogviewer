@@ -6,8 +6,8 @@ import pl.otros.logview.store.LogDataStore;
 import java.util.concurrent.Callable;
 
 class OperationGetLogData implements Callable<LogData> {
-  private LogDataStore logDataStore;
-  private int id;
+  private final LogDataStore logDataStore;
+  private final int id;
 
   public OperationGetLogData(LogDataStore logDataStore, int id) {
     this.logDataStore = logDataStore;

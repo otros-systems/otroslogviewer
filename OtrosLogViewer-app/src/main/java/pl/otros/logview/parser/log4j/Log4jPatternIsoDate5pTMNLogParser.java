@@ -36,7 +36,7 @@ public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Log4jPatternIsoDate5pTMNLogParser.class.getName());
 
-  private ParserDescription pd;
+  private final ParserDescription pd;
 
   // private SimpleDateFormat datePattern = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS", Locale.ENGLISH);
 
@@ -87,7 +87,7 @@ public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
     try {
       datePattern.parse(s);
       return true;
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
     return false;
   }

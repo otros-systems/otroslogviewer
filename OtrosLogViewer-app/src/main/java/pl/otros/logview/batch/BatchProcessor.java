@@ -33,7 +33,6 @@ import pl.otros.logview.parser.ParsingContext;
 import pl.otros.logview.pluginable.AllPluginables;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -44,11 +43,11 @@ import java.util.List;
 public class BatchProcessor {
 
   private List<String> files;
-  private BatchProcessingContext batchProcessingContext;
+  private final BatchProcessingContext batchProcessingContext;
   private LogDataParsedListener logDataParsedListener;
 
   public BatchProcessor() throws IOException, InitializationException {
-    files = new ArrayList<String>();
+    files = new ArrayList<>();
     batchProcessingContext = new BatchProcessingContext();
     LvDynamicLoader.getInstance().loadAll();
   }
@@ -62,7 +61,7 @@ public class BatchProcessor {
       return;
     }
     int i = 0;
-    ArrayList<FileObject> fileObjects = new ArrayList<FileObject>();
+    ArrayList<FileObject> fileObjects = new ArrayList<>();
     for (String file : files) {
       i++;
       FileObject resolveFile = null;
@@ -167,13 +166,7 @@ public class BatchProcessor {
       File f = new File(parserCmdLine.dirWithJars);
       URL[] urls = null;
       if (f.isDirectory()) {
-        File[] listFiles = f.listFiles(new FileFilter() {
-
-          @Override
-          public boolean accept(File f) {
-            return f.isFile() && f.getName().endsWith(".jar");
-          }
-        });
+        File[] listFiles = f.listFiles(f1 -> f1.isFile() && f1.getName().endsWith(".jar"));
         urls = new URL[listFiles.length];
         for (int i = 0; i < urls.length; i++) {
           urls[i] = listFiles[i].toURI().toURL();

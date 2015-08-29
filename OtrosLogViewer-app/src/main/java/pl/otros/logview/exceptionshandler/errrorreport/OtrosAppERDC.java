@@ -25,7 +25,7 @@ public class OtrosAppERDC implements ErrorReportDataCollector {
 	public Map<String, String> collect(ErrorReportCollectingContext context) {
 		OtrosApplication otrosApplication = context.getOtrosApplication();
 		
-		HashMap<String, String> r = new HashMap<String, String>();
+		HashMap<String, String> r = new HashMap<>();
 		r.put("APPLICATION:tab.count", Integer.toString(otrosApplication.getJTabbedPane().getTabCount()));
 		AllPluginables allPluginables = otrosApplication.getAllPluginables();
 		add("filters",r,allPluginables.getLogFiltersContainer());

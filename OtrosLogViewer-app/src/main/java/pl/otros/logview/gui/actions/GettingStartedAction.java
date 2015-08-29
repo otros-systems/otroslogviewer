@@ -31,7 +31,7 @@ public class GettingStartedAction extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GettingStartedAction.class.getName());
 
-  private static final String URL = "https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6";;
+  private static final String URL = "https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6";
 
   public GettingStartedAction(OtrosApplication otrosApplication) {
     super(otrosApplication);

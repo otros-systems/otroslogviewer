@@ -37,7 +37,7 @@ public class PersistanceVer2Test {
 
   private LogData[] datas;
   private ArrayList<LogData> list;
-  private String result = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n"
+  private final String result = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n"
       + "0|0|message\\nno \\P0\\P|class|method|INFO|LN|Thread|a=l0\\n|ndc|File|123|file:/a.txt|Note|true|Red|\n" //
       + "1|1|message\\nno \\P1\\P|class|method|INFO|LN|Thread|a=l1\\n|ndc|File|123|file:/a.txt|Note|false||\n" //
       + "2|2|message\\nno \\P2\\P|class|method|INFO|LN|Thread|a=l2\\n|ndc|File|123|file:/a.txt|Note|true|Black|\n" //
@@ -51,7 +51,7 @@ public class PersistanceVer2Test {
 public void prepare() {
     p = new LogDataListPersistanceVer2();
     datas = new LogData[5];
-    list = new ArrayList<LogData>();
+    list = new ArrayList<>();
     for (int i = 0; i < datas.length; i++) {
       LogData ld = new LogData();
       ld.setLevel(Level.INFO);
@@ -72,7 +72,7 @@ public void prepare() {
       }
       ld.setNote(new Note("Note"));
       ld.setLine("123");
-      HashMap<String, String> properties = new HashMap<String, String>();
+      HashMap<String, String> properties = new HashMap<>();
       properties.put("a", "l" + i);
       ld.setProperties(properties);
 
@@ -115,7 +115,7 @@ public void prepare() {
 
   @Test
   public void testParseLogData() {
-    HashMap<String, Integer> fieldMapping = new HashMap<String, Integer>();
+    HashMap<String, Integer> fieldMapping = new HashMap<>();
     int i = 0;
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_ID, i++);
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_CLASS, i++);
@@ -126,7 +126,7 @@ public void prepare() {
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_THREAD, i++);
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_TIMESTAMP, i++);
 
-    String[] line = new String[] { "3", "a.b.Class", "SEVERE", "logger", "message!\\n\\P\\S", "myMethod", "thread-1", "1000" };
+    String[] line = { "3", "a.b.Class", "SEVERE", "logger", "message!\\n\\P\\S", "myMethod", "thread-1", "1000" };
     LogData ld = p.parseLogData(line, fieldMapping);
     assertEquals(3, ld.getId());
     assertEquals(Level.SEVERE, ld.getLevel());

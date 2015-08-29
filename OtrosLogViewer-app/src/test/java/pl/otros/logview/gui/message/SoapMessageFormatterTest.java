@@ -22,7 +22,7 @@ import org.apache.commons.io.IOUtils;
 
 public class SoapMessageFormatterTest {
 
-	private SoapMessageFormatter formatter = new SoapMessageFormatter();
+	private final SoapMessageFormatter formatter = new SoapMessageFormatter();
 
 	@Test
 	public void testFormatWithoutRemovingMultiRefs() throws Exception {

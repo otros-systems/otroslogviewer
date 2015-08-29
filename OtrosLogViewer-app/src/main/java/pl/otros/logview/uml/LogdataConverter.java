@@ -23,9 +23,9 @@ import java.util.*;
 public class LogdataConverter {
 
   public UMLModel createJComponent(LogData[] datas) {
-    LinkedList<String> stack = new LinkedList<String>();
+    LinkedList<String> stack = new LinkedList<>();
     LinkedList<String> actors = getActors2(datas);
-    HashMap<String, Integer> actorNesting = new HashMap<String, Integer>();
+    HashMap<String, Integer> actorNesting = new HashMap<>();
     actors.addFirst("User");
     stack.add("User");
 
@@ -88,7 +88,7 @@ public class LogdataConverter {
 
   public void createPsFile(LogData[] datas, PrintWriter out) {
 
-    LinkedList<String> stack = new LinkedList<String>();
+    LinkedList<String> stack = new LinkedList<>();
     Map<String, String> actors = getActors(datas);
     // StringBuffer sb = new StringBuffer();
 
@@ -106,7 +106,7 @@ public class LogdataConverter {
     stack.add("User");
 
     for (String key : actors.keySet()) {
-      out.append("object(" + actors.get(key) + ",\"" + key + "\");\n");
+      out.append("object(").append(actors.get(key)).append(",\"").append(key).append("\");\n");
     }
 
     out.append("#Creating events\n");
@@ -176,7 +176,7 @@ public class LogdataConverter {
   }
 
   private Map<String, String> getActors(LogData[] datas) {
-    Map<String, String> list = new LinkedHashMap<String, String>();
+    Map<String, String> list = new LinkedHashMap<>();
     for (int i = 0; i < datas.length; i++) {
       String shortName = getShortClassName(datas[i].getClazz());
       if (!list.containsKey(shortName)) {
@@ -187,15 +187,15 @@ public class LogdataConverter {
   }
 
   private LinkedList<String> getActors2(LogData[] datas) {
-    LinkedHashSet<String> map = new LinkedHashSet<String>();
-    for (int i = 0; i < datas.length; i++) {
-      String clazz = datas[i].getClazz();
+    LinkedHashSet<String> map = new LinkedHashSet<>();
+    for (LogData data : datas) {
+      String clazz = data.getClazz();
       if (!map.contains(clazz)) {
         map.add(clazz);
       }
     }
 
-    LinkedList<String> list = new LinkedList<String>(map);
+    LinkedList<String> list = new LinkedList<>(map);
     return list;
   }
 

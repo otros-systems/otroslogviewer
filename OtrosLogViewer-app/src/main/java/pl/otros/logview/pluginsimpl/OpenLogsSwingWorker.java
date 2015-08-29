@@ -49,7 +49,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenLogsSwingWorker.class.getName());
 
   private LogViewPanelWrapper logViewPanelWrapper;
-  private PluginContext pluginContext;
+  private final PluginContext pluginContext;
   private final FileObject[] fileObjects;
   private final String tabName;
 
@@ -64,13 +64,13 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     LoadingInfo[] loadingInfos = getLoadingInfo();
 
     Collection<LogImporter> elements = pluginContext.getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
-    LogImporter[] importers = elements.toArray(new LogImporter[0]);
+    LogImporter[] importers = elements.toArray(new LogImporter[elements.size()]);
     String[] names = new String[elements.size()];
     for (int i = 0; i < names.length; i++) {
       names[i] = importers[i].getName();
     }
 
-    TableColumns[] visibleColumns = new TableColumns[]{TableColumns.ID,//
+    TableColumns[] visibleColumns = {TableColumns.ID,//
         TableColumns.TIME,//
         TableColumns.LEVEL,//
         TableColumns.MESSAGE,//
@@ -103,41 +103,36 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
   private void openLog(final BufferingLogDataCollectorProxy logDataCollector, final LogImporter importer, final LoadingInfo loadingInfo) {
     publish("Start tailing " + loadingInfo.getFriendlyUrl());
 
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        ParsingContext parsingContext = new ParsingContext(loadingInfo.getFriendlyUrl(), loadingInfo.getFileObject().getName()
-            .getBaseName());
-        logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl()));
-        logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(logDataCollector));
-        logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
-        importer.initParsingContext(parsingContext);
-        try {
-          loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-        } catch (FileSystemException e1) {
-          LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
-        }
-        while (parsingContext.isParsingInProgress()) {
-          try {
-            importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-            if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
-              break;
-            }
-            Thread.sleep(1000);
-
-            Utils.reloadFileObject(loadingInfo);
-          } catch (Exception e) {
-            LOGGER.warn("Exception in tailing loop: " + e.getMessage());
-          }
-        }
-        LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
-        parsingContext.setParsingInProgress(false);
-        LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
-        pluginContext.getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-        Utils.closeQuietly(loadingInfo.getFileObject());
+    Runnable r = () -> {
+      ParsingContext parsingContext = new ParsingContext(loadingInfo.getFriendlyUrl(), loadingInfo.getFileObject().getName()
+          .getBaseName());
+      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl()));
+      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(logDataCollector));
+      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
+      importer.initParsingContext(parsingContext);
+      try {
+        loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
+      } catch (FileSystemException e1) {
+        LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
       }
+      while (parsingContext.isParsingInProgress()) {
+        try {
+          importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
+          if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+            break;
+          }
+          Thread.sleep(1000);
 
+          Utils.reloadFileObject(loadingInfo);
+        } catch (Exception e) {
+          LOGGER.warn("Exception in tailing loop: " + e.getMessage());
+        }
+      }
+      LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
+      parsingContext.setParsingInProgress(false);
+      LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
+      pluginContext.getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
+      Utils.closeQuietly(loadingInfo.getFileObject());
     };
     Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
     t.setDaemon(true);
@@ -166,7 +161,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
   }
 
   private LoadingInfo[] getLoadingInfo() {
-    ArrayList<LoadingInfo> list = new ArrayList<LoadingInfo>();
+    ArrayList<LoadingInfo> list = new ArrayList<>();
     publish("Opening  log files");
     for (final FileObject file : fileObjects) {
       try {

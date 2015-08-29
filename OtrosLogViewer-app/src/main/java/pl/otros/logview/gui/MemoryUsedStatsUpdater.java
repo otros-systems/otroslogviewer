@@ -26,9 +26,9 @@ import java.text.NumberFormat;
 
 public class MemoryUsedStatsUpdater implements Runnable {
 
-  private JProgressBar bar;
+  private final JProgressBar bar;
   private long refreshTime = 10000;
-  private NumberFormat nf = NumberFormat.getInstance();
+  private final NumberFormat nf = NumberFormat.getInstance();
 
   public MemoryUsedStatsUpdater(JProgressBar bar, long refreshTime) {
     super();
@@ -74,13 +74,9 @@ public class MemoryUsedStatsUpdater implements Runnable {
       timeline.setEase(new Sine());
       timeline.setDuration(1200);
       timeline.play();
-      SwingUtilities.invokeLater(new Runnable() {
-
-        @Override
-        public void run() {
-          bar.setString(message);
-          bar.setToolTipText(toolTip);
-        }
+      SwingUtilities.invokeLater(() -> {
+        bar.setString(message);
+        bar.setToolTipText(toolTip);
       });
 
       try {

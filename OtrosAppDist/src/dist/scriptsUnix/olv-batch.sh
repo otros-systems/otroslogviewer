@@ -17,7 +17,7 @@
 
 
 CURRENTDIR=`dirname $0`
-cd $CURRENTDIR
+cd ${CURRENTDIR}
 
 ./olv.sh -batch $@
 

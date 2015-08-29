@@ -25,7 +25,7 @@ public class ShowConfigTest {
     JFrame f = new JFrame("CV");
     f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     f.getContentPane().setLayout(new BorderLayout());
-    ConfigView[] configViews = new ConfigView[]{
+    ConfigView[] configViews = {
         new View1(), // 
         new View2(), //
         new ViewTable(),// 

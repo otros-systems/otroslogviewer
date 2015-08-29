@@ -50,14 +50,14 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   private static final LogData EMPTY_LOG_DATA = new LogData();
 
   private static final Note EMPTY_NOTE = new Note("");
-  private Set<NoteObserver> noteObservers;
+  private final Set<NoteObserver> noteObservers;
   private LogDataStore logDataStore;
-  private Map<String, ClassWrapper> classWrapperCache;
+  private final Map<String, ClassWrapper> classWrapperCache;
 
-  private int maximumMessageLength = 2000;
+  private final int maximumMessageLength = 2000;
 
   public LogDataTableModel() {
-    classWrapperCache = new HashMap<String, ClassWrapper>(100);
+    classWrapperCache = new HashMap<>(100);
 
     String cached = System.getProperty("cacheEvents");
     if (StringUtils.equalsIgnoreCase(cached, "true")) {
@@ -79,7 +79,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     EMPTY_LOG_DATA.setDate(new Date(0));
     EMPTY_LOG_DATA.setMessage("----- Out of bounds ------");
     EMPTY_LOG_DATA.setLevel(Level.SEVERE);
-    noteObservers = new HashSet<NoteObserver>();
+    noteObservers = new HashSet<>();
   }
 
   public String getColumnName(int column) {
@@ -101,8 +101,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       dumpInfo();
     }
     Object result = null;
-    TableColumns selecteColumn = TableColumns.getColumnById(columnIndex);
-    switch (selecteColumn) {
+    TableColumns selectColumn = TableColumns.getColumnById(columnIndex);
+    assert ld != null;
+    switch (selectColumn) {
       case ID:
         result = ld.getId();
         break;
@@ -176,10 +177,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   }
 
   public boolean isCellEditable(int rowIndex, int columnIndex) {
-    if (columnIndex == TableColumns.MARK.getColumn() || columnIndex == TableColumns.NOTE.getColumn()) {
-      return true;
-    }
-    return false;
+    return columnIndex == TableColumns.MARK.getColumn() || columnIndex == TableColumns.NOTE.getColumn();
   }
 
   /*
@@ -214,7 +212,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   public int removeRows(AcceptCondition acceptCondition) {
     LOGGER.debug(String.format("Removing rows using accept condition: %s", acceptCondition.getName()));
-    ArrayList<Integer> toDelete = new ArrayList<Integer>();
+    ArrayList<Integer> toDelete = new ArrayList<>();
     for (int row = 0; row < logDataStore.getCount(); row++) {
       LogData logData = logDataStore.getLogData(row);
       if (acceptCondition.accept(logData)) {
@@ -241,7 +239,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
       int lastRow = rows[rows.length - 1];
       LOGGER.trace(String.format("Firing event fireTableRowsDeleted %d->%d", firstRow, lastRow));
       fireTableRowsDeleted(firstRow, lastRow);
-      LOGGER.trace(String.format("Firing event fireTableRowsDeleted has ended"));
+      LOGGER.trace("Firing event fireTableRowsDeleted has ended");
     }
   }
 
@@ -398,9 +396,9 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   public Memento saveToMemento() {
     Memento m = new Memento();
     m.dataLimit = logDataStore.getLimit();
-    m.list = new ArrayList<LogData>();
+    m.list = new ArrayList<>();
     m.list.addAll(Arrays.asList(logDataStore.getLogData()));
-    m.marks = new TreeMap<Integer, Boolean>();
+    m.marks = new TreeMap<>();
     for (int row = 0; row < logDataStore.getCount(); row++) {
       LogData ld = logDataStore.getLogData(row);
       if (ld.isMarked()) {
@@ -478,11 +476,11 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     private int dataLimit = Integer.MAX_VALUE;
     private int shift = 0;
     private int addIndex = 0;
-    private Set<Integer> visibleColumns = new HashSet<Integer>();
-    private ArrayList<LogData> list = new ArrayList<LogData>();
-    private TreeMap<Integer, Boolean> marks = new TreeMap<Integer, Boolean>();
-    private TreeMap<Integer, MarkerColors> marksColor = new TreeMap<Integer, MarkerColors>();
-    private TreeMap<Integer, Note> notes = new TreeMap<Integer, Note>();
+    private Set<Integer> visibleColumns = new HashSet<>();
+    private ArrayList<LogData> list = new ArrayList<>();
+    private TreeMap<Integer, Boolean> marks = new TreeMap<>();
+    private TreeMap<Integer, MarkerColors> marksColor = new TreeMap<>();
+    private TreeMap<Integer, Note> notes = new TreeMap<>();
     private String name;
 
     public String getName() {

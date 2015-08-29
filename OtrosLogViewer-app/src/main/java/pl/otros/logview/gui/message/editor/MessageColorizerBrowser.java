@@ -18,6 +18,8 @@ package pl.otros.logview.gui.message.editor;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.StatusObserver;
@@ -31,8 +33,6 @@ import pl.otros.logview.pluginable.PluginableElementNameListRenderer;
 import pl.otros.logview.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,32 +40,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MessageColorizerBrowser extends JPanel {
 
   private static final String MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT = "MessageColorizerEditorDefaultContent.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerBrowser.class.getName());
-  private PluginableElementsContainer<MessageColorizer> container;
-	private OtrosApplication otrosApplication;
-	private JList jList;
-  private PluginableElementListModel<MessageColorizer> listModel;
-  private JPanel contentPanel;
-  private CardLayout cardLayout;
+  private final PluginableElementsContainer<MessageColorizer> container;
+	private final OtrosApplication otrosApplication;
+	private final JList jList;
+  private final PluginableElementListModel<MessageColorizer> listModel;
+  private final JPanel contentPanel;
+  private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_EDITOR = "editor";
   private static final String CARD_LAYOUT_NOT_EDITABLE = "notEditable";
   private static final String CARD_LAYOUT_NO_SELECTED = "noSelected";
-  private MessageColorizerEditor editor;
-  private String defualtContent;
-  private JToolBar toolBar;
-  private JButton useButton;
-  private JButton saveButton;
-  private JButton saveAsButton;
-  private JButton deleteButton;
+  private final MessageColorizerEditor editor;
+  private String defaultContent;
+  private final JToolBar toolBar;
+  private final JButton useButton;
+  private final JButton saveButton;
+  private final JButton saveAsButton;
+  private final JButton deleteButton;
 
   private JFileChooser chooser;
-  private DeleteSelected deleteAction;
+  private final DeleteSelected deleteAction;
 
   public MessageColorizerBrowser(OtrosApplication otrosApplication) {
     super(new BorderLayout());
@@ -77,8 +75,8 @@ public class MessageColorizerBrowser extends JPanel {
     JLabel noEditable = new JLabel("Selected MessageColorizer is not editable.", SwingConstants.CENTER);
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 
-    listModel = new PluginableElementListModel<MessageColorizer>(container);
-    jList = new JList(listModel);
+    listModel = new PluginableElementListModel<>(container);
+    jList = new JList<>(listModel);
     jList.setCellRenderer(new PluginableElementNameListRenderer());
     cardLayout = new CardLayout();
     contentPanel = new JPanel(cardLayout);
@@ -86,17 +84,12 @@ public class MessageColorizerBrowser extends JPanel {
     contentPanel.add(noEditable, CARD_LAYOUT_NOT_EDITABLE);
     contentPanel.add(nothingSelected, CARD_LAYOUT_NO_SELECTED);
     cardLayout.show(contentPanel, CARD_LAYOUT_NOT_EDITABLE);
-    JSplitPane mainSplitPane = new JSplitPane(SwingConstants.VERTICAL, new JScrollPane(jList), contentPanel);
+    JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(jList), contentPanel);
     mainSplitPane.setDividerLocation(220);
 
-    jList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        showSelected();
-        enableDisableButtonsForSelectedColorizer();
-      }
-
+    jList.getSelectionModel().addListSelectionListener(e -> {
+      showSelected();
+      enableDisableButtonsForSelectedColorizer();
     });
 
     jList.addKeyListener(new KeyAdapter() {
@@ -111,15 +104,7 @@ public class MessageColorizerBrowser extends JPanel {
       }
     });
 
-    JButton createNew = new JButton("Create new", Icons.ADD);
-    createNew.addActionListener(new ActionListener() {
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        saveAsButton.setEnabled(false);
-        createNew();
-      }
-    });
 
     saveButton = new JButton("Save and use", Icons.DISK);
     saveButton.addActionListener(new ActionListener() {
@@ -200,6 +185,13 @@ public class MessageColorizerBrowser extends JPanel {
     deleteAction = new DeleteSelected(otrosApplication);
     deleteButton = new JButton(deleteAction);
 
+
+    JButton createNew = new JButton("Create new", Icons.ADD);
+    createNew.addActionListener(e -> {
+      saveAsButton.setEnabled(false);
+      createNew();
+    });
+
     toolBar.setFloatable(false);
     toolBar.add(createNew);
     toolBar.add(saveButton);
@@ -261,9 +253,7 @@ public class MessageColorizerBrowser extends JPanel {
       mc.setTestMessage(editor.getTextToColorize());
       fout = new FileOutputStream(selectedFile);
       mc.store(fout);
-    } catch (ConfigurationException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
+    } catch (ConfigurationException | FileNotFoundException e) {
       e.printStackTrace();
     } finally {
       IOUtils.closeQuietly(fout);
@@ -321,14 +311,14 @@ public class MessageColorizerBrowser extends JPanel {
   }
 
   protected String getDefaultContent() {
-    if (defualtContent == null) {
+    if (defaultContent == null) {
       try {
-        defualtContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
+        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
       } catch (IOException e) {
         LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }
     }
-    return defualtContent;
+    return defaultContent;
   }
 
   class DeleteSelected extends AbstractActionWithConfirmation {

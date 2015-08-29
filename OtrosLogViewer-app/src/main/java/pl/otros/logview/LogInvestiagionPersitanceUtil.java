@@ -51,8 +51,8 @@ public class LogInvestiagionPersitanceUtil {
 
   private static JFileChooser chooser;
 
-  private static LogDataListPersistanceVer1 persistanceVer1 = new LogDataListPersistanceVer1();
-  private static LogDataListPersistanceVer2 persistanceVer2 = new LogDataListPersistanceVer2();
+  private static final LogDataListPersistanceVer1 persistanceVer1 = new LogDataListPersistanceVer1();
+  private static final LogDataListPersistanceVer2 persistanceVer2 = new LogDataListPersistanceVer2();
 
   public static JFileChooser getFileChooser() {
     if (chooser == null) {
@@ -159,7 +159,7 @@ public class LogInvestiagionPersitanceUtil {
           throw new Exception("Logs saved with newer version, check for update.");
         }
         List<LogData> loadLogsList = listPersistance.loadLogsList(zin);
-        ArrayList<LogData> list = new ArrayList<LogData>(loadLogsList.size());
+        ArrayList<LogData> list = new ArrayList<>(loadLogsList.size());
         list.addAll(loadLogsList);
         m.setList(list);
       } else if (ze.getName().equalsIgnoreCase(ENTRY_MARKS_COLORS)) {

@@ -39,11 +39,11 @@ public class InFixToPostFix {
   /**
    * Precedence map.
    */
-  private static final Map<String, Integer> precedenceMap = new HashMap<String, Integer>();
+  private static final Map<String, Integer> precedenceMap = new HashMap<>();
   /**
    * Operators.
    */
-  private static final List<String> operators = new Vector<String>();
+  private static final List<String> operators = new Vector<>();
 
   static {
     // order multi-char operators before single-char operators (will use this order during parsing)
@@ -121,8 +121,8 @@ public class InFixToPostFix {
       return false;
     }
 
-    int index1 = ((Integer) precedenceMap.get(symbol1)).intValue();
-    int index2 = ((Integer) precedenceMap.get(symbol2)).intValue();
+    int index1 = precedenceMap.get(symbol1).intValue();
+    int index2 = precedenceMap.get(symbol2).intValue();
 
     boolean precedesResult = (index1 < index2);
 
@@ -140,7 +140,7 @@ public class InFixToPostFix {
     final String space = " ";
     StringBuffer postfix = new StringBuffer();
 
-    Stack<Object> stack = new Stack<Object>();
+    Stack<Object> stack = new Stack<>();
 
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
@@ -212,7 +212,7 @@ public class InFixToPostFix {
 
   public static class CustomTokenizer {
 
-    private LinkedList<Object> linkedList = new LinkedList<Object>();
+    private final LinkedList<Object> linkedList = new LinkedList<>();
 
     public CustomTokenizer(String input) {
       parseInput(input, linkedList);
@@ -238,16 +238,14 @@ public class InFixToPostFix {
           pos = handleProperty(input, pos, linkedList);
         }
         boolean operatorFound = false;
-        for (Iterator<String> iter = operators.iterator(); iter.hasNext();) {
-          String operator = (String) iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, pos, operator)) {
             operatorFound = true;
             pos = handle(pos, linkedList, operator);
           }
         }
         boolean keywordFound = false;
-        for (Iterator<String> iter = keywords.iterator(); iter.hasNext();) {
-          String keyword = (String) iter.next();
+        for (String keyword : keywords) {
           if (nextValueIs(input, pos, keyword)) {
             keywordFound = true;
             pos = handle(pos, linkedList, keyword);
@@ -307,8 +305,7 @@ public class InFixToPostFix {
           linkedList.add(text);
           return newPos;
         }
-        for (Iterator iter = operators.iterator(); iter.hasNext();) {
-          String operator = (String) iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, newPos, operator)) {
             linkedList.add(text);
             return newPos;
@@ -340,8 +337,7 @@ public class InFixToPostFix {
           linkedList.add(propertyName);
           return propertyPos;
         }
-        for (Iterator iter = operators.iterator(); iter.hasNext();) {
-          String operator = (String) iter.next();
+        for (String operator : operators) {
           if (nextValueIs(input, propertyPos, operator)) {
             linkedList.add(propertyName);
             return propertyPos;

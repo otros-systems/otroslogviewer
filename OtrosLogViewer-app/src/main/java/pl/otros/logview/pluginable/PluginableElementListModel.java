@@ -23,15 +23,15 @@ import java.util.Comparator;
 
 public class PluginableElementListModel<T extends PluginableElement> extends AbstractListModel implements PluginableElementEventListener<T> {
 
-  private ArrayList<T> list;
-  private Comparator<T> pluginableElementByNameComparator;
-  private PluginableElementsContainer<T> container;
+  private final ArrayList<T> list;
+  private final Comparator<T> pluginableElementByNameComparator;
+  private final PluginableElementsContainer<T> container;
 
   public PluginableElementListModel(PluginableElementsContainer<T> container) {
     this.container = container;
     Collection<T> pluginablesList = container.getElements();
-    list = new ArrayList<T>(pluginablesList.size());
-    pluginableElementByNameComparator = new PlugiableByNameComparator<T>();
+    list = new ArrayList<>(pluginablesList.size());
+    pluginableElementByNameComparator = new PlugiableByNameComparator<>();
     list.addAll(pluginablesList);
     Collections.sort(list, pluginableElementByNameComparator);
     container.addListener(this);

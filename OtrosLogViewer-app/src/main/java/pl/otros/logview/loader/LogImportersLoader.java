@@ -15,31 +15,30 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.importer.*;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
-import pl.otros.logview.parser.JulSimpleFormmaterParser;
+import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.LogParser;
+import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Collectors;
 
 public class LogImportersLoader {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(LogImportersLoader.class.getName());
-  private BaseLoader baseLoader = new BaseLoader();
+  private final BaseLoader baseLoader = new BaseLoader();
 
   public Collection<LogImporter> loadInternalLogImporters() throws InitializationException {
-    ArrayList<LogImporter> list = new ArrayList<LogImporter>();
+    ArrayList<LogImporter> list = new ArrayList<>();
 
     Properties p = new Properties();
 
@@ -47,7 +46,7 @@ public class LogImportersLoader {
     xmlLogImporter2.init(p);
     list.add(xmlLogImporter2);
 
-    JulSimpleFormmaterParser julSimpleFormmaterParser = new JulSimpleFormmaterParser();
+    JulSimpleFormatterParser julSimpleFormmaterParser = new JulSimpleFormatterParser();
     LogImporterUsingParser julImporter = new LogImporterUsingParser(julSimpleFormmaterParser);
     julImporter.init(p);
     list.add(julImporter);
@@ -69,49 +68,37 @@ public class LogImportersLoader {
   }
 
   public Collection<LogImporter> load(File dir) {
-    Set<LogImporter> logImporters = new HashSet<LogImporter>();
+    Set<LogImporter> logImporters = new HashSet<>();
     if (!dir.exists()) {
       // dir not exist!
-      return new ArrayList<LogImporter>();
+      return new ArrayList<>();
     }
-    File[] files = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        if (pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip")) {
-          return true;
-        }
-        return false;
-      }
-
-    });
-    for (int i = 0; i < files.length; i++) {
-      Collection<LogImporter> m = null;
+    File[] files = dir.listFiles(pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar") || pathname.getName().endsWith(".zip"));
+    for (File file : files) {
+      Collection<LogImporter> m;
       try {
-        if (files[i].isDirectory()) {
-          m = loadFromDir(files[i]);
+        if (file.isDirectory()) {
+          m = loadFromDir(file);
         } else {
-          m = loadFromJar(files[i]);
+          m = loadFromJar(file);
         }
         logImporters.addAll(m);
 
       } catch (IOException e) {
         // TODO Auto-generated catch block
-        LOGGER.error( "IOException", e);
+        LOGGER.error("IOException", e);
       } catch (ClassNotFoundException e) {
         // TODO Auto-generated catch block
-        LOGGER.error( "ClassNotFoundException", e);
+        LOGGER.error("ClassNotFoundException", e);
       }
     }
     return logImporters;
   }
 
   private Collection<LogImporter> loadFromJar(File file) throws IOException, ClassNotFoundException {
-    ArrayList<LogImporter> importers = new ArrayList<LogImporter>();
+    ArrayList<LogImporter> importers = new ArrayList<>();
     Collection<LogImporter> implementationClasses = baseLoader.loadFromJar(file, LogImporter.class);
-    for (LogImporter logImporter : implementationClasses) {
-      importers.add(logImporter);
-    }
+    importers.addAll(implementationClasses.stream().collect(Collectors.toList()));
 
     Collection<LogParser> logParsers = baseLoader.loadFromJar(file, LogParser.class);
     for (LogParser logParser : logParsers) {
@@ -124,15 +111,8 @@ public class LogImportersLoader {
 
   public Collection<LogImporter> loadPropertyPatternFileFromDir(File dir)
   throws InitializationException {
-    ArrayList<LogImporter> logImporters = new ArrayList<LogImporter>();
-    File[] listFiles = dir.listFiles(new FileFilter() {
-
-      @Override
-      public boolean accept(File pathname) {
-        return (pathname.isFile() && pathname.getName().endsWith("pattern"));
-      }
-
-    });
+    ArrayList<LogImporter> logImporters = new ArrayList<>();
+    File[] listFiles = dir.listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith("pattern")));
     if (listFiles != null) {
       StringBuilder exceptionMessages = new StringBuilder();
       for (File file : listFiles) {
@@ -151,7 +131,12 @@ public class LogImportersLoader {
             LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);
             logImporter.init(p);
             logImporters.add(logImporter);
-          } else {
+          } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE,"").equals("json")){
+            final JsonLogParser jsonLogParser = new JsonLogParser();
+            jsonLogParser.init(p);
+            logImporters.add(new LogImporterUsingParser(jsonLogParser));
+          }
+          else {
             LOGGER.error( "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
           }
         } catch (Exception e) {
@@ -171,6 +156,6 @@ public class LogImportersLoader {
   // TODO
   private ArrayList<LogImporter> loadFromDir(File file) {
 
-    return new ArrayList<LogImporter>();
+    return new ArrayList<>();
   }
 }

@@ -20,7 +20,6 @@ import org.apache.commons.configuration.DataConfiguration;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 
 public class StyleProperties {
 
@@ -37,16 +36,15 @@ public class StyleProperties {
     if (group <= 0) {
       groupSuffix = "";
     }
-    StringBuilder sb = new StringBuilder();
-    sb.append(styleConfig.getString(PROP_FONT_FAMILY + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_FONT_SIZE + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_FONT_BOLD + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_FONT_ITALIC + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_FONT_UNDERLINE + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_BACKGROUND + groupSuffix, ""));
-    sb.append(styleConfig.getString(PROP_FOREGROUND + groupSuffix, ""));
+    String sb = styleConfig.getString(PROP_FONT_FAMILY + groupSuffix, "") +
+      styleConfig.getString(PROP_FONT_SIZE + groupSuffix, "") +
+      styleConfig.getString(PROP_FONT_BOLD + groupSuffix, "") +
+      styleConfig.getString(PROP_FONT_ITALIC + groupSuffix, "") +
+      styleConfig.getString(PROP_FONT_UNDERLINE + groupSuffix, "") +
+      styleConfig.getString(PROP_BACKGROUND + groupSuffix, "") +
+      styleConfig.getString(PROP_FOREGROUND + groupSuffix, "");
 
-    return sb.toString().trim().length() > 0;
+    return sb.trim().length() > 0;
 
   }
 

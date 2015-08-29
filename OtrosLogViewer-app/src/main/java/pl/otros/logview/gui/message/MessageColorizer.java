@@ -18,17 +18,16 @@ package pl.otros.logview.gui.message;
 import pl.otros.logview.pluginable.PluginableElement;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import java.util.Collection;
 
 public interface MessageColorizer extends PluginableElement {
 
-  public static int MESSAGE_COLORIZER_VERSION_1 = 1;
-	public static int MESSAGE_COLORIZER_VERSION_2 = 2;
-	public static int MESSAGE_COLORIZER_VERSION_CURRENT = MESSAGE_COLORIZER_VERSION_2;
+  int MESSAGE_COLORIZER_VERSION_1 = 1;
+	int MESSAGE_COLORIZER_VERSION_2 = 2;
+	int MESSAGE_COLORIZER_VERSION_CURRENT = MESSAGE_COLORIZER_VERSION_2;
 
-  public abstract boolean colorizingNeeded(String message);
+  boolean colorizingNeeded(String message);
 
-  public abstract Collection<MessageFragmentStyle> colorize(String textToColorize) throws BadLocationException;
+  Collection<MessageFragmentStyle> colorize(String textToColorize) throws BadLocationException;
 
 }

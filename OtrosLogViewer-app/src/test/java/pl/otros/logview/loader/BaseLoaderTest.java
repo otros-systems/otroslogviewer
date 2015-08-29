@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 public class BaseLoaderTest {
-  private BaseLoader baseLoader = new BaseLoader();
+  private final BaseLoader baseLoader = new BaseLoader();
 
   @Test
   public void testLoad() throws URISyntaxException {

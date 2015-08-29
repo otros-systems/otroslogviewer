@@ -36,7 +36,7 @@ public enum TableColumns {
   LOGGER_NAME("Logger", 14), //
   LOG_SOURCE("Source", 15);//
 
-  private static HashMap<Integer, TableColumns> map = new HashMap<Integer, TableColumns>();
+  private static final HashMap<Integer, TableColumns> map = new HashMap<>();
   static {
     TableColumns[] values = TableColumns.values();
     for (TableColumns tableColumns : values) {
@@ -44,7 +44,7 @@ public enum TableColumns {
     }
   }
 
-  public static final TableColumns[] JUL_COLUMNS = new TableColumns[] { TableColumns.CLASS,//
+  public static final TableColumns[] JUL_COLUMNS = { TableColumns.CLASS,//
       TableColumns.ID,//
       TableColumns.LEVEL,//
       TableColumns.MARK,//
@@ -56,7 +56,7 @@ public enum TableColumns {
 
   };
 
-  public static final TableColumns[] ALL_WITHOUT_LOG_SOURCE = new TableColumns[] { TableColumns.CLASS,//
+  public static final TableColumns[] ALL_WITHOUT_LOG_SOURCE = { TableColumns.CLASS,//
       TableColumns.ID, //
       TableColumns.TIME, //
       TableColumns.LEVEL, //
@@ -74,10 +74,10 @@ public enum TableColumns {
 
   };
 
-  private String name;
-  private int column;
+  private final String name;
+  private final int column;
 
-  private TableColumns(String name, int column) {
+  TableColumns(String name, int column) {
     this.name = name;
     this.column = column;
   }

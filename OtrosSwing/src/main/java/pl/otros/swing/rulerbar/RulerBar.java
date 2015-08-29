@@ -20,16 +20,15 @@ public class RulerBar extends JComponent implements MarkerModelListener {
   private final MarkerModel markerModel;
   private final Map<Range, Marker> tooltips;
   private final List<MarkerClickListener> listenersList;
-  private Dimension dimension;
   private Marker itemsWithFocus;
 
   public RulerBar(MarkerModel model) {
     super();
     this.markerModel = model;
-    listenersList = new ArrayList<MarkerClickListener>();
-    tooltips = new HashMap<Range, Marker>();
+    listenersList = new ArrayList<>();
+    tooltips = new HashMap<>();
     model.addMarkerModelListener(this);
-    dimension = new Dimension(8, 16);
+    Dimension dimension = new Dimension(8, 16);
     setMinimumSize(dimension);
     setSize(dimension);
     setPreferredSize(dimension);
@@ -37,7 +36,7 @@ public class RulerBar extends JComponent implements MarkerModelListener {
 
       @Override
       public void mouseMoved(MouseEvent e) {
-        calculeteTooltipAndCursor(e.getPoint());
+        calculateTooltipAndCursor(e.getPoint());
       }
 
       @Override
@@ -90,7 +89,7 @@ public class RulerBar extends JComponent implements MarkerModelListener {
     return markerModel;
   }
 
-  public void calculeteTooltipAndCursor(Point point) {
+  public void calculateTooltipAndCursor(Point point) {
     itemsWithFocus = null;
     String tooltip = null;
     Cursor cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);

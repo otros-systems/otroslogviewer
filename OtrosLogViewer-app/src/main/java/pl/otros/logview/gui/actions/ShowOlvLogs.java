@@ -23,8 +23,6 @@ import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.logging.GuiAppender;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 
 public class ShowOlvLogs extends OtrosAction {
 
@@ -46,13 +44,9 @@ public class ShowOlvLogs extends OtrosAction {
       logViewPanelWrapper = new LogViewPanelWrapper("Olv logs", null, TableColumns.JUL_COLUMNS, dataTableModel,getOtrosApplication());
       logViewPanelWrapper.goToLiveMode();
 
-      logViewPanelWrapper.addHierarchyListener(new HierarchyListener() {
-
-        @Override
-        public void hierarchyChanged(HierarchyEvent e) {
-          if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
-            GuiAppender.stopAppender();
-          }
+      logViewPanelWrapper.addHierarchyListener(e1 -> {
+        if (e1.getChangeFlags() == 1 && e1.getChanged().getParent() == null) {
+          GuiAppender.stopAppender();
         }
       });
     }

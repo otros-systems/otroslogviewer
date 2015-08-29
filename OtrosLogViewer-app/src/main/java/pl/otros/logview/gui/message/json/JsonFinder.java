@@ -13,7 +13,7 @@ public class JsonFinder {
     }
 
     protected ArrayList<SubText> getSubTexts(List<Integer> ints) {
-        final ArrayList<SubText> subTexts = new ArrayList<SubText>();
+        final ArrayList<SubText> subTexts = new ArrayList<>();
         int startPosition = 0;
         int lastValue = 0;
         for (int i = 0; i < ints.size(); i++) {
@@ -29,7 +29,7 @@ public class JsonFinder {
     }
 
     protected List<Integer> countParenthesis(String string) {
-        final List<Integer> openParenthesis = new ArrayList<Integer>(string.length());
+        final List<Integer> openParenthesis = new ArrayList<>(string.length());
         int currentValue = 0;
         boolean escaped = false;
         boolean inString = false;

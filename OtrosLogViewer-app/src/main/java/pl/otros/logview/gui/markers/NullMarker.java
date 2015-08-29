@@ -22,7 +22,7 @@ public class NullMarker extends AbstractAutomaticMarker {
 
   private static final String NAME = "'Null' in message";
   private static final String DESCRIPTION = "Marks/unmakrs logs with 'null' in message";
-  private static final String[] GROUPS = new String[] { "", "Errors" };
+  private static final String[] GROUPS = { "", "Errors" };
 
   public NullMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

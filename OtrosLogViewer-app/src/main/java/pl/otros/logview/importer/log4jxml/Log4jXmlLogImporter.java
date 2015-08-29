@@ -34,7 +34,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
 
 	private static final int DEFAULT_PARSE_BUFFER_SIZE = 16 * 1024;	
 	private static final String LOG4J_XML_LOG_IMPORTER_DECODER = "Log4jXmlLogImporter.decoder";
-	private int parseBufferSize =DEFAULT_PARSE_BUFFER_SIZE;
+	private final int parseBufferSize =DEFAULT_PARSE_BUFFER_SIZE;
 	
 	public Log4jXmlLogImporter() {
 		super("Log4j xml", "Parser log4j xml");
@@ -96,9 +96,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
 			decoder = XMLDecoder.class.newInstance();
 			parsingContext.getCustomConextProperties().put(
 					LOG4J_XML_LOG_IMPORTER_DECODER, decoder);
-		} catch (InstantiationException e) {
-			throw new RuntimeException("Cant create XMLDecoder", e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("Cant create XMLDecoder", e);
 		}
 	}

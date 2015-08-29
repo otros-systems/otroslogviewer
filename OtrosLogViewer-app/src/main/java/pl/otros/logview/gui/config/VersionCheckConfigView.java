@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class VersionCheckConfigView extends AbstractConfigView implements InMainConfig {
   private final JCheckBox checkCombo;
-  private JPanel panel;
+  private final JPanel panel;
 
   public VersionCheckConfigView() {
     super("versionCheck", "Version check", "Check for new version");

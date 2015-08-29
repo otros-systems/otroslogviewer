@@ -2,5 +2,5 @@ package pl.otros.swing.rulerbar;
 
 public interface MarkerClickListener {
 
-  public void markerClicked(Marker marker);
+  void markerClicked(Marker marker);
 }

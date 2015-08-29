@@ -24,20 +24,20 @@ import java.util.Properties;
 
 public interface LogFilter extends PluginableElement {
 
-  public static int LOG_FILTER_VERSION_1 = 1;
+  int LOG_FILTER_VERSION_1 = 1;
 
-  public String getName();
+  String getName();
 
-  public void init(Properties properties, LogDataTableModel logDataTableModel);
+  void init(Properties properties, LogDataTableModel logDataTableModel);
 
-  public boolean accept(LogData logData, int row);
+  boolean accept(LogData logData, int row);
 
-  public void setEnable(boolean enable);
+  void setEnable(boolean enable);
 
-  public boolean isEnable();
+  boolean isEnable();
 
-  public Component getGUI();
+  Component getGUI();
 
-  public void setValueChangeListener(LogFilterValueChangeListener listener);
+  void setValueChangeListener(LogFilterValueChangeListener listener);
 
 }

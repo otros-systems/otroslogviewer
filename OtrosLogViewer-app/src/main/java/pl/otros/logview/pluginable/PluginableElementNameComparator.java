@@ -13,7 +13,7 @@ public class PluginableElementNameComparator implements Comparator<PluginableEle
         return name1.compareTo(name2);
       } else if (name1 ==null){
         return -1;
-      }   else if (name2 == null){
+      }   else {
         return 1;
       }
 

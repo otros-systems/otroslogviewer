@@ -20,10 +20,10 @@ import java.util.regex.Pattern;
 
 public class Message {
 
-  private MessageType type;
+  private final MessageType type;
   private String message = "";
-  private String values = "";
-  private static Pattern getExitValuesPattern = Pattern.compile("Exit, return value = (.*)");
+  private final String values = "";
+  private static final Pattern getExitValuesPattern = Pattern.compile("Exit, return value = (.*)");
 
   public Message(String m) {
     m = m.toLowerCase();
