@@ -17,15 +17,10 @@ package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import org.jdesktop.swingx.JXComboBox;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.gui.*;
 import pl.otros.logview.gui.actions.search.AcceptConditionSearchMatcher;
 import pl.otros.logview.gui.actions.search.RegexMatcher;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
@@ -59,10 +54,10 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
     }
     JTable table = lvFrame.getLogViewPanel().getTable();
     LogDataTableModel model = lvFrame.getDataTableModel();
-		JXComboBox searchField = getOtrosApplication().getSearchField();
+		JTextField searchField = getOtrosApplication().getSearchField();
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
-		int marked = markAllFound(table, model, searchField.getSelectedItem().toString().trim(), markerColors);
-		statusObserver.updateStatus(marked + " messages marked for string \"" + searchField.getSelectedItem().toString().trim() + "\"");
+		int marked = markAllFound(table, model, searchField.getText().trim(), markerColors);
+		statusObserver.updateStatus(marked + " messages marked for string \"" + searchField.getText().trim() + "\"");
   }
 
   public int markAllFound(JTable table, LogDataTableModel dataTableModel, String string, MarkerColors markerColors) {

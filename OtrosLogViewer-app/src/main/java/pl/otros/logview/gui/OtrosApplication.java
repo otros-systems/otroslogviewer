@@ -19,6 +19,7 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.MarkerColors;
+import pl.otros.logview.gui.services.persist.PersistService;
 import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.gui.services.Services;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -34,7 +35,6 @@ import java.util.List;
  * User: Krzysztof Otrebski
  * Date: 3/29/12
  * Time: 6:57 AM
- * To change this template use File | Settings | File Templates.
  */
 public class OtrosApplication {
   private DataConfiguration configuration = null;
@@ -42,18 +42,20 @@ public class OtrosApplication {
   private StatusObserver statusObserver;
   private JFrame applicationJFrame;
   private JTabbedPane jTabbedPane;
-  private JXComboBox searchField;
+  private JTextField searchField;
   private MarkerColors selectedMarkColors;
   private JMenu pluginsMenu;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private AppProperties appProperties;
+  private List<MenuActionProvider> menuActionProviders;
+  private PersistService persistService;
   private final List<MenuActionProvider> menuActionProviders;
 
 
   private Services services;
 
   public OtrosApplication(){
-    menuActionProviders= new ArrayList<>();
+    menuActionProviders=new ArrayList<MenuActionProvider>();
     appProperties = new AppProperties();
   }
 
@@ -85,7 +87,7 @@ public class OtrosApplication {
     this.pluginsMenu = pluginsMenu;
   }
 
-  public JXComboBox getSearchField() {
+  public JTextField getSearchField() {
     return searchField;
   }
 
@@ -201,7 +203,15 @@ public class OtrosApplication {
    * @return
    */
   public List<MenuActionProvider> getLogViewPanelMenuActionProvider(){
-    return new ArrayList<>(menuActionProviders);
+    return new ArrayList<MenuActionProvider>(menuActionProviders);
+  }
+
+  public PersistService getPersistService() {
+    return persistService;
+  }
+
+  public void setPersistService(PersistService persistService) {
+    this.persistService = persistService;
   }
 }
 
