@@ -17,7 +17,7 @@ public class LogbackUtil {
   public static LogDataBuilder translate(ILoggingEvent ev) {
     final LogDataBuilder builder = new LogDataBuilder()
       .withLoggerName(ev.getLoggerName())
-      .withMessage(ev.getMessage())
+      .withMessage(ev.getFormattedMessage())
       .withLevel(convertLevel(ev.getLevel()))
       .withProperties(ev.getMDCPropertyMap())
       .withDate(new Date(ev.getTimeStamp()))
