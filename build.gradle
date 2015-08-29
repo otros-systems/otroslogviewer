@@ -35,6 +35,10 @@ subprojects {
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            url "https://bintray.com/artifact/download/otros-systems/maven"
+        }
+        //https://oss.sonatype.org/content/repositories
 
     }
 }
@@ -44,6 +48,7 @@ project(':Common-libs') {
 
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
+        compile 'pl.otros.swing.suggest:OtrosSuggestBox:0.1'
         compile 'com.beust:jcommander:1.29'
         compile 'com.github.insubstantial:trident:7.1'
         compile 'com.google.guava:guava:16.0.1'

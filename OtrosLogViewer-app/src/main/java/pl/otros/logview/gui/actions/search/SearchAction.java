@@ -15,7 +15,6 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import org.apache.commons.configuration.DataConfiguration;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
@@ -28,7 +27,6 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SearchAction extends OtrosAction {
 
@@ -52,11 +50,13 @@ public class SearchAction extends OtrosAction {
 	private SearchEngine searchEngine;
 	private MarkerColors markerColors = MarkerColors.Aqua;
 	private final SearchDirection searchDirection;
+  private final SearchListener searchListener;
 
-	public SearchAction(OtrosApplication otrosApplication, SearchDirection searchDirection) {
+  public SearchAction(OtrosApplication otrosApplication, SearchDirection searchDirection, SearchListener searchListener) {
 		super(otrosApplication);
 		this.searchDirection = searchDirection;
-		if (searchDirection.equals(SearchDirection.FORWARD)) {
+    this.searchListener = searchListener;
+    if (searchDirection.equals(SearchDirection.FORWARD)) {
 			this.putValue(Action.NAME, "Next");
 			this.putValue(Action.SMALL_ICON, Icons.ARROW_DOWN);
 		} else {
@@ -69,15 +69,17 @@ public class SearchAction extends OtrosAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
-		String text = getOtrosApplication().getSearchField().getSelectedItem().toString().trim();
+		String text = getOtrosApplication().getSearchField().getText().trim();
 		if (text.trim().length() == 0) {
 			statusObserver.updateStatus("No search criteria", StatusObserver.LEVEL_WARNING);
 			return;
 		}
+
 		performSearch(text, searchDirection);
 	}
 
 	public void performSearch(String text, SearchDirection direction) {
+    searchListener.searchPerformed(searchMode,text);
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
 		JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
 		LogViewPanelWrapper lvPanel = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
@@ -90,14 +92,11 @@ public class SearchAction extends OtrosAction {
 		SearchContext context = new SearchContext();
 		context.setDataTableModel(lvPanel.getDataTableModel());
 		SearchMatcher searchMatcher = null;
-		String confKey = null;
 		if (SearchMode.STRING_CONTAINS.equals(searchMode)) {
 			searchMatcher = new StringContainsSearchMatcher(text);
-			confKey = ConfKeys.SEARCH_LAST_STRING;
 		} else if (SearchMode.REGEX.equals(searchMode)) {
 			try {
 				searchMatcher = new RegexMatcher(text);
-				confKey = ConfKeys.SEARCH_LAST_REGEX;
 			} catch (Exception e) {
 				statusObserver.updateStatus("Error in regular expression: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
 				return;
@@ -107,21 +106,11 @@ public class SearchAction extends OtrosAction {
 			try {
 				acceptCondition = new QueryAcceptCondition(text);
 				searchMatcher = new AcceptConditionSearchMatcher(acceptCondition);
-				confKey = ConfKeys.SEARCH_LAST_QUERY;
 			} catch (RuleException e) {
 				statusObserver.updateStatus("Wrong query rule: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
 				return;
 
 			}
-		}
-		updateList(confKey, getOtrosApplication().getConfiguration(), text);
-		DefaultComboBoxModel model = (DefaultComboBoxModel) getOtrosApplication().getSearchField().getModel();
-		model.removeElement(text);
-		model.insertElementAt(text, 0);
-		model.setSelectedItem(text);
-		int maxCount = getOtrosApplication().getConfiguration().getInt(ConfKeys.SEARCH_LAST_COUNT, 30);
-		while (model.getSize() > maxCount) {
-			model.removeElementAt(model.getSize() - 1);
 		}
 
 		context.setSearchMatcher(searchMatcher);
@@ -142,18 +131,6 @@ public class SearchAction extends OtrosAction {
 		} else {
 			statusObserver.updateStatus(String.format("\"%s\" not found", text), StatusObserver.LEVEL_WARNING);
 		}
-	}
-
-	private void updateList(String configurationKey, DataConfiguration configuration, String text) {
-		List<Object> list = configuration.getList(configurationKey);
-		if (list.contains(text)) {
-			list.remove(text);
-		}
-		list.add(0, text);
-		if (list.size() > configuration.getInt(ConfKeys.SEARCH_LAST_COUNT, 30)) {
-			list.remove(list.size() - 1);
-		}
-		configuration.setProperty(configurationKey, list);
 	}
 
 	private void scrollToSearchResult(ArrayList<String> toHighlight, JTextPane textPane) {

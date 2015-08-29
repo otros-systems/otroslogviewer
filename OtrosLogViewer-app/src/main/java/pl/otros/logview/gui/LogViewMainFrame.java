@@ -26,8 +26,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
-import org.jdesktop.swingx.JXComboBox;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.MarkerColors;
@@ -43,17 +41,17 @@ import pl.otros.logview.gui.actions.globalhotkeys.KeyboardTabSwitcher;
 import pl.otros.logview.gui.actions.read.DragAndDropFilesHandler;
 import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterActionListener;
 import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
-import pl.otros.logview.gui.actions.search.SearchAction;
+import pl.otros.logview.gui.actions.search.*;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
-import pl.otros.logview.gui.actions.search.SearchDirection;
-import pl.otros.logview.gui.actions.search.SearchFieldKeyListener;
-import pl.otros.logview.gui.actions.search.SearchModeValidatorDocumentListener;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
 import pl.otros.logview.gui.services.jumptocode.ServicesImpl;
+import pl.otros.logview.gui.suggestion.PersistedSuggestionSource;
+import pl.otros.logview.gui.suggestion.SearchSuggestionRenderer;
+import pl.otros.logview.gui.suggestion.SearchSuggestionSource;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
@@ -74,6 +72,7 @@ import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
+import pl.otros.swing.suggest.SuggestDecorator;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.imageio.ImageIO;
@@ -82,15 +81,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -110,14 +110,14 @@ public class LogViewMainFrame extends JFrame {
   private DataConfiguration configuration;
   private CardLayout cardLayout;
   private JPanel cardLayoutPanel;
-  private JXComboBox searchField;
+  private JTextField searchField;
   private AllPluginables allPluginables;
   private PluginableElementsContainer<LogImporter> logImportersContainer;
   private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
-  private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
+  private PersistedSuggestionSource searchSuggestionSource;
 
   public LogViewMainFrame(DataConfiguration c) throws InitializationException {
     super();
@@ -302,7 +302,7 @@ public class LogViewMainFrame extends JFrame {
           // Not sure retrieving this from most appropriate Apache config
           // object.
           mf.exitAction.setConfirm(
-              c.getBoolean("generalBehavior.confirmExit", true));
+            c.getBoolean("generalBehavior.confirmExit", true));
           /* TODO:  Implement User Preferences screen or checkbox on exit widget
            * that will update the same config object something like:
            *     c.setProperty("generalBehavior.confirmExit", newValue);
@@ -325,7 +325,7 @@ public class LogViewMainFrame extends JFrame {
           });
           mf.addWindowListener(mf.exitAction);
           SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-              mf.otrosApplication.getAppProperties().getCurrentDir());
+            mf.otrosApplication.getAppProperties().getCurrentDir());
         } catch (InitializationException e) {
           LOGGER.error("Cannot initialize main frame", e);
         }
@@ -465,12 +465,15 @@ public class LogViewMainFrame extends JFrame {
   private void initToolbar() {
     toolBar = new JToolBar();
     final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
-    final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD);
-    final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE);
-    searchFieldCbxModel = new DefaultComboBoxModel();
-    searchField = new JXComboBox(searchFieldCbxModel);
+    searchField = new JTextField();
+
+    searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS),otrosApplication.getServices().getPersistService());
+    SuggestDecorator.decorate(searchField, searchSuggestionSource, new SearchSuggestionRenderer(), s -> searchField.setText(s.getFullContent()));
     searchField.setEditable(true);
-    AutoCompleteDecorator.decorate(searchField);
+;
+    final SearchListener searchListener = searchSuggestionSource::addHistory;
+    final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD,searchListener);
+    final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE,searchListener);
     searchField.setMinimumSize(new Dimension(150, 10));
     searchField.setPreferredSize(new Dimension(250, 10));
     searchField.setToolTipText("<HTML>Enter text to search.<BR/>" + "Enter - search next,<BR/>Alt+Enter search previous,<BR/>"
@@ -478,13 +481,12 @@ public class LogViewMainFrame extends JFrame {
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
-        JTextComponent editorComponent = (JTextComponent) searchField.getEditor().getEditorComponent();
-        int stringEnd = editorComponent.getSelectionStart();
+        int stringEnd = searchField.getSelectionStart();
         if (stringEnd < 0) {
-          stringEnd = editorComponent.getText().length();
+          stringEnd = searchField.getText().length();
         }
         try {
-          String selectedText = editorComponent.getText(0, stringEnd);
+          String selectedText = searchField.getText(0, stringEnd);
           if (StringUtils.isBlank(selectedText)) {
             return;
           }
@@ -496,15 +498,14 @@ public class LogViewMainFrame extends JFrame {
         }
       }
     };
-    JTextComponent searchFieldTextComponent = (JTextComponent) searchField.getEditor().getEditorComponent();
-    searchFieldTextComponent.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+    searchField.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
       @Override
       protected void documentChanged(DocumentEvent e) {
         delayedSearchResultUpdate.performAction();
       }
     });
     final MarkAllFoundAction markAllFoundAction = new MarkAllFoundAction(otrosApplication);
-    final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener((JTextField) searchField.getEditor().getEditorComponent(), observer,
+    final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener(searchField, observer,
         SearchMode.STRING_CONTAINS);
     SearchMode searchModeFromConfig = configuration.get(SearchMode.class, "gui.searchMode", SearchMode.STRING_CONTAINS);
     final String lastSearchString;
@@ -522,9 +523,7 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.warn("Unknown search mode " + searchModeFromConfig);
       lastSearchString = "";
     }
-    Component editorComponent = searchField.getEditor().getEditorComponent();
-    if (editorComponent instanceof JTextField) {
-      final JTextField sfTf = (JTextField) editorComponent;
+      final JTextField sfTf = searchField;
       sfTf.getDocument().addDocumentListener(searchValidatorDocumentListener);
       sfTf.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
         @Override
@@ -541,25 +540,21 @@ public class LogViewMainFrame extends JFrame {
       });
       sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
       sfTf.setText(lastSearchString);
-    }
     searchMode.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         SearchMode mode = null;
         boolean validationEnabled = false;
-        String confKey = null;
-        String lastSearch = ((JTextField) searchField.getEditor().getEditorComponent()).getText();
+        String lastSearch = searchField.getText();
         if (searchMode.getSelectedIndex() == 0) {
           mode = SearchMode.STRING_CONTAINS;
           searchValidatorDocumentListener.setSearchMode(mode);
           validationEnabled = false;
           searchMode.setToolTipText("Checking if log message contains string (case is ignored)");
-          confKey = ConfKeys.SEARCH_LAST_STRING;
         } else if (searchMode.getSelectedIndex() == 1) {
           mode = SearchMode.REGEX;
           validationEnabled = true;
           searchMode.setToolTipText("Checking if log message matches regular expression (case is ignored)");
-          confKey = ConfKeys.SEARCH_LAST_REGEX;
         } else if (searchMode.getSelectedIndex() == 2) {
           mode = SearchMode.QUERY;
           validationEnabled = true;
@@ -569,7 +564,6 @@ public class LogViewMainFrame extends JFrame {
               "See wiki for more info<BR/>" + //
               "</HTML>";
           searchMode.setToolTipText(querySearchTooltip);
-          confKey = ConfKeys.SEARCH_LAST_QUERY;
         }
         searchValidatorDocumentListener.setSearchMode(mode);
         searchValidatorDocumentListener.setEnable(validationEnabled);
@@ -578,12 +572,8 @@ public class LogViewMainFrame extends JFrame {
         markAllFoundAction.setSearchMode(mode);
         configuration.setProperty("gui.searchMode", mode);
         searchResultColorizer.setSearchMode(mode);
-        List<Object> list = configuration.getList(confKey);
-        searchFieldCbxModel.removeAllElements();
-        for (Object o : list) {
-          searchFieldCbxModel.addElement(o);
-        }
-        searchField.setSelectedItem(lastSearch);
+        searchSuggestionSource.setSearchMode(mode);
+        searchField.setText(lastSearch);
       }
     });
     searchMode.setSelectedIndex(selectedSearchMode);
