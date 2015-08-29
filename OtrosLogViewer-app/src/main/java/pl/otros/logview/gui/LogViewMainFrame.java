@@ -108,7 +108,7 @@ public class LogViewMainFrame extends JFrame {
   private DataConfiguration configuration;
   private CardLayout cardLayout;
   private JPanel cardLayoutPanel;
-  private JXComboBox searchField;
+  private JTextField searchField;
   private AllPluginables allPluginables;
   private PluginableElementsContainer<LogImporter> logImportersContainer;
   private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
