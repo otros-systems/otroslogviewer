@@ -85,8 +85,10 @@ project(':Common-libs') {
 
 
 project(':OtrosStarter') {
-    def today = new Date().format("yyyy-MM-dd")
 
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    def today = new Date().format("yyyy-MM-dd")
     jar {
         manifest {
             attributes(
