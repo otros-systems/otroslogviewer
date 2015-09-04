@@ -99,8 +99,8 @@ public class OtrosApplication {
     if (componentAt instanceof LogViewPanelWrapper) {
       LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
       return logViewPanelWrapper.getLogViewPanel();
-    } else if (componentAt instanceof Log4jPatternParserEditor) {
-      Log4jPatternParserEditor patternParserEditor = (Log4jPatternParserEditor) componentAt;
+    } else if (componentAt instanceof LogPatternParserEditor) {
+      LogPatternParserEditor patternParserEditor = (LogPatternParserEditor) componentAt;
       LogViewPanel logViewPanel = patternParserEditor.getLogViewPanel();
       return logViewPanel;
     }

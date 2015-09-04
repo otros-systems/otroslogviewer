@@ -19,11 +19,15 @@ import jsyntaxpane.DefaultSyntaxKit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.VFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporterUsingParser;
 import pl.otros.logview.io.Utils;
+import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
@@ -37,12 +41,9 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class LogPatternParserEditor extends JPanel {
 
-public class Log4jPatternParserEditor extends JPanel {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(Log4jPatternParserEditor.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogPatternParserEditor.class.getName());
 
   private JButton loadLog;
   private JButton testParser;
@@ -57,9 +58,11 @@ public class Log4jPatternParserEditor extends JPanel {
 
   private JLabel logFileContentLabel;
 	private final OtrosApplication otrosApplication;
+  private final String logPatternText;
 
-	public Log4jPatternParserEditor(OtrosApplication otrosApplication) {
+  public LogPatternParserEditor(OtrosApplication otrosApplication, String logPatternText) {
 		this.otrosApplication = otrosApplication;
+    this.logPatternText = logPatternText;
     createGui();
     loadDefaultPropertyEditorContent();
     createActions();
@@ -155,14 +158,14 @@ public class Log4jPatternParserEditor extends JPanel {
     actionsToolBar.add(saveParser);
 
     JToolBar propertyEditorToolbar = new JToolBar();
-    JLabel labelEditProperties = new JLabel("Edit your properties: and test parser");
+    JLabel labelEditProperties = new JLabel("2. Edit your properties: and test parser");
     labelEditProperties.setFont(heading2Font);
     propertyEditorToolbar.add(labelEditProperties);
     panelEditorActions.add(propertyEditorToolbar, BorderLayout.NORTH);
     panelEditorActions.add(actionsToolBar, BorderLayout.SOUTH);
     panelEditorActions.add(new JScrollPane(propertyEditor));
 
-    logFileContentLabel = new JLabel(" Load your log file, paste from clipboard or drag and drop file. ");
+    logFileContentLabel = new JLabel("1.  Load your log file, paste from clipboard or drag and drop file. ");
     JToolBar loadToolbar = new JToolBar();
     loadToolbar.add(logFileContentLabel);
     loadToolbar.add(loadLog);
@@ -177,7 +180,7 @@ public class Log4jPatternParserEditor extends JPanel {
     northSplit.add(panelEditorActions);
 
     JPanel southPanel = new JPanel(new BorderLayout(5, 5));
-    JLabel labelParsingResult = new JLabel(" Parsing result:");
+    JLabel labelParsingResult = new JLabel("3. Parsing result:");
     labelParsingResult.setFont(heading1Font);
     southPanel.add(labelParsingResult, BorderLayout.NORTH);
     southPanel.add(logViewPanel);
@@ -195,17 +198,9 @@ public class Log4jPatternParserEditor extends JPanel {
   }
 
   private void loadDefaultPropertyEditorContent() {
-    InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("log4jDefaultPatternParser.txt");
-    if (resourceAsStream != null) {
-      String string;
-      try {
-        string = IOUtils.toString(resourceAsStream);
-        propertyEditor.setText(string);
-        propertyEditor.setCaretPosition(0);
-      } catch (IOException e) {
-        LOGGER.error("Can't load default value of property editor");
-      }
-    }
+
+    propertyEditor.setText(logPatternText);
+    propertyEditor.setCaretPosition(0);
   }
 
   public void createActions() {
@@ -222,7 +217,7 @@ public class Log4jPatternParserEditor extends JPanel {
         testParser();
       } catch (InitializationException e1){
         LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
-        JOptionPane.showMessageDialog(Log4jPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
+        JOptionPane.showMessageDialog(LogPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
             JOptionPane.ERROR_MESSAGE);
       } catch (Exception e1) {
         LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
@@ -308,7 +303,15 @@ public class Log4jPatternParserEditor extends JPanel {
   protected void testParser() throws IOException, InitializationException {
     Properties p = new Properties();
     p.load(new StringReader(propertyEditor.getText()));
-    Log4jPatternMultilineLogParser log4jParser = new Log4jPatternMultilineLogParser();
+    LogParser log4jParser =  null;
+    final String type = p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE);
+    if ("log4j".equals(type) || "log4j-native".equals(type)){
+      log4jParser = new Log4jPatternMultilineLogParser();
+    } else if (p.getProperty("type").equals("json")) {
+      log4jParser = new JsonLogParser();
+    } else {
+      throw new InitializationException("property type have to set to \"json\" or \"log4j\" ");
+    }
     log4jParser.init(p);
     LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(log4jParser);
     logViewPanel.getDataTableModel().clear();

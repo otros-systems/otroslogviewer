@@ -7,7 +7,7 @@ import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.util.Validator;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.parser.log4j.Log4jUtil;
+import pl.otros.logview.parser.I18nLevelParser;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,6 +32,7 @@ public class JsonExtractor {
 
   private String propertyLogger;
   private String propertyFile;
+  private I18nLevelParser i18nLevelParser;
 
 
   public void init(Properties properties) {
@@ -46,6 +47,8 @@ public class JsonExtractor {
     propertyLine = properties.getProperty("line", "line");
     propertyLogger = properties.getProperty("logger", "logger");
     propertyKeysToMdc = Splitter.on(",").trimResults().splitToList(properties.getProperty("mdcKeys", ""));
+
+    i18nLevelParser = new I18nLevelParser(Locale.ENGLISH);
   }
 
   public DateFormat createDateFormatter() {
@@ -93,8 +96,8 @@ public class JsonExtractor {
   Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
     LogDataBuilder builder = new LogDataBuilder();
 
-    //TODO parsing levels
-    builder.withLevel(Log4jUtil.parseLevel(map.get(propertyLevel).trim()));
+    //TODO parsing level based on custom mapping
+    builder.withLevel(i18nLevelParser.parse(map.get(propertyLevel).trim()));
     final String dateString = map.get(propertyDate);
 
     try {

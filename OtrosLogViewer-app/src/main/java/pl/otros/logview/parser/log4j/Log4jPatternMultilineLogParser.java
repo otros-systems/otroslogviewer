@@ -41,10 +41,7 @@ import org.apache.log4j.spi.ThrowableInformation;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.parser.MultiLineLogParser;
-import pl.otros.logview.parser.ParserDescription;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.parser.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -154,7 +151,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   // private SimpleDateFormat dateFormat;
   // private Rule expressionRule;
   private final String[] emptyException = { "" };
-  private final Map<String, Level> customLevelDefinitionMap = new HashMap<>();
   private boolean appendNonMatches;
   private final List<String> matchingKeywords = new ArrayList<>();
 
@@ -191,6 +187,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   private String timestampFormat = "yyyy-MM-d HH:mm:ss,SSS";
   private String logFormat;
   private String customLevelDefinitions;
+  private CustomLevelsParser customLevelsParser;
   // private String filterExpression;
   private String regexp;
   private Pattern regexpPattern;
@@ -219,39 +216,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     parserDescription.setDescription("desc");
     parserDescription.setDisplayName("displayName");
 
-  }
-
-  /**
-   * If the log file contains non-log4j level strings, they can be mapped to log4j levels using the format (android example):
-   * V=TRACE,D=DEBUG,I=INFO,W=WARN,E=ERROR,F=FATAL,S=OFF
-   * 
-   * @param customLevelDefinitions
-   *          the level definition string
-   */
-  public void setCustomLevelDefinitions(String customLevelDefinitions) {
-    this.customLevelDefinitions = customLevelDefinitions;
-  }
-
-  public String getCustomLevelDefinitions() {
-    return customLevelDefinitions;
-  }
-
-  /**
-   * Mutator. Specify a pattern from {@link java.text.SimpleDateFormat}
-   * 
-   * @param timestampFormat
-   */
-  public void setTimestampFormat(String timestampFormat) {
-    this.timestampFormat = timestampFormat;
-  }
-
-  /**
-   * Accessor
-   * 
-   * @return timestamp format
-   */
-  public String getTimestampFormat() {
-    return timestampFormat;
   }
 
   /**
@@ -420,7 +384,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   protected void initializePatterns() {
 
     // if custom level definitions exist, parse them
-    updateCustomLevelDefinitionMap();
+    customLevelsParser = new CustomLevelsParser(customLevelDefinitions);
 
     List<String> buildingKeywords = new ArrayList<>();
 
@@ -507,20 +471,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
 
     regexp = newPattern;
     LOG.fine("regexp is " + regexp);
-  }
-
-  private void updateCustomLevelDefinitionMap() {
-    if (customLevelDefinitions != null) {
-      StringTokenizer entryTokenizer = new StringTokenizer(customLevelDefinitions, ",");
-
-      customLevelDefinitionMap.clear();
-      while (entryTokenizer.hasMoreTokens()) {
-        StringTokenizer innerTokenizer = new StringTokenizer(entryTokenizer.nextToken(), "=");
-        String key = innerTokenizer.nextToken();
-        String value = innerTokenizer.nextToken();
-        customLevelDefinitionMap.put(key, Level.toLevel(value));
-      }
-    }
   }
 
   private boolean isInteger(String value) {
@@ -672,9 +622,10 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
       // first try to resolve against custom level definition map, then
       // fall back to regular levels
       level = level.trim();
-      levelImpl = customLevelDefinitionMap.get(level);
-      if (levelImpl == null) {
-        levelImpl = Level.toLevel(level.trim());
+      final Optional<Level> levelOptional = customLevelsParser.parse(level);
+      if (levelOptional.isPresent()) {
+        levelImpl = levelOptional.get();
+      } else { levelImpl = Level.toLevel(level.trim());
         if (!level.equals(levelImpl.toString())) {
           // check custom level map
           levelImpl = Level.DEBUG;
@@ -838,7 +789,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     if (StringUtils.isBlank(timestampFormat)){
       throw new InitializationException(String.format("Date format not set (property %s)",PROPERTY_DATE_FORMAT));
     }
-    customLevelDefinitions = properties.getProperty(PROPERTY_CUSTOM_LEVELS);
+    customLevelDefinitions = properties.getProperty(PROPERTY_CUSTOM_LEVELS,"");
     parserDescription.setDisplayName(properties.getProperty(PROPERTY_NAME, "?"));
     parserDescription.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, "?"));
     parserDescription.setCharset(properties.getProperty(PROPERTY_CHARSET, "UTF-8"));
@@ -859,7 +810,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
                     PROPERTY_REPATTERN, rePattern, pse.getDescription()));
         }
         // if custom level definitions exist, parse them
-        updateCustomLevelDefinitionMap();
+        customLevelsParser = new CustomLevelsParser(customLevelDefinitions);
 
         Map<Integer, String> groupMap = new HashMap<>();
         Enumeration<String> e =
