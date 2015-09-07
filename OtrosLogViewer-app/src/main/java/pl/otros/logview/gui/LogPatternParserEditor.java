@@ -185,12 +185,12 @@ public class LogPatternParserEditor extends JPanel {
     southPanel.add(labelParsingResult, BorderLayout.NORTH);
     southPanel.add(logViewPanel);
 
-    JSplitPane mainSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    final JSplitPane mainSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     mainSplit.setOneTouchExpandable(true);
     mainSplit.add(northSplit);
     mainSplit.add(southPanel);
-    mainSplit.setDividerLocation(0.5f);
 
+    addHierarchyListener(e -> mainSplit.setDividerLocation(0.5));
     add(mainSplit);
 
     propertyEditor.setContentType("text/properties");
