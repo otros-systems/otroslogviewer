@@ -7,6 +7,8 @@ import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.util.Validator;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.MarkerColors;
+import pl.otros.logview.Note;
 import pl.otros.logview.parser.I18nLevelParser;
 
 import java.text.DateFormat;
@@ -29,6 +31,9 @@ public class JsonExtractor {
   private String propertyClass;
   private String propertyMethod;
   private String propertyLine;
+  private String propertyNdc;
+  private String propertyNote;
+  private String propertyMarkerColor;
 
   private String propertyLogger;
   private String propertyFile;
@@ -46,6 +51,9 @@ public class JsonExtractor {
     propertyMethod = properties.getProperty("method", "method");
     propertyLine = properties.getProperty("line", "line");
     propertyLogger = properties.getProperty("logger", "logger");
+    propertyNdc = properties.getProperty("ndc", "ndc");
+    propertyNote = properties.getProperty("note", "note");
+    propertyMarkerColor = properties.getProperty("markerColor", "markerColor");
     propertyKeysToMdc = Splitter.on(",").trimResults().splitToList(properties.getProperty("mdcKeys", ""));
 
     i18nLevelParser = new I18nLevelParser(Locale.ENGLISH);
@@ -61,7 +69,8 @@ public class JsonExtractor {
 
   /**
    * Tries to parse log event in json form using selected date format
-   * @param s  log fragment
+   *
+   * @param s          log fragment
    * @param dateFormat instance of DateFormat
    * @return Optional of LogData if log event can be extracted, empty if not.
    */
@@ -79,17 +88,18 @@ public class JsonExtractor {
 
   /**
    * Tries convert json object in map form to log data
-   * @param map json object in map form, names as xpath separated by dots are keys.
-   *            <code>
-   *            {"a": "value1"
-   *             "b": {
-   *               "c": "value2"
-   *             }
-   *            }
-   *            </code>
-   *            will be represented by map
-   *            a   -> value1,
-   *            b.c -> value2
+   *
+   * @param map        json object in map form, names as xpath separated by dots are keys.
+   *                   <code>
+   *                   {"a": "value1"
+   *                   "b": {
+   *                   "c": "value2"
+   *                   }
+   *                   }
+   *                   </code>
+   *                   will be represented by map
+   *                   a   -> value1,
+   *                   b.c -> value2
    * @param dateParser date format
    * @return Optional of LogData in case of success or Optional.empty in case of error
    */
@@ -110,7 +120,16 @@ public class JsonExtractor {
         .withMethod(map.getOrDefault(propertyMethod, ""))
         .withLineNumber(map.getOrDefault(propertyLine, ""))
         .withFile(map.getOrDefault(propertyFile, ""))
+        .withNote(new Note(map.getOrDefault(propertyNote, "")))
+        .withNdc(map.getOrDefault(propertyNdc,""))
       ;
+      final String color = map.getOrDefault(propertyMarkerColor, "");
+      if (color != null) {
+        builder = builder
+          .withMarkerColors(MarkerColors.fromString(color))
+          .withMarked(true);
+
+      }
       //build mdc
       final Map<String, String> mdc = extractMdc(map, this.propertyKeysToMdc);
       builder = builder.withProperties(mdc);
@@ -122,7 +141,8 @@ public class JsonExtractor {
 
   /**
    * Get list of fields and populate values into map (if value for key is not empty
-   * @param map map to fill
+   *
+   * @param map  map to fill
    * @param keys list of xpaths in json files
    * @return map populated by additional xpath values
    */
@@ -135,6 +155,7 @@ public class JsonExtractor {
 
   /**
    * Convert Json object to map representation. Nested object are represented by keys like xpath (dot separated)
+   *
    * @param j Json object t convert
    * @return map representation of json object
    * @throws JSONException

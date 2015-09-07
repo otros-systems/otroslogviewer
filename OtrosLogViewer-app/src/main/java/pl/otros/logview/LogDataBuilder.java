@@ -110,4 +110,9 @@ public class LogDataBuilder {
     ld.setFile(file);
     return this;
   }
+
+  public LogDataBuilder withNdc(String ndc){
+    ld.setNDC(ndc);
+    return this;
+  }
 }
