@@ -53,8 +53,6 @@ public class LogPatternParserEditor extends JPanel {
   private JEditorPane propertyEditor;
   private LogViewPanel logViewPanel;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
-  private Font heading1Font;
-  private Font heading2Font;
 
   private JLabel logFileContentLabel;
 	private final OtrosApplication otrosApplication;
@@ -117,10 +115,7 @@ public class LogPatternParserEditor extends JPanel {
 
       @Override
       public boolean canImport(TransferSupport support) {
-        if (isText(support) || isListOfFiles(support)) {
-          return true;
-        }
-        return defaultTransferHandler.canImport(support);
+        return isText(support) || isListOfFiles(support) || defaultTransferHandler.canImport(support);
       }
 
       private boolean isListOfFiles(TransferSupport support) {
@@ -139,8 +134,8 @@ public class LogPatternParserEditor extends JPanel {
 
   private void createGui() {
     this.setLayout(new BorderLayout());
-    heading1Font = new JLabel().getFont().deriveFont(20f).deriveFont(Font.BOLD);
-    heading2Font = new JLabel().getFont().deriveFont(14f).deriveFont(Font.BOLD);
+    Font heading1Font = new JLabel().getFont().deriveFont(20f).deriveFont(Font.BOLD);
+    Font heading2Font = new JLabel().getFont().deriveFont(14f).deriveFont(Font.BOLD);
 
     loadLog = new JButton("Load log", Icons.FOLDER_OPEN);
     testParser = new JButton("Test parser", Icons.WRENCH_ARROW);
@@ -303,7 +298,7 @@ public class LogPatternParserEditor extends JPanel {
   protected void testParser() throws IOException, InitializationException {
     Properties p = new Properties();
     p.load(new StringReader(propertyEditor.getText()));
-    LogParser log4jParser =  null;
+    LogParser log4jParser;
     final String type = p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE);
     if ("log4j".equals(type) || "log4j-native".equals(type)){
       log4jParser = new Log4jPatternMultilineLogParser();
