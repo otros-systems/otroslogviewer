@@ -2,6 +2,7 @@ package pl.otros.logview.gui.suggestion;
 
 import pl.otros.logview.gui.actions.search.SearchAction;
 import pl.otros.logview.gui.services.persist.PersistService;
+import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 
 import java.util.ArrayList;
@@ -46,12 +47,12 @@ public class PersistedSuggestionSource implements SuggestionSource<SearchSuggest
     return persistService.load(KEY,new ArrayList<>());
   }
 
-  @Override
-  public List<SearchSuggestion> getSuggestions(String s) {
-    return decorate.getSuggestions(s);
-  }
-
   public void setSearchMode(SearchAction.SearchMode searchMode) {
     decorate.setSearchMode(searchMode);
+  }
+
+  @Override
+  public List<SearchSuggestion> getSuggestions(SuggestionQuery query) {
+    return decorate.getSuggestions(query);
   }
 }

@@ -1,6 +1,7 @@
 package pl.otros.logview.gui.suggestion;
 
 import pl.otros.logview.gui.actions.search.SearchAction;
+import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 
 import java.util.ArrayList;
@@ -26,12 +27,12 @@ public class SearchSuggestionSource implements SuggestionSource<SearchSuggestion
   }
 
   @Override
-  public List<SearchSuggestion> getSuggestions(String s) {
+  public List<SearchSuggestion> getSuggestions(SuggestionQuery s) {
     SuggestionSource<SearchSuggestion> source;
-    final List<String> historyForMode = getHistory()
+    final List<SuggestionQuery> historyForMode = getHistory()
       .stream()
       .filter(h -> h.getSearchMode().equals(searchMode))
-      .map(SearchHistory::getQuery)
+      .map(sh -> new SuggestionQuery(sh.getQuery(),sh.getQuery().length()))
       .collect(Collectors.toList());
     if (searchMode.equals(SearchAction.SearchMode.STRING_CONTAINS)) {
       source = new StringSearchSuggestionSource(historyForMode);

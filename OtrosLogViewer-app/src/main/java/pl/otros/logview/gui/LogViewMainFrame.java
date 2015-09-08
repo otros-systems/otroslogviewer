@@ -456,7 +456,11 @@ public class LogViewMainFrame extends JFrame {
     searchField = new JTextField();
 
     searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS),otrosApplication.getServices().getPersistService());
-    SuggestDecorator.decorate(searchField, searchSuggestionSource, new SearchSuggestionRenderer(), s -> searchField.setText(s.getFullContent()));
+    SuggestDecorator.decorate(
+      searchField,
+      searchSuggestionSource,
+      new SearchSuggestionRenderer(),
+      s -> searchField.setText(s.getFullContent()));
     searchField.setEditable(true);
 ;
     final SearchListener searchListener = searchSuggestionSource::addHistory;

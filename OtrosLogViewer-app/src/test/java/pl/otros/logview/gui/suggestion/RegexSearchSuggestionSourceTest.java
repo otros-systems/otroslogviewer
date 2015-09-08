@@ -2,6 +2,7 @@ package pl.otros.logview.gui.suggestion;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import pl.otros.swing.suggest.SuggestionQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,7 +129,7 @@ public class RegexSearchSuggestionSourceTest {
 
   @Test(dataProvider = "data")
   public void testGetSuggestions(String text,String suggestionsNewLined) throws Exception {
-    final List<SearchSuggestion> suggestions = underTest.getSuggestions(text);
+    final List<SearchSuggestion> suggestions = underTest.getSuggestions(new SuggestionQuery(text,text.length()));
     final String result = suggestions.stream().map(s -> s.getFullContent().substring(text.length())).collect(Collectors.joining("\n"));
     assertEquals(result, suggestionsNewLined);
   }
@@ -137,10 +138,10 @@ public class RegexSearchSuggestionSourceTest {
   public void testShowHistorySuggestions(){
     //given
     final List<String> history = Arrays.asList("aa", "bab", "cfs");
-    final RegexSearchSuggestionSource underTest = new RegexSearchSuggestionSource(history);
+    final RegexSearchSuggestionSource underTest = new RegexSearchSuggestionSource(history.stream().map(s->new SuggestionQuery(s,s.length())).collect(Collectors.toList()));
 
     //when
-    final List<SearchSuggestion> suggestions = underTest.getSuggestions("a");
+    final List<SearchSuggestion> suggestions = underTest.getSuggestions(new SuggestionQuery("a",1));
 
     //then
     assertEquals(suggestions.stream().map(SearchSuggestion::getFullContent).collect(Collectors.joining(",")),"aa,bab");
