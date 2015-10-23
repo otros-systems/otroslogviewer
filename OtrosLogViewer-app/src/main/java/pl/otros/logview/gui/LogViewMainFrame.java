@@ -43,6 +43,8 @@ import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterAction
 import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
 import pl.otros.logview.gui.actions.search.*;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
+import pl.otros.logview.gui.editor.json.JsonPatternParserEditor;
+import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
 import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
@@ -460,7 +462,7 @@ public class LogViewMainFrame extends JFrame {
       searchField,
       searchSuggestionSource,
       new SearchSuggestionRenderer(),
-      s -> searchField.setText(s.getFullContent()));
+      s -> searchField.setText(s.getValue().getFullContent()));
     searchField.setEditable(true);
 ;
     final SearchListener searchListener = searchSuggestionSource::addHistory;
@@ -727,8 +729,8 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
-    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt","Show Log4j pattern parser editor", "Show Log4j pattern parser editor.", Icons.WRENCH));
-    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties","Show JSON pattern parser editor", "Show JSON pattern parser editor.", Icons.JSON));
+    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt","Show Log4j pattern parser editor", "Show Log4j pattern parser editor.", Icons.WRENCH,()->new Log4jPatternParserEditor(otrosApplication,"log4jDefaultPatternParser.txt")));
+    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties","Show JSON pattern parser editor", "Show JSON pattern parser editor.", Icons.JSON,()->new JsonPatternParserEditor(otrosApplication,"jsonDefaultPatternParser.properties")));
     toolsMenu.add(new ShowMessageColorizerEditor(otrosApplication));
     toolsMenu.add(new ShowLoadedPlugins(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));

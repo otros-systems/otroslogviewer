@@ -1,19 +1,4 @@
-/*******************************************************************************
- * Copyright 2011 Krzysztof Otrebski
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
-package pl.otros.logview.gui;
+package pl.otros.logview.gui.editor;
 
 import jsyntaxpane.DefaultSyntaxKit;
 import org.apache.commons.io.IOUtils;
@@ -21,13 +6,14 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.gui.*;
+import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
 import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.importer.InitializationException;
 import pl.otros.logview.importer.LogImporterUsingParser;
 import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
@@ -41,25 +27,22 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
-public class LogPatternParserEditor extends JPanel {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(LogPatternParserEditor.class.getName());
-
+public abstract class LogPatternParserEditorBase extends JPanel {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Log4jPatternParserEditor.class.getName());
+  protected final OtrosApplication otrosApplication;
+  protected final String logPatternText;
   private JButton loadLog;
-  private JButton testParser;
   private JButton saveParser;
-
-  private JTextArea logFileContent;
-  private JEditorPane propertyEditor;
-  private LogViewPanel logViewPanel;
+  protected JTextArea logFileContent;
+  protected JEditorPane propertyEditor;
+  protected LogViewPanel logViewPanel;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
-
   private JLabel logFileContentLabel;
-	private final OtrosApplication otrosApplication;
-  private final String logPatternText;
+  private JButton testParser;
 
-  public LogPatternParserEditor(OtrosApplication otrosApplication, String logPatternText) {
-		this.otrosApplication = otrosApplication;
+
+  public LogPatternParserEditorBase(OtrosApplication otrosApplication, String logPatternText) {
+    this.otrosApplication = otrosApplication;
     this.logPatternText = logPatternText;
     createGui();
     loadDefaultPropertyEditorContent();
@@ -67,7 +50,7 @@ public class LogPatternParserEditor extends JPanel {
     enableDragAndDrop();
   }
 
-  private void enableDragAndDrop() {
+  protected void enableDragAndDrop() {
     logFileContent.setDragEnabled(true);
     final TransferHandler defaultTransferHandler = logFileContent.getTransferHandler();
     TransferHandler transferHandler = new TransferHandler() {
@@ -132,7 +115,7 @@ public class LogPatternParserEditor extends JPanel {
     logFileContentLabel.setTransferHandler(transferHandler);
   }
 
-  private void createGui() {
+  protected void createGui() {
     this.setLayout(new BorderLayout());
     Font heading1Font = new JLabel().getFont().deriveFont(20f).deriveFont(Font.BOLD);
     Font heading2Font = new JLabel().getFont().deriveFont(14f).deriveFont(Font.BOLD);
@@ -192,7 +175,7 @@ public class LogPatternParserEditor extends JPanel {
 
   }
 
-  private void loadDefaultPropertyEditorContent() {
+  protected void loadDefaultPropertyEditorContent() {
 
     propertyEditor.setText(logPatternText);
     propertyEditor.setCaretPosition(0);
@@ -212,7 +195,7 @@ public class LogPatternParserEditor extends JPanel {
         testParser();
       } catch (InitializationException e1){
         LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
-        JOptionPane.showMessageDialog(LogPatternParserEditor.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
+        JOptionPane.showMessageDialog(LogPatternParserEditorBase.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
             JOptionPane.ERROR_MESSAGE);
       } catch (Exception e1) {
         LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
@@ -265,7 +248,7 @@ public class LogPatternParserEditor extends JPanel {
     }
   }
 
-	private LogImporterUsingParser createLog4jImporter(String text) throws IOException, InitializationException {
+  private LogImporterUsingParser createLog4jImporter(String text) throws IOException, InitializationException {
 		Log4jPatternMultilineLogParser log4jPatternMultilineLogParser = new Log4jPatternMultilineLogParser();
 		Properties p = new Properties();
 		p.load(new ByteArrayInputStream(text.getBytes()));
@@ -274,7 +257,7 @@ public class LogPatternParserEditor extends JPanel {
 		return logImporterUsingParser;
 	}
 
-	public void selectLogFileAndLoad() throws IOException {
+  public void selectLogFileAndLoad() throws IOException {
     if (otrosVfsBrowserDialog == null) {
       otrosVfsBrowserDialog = new JOtrosVfsBrowserDialog();
       otrosVfsBrowserDialog.setMultiSelectionEnabled(false);
@@ -295,20 +278,16 @@ public class LogPatternParserEditor extends JPanel {
     }
   }
 
+  public LogViewPanel getLogViewPanel() {
+		return logViewPanel;
+	}
+
   protected void testParser() throws IOException, InitializationException {
     Properties p = new Properties();
     p.load(new StringReader(propertyEditor.getText()));
-    LogParser log4jParser;
-    final String type = p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE);
-    if ("log4j".equals(type) || "log4j-native".equals(type)){
-      log4jParser = new Log4jPatternMultilineLogParser();
-    } else if (p.getProperty("type").equals("json")) {
-      log4jParser = new JsonLogParser();
-    } else {
-      throw new InitializationException("property type have to set to \"json\" or \"log4j\" ");
-    }
-    log4jParser.init(p);
-    LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(log4jParser);
+    LogParser jsonLogParser = createLogParser(p);
+    jsonLogParser.init(p);
+    LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(jsonLogParser);
     logViewPanel.getDataTableModel().clear();
     ParsingContext parsingContext = new ParsingContext();
     ByteArrayInputStream in = new ByteArrayInputStream(logFileContent.getText().getBytes());
@@ -322,7 +301,10 @@ public class LogPatternParserEditor extends JPanel {
     }
   }
 
-	public LogViewPanel getLogViewPanel() {
-		return logViewPanel;
-	}
+  protected abstract LogParser createLogParser(Properties p) throws InitializationException;
+
+  public void setLogPattern(String logPattern){
+    propertyEditor.setText(logPattern);
+  }
+
 }

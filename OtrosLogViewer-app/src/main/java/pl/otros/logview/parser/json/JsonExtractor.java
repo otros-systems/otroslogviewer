@@ -22,6 +22,37 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 public class JsonExtractor {
 
   public static final String VALUES_SEPARATOR = ".";
+  public static final String LEVEL = "level";
+  public static final String MESSAGE = "message";
+  public static final String DATE = "date";
+  public static final String DATE_FORMAT = "dateFormat";
+  public static final String THREAD = "thread";
+  public static final String FILE = "file";
+  public static final String CLASS = "class";
+  public static final String METHOD = "method";
+  public static final String LINE = "line";
+  public static final String LOGGER = "logger";
+  public static final String NDC = "ndc";
+  public static final String NOTE = "note";
+  public static final String EXCEPTION = "exception";
+  public static final String MARKER_COLOR = "markerColor";
+  public static final String MDC_KEYS = "mdcKeys";
+  public static final String[] KEYS = {
+    LEVEL,
+    MESSAGE,
+    DATE,
+    DATE_FORMAT,
+    THREAD,
+    FILE,
+    CLASS,
+    METHOD,
+    LINE,
+    LOGGER,
+    NDC,
+    NOTE,
+    MARKER_COLOR,
+    MDC_KEYS
+  };
   private String propertyLevel;
   private List<String> propertyKeysToMdc;
   private String propertyMessage;
@@ -33,6 +64,7 @@ public class JsonExtractor {
   private String propertyLine;
   private String propertyNdc;
   private String propertyNote;
+  private String propertyException;
   private String propertyMarkerColor;
 
   private String propertyLogger;
@@ -41,20 +73,21 @@ public class JsonExtractor {
 
 
   public void init(Properties properties) {
-    propertyLevel = properties.getProperty("level", "level");
-    propertyMessage = properties.getProperty("message", "message");
-    propertyDate = properties.getProperty("date", "date");
-    propertyDateFormat = properties.getProperty("dateFormat", "timestamp");
-    propertyThread = properties.getProperty("thread", "thread");
-    propertyFile = properties.getProperty("file", "file");
-    propertyClass = properties.getProperty("class", "class");
-    propertyMethod = properties.getProperty("method", "method");
-    propertyLine = properties.getProperty("line", "line");
-    propertyLogger = properties.getProperty("logger", "logger");
-    propertyNdc = properties.getProperty("ndc", "ndc");
-    propertyNote = properties.getProperty("note", "note");
-    propertyMarkerColor = properties.getProperty("markerColor", "markerColor");
-    propertyKeysToMdc = Splitter.on(",").trimResults().splitToList(properties.getProperty("mdcKeys", ""));
+    propertyLevel = properties.getProperty(LEVEL, "level");
+    propertyMessage = properties.getProperty(MESSAGE, "message");
+    propertyDate = properties.getProperty(DATE, "date");
+    propertyDateFormat = properties.getProperty(DATE_FORMAT, "timestamp");
+    propertyThread = properties.getProperty(THREAD, "thread");
+    propertyFile = properties.getProperty(FILE, "file");
+    propertyClass = properties.getProperty(CLASS, "class");
+    propertyMethod = properties.getProperty(METHOD, "method");
+    propertyLine = properties.getProperty(LINE, "line");
+    propertyLogger = properties.getProperty(LOGGER, "logger");
+    propertyNdc = properties.getProperty(NDC, "ndc");
+    propertyNote = properties.getProperty(NOTE, "note");
+    propertyException = properties.getProperty(EXCEPTION, "exception");
+    propertyMarkerColor = properties.getProperty(MARKER_COLOR, "markerColor");
+    propertyKeysToMdc = Splitter.on(",").trimResults().splitToList(properties.getProperty(MDC_KEYS, ""));
 
     i18nLevelParser = new I18nLevelParser(Locale.ENGLISH);
   }
@@ -111,9 +144,14 @@ public class JsonExtractor {
     final String dateString = map.get(propertyDate);
 
     try {
+      String message = map.getOrDefault(propertyMessage, "");
+      if (map.containsKey(propertyException)){
+        message = message + "\n" + map.get(propertyException);
+      }
+
       builder = builder
         .withDate(dateParser.parse(dateString))
-        .withMessage(map.getOrDefault(propertyMessage, ""))
+        .withMessage(message)
         .withThread(map.getOrDefault(propertyThread, ""))
         .withLoggerName(map.getOrDefault(propertyLogger, ""))
         .withClass(map.getOrDefault(propertyClass, ""))
@@ -121,14 +159,13 @@ public class JsonExtractor {
         .withLineNumber(map.getOrDefault(propertyLine, ""))
         .withFile(map.getOrDefault(propertyFile, ""))
         .withNote(new Note(map.getOrDefault(propertyNote, "")))
-        .withNdc(map.getOrDefault(propertyNdc,""))
+        .withNdc(map.getOrDefault(propertyNdc, ""))
       ;
       final String color = map.getOrDefault(propertyMarkerColor, "");
-      if (color != null) {
+      if (StringUtils.isNotBlank(color)) {
         builder = builder
           .withMarkerColors(MarkerColors.fromString(color))
           .withMarked(true);
-
       }
       //build mdc
       final Map<String, String> mdc = extractMdc(map, this.propertyKeysToMdc);
@@ -178,4 +215,5 @@ public class JsonExtractor {
     }
     return map;
   }
+
 }

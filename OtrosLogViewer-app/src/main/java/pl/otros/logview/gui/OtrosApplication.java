@@ -19,6 +19,8 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.api.plugins.MenuActionProvider;
+import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
+import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
 import pl.otros.logview.gui.services.Services;
 import pl.otros.logview.gui.services.persist.PersistService;
 import pl.otros.logview.pluginable.AllPluginables;
@@ -99,8 +101,8 @@ public class OtrosApplication {
     if (componentAt instanceof LogViewPanelWrapper) {
       LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
       return logViewPanelWrapper.getLogViewPanel();
-    } else if (componentAt instanceof LogPatternParserEditor) {
-      LogPatternParserEditor patternParserEditor = (LogPatternParserEditor) componentAt;
+    } else if (componentAt instanceof Log4jPatternParserEditor) {
+      LogPatternParserEditorBase patternParserEditor = (LogPatternParserEditorBase) componentAt;
       LogViewPanel logViewPanel = patternParserEditor.getLogViewPanel();
       return logViewPanel;
     }

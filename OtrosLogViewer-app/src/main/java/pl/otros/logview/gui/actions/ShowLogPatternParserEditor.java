@@ -18,46 +18,52 @@ package pl.otros.logview.gui.actions;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.LogPatternParserEditor;
 import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 public class ShowLogPatternParserEditor extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowLogPatternParserEditor.class.getName());
-  private LogPatternParserEditor log4jEditor;
-  private final String logPatternResourceName;
+  private LogPatternParserEditorBase log4jEditor;
+  private final Supplier<LogPatternParserEditorBase> viewSupplier;
+  private String logPatternText = "";
 
   public ShowLogPatternParserEditor(OtrosApplication otrosApplication,
                                     String logPatternResourceName,
                                     String actionName,
                                     String shortDescription,
-                                    Icon icon) {
+                                    Icon icon, Supplier<LogPatternParserEditorBase> viewSupplier)  {
     super(otrosApplication);
-    this.logPatternResourceName = logPatternResourceName;
+    this.viewSupplier = viewSupplier;
     putValue(NAME, actionName);
     putValue(SHORT_DESCRIPTION, shortDescription);
     putValue(SMALL_ICON, icon);
+    logPatternText = loadDefaultText(logPatternResourceName);
 
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     if (log4jEditor == null) {
-      String logPatternText = "";
-      ;
-      try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(logPatternResourceName);) {
-        logPatternText = IOUtils.toString(resourceAsStream);
-      } catch (IOException ex) {
-        LOGGER.error("Can't load default value of property editor");
-      }
-      log4jEditor = new LogPatternParserEditor(getOtrosApplication(), logPatternText);
+      log4jEditor = viewSupplier.get();
+      log4jEditor.setLogPattern(logPatternText);
     }
     getOtrosApplication().addClosableTab(getValue(NAME).toString(), getValue(SHORT_DESCRIPTION).toString(), (Icon) getValue(SMALL_ICON), log4jEditor, true);
+  }
+
+  private String loadDefaultText(String resources) {
+    try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources)) {
+      logPatternText = IOUtils.toString(resourceAsStream);
+    } catch (IOException ex) {
+      LOGGER.error("Can't load default value of property editor");
+    }
+    return logPatternText;
   }
 
 }
