@@ -15,16 +15,18 @@
  ******************************************************************************/
 package pl.otros.logview.parser;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-public class LevelParser {
+public class I18nLevelParser {
 
   private final HashMap<String, Level> levels;
 
-  public LevelParser(Locale locale) {
+  public I18nLevelParser(Locale locale) {
     levels = new HashMap<>(8);
     ResourceBundle rb = ResourceBundle.getBundle("pl.otros.logview.parser.Levels", locale);
     levels.put(rb.getString("FINEST"), Level.FINEST);
@@ -43,7 +45,7 @@ public class LevelParser {
   }
 
   public Level parse(String string) {
-    return levels.get(string);
+    return levels.get(StringUtils.trimToEmpty(string).toUpperCase());
   }
 
 }

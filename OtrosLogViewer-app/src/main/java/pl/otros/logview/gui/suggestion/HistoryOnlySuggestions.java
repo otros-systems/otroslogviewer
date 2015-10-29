@@ -1,6 +1,7 @@
 package pl.otros.logview.gui.suggestion;
 
 import org.apache.commons.lang.StringUtils;
+import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 
 import java.util.List;
@@ -12,16 +13,17 @@ import java.util.stream.Collectors;
  */
 public class HistoryOnlySuggestions implements SuggestionSource<SearchSuggestion> {
 
-  final List<String> history;
+  final List<SuggestionQuery> history;
 
-  public HistoryOnlySuggestions(List<String> history) {
+  public HistoryOnlySuggestions(List<SuggestionQuery> history) {
     this.history = history;
   }
 
   @Override
-  public List<SearchSuggestion> getSuggestions(String s) {
-
+  public List<SearchSuggestion> getSuggestions(SuggestionQuery q) {
+    String s = q.getValue();
     return history.stream()
+      .map(SuggestionQuery::getValue)
       .filter(x-> StringUtils.containsIgnoreCase(x,s))
       .map(x->new SearchSuggestion(x,x))
       .collect(Collectors.toList());

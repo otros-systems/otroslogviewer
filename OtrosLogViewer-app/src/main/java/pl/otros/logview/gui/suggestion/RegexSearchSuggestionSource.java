@@ -1,6 +1,8 @@
 package pl.otros.logview.gui.suggestion;
 
 
+import pl.otros.swing.suggest.SuggestionQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,12 +15,13 @@ public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
   public static final String COUNT_N = "^.*\\{(\\d+)$";
   final String COUNT_N_TO = "^.*\\{(\\d+),$";
 
-  public RegexSearchSuggestionSource(List<String> history) {
+  public RegexSearchSuggestionSource(List<SuggestionQuery> history) {
     super(history);
   }
 
   @Override
-  public List<SearchSuggestion> getSuggestions(String queryString) {
+  public List<SearchSuggestion> getSuggestions(SuggestionQuery query) {
+    String queryString = query.getValue();
     ArrayList<SearchSuggestion> result = new ArrayList<>();
     if (queryString.length() > 1) {
       final String last2 = queryString.substring(queryString.length() - 2);
@@ -108,7 +111,7 @@ public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
       result.add(new SearchSuggestion("[a-z&&[^bc]] - a through z, except for b and c: [ad-z] (subtraction)", queryString + "a-z&&[^bc]]"));
     }
 
-    final List<SearchSuggestion> history = super.historySuggestions(queryString);
+    final List<SearchSuggestion> history = super.historySuggestions(query);
     result.addAll(history);
     return result;
   }

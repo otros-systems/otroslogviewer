@@ -41,11 +41,11 @@ public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumn
 
   private final ParserDescription pd;
 
-  private final LevelParser[] levelParser = {
-    new LevelParser(Locale.ENGLISH), 
-    new LevelParser(Locale.GERMAN), 
-    new LevelParser(new Locale("es")),
-    new LevelParser(new Locale("fr"))
+  private final I18nLevelParser[] levelParser = {
+    new I18nLevelParser(Locale.ENGLISH),
+    new I18nLevelParser(Locale.GERMAN),
+    new I18nLevelParser(new Locale("es")),
+    new I18nLevelParser(new Locale("fr"))
 };
 
   public JulSimpleFormatterParser() {
@@ -140,7 +140,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumn
     logData.setMethod(method);
     logData.setClazz(clazz);
     logData.setMessage(levelAndMessage.substring(levelAndMessage.indexOf(':') + 1).trim());
-    for (LevelParser lp : this.levelParser) {
+    for (I18nLevelParser lp : this.levelParser) {
       Level l = lp.parse(level);
       if (l != null) {
         logData.setLevel(l);

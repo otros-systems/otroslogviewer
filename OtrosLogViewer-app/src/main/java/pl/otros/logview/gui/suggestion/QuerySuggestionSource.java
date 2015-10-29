@@ -9,6 +9,7 @@ import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.Rule;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleFactory;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.TimestampInequalityRule;
+import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 
 import java.text.SimpleDateFormat;
@@ -30,9 +31,9 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   private final String levelPattern = "level\\s*" + operatorsPattern + "\\s*\\w*";
 
   private Set<String> fieldsSet = new HashSet<String>(fields);
-  private List<String> history;
+  private List<SuggestionQuery> history;
 
-  public QuerySuggestionSource(List<String> history) {
+  public QuerySuggestionSource(List<SuggestionQuery> history) {
     this.history = history;
   }
 
@@ -50,10 +51,13 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   }
 
   @Override
-  public List<SearchSuggestion> getSuggestions(String s) {
+  public List<SearchSuggestion> getSuggestions(SuggestionQuery q) {
+    String s = q.getValue();
     if (s.trim().length() == 0) {
       final List<SearchSuggestion> fields = this.fields.stream().map(f -> new SearchSuggestion(f, f + " ")).collect(Collectors.toList());
-      final List<SearchSuggestion> h = history.stream().map(x -> new SearchSuggestion(x, x)).collect(Collectors.toList());
+      final List<SearchSuggestion> h = history.stream()
+        .map(SuggestionQuery::getValue)
+        .map(x -> new SearchSuggestion(x, x)).collect(Collectors.toList());
       fields.addAll(h);
       return fields;
     }
@@ -133,6 +137,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
 
     final List<SearchSuggestion> matchingHistory = history
       .stream()
+      .map(SuggestionQuery::getValue)
       .filter(x -> x.contains(s))
       .filter(x -> !x.equals(s))
       .map(x -> new SearchSuggestion(x, x))
@@ -266,8 +271,8 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return s;
   }
 
-  protected Set<String> getValuesForFieldFromHistory(String field, List<String> history) {
-    final Stream<String> stringStream = history.stream().filter(x -> x.contains(field));
+  protected Set<String> getValuesForFieldFromHistory(String field, List<SuggestionQuery> history) {
+    final Stream<String> stringStream = history.stream().map(SuggestionQuery::getValue).filter(x -> x.contains(field));
     final Stream<String> fieldValues = stringStream.flatMap(s -> getFieldValues(field, s).stream());
     return fieldValues.collect(Collectors.toSet());
   }
@@ -340,7 +345,10 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   public static void main(String[] args) {
 
     "".matches("(level|logger|message|class|method|file|line|thread|mark|note|prop.|date)\\s*\\s*(!=|==|~=|like|exists|<|>|<=|>=)\\s*(\\S+)(.*)");
-    final List<String> history = Arrays.asList("level>INFO", "level<INFO", "message != ASD");
+    final List<SuggestionQuery> history = Arrays.asList("level>INFO", "level<INFO", "message != ASD")
+      .stream()
+      .map(s->new SuggestionQuery(s,s.length()))
+      .collect(Collectors.toList());
     final QuerySuggestionSource querySuggestionSource = new QuerySuggestionSource(history);
 //    querySuggestionSource.getExpectedType("level>INFO && ");
 //    querySuggestionSource.getExpectedType("level>INFO && message ~= ala");
@@ -374,7 +382,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     };
     for (String s : query) {
       System.out.printf("%nSuggestion for empty \"%s\" %n'", s);
-      final List<SearchSuggestion> suggestions = querySuggestionSource.getSuggestions(s);
+      final List<SearchSuggestion> suggestions = querySuggestionSource.getSuggestions(new SuggestionQuery(s,s.length()));
       System.out.print("Will display: ");
       suggestions
         .stream()

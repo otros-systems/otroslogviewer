@@ -288,4 +288,7 @@ public class Icons {
   @Path(path = "/img/fugue/arrow-continue-180.png")
   public static ImageIcon SCROLL_HORIZONTAL;
 
+  @Path(path = "/img/fugue/json.png")
+  public static ImageIcon JSON;
+
 }
