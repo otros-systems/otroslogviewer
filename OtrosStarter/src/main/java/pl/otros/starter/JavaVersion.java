@@ -14,7 +14,6 @@ public class JavaVersion implements Comparable<JavaVersion> {
 
   public static JavaVersion fromString(String s) {
     final Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+).*");
-    System.out.println("Parsing " + s);
     final Matcher matcher = pattern.matcher(s);
     final boolean b = matcher.find();
     if (b) {
