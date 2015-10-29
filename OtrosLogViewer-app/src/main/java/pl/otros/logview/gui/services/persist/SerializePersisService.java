@@ -1,14 +1,17 @@
 package pl.otros.logview.gui.services.persist;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.pluginable.AllPluginables;
 
 import java.io.*;
 import java.util.Objects;
 
-//TODO temoprary perist ustil, use jackoson instead
+//TODO temporary persist util, use jackson instead
 public class SerializePersisService implements PersistService {
 
-  private File dir;
+  private static final Logger LOGGER = LoggerFactory.getLogger(SerializePersisService.class.getName());
+  private final File dir;
 
   public SerializePersisService() {
     this(new File(AllPluginables.USER_CONFIGURATION_DIRECTORY, "persist"));
@@ -16,7 +19,7 @@ public class SerializePersisService implements PersistService {
 
   public SerializePersisService(File dir) {
     this.dir = dir;
-    if (!dir.exists()){
+    if (!dir.exists()) {
       dir.mkdirs();
     }
   }
@@ -24,7 +27,7 @@ public class SerializePersisService implements PersistService {
   @Override
   public void persist(String key, Object o) throws Exception {
     final File file = new File(dir, key + ".ser");
-    final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file,false));
+    final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false));
     outputStream.writeObject(o);
     outputStream.close();
   }
@@ -32,22 +35,22 @@ public class SerializePersisService implements PersistService {
   @Override
   public <T> T load(String key, T defaultValue) {
     final File file = new File(dir, key + ".ser");
-    if (!file.exists()){
+    if (!file.exists()) {
       return defaultValue;
     }
-    ObjectInputStream in = null;
+    ObjectInputStream in;
     try {
       in = new ObjectInputStream(new FileInputStream(file));
       final Object o = in.readObject();
-      if (o == null || !Objects.equals(o.getClass().getName(), defaultValue.getClass().getName())){
+      if (o == null || !Objects.equals(o.getClass().getName(), defaultValue.getClass().getName())) {
+        LOGGER.warn("Read object is null or class different than default value: {}", o);
         return defaultValue;
       }
+      return (T) o;
     } catch (IOException | ClassNotFoundException e) {
-      e.printStackTrace();
-      //TODO LOGGING
+      LOGGER.warn("Can't read value for " + key, e);
       return defaultValue;
     }
-    return defaultValue;
   }
 }
 
