@@ -14,7 +14,6 @@ import pl.otros.logview.importer.LogImporterUsingParser;
 import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
@@ -236,7 +235,7 @@ public abstract class LogPatternParserEditorBase extends JPanel {
       try {
         output = new FileOutputStream(selectedFile);
         IOUtils.write(text, output);
-				LogImporterUsingParser log4jImporter = createLog4jImporter(text);
+				LogImporterUsingParser log4jImporter = craeteLogImporter(text);
 				otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
 			} catch (Exception e) {
         LOGGER.error("Can't save parser: " + e.getMessage());
@@ -248,11 +247,11 @@ public abstract class LogPatternParserEditorBase extends JPanel {
     }
   }
 
-  private LogImporterUsingParser createLog4jImporter(String text) throws IOException, InitializationException {
-		Log4jPatternMultilineLogParser log4jPatternMultilineLogParser = new Log4jPatternMultilineLogParser();
-		Properties p = new Properties();
-		p.load(new ByteArrayInputStream(text.getBytes()));
-		LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(log4jPatternMultilineLogParser);
+  private LogImporterUsingParser craeteLogImporter(String text) throws IOException, InitializationException {
+    Properties p = new Properties();
+    p.load(new ByteArrayInputStream(text.getBytes()));
+    LogParser parser = createLogParser(p);
+		LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(parser);
 		logImporterUsingParser.init(p);
 		return logImporterUsingParser;
 	}

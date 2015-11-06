@@ -119,6 +119,35 @@ public class JsonExtractor {
     }
   }
 
+  public  List<String> extractFieldValues(String json, String field){
+    final List<String> lines = Arrays.asList(json.split("\n")).stream().map(String::trim).collect(Collectors.toList());
+    StringBuilder buffer = new StringBuilder();
+    List<String> result = new ArrayList<>();
+    for (String line : lines) {
+      buffer.append(line);
+      if (isJson(buffer.toString())){
+        try {
+          final JSONObject jsonObject = new JSONObject(buffer.toString());
+          buffer.setLength(0);
+          Optional.ofNullable(toMap(jsonObject).get(field))
+            .ifPresent(result::add);
+        } catch (JSONException ignore) {
+          //;
+        }
+      }
+    }
+    return result;
+  }
+
+  public boolean isJson(String s){
+    try {
+      Validator.validate(s);
+      return true;
+    }  catch (JSONException e){
+      return false;
+    }
+  }
+
   /**
    * Tries convert json object in map form to log data
    *

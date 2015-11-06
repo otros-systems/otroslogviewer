@@ -47,17 +47,17 @@ public class JsonPatternParserEditor extends LogPatternParserEditorBase {
     logFileContent.getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
-        updateJsonPaths();
+        updateSuggestionSource();
       }
 
       @Override
       public void removeUpdate(DocumentEvent e) {
-        updateJsonPaths();
+        updateSuggestionSource();
       }
 
       @Override
       public void changedUpdate(DocumentEvent e) {
-        updateJsonPaths();
+        updateSuggestionSource();
       }
     });
 
@@ -70,7 +70,7 @@ public class JsonPatternParserEditor extends LogPatternParserEditorBase {
   }
 
 
-  private void updateJsonPaths() {
+  private void updateSuggestionSource() {
     final String text = logFileContent.getText();
     final List<String> lines = Splitter.on("\n").trimResults().omitEmptyStrings().splitToList(text);
     StringBuilder sb = new StringBuilder();
@@ -86,6 +86,8 @@ public class JsonPatternParserEditor extends LogPatternParserEditorBase {
     }
     LOGGER.debug("Updating json paths with {} elements: {}",keys.size(), Joiner.on(", ").join(keys));
     suggestionSource.setJsonPaths(keys);
+    suggestionSource.setJsonDoc(text);
+    suggestionSource.setPropertyDoc(propertyEditor.getText());
   }
 
   private void processLogLine(StringBuilder sb, Set<String> keys, String line) {

@@ -3,6 +3,7 @@ package pl.otros.logview.gui.editor.json;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.parser.json.JsonExtractor;
+import pl.otros.logview.util.DateUtil;
 import pl.otros.swing.suggest.BasicSuggestion;
 import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
@@ -19,6 +20,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
 
   public static final String JSON = "json";
   private final List<String> keys;
+  private final DateUtil dateUtil = new DateUtil();
 
   public JsonXpathSuggestionSource() {
     keys = new ArrayList<>();
@@ -26,16 +28,23 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
     keys.add("name");
     keys.add("type");
     keys.add("description");
+
   }
 
   private Set<String> jsonPaths = new HashSet<>();
-
-  public Set<String> getJsonPaths() {
-    return jsonPaths;
-  }
+  private String jsonDoc = "";
+  private String propertyDoc = "";
 
   public void setJsonPaths(Set<String> jsonPaths) {
     this.jsonPaths = jsonPaths;
+  }
+
+  public void setJsonDoc(String jsonDoc) {
+    this.jsonDoc = jsonDoc;
+  }
+
+  public void setPropertyDoc(String propertyDoc) {
+    this.propertyDoc = propertyDoc;
   }
 
   @Override
@@ -46,8 +55,8 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
     String line = lineForPosition(text, caretLocation);
     final boolean matches = line.matches("\\w+\\s*=\\s*.*");
     int position = caretLocation - lineStartIndexAtPosition(text, caretLocation);
-    if (line.equalsIgnoreCase("\n")){
-      position = position-1;
+    if (line.equalsIgnoreCase("\n")) {
+      position = position - 1;
     }
     if (matches) {
       final int indexOf = line.indexOf("=");
@@ -78,7 +87,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
     return keys.stream()
       .filter(s -> !definedKeys.contains(s))
       .filter(s -> s.startsWith(typedText))
-      .map(s -> new BasicSuggestion(s, s.substring(typedText.length())+"="))
+      .map(s -> new BasicSuggestion(s, s.substring(typedText.length()) + "="))
       .sorted()
       .collect(Collectors.toList());
   }
@@ -86,18 +95,35 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
   List<BasicSuggestion> getValuesSuggestions(String line, int position, int indexOf) {
     String key = line.substring(0, indexOf);
     final String entered = line.substring(indexOf + 1, max(position, indexOf + 1));
-    if (key.equals("type")) {
-      return suggestionsForTypeJson(line, position);
-    } else if (key.equals(JsonExtractor.MDC_KEYS)) {
-      return suggestionsForMdc(line, position);
-    } else {
-      return jsonPaths.stream()
-        .filter(s -> s.startsWith(entered))
-        .map(s -> new BasicSuggestion(s, s.substring(entered.length())))
-        .sorted()
-        .collect(Collectors.toList());
+    switch (key) {
+      case "type":
+        return suggestionsForTypeJson(line, position);
+      case JsonExtractor.MDC_KEYS:
+        return suggestionsForMdc(line, position);
+      case JsonExtractor.DATE_FORMAT:
+        Properties p = new Properties();
+        try {
+          p.load(new StringReader(propertyDoc));
+          final String dateProperty = p.getProperty(JsonExtractor.DATE);
+          final JsonExtractor jsonExtractor = new JsonExtractor();
+          final Set<String> dates = jsonExtractor.extractFieldValues(jsonDoc, dateProperty).stream().limit(5).collect(Collectors.toSet());
+          final Set<String> parsedDateFormats =
+            dateUtil.matchingDateFormat(dateUtil.allDateFormats(),dates);
+          return parsedDateFormats.stream().map(s -> new BasicSuggestion(s, s)).collect(Collectors.toList());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        return Collections.singletonList(new BasicSuggestion("Timestamp as long", "timestamp"));
+      default:
+        return jsonPaths.stream()
+          .filter(s -> s.startsWith(entered))
+          .map(s -> new BasicSuggestion(s, s.substring(entered.length())))
+          .sorted()
+          .collect(Collectors.toList());
     }
   }
+
+
 
   List<BasicSuggestion> suggestionsForMdc(String line, int position) {
     final List<String> usedFields = Splitter.on(",").trimResults().splitToList(line.replaceFirst(".*?=", ""));
@@ -139,7 +165,9 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
   }
 
   private int lineStartIndexAtPosition(String text, int position) {
-    String textBefore = text.substring(0, min(position,text.length()));
+    String textBefore = text.substring(0, min(position, text.length()));
     return Math.max(textBefore.lastIndexOf('\n') + 1, 0);
   }
+
+
 }
