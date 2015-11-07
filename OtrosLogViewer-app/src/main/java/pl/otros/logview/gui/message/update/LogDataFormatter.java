@@ -17,6 +17,8 @@
 package pl.otros.logview.gui.message.update;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.Note;
@@ -38,9 +40,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -90,7 +89,6 @@ public class LogDataFormatter {
       sc = new StyleContext();
         defaultStyle = sc.getStyle(StyleContext.DEFAULT_STYLE);
         mainStyle = sc.addStyle("MainStyle", defaultStyle);
-        StyleConstants.setFontSize(mainStyle, 12);
         StyleConstants.setForeground(mainStyle, Color.BLACK);
 
         classMethodStyle = sc.addStyle("classMethod", null);
