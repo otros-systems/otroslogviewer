@@ -685,8 +685,8 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         wrapText.doClick();
         messageDetailToolbar.add(wrapText);
 
-        messageDetailToolbar.add(FontResize.increaseFontSizeAction(logDetailTextArea));
         messageDetailToolbar.add(FontResize.decreaseFontSizeAction(logDetailTextArea));
+        messageDetailToolbar.add(FontResize.increaseFontSizeAction(logDetailTextArea));
 
     }
 
