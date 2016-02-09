@@ -51,6 +51,7 @@ import pl.otros.logview.pluginable.*;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.swing.table.ColumnLayout;
+import pl.otros.swing.text.FontResize;
 import pl.otros.swing.text.FullWidthJTextPane;
 import pl.otros.vfs.browser.table.FileSize;
 
@@ -142,6 +143,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         logDetailTextArea.addMouseListener(locationInfo);
         logDetailTextArea.setBorder(BorderFactory.createTitledBorder("Details"));
         logDetailWithRulerScrollPane = RulerBarHelper.wrapTextComponent((JTextPane) logDetailTextArea);
+        FontResize.addFontResizeOnScroll(logDetailWithRulerScrollPane.getjScrollPane());
         table = new JTableWith2RowHighliting(dataTableModel);
 
         // Initialize default column visible before creating context menu
@@ -682,6 +684,9 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
         wrapText.setSelected(configuration.getBoolean(ConfKeys.MESSAGE_DETAIL_SCROLL_HORIZONTAL, true));
         wrapText.doClick();
         messageDetailToolbar.add(wrapText);
+
+        messageDetailToolbar.add(FontResize.decreaseFontSizeAction(logDetailTextArea));
+        messageDetailToolbar.add(FontResize.increaseFontSizeAction(logDetailTextArea));
 
     }
 
