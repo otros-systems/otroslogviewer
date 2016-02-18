@@ -25,12 +25,11 @@ public class LocationInfoTest {
 
   @DataProvider(name = "parse")
   public Object[][] parseDataProvider() {
-    Optional<String > msg = Optional.empty();
     return new Object[][]{
-      {"\tat java.util.concurrent.FutureTask.report(FutureTask.java:122)", new LocationInfo("java.util.concurrent", "java.util.concurrent.FutureTask", "report", "FutureTask.java", Optional.of(122), msg)},
-      {"at test.sampleapp.SampleAppMultiThreadedFix2.lambda$performRequests$16(SampleAppMultiThreadedFix2.java:36)", new LocationInfo("test.sampleapp", "test.sampleapp.SampleAppMultiThreadedFix2", "lambda$performRequests$16", "SampleAppMultiThreadedFix2.java", Optional.of(36), Optional.empty())},
+      {"\tat java.util.concurrent.FutureTask.report(FutureTask.java:122)", new LocationInfo("java.util.concurrent", "java.util.concurrent.FutureTask", "report", "FutureTask.java", Optional.of(122), null)},
+      {"at test.sampleapp.SampleAppMultiThreadedFix2.lambda$performRequests$16(SampleAppMultiThreadedFix2.java:36)", new LocationInfo("test.sampleapp", "test.sampleapp.SampleAppMultiThreadedFix2", "lambda$performRequests$16", "SampleAppMultiThreadedFix2.java", Optional.of(36), null)},
       {"at test.sampleapp.SampleAppMultiThreadedFix2$$Lambda$16/2016207428.accept(Unknown Source)", null},
-      {"at test.sampleapp.services.hotels.HotelsService.getHotels(HotelsService.java:30)", new LocationInfo("test.sampleapp.services.hotels", "test.sampleapp.services.hotels.HotelsService", "getHotels", "HotelsService.java", Optional.of(30), Optional.empty())},
+      {"at test.sampleapp.services.hotels.HotelsService.getHotels(HotelsService.java:30)", new LocationInfo("test.sampleapp.services.hotels", "test.sampleapp.services.hotels.HotelsService", "getHotels", "HotelsService.java", Optional.of(30), null)},
     };
   }
 

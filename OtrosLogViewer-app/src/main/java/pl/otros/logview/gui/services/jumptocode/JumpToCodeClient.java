@@ -94,19 +94,9 @@ public class JumpToCodeClient {
     ArrayList<NameValuePair> list = new ArrayList<>(5);
     list.add( new NameValuePair("o", httpOperation.getOperation()));
 
-    if (StringUtils.isNotBlank(locationInfo.getPackageName())){
-      list.add(new NameValuePair("p", locationInfo.getPackageName()));
-    }
-
-    if (StringUtils.isNotBlank(locationInfo.getClassName())){
-      list.add(new NameValuePair("c", locationInfo.getClassName()));
-    }
-
-    if (StringUtils.isNotBlank(locationInfo.getFileName())){
-      list.add(new NameValuePair("f", locationInfo.getFileName()));
-    }
-
-
+    locationInfo.getPackageName().ifPresent(p->list.add(new NameValuePair("p", p)));
+    locationInfo.getClassName().ifPresent(p->list.add(new NameValuePair("c", p)));
+    locationInfo.getFileName().ifPresent(p->list.add(new NameValuePair("f", p)));
     locationInfo.getMessage().ifPresent(m->list.add(new NameValuePair("m", m)));
     locationInfo.getLineNumber().map(i->Integer.toString(i)).ifPresent(l -> list.add(new NameValuePair("l",l)));
 
@@ -217,7 +207,7 @@ public class JumpToCodeClient {
 
     @Override
     public Ide call() throws Exception {
-      HttpMethod method = buildMethod(url, new LocationInfo("", "", Optional.empty()), HttpOperation.TEST);
+      HttpMethod method = buildMethod(url, new LocationInfo(Optional.empty(), Optional.empty(), Optional.empty()), HttpOperation.TEST);
       Ide ide = Ide.DISCONNECTED;
       try {
         // we don't even read the response body
