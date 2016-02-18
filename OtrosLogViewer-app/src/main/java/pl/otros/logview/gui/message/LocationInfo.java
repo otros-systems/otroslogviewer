@@ -19,6 +19,8 @@ package pl.otros.logview.gui.message;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Optional;
+
 /**
  * This class represents the location information about a line of code (the class, method,
  * line number, ...)
@@ -27,21 +29,23 @@ import org.apache.commons.lang.StringUtils;
  */
 public class LocationInfo {
   // ------------------------------ FIELDS ------------------------------
-  public static final int UNKNOWN_LINE_NUMBER = -1;
+  public static final Optional<Integer> UNKNOWN_LINE_NUMBER = Optional.empty();
   private final String packageName;
   private final String className;
   private final String method;
   private final String fileName;
-  private final int lineNumber;
+  private final Optional<Integer> lineNumber;
+  private final Optional<String> message;
 // --------------------------- CONSTRUCTORS ---------------------------
 
   /**
    * Constructor
-   *
-   * @param className  the name of the class. If this is a FQN, then the package name will be parsed from it.
+   *  @param className  the name of the class. If this is a FQN, then the package name will be parsed from it.
    * @param methodName the name of the method.
+   * @param message log message
    */
-  public LocationInfo(String className, String methodName) {
+  public LocationInfo(String className, String methodName, Optional<String> message) {
+    this.message = message;
     this.packageName = parsePackageName(className);
     this.className = className;
     this.method = isEmpty(methodName) ? "<unknown>" : methodName;
@@ -51,13 +55,14 @@ public class LocationInfo {
 
   /**
    * Constructor
-   *
-   * @param className  the name of the class. If this is a FQN, then the package name will be parsed from it.
+   *  @param className  the name of the class. If this is a FQN, then the package name will be parsed from it.
    * @param methodName the name of the method (can be null)
    * @param fileName   the file name
    * @param lineNumber the line number
+   * @param message log message
    */
-  public LocationInfo(String className, String methodName, String fileName, int lineNumber) {
+  public LocationInfo(String className, String methodName, String fileName, Optional<Integer> lineNumber, Optional<String> message) {
+    this.message = message;
     this.packageName = parsePackageName(className);
     this.className = className;
     this.method = isEmpty(methodName) ? "<unknown>" : methodName;
@@ -67,16 +72,17 @@ public class LocationInfo {
 
   /**
    * Constructor
-   *
-   * @param packageName the package name (of the class)
+   *  @param packageName the package name (of the class)
    * @param className   the name of the class.
    * @param method      the name of the method
    * @param fileName    the name of the file
    * @param lineNumber  the name of the line number in the file. Can be {@link #UNKNOWN_LINE_NUMBER} if not known.
+   * @param message log message
    */
-  public LocationInfo(String packageName, String className, String method, String fileName, int lineNumber) {
+  public LocationInfo(String packageName, String className, String method, String fileName, Optional<Integer> lineNumber, Optional<String> message) {
     this.packageName = packageName;
     this.className = className;
+    this.message = message;
     this.method = isEmpty(method) ? "<unknown>" : method;
     this.fileName = fileName;
     this.lineNumber = lineNumber;
@@ -99,15 +105,26 @@ public class LocationInfo {
     return fileName;
   }
 
-  public int getLineNumber() {
+  public Optional<Integer> getLineNumber() {
     return lineNumber;
   }
 
+  public Optional<String> getMessage() {
+    return message;
+  }
 
   @Override
   public String toString() {
-    return className + "." + method + "(" + fileName + ":" + lineNumber + ")";
+    return "LocationInfo{" +
+      "packageName='" + packageName + '\'' +
+      ", className='" + className + '\'' +
+      ", method='" + method + '\'' +
+      ", fileName='" + fileName + '\'' +
+      ", lineNumber=" + lineNumber +
+      ", message=" + message +
+      '}';
   }
+
 // -------------------------- STATIC METHODS --------------------------
 
   /**
@@ -133,9 +150,9 @@ public class LocationInfo {
     String className;
     String methodName;
     String fileName;
-    int lineNumber;
+    Optional<Integer> lineNumber;
     final String lineNumberString = fullInfo.substring(lastColon + 1, lastClosingBrace);
-    lineNumber = Integer.parseInt(lineNumberString);
+    lineNumber = Optional.of(Integer.parseInt(lineNumberString));
     fileName = fullInfo.substring(lastOpeningBrace + 1, lastColon);
     // packageName
     fullInfo = fullInfo.substring(0, lastOpeningBrace);
@@ -157,34 +174,15 @@ public class LocationInfo {
       className,
       methodName,
       fileName,
-      lineNumber);
+      lineNumber,
+      Optional.empty());
   }
 
   static String removeLambdas(String fullInfo) {
     return fullInfo.replaceFirst("\\$\\$.*?\\.","\\$Lambda.");
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LocationInfo)) return false;
-    LocationInfo that = (LocationInfo) o;
-    if (lineNumber != that.lineNumber) return false;
-    if (className != null ? !className.equals(that.className) : that.className != null) return false;
-    if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
-    if (method != null ? !method.equals(that.method) : that.method != null) return false;
-    return !(packageName != null ? !packageName.equals(that.packageName) : that.packageName != null);
-  }
 
-  @Override
-  public int hashCode() {
-    int result = packageName != null ? packageName.hashCode() : 0;
-    result = 31 * result + (className != null ? className.hashCode() : 0);
-    result = 31 * result + (method != null ? method.hashCode() : 0);
-    result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-    result = 31 * result + lineNumber;
-    return result;
-  }
   // -------------------------- PRIVATE METHODS --------------------------
 
   private String parsePackageName(String className) {

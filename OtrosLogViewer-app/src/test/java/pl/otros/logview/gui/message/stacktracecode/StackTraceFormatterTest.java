@@ -33,13 +33,7 @@ public class StackTraceFormatterTest {
         final JumpToCodeService mock = Mockito.mock(JumpToCodeService.class);
         Mockito.when(mock.getContent(Mockito.any(LocationInfo.class))).thenAnswer(invocation -> {
             LocationInfo li = (LocationInfo) invocation.getArguments()[0];
-//                System.out.println("Calling for " + li);
-            if (li.getLineNumber()>0){
-                return li.getLineNumber() + ": code";
-            } else {
-                return "";
-
-            }
+            return li.getLineNumber().map(l->l + ": code").orElse("");
         });
         final StackTraceFormatter formatter = new StackTraceFormatter(mock);
 

@@ -1,9 +1,11 @@
 package pl.otros.logview.gui.util;
 
-import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableScheduledFuture;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
+import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.LogDataTableModel;
@@ -15,8 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 
 /**
  * JumpToCodeSelectionListener perorms jump to code in IDE if selected log event contains location info, applications has focus and jump to code is enabled
@@ -43,7 +44,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         this.dataTableModel = dataTableModel;
         this.table = table;
         this.delayMs = delayMs;
-        scheduledJump = Optional.absent();
+        scheduledJump = Optional.empty();
     }
 
     @Override
@@ -52,12 +53,18 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
         if (hasFocus && enabled && !e.getValueIsAdjusting()) {
             try {
+                LOGGER.info("Will jump after selection");
                 final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
-                final LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), Integer.valueOf(logData.getLine()));
+                Optional<Integer> line = Optional.empty();
+                if (StringUtils.isNotBlank(logData.getLine()) && StringUtils.isAlphanumeric(logData.getLine())){
+                  line = Optional.of( Integer.valueOf(logData.getLine()));
+                }
+
+                final LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), line, Optional.ofNullable(logData.getMessage()));
                 final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
                 final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
                 if (ideAvailable) {
-                    scheduledJump.transform(input -> {
+                    scheduledJump.map(input -> {
                         input.cancel(false);
                         return Boolean.TRUE;
                     });
@@ -70,7 +77,8 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
                     scheduledJump = Optional.of(jump);
                 }
             } catch (Exception e1) {
-                LOGGER.warn("Can't perform jump to code: " + e1.getMessage());
+                LOGGER.warn("Can't perform jump to code: " + e1.getMessage(),e1);
+              e1.printStackTrace();
             }
 
         }
@@ -86,7 +94,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         }
 
         public void run() {
-            LOGGER.debug("Jumping to " + li);
+            LOGGER.info("Jumping to " + li);
             try {
                 jumpToCodeService.jump(li);
             } catch (IOException e1) {
