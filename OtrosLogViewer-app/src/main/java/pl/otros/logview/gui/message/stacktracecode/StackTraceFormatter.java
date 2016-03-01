@@ -1,15 +1,15 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import com.google.common.base.Splitter;
-import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class StackTraceFormatter extends AbstractPluginableElement implements MessageFormatter {
@@ -52,13 +52,16 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
     final LocationInfo location = LocationInfo.parse(line);
     if (location != null) {
       try {
-        String content = jumpToCodeService.getContent(location).replaceAll("\r", "");
-        if (StringUtils.isNotBlank(content)) {
-          final String begin = "\n" + location.getLineNumber() + ":";
-          content = content.substring(content.indexOf(begin) + begin.length());
-          content = content.split("\n", 2)[0];
-          sb.append("\t //").append(content.trim());
-        }
+        final String finalContent = jumpToCodeService.getContent(location).replaceAll("\r", "");
+        final Optional<String> oneLine = location.getLineNumber().flatMap(ln ->
+          Splitter.on('\n').splitToList(finalContent)
+            .stream()
+            .filter(t -> t.startsWith(Integer.toString(ln)))
+            .map(s -> "\t //" + s.replaceFirst("[\\d\\s]]+:", "").trim())
+            .findFirst()
+
+        );
+        sb.append(oneLine);
       } catch (IOException e) {
         //ignore. if code fragment cant be loaded, just don't display it
       }

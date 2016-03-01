@@ -53,14 +53,16 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         final boolean enabled = otrosApplication.getConfiguration().getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, false);
         if (hasFocus && enabled && !e.getValueIsAdjusting()) {
             try {
-                LOGGER.info("Will jump after selection");
                 final LogData logData = dataTableModel.getLogData(table.convertRowIndexToModel(e.getFirstIndex()));
                 Optional<Integer> line = Optional.empty();
                 if (StringUtils.isNotBlank(logData.getLine()) && StringUtils.isAlphanumeric(logData.getLine())){
                   line = Optional.of( Integer.valueOf(logData.getLine()));
                 }
-
-                final LocationInfo li = new LocationInfo(logData.getClazz(), logData.getMethod(), logData.getFile(), line, Optional.ofNullable(logData.getMessage()));
+                final LocationInfo li = new LocationInfo(
+                  Optional.ofNullable(logData.getClazz()).orElseGet(logData::getLoggerName),
+                  logData.getMethod(), logData.getFile(),
+                  line,
+                  Optional.ofNullable(logData.getMessage()));
                 final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
                 final boolean ideAvailable = jumpToCodeService.isIdeAvailable();
                 if (ideAvailable) {
@@ -94,7 +96,7 @@ public class JumpToCodeSelectionListener implements ListSelectionListener {
         }
 
         public void run() {
-            LOGGER.info("Jumping to " + li);
+            LOGGER.trace("Jumping to " + li);
             try {
                 jumpToCodeService.jump(li);
             } catch (IOException e1) {
