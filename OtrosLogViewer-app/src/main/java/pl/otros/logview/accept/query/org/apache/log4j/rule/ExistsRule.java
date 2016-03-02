@@ -36,7 +36,7 @@ public class ExistsRule extends AbstractRule {
   /**
    * Serialization id.
    */
-  static final long serialVersionUID = -5386265224649967464L;
+  private static final long serialVersionUID = -5386265224649967464L;
   /**
    * field resolver.
    */

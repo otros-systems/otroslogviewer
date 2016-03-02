@@ -80,7 +80,7 @@ public class ClassWrapperRenderer implements TableCellRenderer {
     return abbreviatePackage;
   }
 
-  SortedMap<String, String> toMap(String configuration) {
+  protected SortedMap<String, String> toMap(String configuration) {
     configuration = StringUtils.defaultString(configuration);
     Properties p = new Properties();
     SortedMap<String, String> result = new TreeMap<>(stringLengthComparator);
@@ -97,7 +97,7 @@ public class ClassWrapperRenderer implements TableCellRenderer {
     return result;
   }
 
-  String abbreviatePackageUsingMappings(String clazz, SortedMap<String, String> abbreviations) {
+  protected String abbreviatePackageUsingMappings(String clazz, SortedMap<String, String> abbreviations) {
     for (String s : abbreviations.keySet()) {
       if (clazz.startsWith(s)) {
         return StringUtils.replaceOnce(clazz, s, abbreviations.get(s));

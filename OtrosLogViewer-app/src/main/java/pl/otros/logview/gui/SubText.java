@@ -17,9 +17,8 @@ package pl.otros.logview.gui;
 
 public class SubText implements Comparable<SubText> {
 
-  int start = 0;
-
-  int end = 0;
+  private int start = 0;
+  private int end = 0;
 
   public SubText(int start, int end) {
     super();
@@ -74,9 +73,7 @@ public class SubText implements Comparable<SubText> {
     if (getClass() != obj.getClass())
       return false;
     SubText other = (SubText) obj;
-    if (end != other.end)
-      return false;
-    return start == other.start;
+    return end == other.end && start == other.start;
   }
 
 }

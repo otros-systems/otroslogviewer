@@ -34,7 +34,7 @@ public class ColorRule extends AbstractRule implements Serializable {
   /**
    * Serialization id.
    */
-  static final long serialVersionUID = -794434783372847773L;
+  private static final long serialVersionUID = -794434783372847773L;
 
   /**
    * Wrapped rule.
@@ -121,13 +121,12 @@ public class ColorRule extends AbstractRule implements Serializable {
    * {@inheritDoc}
    */
   public String toString() {
-    String buf = "color rule - expression: " + expression +
+    return "color rule - expression: " + expression +
       ", rule: " +
       rule +
       " bg: " +
       backgroundColor +
       " fg: " +
       foregroundColor;
-    return buf;
   }
 }
