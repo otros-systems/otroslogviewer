@@ -8,7 +8,6 @@ import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -39,7 +38,7 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
     StringBuilder sb = new StringBuilder(message.length());
     final Iterable<String> split = Splitter.on("\n").split(message);
     for (String line : split) {
-      sb.append(line);
+      sb.append(line.replaceFirst("\\s+at","  at"));
       if (Pattern.compile(STACK_TRACE_REGEX).matcher(line).find()) {
         addCodeToLine(sb, line);
       }
@@ -49,23 +48,28 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
   }
 
   private void addCodeToLine(StringBuilder sb, String line) {
-    final LocationInfo location = LocationInfo.parse(line);
-    if (location != null) {
-      try {
-        final String finalContent = jumpToCodeService.getContent(location).replaceAll("\r", "");
-        final Optional<String> oneLine = location.getLineNumber().flatMap(ln ->
+    final Optional<LocationInfo> location = Optional
+      .ofNullable(line)
+      .map(LocationInfo::parse);
+
+    final Optional<String> content = location
+      .flatMap(jumpToCodeService::getContentOptional)
+      .map(s -> s.replaceAll("\r", ""));
+
+    if (content.isPresent()) {
+      final String finalContent = content.get();
+      location
+        .flatMap(LocationInfo::getLineNumber)
+        .flatMap(ln ->
           Splitter.on('\n').splitToList(finalContent)
             .stream()
             .filter(t -> t.startsWith(Integer.toString(ln)))
-            .map(s -> "\t //" + s.replaceFirst("[\\d\\s]]+:", "").trim())
+            .map(s -> "\t //" + s.replaceFirst("[\\d\\s]+:\\s*", " ").trim())
             .findFirst()
+        ).ifPresent(sb::append);
 
-        );
-        sb.append(oneLine);
-      } catch (IOException e) {
-        //ignore. if code fragment cant be loaded, just don't display it
-      }
     }
+
   }
 
 }
