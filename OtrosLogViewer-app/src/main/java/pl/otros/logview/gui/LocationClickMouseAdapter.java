@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Optional;
 
 class LocationClickMouseAdapter extends MouseAdapter {
   private static final Logger LOGGER = LoggerFactory.getLogger(LocationClickMouseAdapter.class.getName());
@@ -34,14 +35,14 @@ class LocationClickMouseAdapter extends MouseAdapter {
     try {
       JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
       if (locationInfo != null && jumpToCodeService.isJumpable(locationInfo)) {
-        int lineNumber = locationInfo.getLineNumber();
+        Optional<Integer> lineNumber = locationInfo.getLineNumber();
         textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append(locationInfo.toString()).append(" in IDEA using JumpToCode plugin<BR/>");
         String content = jumpToCodeService.getContent(locationInfo);
         String[] split = content.split("\n");
         for (String s : split) {
           String sHtml = s.replaceAll("\t", "  ").replaceAll(" ", "&nbsp;");
-          if (s.startsWith(Integer.toString(lineNumber))) {
+          if (s.startsWith(Integer.toString(lineNumber.get()))) {
             toolTipText.append("<B>").append(sHtml).append("</B>");
           } else {
             toolTipText.append(sHtml);

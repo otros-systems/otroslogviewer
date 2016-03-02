@@ -1,13 +1,13 @@
 /**
  * ****************************************************************************
  * Copyright 2014 Krzysztof Otrebski
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ package pl.otros.logview.gui.message;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Optional;
+
 /**
  * This class represents the location information about a line of code (the class, method,
  * line number, ...)
@@ -27,12 +29,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public class LocationInfo {
   // ------------------------------ FIELDS ------------------------------
-  public static final int UNKNOWN_LINE_NUMBER = -1;
-  private final String packageName;
-  private final String className;
-  private final String method;
-  private final String fileName;
-  private final int lineNumber;
+  private final Optional<String> packageName;
+  private final Optional<String> className;
+  private final Optional<String> method;
+  private final Optional<String> fileName;
+  private final Optional<Integer> lineNumber;
+  private final Optional<String> message;
 // --------------------------- CONSTRUCTORS ---------------------------
 
   /**
@@ -40,13 +42,15 @@ public class LocationInfo {
    *
    * @param className  the name of the class. If this is a FQN, then the package name will be parsed from it.
    * @param methodName the name of the method.
+   * @param message    log message
    */
-  public LocationInfo(String className, String methodName) {
-    this.packageName = parsePackageName(className);
+  public LocationInfo(Optional<String> className, Optional<String> methodName, Optional<String> message) {
+    this.message = message;
+    this.packageName = className.flatMap(this::parsePackageName);
     this.className = className;
-    this.method = isEmpty(methodName) ? "<unknown>" : methodName;
-    fileName = null;
-    lineNumber = UNKNOWN_LINE_NUMBER;
+    this.method = methodName;
+    fileName = Optional.empty();
+    lineNumber = Optional.empty();
   }
 
   /**
@@ -56,11 +60,13 @@ public class LocationInfo {
    * @param methodName the name of the method (can be null)
    * @param fileName   the file name
    * @param lineNumber the line number
+   * @param message    log message
    */
-  public LocationInfo(String className, String methodName, String fileName, int lineNumber) {
-    this.packageName = parsePackageName(className);
+  public LocationInfo(Optional<String> className, Optional<String> methodName, Optional<String> fileName, Optional<Integer> lineNumber, Optional<String> message) {
+    this.message = message;
+    this.packageName = className.flatMap(this::parsePackageName);
     this.className = className;
-    this.method = isEmpty(methodName) ? "<unknown>" : methodName;
+    this.method = methodName;
     this.fileName = fileName;
     this.lineNumber = lineNumber;
   }
@@ -72,42 +78,74 @@ public class LocationInfo {
    * @param className   the name of the class.
    * @param method      the name of the method
    * @param fileName    the name of the file
-   * @param lineNumber  the name of the line number in the file. Can be {@link #UNKNOWN_LINE_NUMBER} if not known.
+   * @param lineNumber  the name of the line number in the file.
+   * @param message     log message
    */
-  public LocationInfo(String packageName, String className, String method, String fileName, int lineNumber) {
+  public LocationInfo(Optional<String> packageName, Optional<String> className, Optional<String> method, Optional<String> fileName, Optional<Integer> lineNumber, Optional<String> message) {
     this.packageName = packageName;
     this.className = className;
-    this.method = isEmpty(method) ? "<unknown>" : method;
+    this.message = message;
+    this.method = method;
     this.fileName = fileName;
+    this.lineNumber = lineNumber;
+  }
+
+  public LocationInfo(String packageName, String className, String method, String fileName, Optional<Integer> lineNumber, String message) {
+    this.packageName = Optional.ofNullable(packageName);
+    this.className = Optional.ofNullable(className);
+    this.message = Optional.ofNullable(message);
+    this.method = Optional.ofNullable(method);
+    this.fileName = Optional.ofNullable(fileName);
+    this.lineNumber = lineNumber;
+  }
+
+  public LocationInfo(String clazz, String method, String file, Optional<Integer> lineNumber, Optional<String> message) {
+    this.className = Optional.ofNullable(clazz);
+    this.packageName = className.flatMap(this::parsePackageName);
+    this.message = message;
+    this.method = Optional.ofNullable(method);
+    this.fileName = Optional.ofNullable(file);
     this.lineNumber = lineNumber;
   }
 // -------------------------- PUBLIC METHODS --------------------------
 
-  public String getClassName() {
-    return className;
-  }
 
-  public String getPackageName() {
-    return packageName;
-  }
-
-  public String getMethod() {
-    return method;
-  }
-
-  public String getFileName() {
-    return fileName;
-  }
-
-  public int getLineNumber() {
+  public Optional<Integer> getLineNumber() {
     return lineNumber;
   }
 
+  public Optional<String> getMessage() {
+    return message;
+  }
+
+  public Optional<String> getPackageName() {
+    return packageName;
+  }
+
+  public Optional<String> getClassName() {
+    return className;
+  }
+
+  public Optional<String> getMethod() {
+    return method;
+  }
+
+  public Optional<String> getFileName() {
+    return fileName;
+  }
 
   @Override
   public String toString() {
-    return className + "." + method + "(" + fileName + ":" + lineNumber + ")";
+    return "LocationInfo{" +
+      "packageName='" + packageName + '\'' +
+      ", className='" + className + '\'' +
+      ", method='" + method + '\'' +
+      ", fileName='" + fileName + '\'' +
+      ", lineNumber=" + lineNumber +
+      ", message=" + message +
+      '}';
   }
+
 // -------------------------- STATIC METHODS --------------------------
 
   /**
@@ -133,9 +171,9 @@ public class LocationInfo {
     String className;
     String methodName;
     String fileName;
-    int lineNumber;
+    Optional<Integer> lineNumber;
     final String lineNumberString = fullInfo.substring(lastColon + 1, lastClosingBrace);
-    lineNumber = Integer.parseInt(lineNumberString);
+    lineNumber = Optional.of(Integer.parseInt(lineNumberString));
     fileName = fullInfo.substring(lastOpeningBrace + 1, lastColon);
     // packageName
     fullInfo = fullInfo.substring(0, lastOpeningBrace);
@@ -153,27 +191,50 @@ public class LocationInfo {
       }
     }
     return new LocationInfo(
-      packageName,
-      className,
-      methodName,
-      fileName,
-      lineNumber);
+      Optional.of(packageName),
+      Optional.of(className),
+      Optional.of(methodName),
+      Optional.of(fileName),
+      lineNumber,
+      Optional.empty());
   }
 
   static String removeLambdas(String fullInfo) {
-    return fullInfo.replaceFirst("\\$\\$.*?\\.","\\$Lambda.");
+    return fullInfo.replaceFirst("\\$\\$.*?\\.", "\\$Lambda.");
+  }
+
+
+  // -------------------------- PRIVATE METHODS --------------------------
+
+  private Optional<String> parsePackageName(String className) {
+    Optional<String> result;
+    if (className == null) {
+      result = null;
+    } else {
+      if (className.contains(".")) {
+        int lastDot = className.lastIndexOf(".");
+        result = Optional.of(className.substring(0, lastDot));
+      } else {
+        result = Optional.empty();
+      }
+    }
+    return result;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof LocationInfo)) return false;
+    if (o == null || getClass() != o.getClass()) return false;
+
     LocationInfo that = (LocationInfo) o;
-    if (lineNumber != that.lineNumber) return false;
-    if (className != null ? !className.equals(that.className) : that.className != null) return false;
-    if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
-    if (method != null ? !method.equals(that.method) : that.method != null) return false;
-    return !(packageName != null ? !packageName.equals(that.packageName) : that.packageName != null);
+
+    return packageName != null ? packageName.equals(that.packageName) : that.packageName == null
+      && (className != null ? className.equals(that.className) : that.className == null
+      && (method != null ? method.equals(that.method) : that.method == null
+      && (fileName != null ? fileName.equals(that.fileName) : that.fileName == null
+      && (lineNumber != null ? lineNumber.equals(that.lineNumber) : that.lineNumber == null
+      && (message != null ? message.equals(that.message) : that.message == null)))));
+
   }
 
   @Override
@@ -182,27 +243,8 @@ public class LocationInfo {
     result = 31 * result + (className != null ? className.hashCode() : 0);
     result = 31 * result + (method != null ? method.hashCode() : 0);
     result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-    result = 31 * result + lineNumber;
+    result = 31 * result + (lineNumber != null ? lineNumber.hashCode() : 0);
+    result = 31 * result + (message != null ? message.hashCode() : 0);
     return result;
-  }
-  // -------------------------- PRIVATE METHODS --------------------------
-
-  private String parsePackageName(String className) {
-    String result;
-    if (className == null) {
-      result = null;
-    } else {
-      if (className.contains(".")) {
-        int lastDot = className.lastIndexOf(".");
-        result = className.substring(0, lastDot);
-      } else {
-        result = null;
-      }
-    }
-    return result;
-  }
-
-  private static boolean isEmpty(String value) {
-    return (value == null || value.length() == 0);
   }
 }

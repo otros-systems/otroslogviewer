@@ -13,6 +13,8 @@ import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.ide.Ide;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -89,12 +91,17 @@ public class JumpToCodeClient {
 
   private HttpMethod buildMethod(String url, LocationInfo locationInfo, HttpOperation httpOperation) {
     HttpMethod method = new GetMethod(url);
-    NameValuePair[] pair = new NameValuePair[4];
-    String lineNumber = String.valueOf(locationInfo.getLineNumber());
-    pair[0] = new NameValuePair("p", locationInfo.getPackageName());
-    pair[1] = new NameValuePair("f", locationInfo.getFileName());
-    pair[2] = new NameValuePair("l", lineNumber);
-    pair[3] = new NameValuePair("o", httpOperation.getOperation());
+    ArrayList<NameValuePair> list = new ArrayList<>(5);
+    list.add( new NameValuePair("o", httpOperation.getOperation()));
+
+    locationInfo.getPackageName().ifPresent(p->list.add(new NameValuePair("p", p)));
+    locationInfo.getClassName().ifPresent(p->list.add(new NameValuePair("c", p)));
+    locationInfo.getFileName().ifPresent(p->list.add(new NameValuePair("f", p)));
+    locationInfo.getMessage().ifPresent(m->list.add(new NameValuePair("m", m)));
+    locationInfo.getLineNumber().map(i->Integer.toString(i)).ifPresent(l -> list.add(new NameValuePair("l",l)));
+
+
+    NameValuePair[] pair = list.toArray(new NameValuePair[0]);
 
     method.setQueryString(pair);
     return method;
@@ -200,7 +207,7 @@ public class JumpToCodeClient {
 
     @Override
     public Ide call() throws Exception {
-      HttpMethod method = buildMethod(url, new LocationInfo("", ""), HttpOperation.TEST);
+      HttpMethod method = buildMethod(url, new LocationInfo(Optional.empty(), Optional.empty(), Optional.empty()), HttpOperation.TEST);
       Ide ide = Ide.DISCONNECTED;
       try {
         // we don't even read the response body

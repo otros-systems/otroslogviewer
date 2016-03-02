@@ -237,7 +237,7 @@ public class LogViewMainFrame extends JFrame {
     ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
     listeningScheduledExecutorService.scheduleAtFixedRate(
         new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
-        5, 5, TimeUnit.SECONDS);
+        25, 25, TimeUnit.SECONDS);
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
   }
 
