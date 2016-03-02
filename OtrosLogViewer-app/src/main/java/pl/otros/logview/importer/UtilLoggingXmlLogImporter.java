@@ -91,10 +91,10 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   @Override
   public void importLogs(InputStream in, LogDataCollector collector, ParsingContext parsingContext) {
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     try {
       LineNumberReader bin = new LineNumberReader(new InputStreamReader(in, ENCODING));
-      String line = null;
+      String line;
 
       while ((line = bin.readLine()) != null) {
         sb.append(line).append("\n");
@@ -138,7 +138,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       /**
        * resetting the length of the StringBuffer is dangerous, particularly on some JDK 1.4 impls, there's a known Bug that causes a memory leak
        */
-      StringBuffer buf = new StringBuffer(1024);
+      StringBuilder buf = new StringBuilder(1024);
 
       if (!data.startsWith("<?xml")) {
         buf.append(BEGIN_PART);
@@ -177,7 +177,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       }
 
       String newDoc;
-      String newPartialEvent = null;
+      String newPartialEvent;
       // separate the string into the last portion ending with </record>
       // (which will be processed) and the partial event which
       // will be combined and processed in the next section
@@ -201,7 +201,6 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       if (partialEvent != null) {
         newDoc = partialEvent + newDoc;
       }
-      partialEvent = newPartialEvent;
 
       Document doc = parse(newDoc, (DocumentBuilder) parsingContext.getCustomConextProperties().get(DOC_BUILDER));
       if (doc == null) {
@@ -216,7 +215,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    *
    * @param document
    *          XML document
-   * @return Vector of LoggingEvents
+   * @return  Vector of LoggingEvents
    */
   private void decodeEvents(final Document document, LogDataCollector collector, ParsingContext parsingContext) {
 
@@ -299,7 +298,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
     }
   }
 
-  String getExceptionStackTrace(Node eventNode) {
+  protected String getExceptionStackTrace(Node eventNode) {
     StringBuilder sb = new StringBuilder();
     NodeList childNodes = eventNode.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
@@ -316,7 +315,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   }
 
-  void getStackTraceFrame(Node item, StringBuilder sb) {
+  protected void getStackTraceFrame(Node item, StringBuilder sb) {
     NodeList childNodes = item.getChildNodes();
 
     String clazz=null;
@@ -341,7 +340,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   }
 
-  StringBuilder appendStackFrame(StringBuilder sb, String clazz, String method, String line, String fileName) {
+  protected StringBuilder appendStackFrame(StringBuilder sb, String clazz, String method, String line, String fileName) {
     sb.append("\n\tat ");
     sb.append(clazz).append(".").append(method);
     if (fileName!=null){
@@ -355,15 +354,14 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
     return sb;
   }
 
-  String extractFileName(String clazz) {
+  protected String extractFileName(String clazz) {
     int clazzStart = StringUtils.lastIndexOf(clazz, '.')+1;
     clazzStart = Math.max(0, clazzStart);
     int clazzEnd = StringUtils.indexOf(clazz, '$');
     if (clazzEnd<0){
       clazzEnd=clazz.length();
     }
-    String fileName = StringUtils.substring(clazz, clazzStart, clazzEnd);
-    return fileName;
+    return StringUtils.substring(clazz, clazzStart, clazzEnd);
   }
 
   /**
@@ -374,7 +372,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    * @return text content of all text or CDATA children of node.
    */
   private String getCData(final Node n) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     NodeList nl = n.getChildNodes();
 
     for (int x = 0; x < nl.getLength(); x++) {

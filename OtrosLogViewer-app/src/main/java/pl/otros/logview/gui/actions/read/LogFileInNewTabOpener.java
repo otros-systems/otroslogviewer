@@ -16,6 +16,8 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.LogViewPanelWrapper;
 import pl.otros.logview.gui.OtrosApplication;
@@ -26,12 +28,10 @@ import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.TableColumnNameSelfDescribable;
 
 import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogFileInNewTabOpener {
 
-  static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
   private final LogImporterProvider importerProvider;
 	private final OtrosApplication otrosApplication;
 
@@ -74,10 +74,9 @@ public class LogFileInNewTabOpener {
       TableColumnNameSelfDescribable describable = (TableColumnNameSelfDescribable) importer;
       tableColumnsToUse = describable.getTableColumnsToUse();
     }
-    final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), openFileObject.getObserableInputStreamImpl(),
-        tableColumnsToUse,otrosApplication);
 
-    return panel;
+    return new LogViewPanelWrapper(file.getName().getBaseName(), openFileObject.getObserableInputStreamImpl(),
+        tableColumnsToUse,otrosApplication);
   }
 
 

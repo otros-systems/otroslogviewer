@@ -83,7 +83,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
     return properties.keySet().stream().map(Object::toString).collect(Collectors.toSet());
   }
 
-  List<BasicSuggestion> getKeysSuggestion(String typedText, Set<String> definedKeys) {
+  protected List<BasicSuggestion> getKeysSuggestion(String typedText, Set<String> definedKeys) {
     return keys.stream()
       .filter(s -> !definedKeys.contains(s))
       .filter(s -> s.startsWith(typedText))
@@ -92,7 +92,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
       .collect(Collectors.toList());
   }
 
-  List<BasicSuggestion> getValuesSuggestions(String line, int position, int indexOf) {
+  protected List<BasicSuggestion> getValuesSuggestions(String line, int position, int indexOf) {
     String key = line.substring(0, indexOf);
     final String entered = line.substring(indexOf + 1, max(position, indexOf + 1));
     switch (key) {
@@ -108,7 +108,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
           final JsonExtractor jsonExtractor = new JsonExtractor();
           final Set<String> dates = jsonExtractor.extractFieldValues(jsonDoc, dateProperty).stream().limit(5).collect(Collectors.toSet());
           final Set<String> parsedDateFormats =
-            dateUtil.matchingDateFormat(dateUtil.allDateFormats(),dates);
+            dateUtil.matchingDateFormat(dateUtil.allDateFormats(), dates);
           return parsedDateFormats.stream().map(s -> new BasicSuggestion(s, s)).collect(Collectors.toList());
         } catch (IOException e) {
           e.printStackTrace();
@@ -124,8 +124,7 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
   }
 
 
-
-  List<BasicSuggestion> suggestionsForMdc(String line, int position) {
+  protected List<BasicSuggestion> suggestionsForMdc(String line, int position) {
     final List<String> usedFields = Splitter.on(",").trimResults().splitToList(line.replaceFirst(".*?=", ""));
     final ArrayList<String> toUse = new ArrayList<>(jsonPaths);
     toUse.removeAll(usedFields);
@@ -147,26 +146,25 @@ class JsonXpathSuggestionSource implements SuggestionSource<BasicSuggestion> {
 
   }
 
-  List<BasicSuggestion> suggestionsForTypeJson(String line, int position) {
+  protected List<BasicSuggestion> suggestionsForTypeJson(String line, int position) {
     final String substring1 = line.substring(0, position);
     final String substring = substring1.replaceFirst(".*?=", "").trim();
     final String toInsert = StringUtils.removeStart(JSON, substring);
     return Collections.singletonList(new BasicSuggestion(JSON, toInsert));
   }
 
-  String lineForPosition(String text, int position) {
+  protected String lineForPosition(String text, int position) {
     int start = max(0, text.substring(0, min(text.length(), position)).lastIndexOf('\n'));
     int end = text.indexOf('\n', position);
     if (end == -1) {
       end = text.length();
     }
-    final String line = text.substring(start, end).replaceAll("\r", "").replace("\n", "");
-    return line;
+    return text.substring(start, end).replaceAll("\r", "").replace("\n", "");
   }
 
   private int lineStartIndexAtPosition(String text, int position) {
     String textBefore = text.substring(0, min(position, text.length()));
-    return Math.max(textBefore.lastIndexOf('\n') + 1, 0);
+    return max(textBefore.lastIndexOf('\n') + 1, 0);
   }
 
 
