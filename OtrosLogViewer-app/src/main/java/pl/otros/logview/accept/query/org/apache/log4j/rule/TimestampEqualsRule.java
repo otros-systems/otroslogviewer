@@ -17,6 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
 
@@ -24,8 +26,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Rule class implementing equality evaluation for timestamps.
@@ -44,7 +44,7 @@ public class TimestampEqualsRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 1639079557187790321L;
+  private static final long serialVersionUID = 1639079557187790321L;
   /**
    * Resolver.
    */

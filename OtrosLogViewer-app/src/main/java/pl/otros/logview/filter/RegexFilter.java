@@ -23,16 +23,16 @@ import java.util.regex.PatternSyntaxException;
 
 public class RegexFilter extends AbstractStringBasedFilter {
 
-  private static final String NANE = "Regex filter";
+  private static final String NAME = "Regex filter";
   private static final String DESCRIPTION = "Filtering events based on a regular expression.";
   private static final String LABEL_TEXT = "Enter a regular expression";
   private static final String DOT_ALL_SUFFIX = ".*";
-  String condition = "";
+  private String condition = "";
   private Pattern pattern = Pattern.compile("");
   private boolean patternOk = true;
 
   public RegexFilter() {
-    super(NANE, DESCRIPTION, LABEL_TEXT);
+    super(NAME, DESCRIPTION, LABEL_TEXT);
 
   }
 

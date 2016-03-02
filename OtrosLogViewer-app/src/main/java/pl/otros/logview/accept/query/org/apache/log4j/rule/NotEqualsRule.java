@@ -36,7 +36,7 @@ public class NotEqualsRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -1135478467213793211L;
+  private static final long serialVersionUID = -1135478467213793211L;
   /**
    * Resolver.
    */

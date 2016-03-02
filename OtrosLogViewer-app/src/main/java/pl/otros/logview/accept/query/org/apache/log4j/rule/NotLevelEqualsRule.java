@@ -35,7 +35,7 @@ public class NotLevelEqualsRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -3638386582899583994L;
+  private static final long serialVersionUID = -3638386582899583994L;
 
   /**
    * Level.

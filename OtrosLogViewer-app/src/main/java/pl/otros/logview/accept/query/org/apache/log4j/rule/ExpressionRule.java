@@ -39,7 +39,7 @@ public class ExpressionRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 5809121703146893729L;
+  private static final long serialVersionUID = 5809121703146893729L;
   /**
    * Converter.
    */
