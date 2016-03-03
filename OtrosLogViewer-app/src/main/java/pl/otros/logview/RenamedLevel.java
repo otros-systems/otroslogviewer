@@ -33,7 +33,7 @@ public class RenamedLevel extends Level {
         super(name, value);
     }
 
-    public boolean equals(java.util.logging.Level level){
+    public boolean equals(Level level){
         return intValue()==level.intValue();
     }
 }

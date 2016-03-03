@@ -126,7 +126,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     if (expectedType.contains(ExpectedType.VALUE_LEVEL)) {
       final List<String> levels = Arrays.asList("FINEST FINER FINE CONFIG INFO WARN SEVERE".split("\\s"));
       final List<String> typedLevels = getFieldValues("level", fieldHead);
-      final String typedLevel = typedLevels.size()>0?typedLevels.get(0):"";
+      final String typedLevel = typedLevels.size() > 0 ? typedLevels.get(0) : "";
       final Stream<String> levelsStream = levels.stream().filter(l -> l.startsWith(typedLevel));
       result.addAll(levelsStream.map(l -> new SearchSuggestion(l, s + l.substring(typedLevel.length()) + " ")).collect(Collectors.toList()));
     }
@@ -148,7 +148,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return result;
   }
 
-  List<ExpectedType> getExpectedType(String s) {
+  protected List<ExpectedType> getExpectedType(String s) {
     final ArrayList<ExpectedType> result = new ArrayList<>();
     if (s.trim().length() == 0) {
       result.add(ExpectedType.FIELD);
@@ -211,14 +211,14 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
 
       String group3 = matcher.group(3);
       group3 = trimLeading(group3);
-      if (isLastValue(group3)){
+      if (isLastValue(group3)) {
         return rest;
       }
       //rest can be:
       // value && level>INFO
       // 'message with &&' || .....
       // "message with &&" || .....
-      String anotherQuery="";
+      String anotherQuery = "";
       if (group3.matches("\\w+")) {
         anotherQuery = "";
       } else if (group3.matches("\\w+\\s*(\\S+.*)")) {
@@ -243,11 +243,11 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   }
 
   private boolean isLastValue(String s) {
-    if (s.matches("[^\"']\\S*")){
+    if (s.matches("[^\"']\\S*")) {
       return true;
     }
     final String[] splitWithSingleQuotes = s.split(",(?=([^\']*\"[^\']*\')*[^\']*$)", -1);
-    if (splitWithSingleQuotes.length>1){
+    if (splitWithSingleQuotes.length > 1) {
       return true;
     }
     final String[] splitWithDoubleQuotes = s.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
@@ -255,16 +255,16 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return splitWithDoubleQuotes.length > 1;
   }
 
-  public  String getLastValue(String s){
-    if (s.matches("[^\"']\\S*")){
+  public String getLastValue(String s) {
+    if (s.matches("[^\"']\\S*")) {
       return s.replaceFirst("([^\"']\\S*).*", "$1");
     }
     final String[] splitWithSingleQuotes = s.split(",(?=([^\']*\"[^\']*\')*[^\']*$)", -1);
-    if (splitWithSingleQuotes.length>1){
+    if (splitWithSingleQuotes.length > 1) {
       return splitWithSingleQuotes[1];
     }
     final String[] splitWithDoubleQuotes = s.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-    if (splitWithDoubleQuotes.length>1){
+    if (splitWithDoubleQuotes.length > 1) {
       return splitWithDoubleQuotes[1];
     }
     return s;
@@ -294,7 +294,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return result;
   }
 
-  int countParenthesisBalance(String rest) {
+  protected int countParenthesisBalance(String rest) {
     boolean inSingleQuote = false;
     boolean inDoubleQuote = false;
     final char[] chars = rest.toCharArray();
@@ -313,7 +313,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return balance;
   }
 
-  int closingParenthesisPosition(String rest) {
+  private int closingParenthesisPosition(String rest) {
     boolean inSingleQuote = false;
     boolean inDoubleQuote = false;
     final char[] chars = rest.toCharArray();
@@ -346,7 +346,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     "".matches("(level|logger|message|class|method|file|line|thread|mark|note|prop.|date)\\s*\\s*(!=|==|~=|like|exists|<|>|<=|>=)\\s*(\\S+)(.*)");
     final List<SuggestionQuery> history = Arrays.asList("level>INFO", "level<INFO", "message != ASD")
       .stream()
-      .map(s->new SuggestionQuery(s,s.length()))
+      .map(s -> new SuggestionQuery(s, s.length()))
       .collect(Collectors.toList());
     final QuerySuggestionSource querySuggestionSource = new QuerySuggestionSource(history);
 //    querySuggestionSource.getExpectedType("level>INFO && ");
@@ -381,7 +381,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     };
     for (String s : query) {
       System.out.printf("%nSuggestion for empty \"%s\" %n'", s);
-      final List<SearchSuggestion> suggestions = querySuggestionSource.getSuggestions(new SuggestionQuery(s,s.length()));
+      final List<SearchSuggestion> suggestions = querySuggestionSource.getSuggestions(new SuggestionQuery(s, s.length()));
       System.out.print("Will display: ");
       suggestions
         .stream()
@@ -393,7 +393,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   }
 
 
-    private static void tokenize(String query){
+  private static void tokenize(String query) {
     RuleFactory factory = RuleFactory.getInstance();
     Stack<Object> stack = new Stack<>();
     InFixToPostFix.CustomTokenizer tokenizer = new InFixToPostFix.CustomTokenizer(query);

@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 public class InputStreamLogReader implements LogReader {
 
-  BufferedReader bin;
+  private BufferedReader bin;
 
   public void close() throws IOException {
     bin.close();

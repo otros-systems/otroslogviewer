@@ -464,7 +464,7 @@ public class LogViewMainFrame extends JFrame {
       new SearchSuggestionRenderer(),
       s -> searchField.setText(s.getValue().getFullContent()));
     searchField.setEditable(true);
-;
+
     final SearchListener searchListener = searchSuggestionSource::addHistory;
     final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD,searchListener);
     final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE,searchListener);
@@ -804,10 +804,10 @@ public class LogViewMainFrame extends JFrame {
     JButton b = new JButton("Throw exception");
     b.addActionListener(e -> {
       if (System.currentTimeMillis() % 2 == 0) {
-        throw new RuntimeException("Exception swing action!");
+        throw new IllegalArgumentException("Exception swing action!");
       } else {
         new Thread(() -> {
-          throw new RuntimeException("Exception from tread!");
+          throw new IllegalArgumentException("Exception from tread!");
         }).start();
       }
     });

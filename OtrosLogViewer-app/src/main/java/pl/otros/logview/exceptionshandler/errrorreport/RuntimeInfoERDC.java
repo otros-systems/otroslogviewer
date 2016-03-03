@@ -31,9 +31,9 @@ public class RuntimeInfoERDC implements ErrorReportDataCollector {
 
     }
 
-    protected String formatTimeDuration(long timeInMs){
-        timeInMs = timeInMs/1000;
-        String upTimeFormatted = String.format("%d:%02d:%02d", timeInMs / 3600, (timeInMs % 3600) / 60, (timeInMs % 60));
+    protected String formatTimeDuration(final long timeInMs){
+        long timeInS = timeInMs/1000;
+        String upTimeFormatted = String.format("%d:%02d:%02d", timeInS / 3600, (timeInS % 3600) / 60, (timeInS % 60));
         return upTimeFormatted;
     }
 

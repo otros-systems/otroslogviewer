@@ -103,26 +103,26 @@ public class InFixToPostFix {
   /**
    * Determines whether one symbol precedes another.
    * 
-   * @param s1
+   * @param symbol1
    *          symbol 1
-   * @param s2
+   * @param symbol2
    *          symbol 2
    * @return true if symbol 1 precedes symbol 2
    */
-  boolean precedes(final String s1, final String s2) {
-    String symbol1 = s1.toLowerCase(Locale.ENGLISH);
-    String symbol2 = s2.toLowerCase(Locale.ENGLISH);
+  boolean precedes(final String symbol1, final String symbol2) {
+    String sym1 = symbol1.toLowerCase(Locale.ENGLISH);
+    String sym2 = symbol2.toLowerCase(Locale.ENGLISH);
 
-    if (!precedenceMap.keySet().contains(symbol1)) {
+    if (!precedenceMap.keySet().contains(sym1)) {
       return false;
     }
 
-    if (!precedenceMap.keySet().contains(symbol2)) {
+    if (!precedenceMap.keySet().contains(sym2)) {
       return false;
     }
 
-    int index1 = precedenceMap.get(symbol1).intValue();
-    int index2 = precedenceMap.get(symbol2).intValue();
+    int index1 = precedenceMap.get(sym1).intValue();
+    int index2 = precedenceMap.get(sym2).intValue();
 
     boolean precedesResult = (index1 < index2);
 
@@ -136,7 +136,7 @@ public class InFixToPostFix {
    *          tokenizer.
    * @return post-fix expression.
    */
-  String infixToPostFix(final CustomTokenizer tokenizer) {
+  private String infixToPostFix(final CustomTokenizer tokenizer) {
     final String space = " ";
     StringBuffer postfix = new StringBuffer();
 

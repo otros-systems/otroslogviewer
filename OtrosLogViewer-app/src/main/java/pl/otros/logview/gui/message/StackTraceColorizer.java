@@ -101,24 +101,25 @@ public class StackTraceColorizer implements MessageColorizer {
     return list;
   }
 
-  public Collection<MessageFragmentStyle> colorizeStackTraceRegex(Style style, String text, Pattern regex, int group) {
+  public Collection<MessageFragmentStyle> colorizeStackTraceRegex(final Style style, String text, Pattern regex, int group) {
     ArrayList<MessageFragmentStyle> list = new ArrayList<>();
     Matcher matcher = regex.matcher(text);
+    Style styleToUse = style;
     while (matcher.find()) {
       LocationInfo locationInfo = LocationInfo.parse(matcher.group(0));
       if (locationInfo != null) {
-        String name = style.getName();
-        Style newStyle = styleContext.addStyle(name + "-" + locationInfo.toString(), style);
+        String name = styleToUse.getName();
+        Style newStyle = styleContext.addStyle(name + "-" + locationInfo.toString(), styleToUse);
         newStyle.addAttribute("locationInfo", locationInfo);
-        StyleConstants.setForeground(newStyle, StyleConstants.getForeground(style));
-        StyleConstants.setBold(newStyle, StyleConstants.isBold(style));
-        StyleConstants.setItalic(newStyle, StyleConstants.isItalic(style));
-        style = newStyle;
+        StyleConstants.setForeground(newStyle, StyleConstants.getForeground(styleToUse));
+        StyleConstants.setBold(newStyle, StyleConstants.isBold(styleToUse));
+        StyleConstants.setItalic(newStyle, StyleConstants.isItalic(styleToUse));
+        styleToUse = newStyle;
       }
       int start = matcher.start(group);
       int end = matcher.end(group);
       if (end - start > 0) {
-        MessageFragmentStyle messageFragmentStyle = new MessageFragmentStyle(start, end - start, style, false);
+        MessageFragmentStyle messageFragmentStyle = new MessageFragmentStyle(start, end - start, styleToUse, false);
         list.add(messageFragmentStyle);
       }
     }

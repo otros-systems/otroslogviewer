@@ -121,8 +121,9 @@ public class LevelFilter extends AbstractLogFilter {
         return logData.getLevel().intValue() == passLevel;
       case HIGHER_OR_EQUAL:
         return logData.getLevel().intValue() >= passLevel;
+      default:
+        return false;
     }
-    return false;
   }
 
   @Override

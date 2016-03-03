@@ -178,9 +178,9 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 				JOptionPane.showMessageDialog(panel, "Can't parse port number.", "Error", JOptionPane.ERROR_MESSAGE);
 				continue;
 			}
-			return true;
+			break;
 		}
-
+		return true;
 	}
 
 	protected Socket tryToConnectToSocket(DataConfiguration configuration, String hostAndPortString, SocketFactory socketFactory) throws IOException {

@@ -60,18 +60,18 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
 		statusObserver.updateStatus(marked + " messages marked for string \"" + searchField.getText().trim() + "\"");
   }
 
-  public int markAllFound(JTable table, LogDataTableModel dataTableModel, String string, MarkerColors markerColors) {
-    string = string.trim().toLowerCase();
-    if (string.length() == 0) {
+  public int markAllFound(final JTable table, final LogDataTableModel dataTableModel,final  String searchText, final MarkerColors markerColors) {
+    String searchTextLc = searchText.trim().toLowerCase();
+    if (searchTextLc.length() == 0) {
       return 0;
     }
 
     SearchMatcher searchMatcher;
     if (SearchMode.STRING_CONTAINS.equals(searchMode)) {
-      searchMatcher = new StringContainsSearchMatcher(string);
+      searchMatcher = new StringContainsSearchMatcher(searchTextLc);
     } else if (SearchMode.REGEX.equals(searchMode)) {
       try {
-        searchMatcher = new RegexMatcher(string);
+        searchMatcher = new RegexMatcher(searchTextLc);
       } catch (Exception e) {
         getOtrosApplication().getStatusObserver().updateStatus("Error in regular expression: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
         return 0;
@@ -79,7 +79,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
     } else if (SearchMode.QUERY.equals(searchMode)){
       QueryAcceptCondition acceptCondition;
       try {
-        acceptCondition = new QueryAcceptCondition(string);
+        acceptCondition = new QueryAcceptCondition(searchTextLc);
         searchMatcher = new AcceptConditionSearchMatcher(acceptCondition);
       } catch (RuleException e) {
         getOtrosApplication().getStatusObserver().updateStatus("Wrong query rule: " + e.getMessage(), StatusObserver.LEVEL_ERROR);

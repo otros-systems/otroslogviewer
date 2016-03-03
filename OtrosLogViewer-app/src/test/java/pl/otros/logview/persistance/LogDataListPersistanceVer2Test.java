@@ -125,19 +125,19 @@ public class LogDataListPersistanceVer2Test {
 
   @Test
   public void testEscpageStringPipes() {
-    String escpageString = ver2.escpageString("String|with|pipe");
+    String escpageString = ver2.escapedString("String|with|pipe");
     AssertJUnit.assertEquals("String\\Pwith\\Ppipe", escpageString);
   }
 
   @Test
   public void testEscpageStringBackslash() {
-    String escpageString = ver2.escpageString("String\\with\\backslash");
+    String escpageString = ver2.escapedString("String\\with\\backslash");
     AssertJUnit.assertEquals("String\\Swith\\Sbackslash", escpageString);
   }
 
   @Test
   public void testEscpageStringNewLine() {
-    String escpageString = ver2.escpageString("String\nwith\nnewline");
+    String escpageString = ver2.escapedString("String\nwith\nnewline");
     AssertJUnit.assertEquals("String\\nwith\\nnewline", escpageString);
   }
 }

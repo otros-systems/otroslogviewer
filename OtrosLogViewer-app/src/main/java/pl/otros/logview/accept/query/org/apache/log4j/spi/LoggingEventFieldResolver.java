@@ -4,7 +4,6 @@ import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

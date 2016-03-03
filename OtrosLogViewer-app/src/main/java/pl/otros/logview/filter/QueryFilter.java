@@ -30,7 +30,7 @@ public class QueryFilter extends AbstractStringBasedFilter {
     super("Query filter", "Query Filter - see manual", "Enter query");
   }
 
-  QueryAcceptCondition queryAcceptCondition = null;
+  private QueryAcceptCondition queryAcceptCondition = null;
 
   @Override
   public boolean accept(LogData logData, int row) {

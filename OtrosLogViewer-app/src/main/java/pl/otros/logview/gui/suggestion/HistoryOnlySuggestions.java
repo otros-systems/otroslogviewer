@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class HistoryOnlySuggestions implements SuggestionSource<SearchSuggestion> {
 
-  final List<SuggestionQuery> history;
+  private final List<SuggestionQuery> history;
 
   public HistoryOnlySuggestions(List<SuggestionQuery> history) {
     this.history = history;

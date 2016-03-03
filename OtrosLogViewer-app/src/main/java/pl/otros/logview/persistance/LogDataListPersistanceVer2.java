@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,7 +73,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
         if (s == null) {
           s = "";
         }
-        bout.write(escpageString(s));
+        bout.write(escapedString(s));
         bout.write(FIELD_SEPERATOR);
       }
       bout.write("\n");
@@ -182,7 +182,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
 
   protected LogData parseLogData(String[] line, Map<String, Integer> fieldMapping) {
     for (int i = 0; i < line.length; i++) {
-      line[i] = unescapgeString(line[i]);
+      line[i] = unescapedString(line[i]);
     }
     LogData ld = new LogData();
     ld.setId(Integer.parseInt(line[fieldMapping.get(HEADER_ID)]));
@@ -243,20 +243,21 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
     return ld;
   }
 
-  protected String escpageString(String s) {
-    s = s.replace("\\", "\\S"); // "\" -> "\S"
-    s = s.replace("|", "\\P"); // "|" -> "\P"
-    s = s.replace("\n", "\\n");
-    s = s.replace("\r", "\\r");
-    return s;
+  protected String escapedString(String string) {
+    return string
+      .replace("\\", "\\S")// "\" -> "\S"
+      .replace("|", "\\P") // "|" -> "\P"
+      .replace("\n", "\\n")
+      .replace("\r", "\\r");
   }
 
-  protected String unescapgeString(String s) {
-    s = s.replace("\\n", "\n");
-    s = s.replace("\\r", "\r");
-    s = s.replace("\\P", "|");
-    s = s.replace("\\S", "\\");
-    return s;
+
+  protected String unescapedString(String s) {
+    return s
+      .replace("\\n", "\n")
+      .replace("\\r", "\r")
+      .replace("\\P", "|")
+      .replace("\\S", "\\");
   }
 
 }

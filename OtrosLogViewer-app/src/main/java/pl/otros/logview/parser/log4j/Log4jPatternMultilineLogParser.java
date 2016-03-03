@@ -510,19 +510,20 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   }
 
   private String singleReplace(String inputString, String oldString, String newString) {
+    String result = inputString;
     int propLength = oldString.length();
-    int startPos = inputString.indexOf(oldString);
+    int startPos = result.indexOf(oldString);
     if (startPos == -1) {
-      LOG.info("string: " + oldString + " not found in input: " + inputString + " - returning input");
-      return inputString;
+      LOG.info("string: " + oldString + " not found in input: " + result + " - returning input");
+      return result;
     }
     if (startPos == 0) {
-      inputString = inputString.substring(propLength);
-      inputString = newString + inputString;
+      result = result.substring(propLength);
+      result = newString + result;
     } else {
-      inputString = inputString.substring(0, startPos) + newString + inputString.substring(startPos + propLength);
+      result = result.substring(0, startPos) + newString + result.substring(startPos + propLength);
     }
-    return inputString;
+    return result;
   }
 
   private String getShortPropertyName(String longPropertyName) {
@@ -541,24 +542,24 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
   private String replaceMetaChars(String input) {
     // escape backslash first since that character is used to escape the
     // remaining meta chars
-    input = input.replaceAll("\\\\", "\\\\\\");
+    String result = input.replaceAll("\\\\", "\\\\\\");
 
     // don't escape star - it's used as the wildcard
-    input = input.replaceAll(Pattern.quote("]"), "\\\\]");
-    input = input.replaceAll(Pattern.quote("["), "\\\\[");
-    input = input.replaceAll(Pattern.quote("^"), "\\\\^");
-    input = input.replaceAll(Pattern.quote("$"), "\\\\$");
-    input = input.replaceAll(Pattern.quote("."), "\\\\.");
-    input = input.replaceAll(Pattern.quote("|"), "\\\\|");
-    input = input.replaceAll(Pattern.quote("?"), "\\\\?");
-    input = input.replaceAll(Pattern.quote("+"), "\\\\+");
-    input = input.replaceAll(Pattern.quote("("), "\\\\(");
-    input = input.replaceAll(Pattern.quote(")"), "\\\\)");
-    input = input.replaceAll(Pattern.quote("-"), "\\\\-");
-    input = input.replaceAll(Pattern.quote("{"), "\\\\{");
-    input = input.replaceAll(Pattern.quote("}"), "\\\\}");
-    input = input.replaceAll(Pattern.quote("#"), "\\\\#");
-    return input;
+    result = result.replaceAll(Pattern.quote("]"), "\\\\]");
+    result = result.replaceAll(Pattern.quote("["), "\\\\[");
+    result = result.replaceAll(Pattern.quote("^"), "\\\\^");
+    result = result.replaceAll(Pattern.quote("$"), "\\\\$");
+    result = result.replaceAll(Pattern.quote("."), "\\\\.");
+    result = result.replaceAll(Pattern.quote("|"), "\\\\|");
+    result = result.replaceAll(Pattern.quote("?"), "\\\\?");
+    result = result.replaceAll(Pattern.quote("+"), "\\\\+");
+    result = result.replaceAll(Pattern.quote("("), "\\\\(");
+    result = result.replaceAll(Pattern.quote(")"), "\\\\)");
+    result = result.replaceAll(Pattern.quote("-"), "\\\\-");
+    result = result.replaceAll(Pattern.quote("{"), "\\\\{");
+    result = result.replaceAll(Pattern.quote("}"), "\\\\}");
+    result = result.replaceAll(Pattern.quote("#"), "\\\\#");
+    return result;
   }
 
   /**
