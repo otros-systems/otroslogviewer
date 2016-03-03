@@ -52,7 +52,7 @@ public class ShowCallHierarchyAction extends FocusOnThisAbstractAction<CallHiera
     LogDataTableModel dataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
     try {
       findCallHierarchyEvents(selected, dataTableModel, listEntryEvents, listOfEvents2);
-    } catch (java.util.NoSuchElementException e1) {
+    } catch (NoSuchElementException e1) {
       LOGGER.error("Log file do not have consistent Entry/Return in logs");
       throw new Exception("Log file do not have consistent Entry/Return in logs",e1);
     }

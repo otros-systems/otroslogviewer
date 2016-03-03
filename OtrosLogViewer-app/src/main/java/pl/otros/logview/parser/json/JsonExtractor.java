@@ -165,7 +165,7 @@ public class JsonExtractor {
    * @param dateParser date format
    * @return Optional of LogData in case of success or Optional.empty in case of error
    */
-  Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
+  private Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
     LogDataBuilder builder = new LogDataBuilder();
 
     //TODO parsing level based on custom mapping

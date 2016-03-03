@@ -102,7 +102,7 @@ public class LevelEqualsRule extends AbstractRule {
   public boolean evaluate(final LogData event, Map matches) {
     // both util.logging and log4j contain 'info' - use the int values instead of equality
     // info level set to the same value for both levels
-    java.util.logging.Level eventLevel = event.getLevel();
+    Level eventLevel = event.getLevel();
     boolean result = (level.intValue() == eventLevel.intValue());
     if (result && matches != null) {
       Set entries = (Set) matches.get(LoggingEventFieldResolver.LEVEL_FIELD);

@@ -15,6 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.text.DateFormat;
@@ -22,8 +25,6 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogImportStats extends AbstractTableModel {
 
@@ -86,6 +87,7 @@ public class LogImportStats extends AbstractTableModel {
       case 4:
         value = speedFormat.format(speedKbPerSecond);
         break;
+      default:
 
     }
     return value;

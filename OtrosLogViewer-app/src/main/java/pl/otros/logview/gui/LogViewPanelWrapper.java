@@ -17,6 +17,8 @@ package pl.otros.logview.gui;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.Stoppable;
 import pl.otros.logview.gui.actions.ClearLogTableAction;
 import pl.otros.logview.gui.table.TableColumns;
@@ -27,8 +29,6 @@ import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogViewPanelWrapper extends JPanel {
 
@@ -48,27 +48,33 @@ public class LogViewPanelWrapper extends JPanel {
   private Mode mode = Mode.Static;
   private JCheckBox playTailing;
   private DataConfiguration configuration;
-	private final OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
 
-	public enum Mode {
+  public enum Mode {
     Static, Live
   }
 
 
   public LogViewPanelWrapper(String name, Stoppable stoppable, TableColumns[] visibleColumns, OtrosApplication otrosApplication) {
-		this(name,stoppable,visibleColumns,new LogDataTableModel(),otrosApplication);
+    this(name, stoppable, visibleColumns, new LogDataTableModel(), otrosApplication);
   }
 
   public LogViewPanelWrapper(String name, Stoppable stoppable, TableColumns[] visibleColumns, LogDataTableModel logDataTableModel, OtrosApplication otrosApplication) {
-    this(name, stoppable, visibleColumns, logDataTableModel, new DataConfiguration(new BaseConfiguration()),otrosApplication);
-	}
+    this(name, stoppable, visibleColumns, logDataTableModel, new DataConfiguration(new BaseConfiguration()), otrosApplication);
+  }
 
-  public LogViewPanelWrapper(String name, Stoppable stoppable, TableColumns[] visibleColumns,
-      LogDataTableModel logDataTableModel, DataConfiguration configuration, OtrosApplication otrosApplication) {
+  public LogViewPanelWrapper(
+    final String name,
+    final Stoppable stoppable,
+    final TableColumns[] visibleColumns,
+    final LogDataTableModel logDataTableModel,
+    final DataConfiguration configuration,
+    final OtrosApplication otrosApplication) {
+
     this.name = name;
     this.configuration = configuration;
-		this.otrosApplication = otrosApplication;
-		this.addHierarchyListener(new HierarchyListener() {
+    this.otrosApplication = otrosApplication;
+    this.addHierarchyListener(new HierarchyListener() {
 
       @Override
       public void hierarchyChanged(HierarchyEvent e) {
@@ -78,16 +84,14 @@ public class LogViewPanelWrapper extends JPanel {
         }
       }
     });
-    if (visibleColumns == null) {
-      visibleColumns = TableColumns.ALL_WITHOUT_LOG_SOURCE;
-    }
+    final TableColumns[] columns = (visibleColumns == null) ? TableColumns.ALL_WITHOUT_LOG_SOURCE : visibleColumns;
 
     fillDefaultConfiguration();
 
     stopableReference = new SoftReference<>(stoppable);
     // this.statusObserver = statusObserver;
     dataTableModel = logDataTableModel == null ? new LogDataTableModel() : logDataTableModel;
-    logViewPanel = new LogViewPanel(dataTableModel, visibleColumns,otrosApplication);
+    logViewPanel = new LogViewPanel(dataTableModel, columns, otrosApplication);
 
     cardLayout = new CardLayout();
     JPanel panelLoading = new JPanel(new GridBagLayout());

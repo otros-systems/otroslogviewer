@@ -16,11 +16,11 @@
 
 package pl.otros.logview.store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogData;
 
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDataStore {
 
@@ -56,7 +56,8 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
     }
   }
 
-  protected int getIndexToInsert(Date date, int downLimit, int upLimit, int startPoint) {
+  protected int getIndexToInsert(Date date, int downLimit, int upLimit, int startAt) {
+    int startPoint = startAt;
     Date dateInList = list.get(startPoint).getDate();
     int compareTo = date.compareTo(dateInList);
 
