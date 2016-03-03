@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 public class ImportLogWithGivenImporterActionListener extends ImportLogActionListener {
 
-  static final Logger LOGGER = LoggerFactory.getLogger(ImportLogWithGivenImporterActionListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImportLogWithGivenImporterActionListener.class.getName());
   private LogImporter importer;
 
   public ImportLogWithGivenImporterActionListener(OtrosApplication otrosApplication, LogImporter importer) {

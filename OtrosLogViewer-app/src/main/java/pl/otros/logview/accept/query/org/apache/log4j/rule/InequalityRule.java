@@ -40,7 +40,7 @@ public class InequalityRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -5592986598528885122L;
+   private static final long serialVersionUID = -5592986598528885122L;
   /**
    * field RESOLVER.
    */
@@ -126,14 +126,14 @@ public class InequalityRule extends AbstractRule {
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public boolean evaluate(final LogData event, Map matches) {
-    long first = 0;
+    long first;
     try {
       first = Long.parseLong(RESOLVER.getValue(field, event).toString());
     } catch (NumberFormatException nfe) {
       return false;
     }
 
-    long second = 0;
+    long second;
 
     try {
       second = Long.parseLong(value);

@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  * An abstract Rule class that provides the PropertyChange support plumbing.
- * 
+ *
  * @author Paul Smith (psmith@apache.org)
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
@@ -34,7 +34,7 @@ public abstract class AbstractRule implements Rule, Serializable {
   /**
    * Serialization id.
    */
-  static final long serialVersionUID = -2844288145563025172L;
+  private static final long serialVersionUID = -2844288145563025172L;
 
   /**
    * PropertySupport instance.
@@ -43,9 +43,8 @@ public abstract class AbstractRule implements Rule, Serializable {
 
   /**
    * Add property change listener.
-   * 
-   * @param l
-   *          listener.
+   *
+   * @param l listener.
    */
   public void addPropertyChangeListener(final PropertyChangeListener l) {
     propertySupport.addPropertyChangeListener(l);
@@ -53,9 +52,8 @@ public abstract class AbstractRule implements Rule, Serializable {
 
   /**
    * Remove property change listener.
-   * 
-   * @param l
-   *          listener.
+   *
+   * @param l listener.
    */
   public void removePropertyChangeListener(final PropertyChangeListener l) {
     propertySupport.removePropertyChangeListener(l);
@@ -63,13 +61,10 @@ public abstract class AbstractRule implements Rule, Serializable {
 
   /**
    * Send property change notification to attached listeners.
-   * 
-   * @param propertyName
-   *          property name.
-   * @param oldVal
-   *          old value.
-   * @param newVal
-   *          new value.
+   *
+   * @param propertyName property name.
+   * @param oldVal       old value.
+   * @param newVal       new value.
    */
   protected void firePropertyChange(final String propertyName, final Object oldVal, final Object newVal) {
     propertySupport.firePropertyChange(propertyName, oldVal, newVal);
@@ -77,9 +72,8 @@ public abstract class AbstractRule implements Rule, Serializable {
 
   /**
    * Send property change notification to attached listeners.
-   * 
-   * @param evt
-   *          property change event.
+   *
+   * @param evt property change event.
    */
   public void firePropertyChange(final PropertyChangeEvent evt) {
     propertySupport.firePropertyChange(evt);

@@ -53,7 +53,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
 
   private static final long serialVersionUID = 3830464109280595888L;
 
-  static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
 	private final OtrosApplication otrosApplication;
 
 

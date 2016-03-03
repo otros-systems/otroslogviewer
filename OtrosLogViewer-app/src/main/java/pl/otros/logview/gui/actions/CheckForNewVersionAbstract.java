@@ -17,6 +17,8 @@ package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
 import pl.otros.logview.gui.OtrosApplication;
 
@@ -24,14 +26,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static pl.otros.logview.gui.ConfKeys.*;
 
 public abstract class CheckForNewVersionAbstract extends OtrosAction {
   private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
-  SwingWorker<String, String> versionChecker = new SwingWorker<String, String>() {
+  private SwingWorker<String, String> versionChecker = new SwingWorker<String, String>() {
     @Override
     protected String doInBackground() throws Exception {
       String running;

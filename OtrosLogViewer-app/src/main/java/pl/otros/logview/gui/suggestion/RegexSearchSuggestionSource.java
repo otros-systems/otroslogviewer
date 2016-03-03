@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
 
 
-  public static final String COUNT_N_M = "^.*\\{(\\d+),(\\d+)$";
-  public static final String COUNT_N = "^.*\\{(\\d+)$";
-  final String COUNT_N_TO = "^.*\\{(\\d+),$";
+  private static final String COUNT_N_M = "^.*\\{(\\d+),(\\d+)$";
+  private static final String COUNT_N = "^.*\\{(\\d+)$";
+  private final String COUNT_N_TO = "^.*\\{(\\d+),$";
 
   public RegexSearchSuggestionSource(List<SuggestionQuery> history) {
     super(history);

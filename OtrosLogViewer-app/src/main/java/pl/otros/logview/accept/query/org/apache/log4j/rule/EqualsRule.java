@@ -36,7 +36,7 @@ public class EqualsRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 1712851553477517245L;
+   private static final long serialVersionUID = 1712851553477517245L;
   /**
    * Resolver.
    */

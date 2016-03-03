@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 
 public abstract class ImportLogActionListener extends OtrosAction {
 
-  static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
 	private final String title;
 
   public ImportLogActionListener(OtrosApplication otrosApplication, String title) {

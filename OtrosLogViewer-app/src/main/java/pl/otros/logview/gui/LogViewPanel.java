@@ -763,7 +763,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {
 
-        PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
+        private PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
 
         @Override
         public void elementAdded(AutomaticMarker element) {

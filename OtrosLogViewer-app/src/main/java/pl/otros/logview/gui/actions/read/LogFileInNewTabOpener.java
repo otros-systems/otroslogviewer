@@ -16,6 +16,8 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.LogViewPanelWrapper;
 import pl.otros.logview.gui.OtrosApplication;
@@ -26,19 +28,17 @@ import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.TableColumnNameSelfDescribable;
 
 import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogFileInNewTabOpener {
 
-  static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogFileInNewTabOpener.class.getName());
   private final LogImporterProvider importerProvider;
-	private final OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
 
-	public LogFileInNewTabOpener(LogImporterProvider importerProvider, OtrosApplication otrosApplication) {
+  public LogFileInNewTabOpener(LogImporterProvider importerProvider, OtrosApplication otrosApplication) {
     this.importerProvider = importerProvider;
-		this.otrosApplication = otrosApplication;
-	}
+    this.otrosApplication = otrosApplication;
+  }
 
   public void open(FileObject file) {
     try {
@@ -56,7 +56,7 @@ public class LogFileInNewTabOpener {
       }
 
       final LogViewPanelWrapper panel = createPanelForLog(file, openFileObject, importer);
-      otrosApplication.addClosableTab(getTabName(file),  file.getName().getFriendlyURI(),Icons.FOLDER_OPEN,panel,true);
+      otrosApplication.addClosableTab(getTabName(file), file.getName().getFriendlyURI(), Icons.FOLDER_OPEN, panel, true);
       startThreadToImportLogDataFromFile(file, openFileObject, importer, panel);
     } catch (Exception e1) {
       LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
@@ -74,10 +74,11 @@ public class LogFileInNewTabOpener {
       TableColumnNameSelfDescribable describable = (TableColumnNameSelfDescribable) importer;
       tableColumnsToUse = describable.getTableColumnsToUse();
     }
-    final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), openFileObject.getObserableInputStreamImpl(),
-        tableColumnsToUse,otrosApplication);
 
-    return panel;
+    return new LogViewPanelWrapper(
+      file.getName().getBaseName(),
+      openFileObject.getObserableInputStreamImpl(),
+      tableColumnsToUse, otrosApplication);
   }
 
 
@@ -93,7 +94,7 @@ public class LogFileInNewTabOpener {
     LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): no suitable log parser found");
 
     String errorMessage = "Error loading log file: no suitable log parser found for " + file.getName().getFriendlyURI() + "\n"
-        + "Go https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout to check how to parse log4j custom pattern.";
+      + "Go https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout to check how to parse log4j custom pattern.";
     JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
   }
 

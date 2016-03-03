@@ -36,7 +36,7 @@ public class PartialTextMatchRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 6963284773637727558L;
+   private static final long serialVersionUID = 6963284773637727558L;
   /**
    * Resolver.
    */
