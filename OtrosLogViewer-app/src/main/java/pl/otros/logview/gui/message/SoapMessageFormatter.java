@@ -15,6 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -23,13 +26,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.SortedSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -132,7 +129,7 @@ public class SoapMessageFormatter implements MessageFormatter {
     Pattern p = Pattern.compile(REMOVE_NIL_PATTERN);
     Matcher matcher = p.matcher(xml);
     if (matcher.find()) {
-      xml = matcher.replaceAll(REMOVE_NIL_REPLACE_PATTERN);
+      return matcher.replaceAll(REMOVE_NIL_REPLACE_PATTERN);
     }
     return xml;
   }

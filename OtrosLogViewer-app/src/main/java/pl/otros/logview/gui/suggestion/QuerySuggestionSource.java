@@ -148,7 +148,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return result;
   }
 
-  List<ExpectedType> getExpectedType(String s) {
+  protected List<ExpectedType> getExpectedType(String s) {
     final ArrayList<ExpectedType> result = new ArrayList<>();
     if (s.trim().length() == 0) {
       result.add(ExpectedType.FIELD);

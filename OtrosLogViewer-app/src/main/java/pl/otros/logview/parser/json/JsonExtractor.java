@@ -212,7 +212,7 @@ public class JsonExtractor {
    * @param keys list of xpaths in json files
    * @return map populated by additional xpath values
    */
-  static Map<String, String> extractMdc(Map<String, String> map, List<String> keys) {
+  private static Map<String, String> extractMdc(Map<String, String> map, List<String> keys) {
     return keys.stream()
       .filter(key -> isNotBlank(map.getOrDefault(key, ""))
       )

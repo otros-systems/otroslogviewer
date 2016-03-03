@@ -142,7 +142,7 @@ public void prepare() {
   public void testEsape() {
     String s = "ala ma kota \nkot ma \\al|e";
     String expected = "ala ma kota \\nkot ma \\Sal\\Pe";
-    String result = p.escpageString(s);
+    String result = p.escapedString(s);
 
     assertEquals(expected, result);
   }

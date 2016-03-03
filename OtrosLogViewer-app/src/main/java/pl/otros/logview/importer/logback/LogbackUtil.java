@@ -28,7 +28,7 @@ public class LogbackUtil {
     return builder;
   }
 
-  static void addCallerData(ILoggingEvent ev, LogDataBuilder builder) {
+  public static void addCallerData(ILoggingEvent ev, LogDataBuilder builder) {
     if (ev.hasCallerData()) {
       final StackTraceElement[] callerData = ev.getCallerData();
       if (callerData.length > 0) {
@@ -40,7 +40,7 @@ public class LogbackUtil {
     }
   }
 
-  static void addException(IThrowableProxy throwableProxy, String message, LogDataBuilder builder) {
+  public static void addException(IThrowableProxy throwableProxy, String message, LogDataBuilder builder) {
     if (throwableProxy != null) {
       StringBuilder sb = new StringBuilder();
       sb.append(message).append("\n");
@@ -53,7 +53,7 @@ public class LogbackUtil {
     }
   }
 
-  static void addMarker(Marker marker, Map<String, String> mdcMap, LogDataBuilder builder) {
+  public static void addMarker(Marker marker, Map<String, String> mdcMap, LogDataBuilder builder) {
     if (marker != null) {
       builder.withMarked(true);
       builder.withMarkerColors(MarkerColors.Aqua);
@@ -63,7 +63,7 @@ public class LogbackUtil {
     }
   }
 
-  static Level convertLevel(ch.qos.logback.classic.Level level) {
+  public static Level convertLevel(ch.qos.logback.classic.Level level) {
 
     if (ch.qos.logback.classic.Level.DEBUG_INT == level.toInt()) {
       return Level.FINE;

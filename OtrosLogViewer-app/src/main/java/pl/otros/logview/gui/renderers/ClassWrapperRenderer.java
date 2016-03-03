@@ -64,28 +64,28 @@ public class ClassWrapperRenderer implements TableCellRenderer {
   }
 
   public String abbreviatePackagesToSingleLetter(String abbreviatePackage, int availableWidth, FontMetrics fm) {
-    if (fm.stringWidth(abbreviatePackage) > availableWidth) {
-      final java.util.List<String> split = Splitter.on('.').splitToList(abbreviatePackage);
+    String result = abbreviatePackage;
+    if (fm.stringWidth(result) > availableWidth) {
+      final java.util.List<String> split = Splitter.on('.').splitToList(result);
       int index = 0;
-      while (fm.stringWidth(abbreviatePackage) > availableWidth && index < split.size() - 1) {
+      while (fm.stringWidth(result) > availableWidth && index < split.size() - 1) {
         java.util.List<String> list = new ArrayList<>(split.size());
         for (int i = 0; i < split.size(); i++) {
           final String s = split.get(i);
           list.add(i <= index && s.length()>0 ? s.substring(0, 1) : s);
         }
-        abbreviatePackage = Joiner.on(".").join(list);
+        result = Joiner.on(".").join(list);
         index++;
       }
     }
-    return abbreviatePackage;
+    return result;
   }
 
   protected SortedMap<String, String> toMap(String configuration) {
-    configuration = StringUtils.defaultString(configuration);
     Properties p = new Properties();
     SortedMap<String, String> result = new TreeMap<>(stringLengthComparator);
     try {
-      p.load(new StringReader(configuration));
+      p.load(new StringReader(StringUtils.defaultString(configuration)));
       for (Object o : p.keySet()) {
         final String key = o.toString();
         final String value = p.getProperty(key);
