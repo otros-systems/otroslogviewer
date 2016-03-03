@@ -32,7 +32,7 @@ public class OrRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 2088765995061413165L;
+  private static final long serialVersionUID = 2088765995061413165L;
   /**
    * rule 1.
    */

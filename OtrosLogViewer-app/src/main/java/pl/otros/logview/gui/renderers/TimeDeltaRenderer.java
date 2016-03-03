@@ -40,7 +40,7 @@ public class TimeDeltaRenderer implements TableCellRenderer {
    * @param deltaInMillis duration in milliseconds
    * @return time duration in descriptive form
    */
-  String formatDelta(long deltaInMillis) {
+  protected String formatDelta(long deltaInMillis) {
     StringBuilder sb = new StringBuilder();
     if (deltaInMillis < 0) {
       sb.append("-");

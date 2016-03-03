@@ -89,11 +89,11 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
       Level level = (Level) value;
       label.setIcon(null);
       label.setText("");
-      if (!(mode == Mode.IconsOnly)) {
+      if (mode != Mode.IconsOnly) {
         label.setText(level.getName());
         label.setBackground(getColorByLevel(level));
       }
-      if (!(mode == Mode.TextOnly)) {
+      if (mode != Mode.TextOnly) {
         label.setIcon(getIconByLevel(level));
       }
       if (mode == Mode.IconsOnly) {

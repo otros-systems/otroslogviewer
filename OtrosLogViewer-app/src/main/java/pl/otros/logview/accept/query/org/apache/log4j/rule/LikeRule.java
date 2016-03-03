@@ -40,7 +40,7 @@ public class LikeRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -3375458885595683156L;
+  private static final long serialVersionUID = -3375458885595683156L;
 
   /**
    * Resolver.

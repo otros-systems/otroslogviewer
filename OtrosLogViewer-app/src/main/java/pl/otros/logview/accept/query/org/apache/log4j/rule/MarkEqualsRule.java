@@ -38,7 +38,7 @@ public class MarkEqualsRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = 1639079557187790321L;
+  private static final long serialVersionUID = 1639079557187790321L;
   /**
    * Resolver.
    */
@@ -50,7 +50,6 @@ public class MarkEqualsRule extends AbstractRule {
   private boolean useOnOffSwith = false;
   private MarkerColors markerColors;
   private boolean marked;
-  private final boolean negation;
 
   /**
    * Create new instance.
@@ -60,9 +59,8 @@ public class MarkEqualsRule extends AbstractRule {
    */
   private MarkEqualsRule(final String value, final boolean negation) {
     super();
-    this.negation = negation;
     if (StringUtils.equalsIgnoreCase(value, "true") || StringUtils.equalsIgnoreCase(value, "false")) {
-      marked = Boolean.valueOf(value).booleanValue();
+      marked = Boolean.valueOf(value);
       useOnOffSwith = true;
     } else {
       // expects value to be a timestamp value represented as a long
@@ -99,9 +97,9 @@ public class MarkEqualsRule extends AbstractRule {
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public boolean evaluate(final LogData event, Map matches) {
     String eventMarkString = RESOLVER.getValue(LoggingEventFieldResolver.MARK_FIELD, event).toString();
-    boolean result = false;
+    boolean result;
     if (useOnOffSwith) {
-      result = !(marked ^ event.isMarked());
+      result = marked == event.isMarked();
     } else {
       result = event.getMarkerColors() != null && event.getMarkerColors().equals(markerColors);
     }

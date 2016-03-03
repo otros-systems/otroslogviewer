@@ -30,11 +30,12 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
   private final String fieldsPattern = fields.stream().collect(Collectors.joining("|", "(", ")")) + "\\s*";
   private final String levelPattern = "level\\s*" + operatorsPattern + "\\s*\\w*";
 
-  private Set<String> fieldsSet = new HashSet<String>(fields);
+  private Set<String> fieldsSet;
   private List<SuggestionQuery> history;
 
   public QuerySuggestionSource(List<SuggestionQuery> history) {
     this.history = history;
+    fieldsSet = new HashSet<>(fields);
   }
 
   public enum ExpectedType {
@@ -250,10 +251,8 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
       return true;
     }
     final String[] splitWithDoubleQuotes = s.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-    if (splitWithDoubleQuotes.length>1){
-      return true;
-    }
-    return false;
+
+    return splitWithDoubleQuotes.length > 1;
   }
 
   public  String getLastValue(String s){
@@ -396,7 +395,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
 
     private static void tokenize(String query){
     RuleFactory factory = RuleFactory.getInstance();
-    Stack<Object> stack = new Stack<Object>();
+    Stack<Object> stack = new Stack<>();
     InFixToPostFix.CustomTokenizer tokenizer = new InFixToPostFix.CustomTokenizer(query);
 
     while (tokenizer.hasMoreTokens()) {
