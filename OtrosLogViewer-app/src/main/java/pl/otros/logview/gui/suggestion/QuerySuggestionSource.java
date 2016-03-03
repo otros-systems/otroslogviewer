@@ -294,7 +294,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return result;
   }
 
-  private int countParenthesisBalance(String rest) {
+  protected int countParenthesisBalance(String rest) {
     boolean inSingleQuote = false;
     boolean inDoubleQuote = false;
     final char[] chars = rest.toCharArray();

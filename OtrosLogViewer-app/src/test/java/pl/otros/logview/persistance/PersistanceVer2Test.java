@@ -146,12 +146,11 @@ public void prepare() {
 
     assertEquals(expected, result);
   }
-
   @Test
   public void testUnEsape() {
     String s = "ala ma kota \\nkot ma \\Sal\\Pe";
     String expected = "ala ma kota \nkot ma \\al|e";
-    String result = p.unescapgeString(s);
+    String result = p.unescapedString(s);
     assertEquals(expected, result);
   }
 
