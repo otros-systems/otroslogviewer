@@ -32,7 +32,7 @@ public class NotRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -6827159473117969306L;
+   private static final long serialVersionUID = -6827159473117969306L;
   /**
    * Enclosed rule.
    */

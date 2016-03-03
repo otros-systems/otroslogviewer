@@ -40,7 +40,7 @@ public class AndRule extends AbstractRule {
   /**
    * Serialization id.
    */
-  static final long serialVersionUID = -8233444426923854651L;
+   private static final long serialVersionUID = -8233444426923854651L;
 
   /**
    * Create new instance.

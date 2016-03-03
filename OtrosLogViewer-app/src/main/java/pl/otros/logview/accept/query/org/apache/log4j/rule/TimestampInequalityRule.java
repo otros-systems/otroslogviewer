@@ -42,7 +42,7 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-  static final long serialVersionUID = -4642641663914789241L;
+   private static final long serialVersionUID = -4642641663914789241L;
   /**
    * Resolver.
    */
@@ -183,16 +183,15 @@ public class TimestampInequalityRule extends AbstractRule {
     // eventTimeStampString) / 1000 * 1000;
     long eventTimeStamp = event.getDate().getTime();
     boolean result = false;
-    long first = eventTimeStamp;
     long second = timeStamp;
     if ("<".equals(inequalitySymbol)) {
-      result = first < second;
+      result = eventTimeStamp < second;
     } else if (">".equals(inequalitySymbol)) {
-      result = first > second;
+      result = eventTimeStamp > second;
     } else if ("<=".equals(inequalitySymbol)) {
-      result = first <= second;
+      result = eventTimeStamp <= second;
     } else if (">=".equals(inequalitySymbol)) {
-      result = first >= second;
+      result = eventTimeStamp >= second;
     }
     if (result && matches != null) {
       Set entries = (Set) matches.get(LoggingEventFieldResolver.TIMESTAMP_FIELD);

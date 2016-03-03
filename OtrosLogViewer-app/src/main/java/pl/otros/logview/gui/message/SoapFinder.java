@@ -22,11 +22,11 @@ import java.util.regex.Pattern;
 
 public class SoapFinder {
 
-  static Pattern p1 = Pattern.compile("xmlns:(.+?)=\"http://schemas\\.xmlsoap\\.org/soap/envelope/\"", Pattern.MULTILINE);
+  private static Pattern p1 = Pattern.compile("xmlns:(.+?)=\"http://schemas\\.xmlsoap\\.org/soap/envelope/\"", Pattern.MULTILINE);
   // static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/2003/05/soap-envelope\"", Pattern.MULTILINE);
-  static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/\\d+/\\d+/soap-envelope\"", Pattern.MULTILINE);
+  private static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/\\d+/\\d+/soap-envelope\"", Pattern.MULTILINE);
   // http://www.w3.org/2002/06/soap-envelope
-  static Pattern[] patterns = { p1, p2 };
+  private static final Pattern[] patterns = { p1, p2 };
 
   public String findSoapTag(String string) {
     String result = null;
@@ -50,14 +50,13 @@ public class SoapFinder {
     }
     String soapStartTag = "<" + tag + ":Envelope";
     String soapEndTag = "</" + tag + ":Envelope>";
-    int end = 0;
-    int start = 0;
-    String s = text;
-    Pattern startPatern = Pattern.compile("((<\\?xml .*?\\?>[\\s\n]*)?" + soapStartTag + ")");
-    Matcher startMatcher = startPatern.matcher(s);
+    int end;
+    int start;
+    Pattern startPattern = Pattern.compile("((<\\?xml .*?\\?>[\\s\n]*)?" + soapStartTag + ")");
+    Matcher startMatcher = startPattern.matcher(text);
     while (startMatcher.find()) {
       start = startMatcher.start(1);
-      end = s.indexOf(soapEndTag, start);
+      end = text.indexOf(soapEndTag, start);
       if (start < 0 || end < 0) {
         break;
       }

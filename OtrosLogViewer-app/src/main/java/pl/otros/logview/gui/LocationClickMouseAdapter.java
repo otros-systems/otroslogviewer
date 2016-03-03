@@ -82,7 +82,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
     }
   }
 
-  AttributeSet getStyleUnderCursor(MouseEvent e) {
+  private AttributeSet getStyleUnderCursor(MouseEvent e) {
     int i = textPane.viewToModel(e.getPoint());
     return textPane.getStyledDocument().getCharacterElement(i).getAttributes();
   }
