@@ -40,9 +40,9 @@ public class Renderers {
           levelRenderer.setMode(mode);
           break;
         case LOG_TABLE_FORMAT_DATE_FORMAT:
-        default:
           dateRenderer.setDateFormatter(new SimpleDateFormat(value));
           break;
+        default:
       }
     });
   }

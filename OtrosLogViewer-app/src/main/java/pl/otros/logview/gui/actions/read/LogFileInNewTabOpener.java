@@ -59,7 +59,7 @@ public class LogFileInNewTabOpener {
       otrosApplication.addClosableTab(getTabName(file), file.getName().getFriendlyURI(), Icons.FOLDER_OPEN, panel, true);
       startThreadToImportLogDataFromFile(file, openFileObject, importer, panel);
     } catch (Exception e1) {
-      LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage());
+      LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage(),e1);
       JOptionPane.showMessageDialog(null, "Error loading log: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }
