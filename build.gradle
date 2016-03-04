@@ -15,8 +15,7 @@
  */
 
 
-project.ext.set('sharedVersion', "1.4.0")
-//project.ext.set('sharedVersion', "1.3.2-SNAPSHOT-${new Date().format("yyyyMMdd-HHmmss")}")
+project.ext.set('sharedVersion', "1.4.1-SNAPSHOT-${new Date().format("yyyyMMdd-HHmmss")}")
 
 subprojects {
     apply plugin: 'java'
