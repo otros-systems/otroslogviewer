@@ -2,7 +2,8 @@
 Useful software for analysing applications logs and traces.
 
 ## Requirements
-  * Java 6
+  * Java 8 since version 1.4.0
+  * Java 6 for verions 1.3.x
 
 ## Download 
   * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory)
