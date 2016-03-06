@@ -31,6 +31,7 @@ Useful software for analysing applications logs and traces.
   * Java Util Logging XMLFormatter
   * Java Util Logging SimpleFormatter
   * log4j pattern layout [(how to create your own)](https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout)
+  * [JSON format](https://github.com/otros-systems/otroslogviewer/wiki/Parsing-logs-in-JSON-format)
   * log4j XMLLayout
 
 ## Included filters
