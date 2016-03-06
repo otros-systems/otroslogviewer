@@ -2,6 +2,7 @@ package pl.otros.logview.gui.actions;
 
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.gui.config.GeneralConfigView;
 import pl.otros.logview.gui.config.IdeIntegrationConfigView;
 import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.config.VersionCheckConfigView;
@@ -35,6 +36,7 @@ public class OpenPreferencesAction extends OtrosAction {
       }
     };
     ConfigView[] configViews = {
+        new GeneralConfigView(),
         new LogTableFormatConfigView(getOtrosApplication()),
         new IdeIntegrationConfigView(getOtrosApplication()),
         new VersionCheckConfigView()

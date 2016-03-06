@@ -291,15 +291,6 @@ public class LogViewMainFrame extends JFrame {
         try {
           final DataConfiguration c1 = new OtrosConfiguration(c);
           final LogViewMainFrame mf = new LogViewMainFrame(c1);
-          // mf.exitAction was instantiated in the constructor (previous line)
-          // Not sure retrieving this from most appropriate Apache config
-          // object.
-          mf.exitAction.setConfirm(
-            c.getBoolean("generalBehavior.confirmExit", true));
-          /* TODO:  Implement User Preferences screen or checkbox on exit widget
-           * that will update the same config object something like:
-           *     c.setProperty("generalBehavior.confirmExit", newValue);
-           */
           mf.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -717,7 +708,8 @@ public class LogViewMainFrame extends JFrame {
     JMenuItem exitMenuItem = new JMenuItem("Exit", 'e');
     exitMenuItem.setIcon(Icons.TURN_OFF);
     exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("control F4"));
-    exitAction = new ExitAction(this);
+    exitAction = new ExitAction(otrosApplication);
+
     exitMenuItem.addActionListener(exitAction);
     fileMenu.add(new JSeparator());
     fileMenu.add(exitMenuItem);

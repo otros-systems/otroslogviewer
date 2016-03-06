@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,23 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
+import pl.otros.logview.gui.ConfKeys;
+import pl.otros.logview.gui.OtrosApplication;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-public class ExitAction extends WindowAdapter implements ActionListener {
+public class ExitAction extends OtrosAction implements WindowListener {
 
   private final JFrame frame;
-  private boolean doConfirm = true;
 
-  public ExitAction(JFrame frame) {
-    this.frame = frame;
+  public ExitAction(OtrosApplication otrosApplication) {
+    super("Quit", otrosApplication);
+    this.frame = otrosApplication.getApplicationJFrame();
   }
 
-  public void setConfirm(final boolean doConfirm) {
-    this.doConfirm = doConfirm;
-  }
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -45,15 +44,46 @@ public class ExitAction extends WindowAdapter implements ActionListener {
   }
 
   protected void askAndExit() {
-    if (!doConfirm ||
-          JOptionPane.showConfirmDialog(frame,
-              "Do you want to exit OtrosLogViewer and parse logs with 'grep'?",
-              "Are you sure?", JOptionPane.YES_NO_OPTION)
-          == JOptionPane.YES_OPTION) {
+    boolean doConfirm = getOtrosApplication().getConfiguration().getBoolean(ConfKeys.CONFIRM_QUIT, true);
+    if (!doConfirm || JOptionPane.showConfirmDialog(
+      frame,
+      "Do you want to exit OtrosLogViewer and parse logs with 'grep'?",
+      "Are you sure?", JOptionPane.YES_NO_OPTION)
+      == JOptionPane.YES_OPTION) {
       frame.setVisible(false);
       frame.dispose();
       System.exit(0);
     }
+  }
+
+  @Override
+  public void windowOpened(WindowEvent e) {
+
+  }
+
+  @Override
+  public void windowClosed(WindowEvent e) {
+
+  }
+
+  @Override
+  public void windowIconified(WindowEvent e) {
+
+  }
+
+  @Override
+  public void windowDeiconified(WindowEvent e) {
+
+  }
+
+  @Override
+  public void windowActivated(WindowEvent e) {
+
+  }
+
+  @Override
+  public void windowDeactivated(WindowEvent e) {
+
   }
 
 }
