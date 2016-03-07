@@ -94,6 +94,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import static pl.otros.logview.gui.ConfKeys.APPEARANCE_CUSTOM_FONT_SIZE;
+import static pl.otros.logview.gui.ConfKeys.APPEARANCE_FONT_SIZE;
 import static pl.otros.logview.gui.ConfKeys.FORMATTER_SOAP_REMOVE_XSI_FOR_NIL;
 
 public class LogViewMainFrame extends JFrame {
@@ -276,43 +278,45 @@ public class LogViewMainFrame extends JFrame {
     }
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          OtrosSplash.setMessage("Loading L&F");
-          String lookAndFeel = c.getString("lookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-          LOGGER.debug("Initializing look and feel: " + lookAndFeel);
-          PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
-          UIManager.setLookAndFeel(lookAndFeel);
-        } catch (Throwable e1) {
-          LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
-        }
-        try {
-          final DataConfiguration c1 = new OtrosConfiguration(c);
-          final LogViewMainFrame mf = new LogViewMainFrame(c1);
-          mf.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-              c.setProperty("gui.state", mf.getExtendedState());
-              if (mf.getExtendedState() == Frame.NORMAL) {
-                c.setProperty("gui.width", mf.getWidth());
-                c.setProperty("gui.height", mf.getHeight());
-              }
-            }
+    SwingUtilities.invokeAndWait(() -> {
+      if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE,false)){
+        final int fontSize = c.getInt(APPEARANCE_FONT_SIZE, 12);
+        FontSize.setDefaultSize(fontSize);
+      }
 
-            @Override
-            public void componentMoved(ComponentEvent e) {
-              c.setProperty("gui.location.x", mf.getLocation().x);
-              c.setProperty("gui.location.y", mf.getLocation().y);
+      try {
+        String lookAndFeel = c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+        OtrosSplash.setMessage("Loading L&F " + lookAndFeel );
+        LOGGER.debug("Initializing look and feel: " + lookAndFeel);
+        PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
+        UIManager.setLookAndFeel(lookAndFeel);
+      } catch (Throwable e1) {
+        LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
+      }
+      try {
+        final DataConfiguration c1 = new OtrosConfiguration(c);
+        final LogViewMainFrame mf = new LogViewMainFrame(c1);
+        mf.addComponentListener(new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            c.setProperty("gui.state", mf.getExtendedState());
+            if (mf.getExtendedState() == Frame.NORMAL) {
+              c.setProperty("gui.width", mf.getWidth());
+              c.setProperty("gui.height", mf.getHeight());
             }
-          });
-          mf.addWindowListener(mf.exitAction);
-          SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-            mf.otrosApplication.getAppProperties().getCurrentDir());
-        } catch (InitializationException e) {
-          LOGGER.error("Cannot initialize main frame", e);
-        }
+          }
+
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            c.setProperty("gui.location.x", mf.getLocation().x);
+            c.setProperty("gui.location.y", mf.getLocation().y);
+          }
+        });
+        mf.addWindowListener(mf.exitAction);
+        SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
+          mf.otrosApplication.getAppProperties().getCurrentDir());
+      } catch (InitializationException e) {
+        LOGGER.error("Cannot initialize main frame", e);
       }
     });
   }
@@ -740,6 +744,7 @@ public class LogViewMainFrame extends JFrame {
     JMenuItem checkForNewVersion = new JMenuItem(new CheckForNewVersionAction(otrosApplication));
     helpMenu.add(checkForNewVersion);
     helpMenu.add(new GettingStartedAction(otrosApplication));
+    helpMenu.add(new FontSize(otrosApplication, 12));
     menuBar.add(fileMenu);
     menuBar.add(toolsMenu);
     menuBar.add(pluginsMenu);
