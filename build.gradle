@@ -114,6 +114,7 @@ project(':OtrosLogViewer-app') {
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosSwing')
+        testCompile 'com.github.tomakehurst:wiremock:1.58'
     }
     version = sharedVersion
 
