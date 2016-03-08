@@ -49,11 +49,11 @@ public class ExitAction extends OtrosAction implements WindowListener {
     final DataConfiguration configuration = getOtrosApplication().getConfiguration();
     boolean doConfirm = configuration.getBoolean(ConfKeys.CONFIRM_QUIT, true);
     JPanel panel = new JPanel(new MigLayout("left"));
-    panel.add(new JLabel("Do you want to exit OtrosLogViewer and parse logs with 'grep'?"),"growx, wrap");
-    getOtrosApplication().getConfiguration().getBoolean(ConfKeys.CONFIRM_QUIT,true);
+    panel.add(new JLabel("Do you want to exit OtrosLogViewer and parse logs with 'grep'?"), "growx, wrap");
+    getOtrosApplication().getConfiguration().getBoolean(ConfKeys.CONFIRM_QUIT, true);
     final JCheckBox box = new JCheckBox("Always ask before exit", doConfirm);
     box.addActionListener(e -> configuration.setProperty(ConfKeys.CONFIRM_QUIT, box.isSelected()));
-    panel.add(box,"growx, wrap");
+    panel.add(box, "growx, wrap");
 
     if (!doConfirm || JOptionPane.showConfirmDialog(frame, panel, "Are you sure?", JOptionPane.YES_NO_OPTION)
       == JOptionPane.YES_OPTION) {
@@ -65,32 +65,32 @@ public class ExitAction extends OtrosAction implements WindowListener {
 
   @Override
   public void windowOpened(WindowEvent e) {
-
+    //nothing
   }
 
   @Override
   public void windowClosed(WindowEvent e) {
-
+//nothing
   }
 
   @Override
   public void windowIconified(WindowEvent e) {
-
+//nothing
   }
 
   @Override
   public void windowDeiconified(WindowEvent e) {
-
+//nothing
   }
 
   @Override
   public void windowActivated(WindowEvent e) {
-
+//nothing
   }
 
   @Override
   public void windowDeactivated(WindowEvent e) {
-
+//nothing
   }
 
 }
