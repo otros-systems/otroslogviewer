@@ -58,7 +58,7 @@ public class ConfigComponent extends JPanel {
       centralPanel.revalidate();
       centralPanel.repaint();
     });
-    reload();
+
     if (list.getModel().getSize() > 0) {
       list.setSelectedIndex(0);
     }
@@ -80,6 +80,7 @@ public class ConfigComponent extends JPanel {
     this.add(new JScrollPane(centralPanel), "dock center, grow, push");
     this.add(southPanel, "dock south");
     list.requestFocus();
+    reload();
   }
 
   public void reload() {

@@ -29,6 +29,7 @@ public abstract class AbstractConfigView implements ConfigView {
     return description;
   }
 
+
   protected void addLabel(String string, char c, JComponent jComponent, JPanel panelToAdd) {
     addLabel(string,c,jComponent,jComponent,panelToAdd);
   }

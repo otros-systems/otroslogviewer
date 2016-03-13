@@ -54,4 +54,7 @@ public class ConfKeys {
   public static final String LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS = "gui.LogTableFormat.packageAbbreviations";
   public static final String MESSAGE_DETAIL_SCROLL_HORIZONTAL = "gui.messageDetail.scrollHorizontal";
   public static final String CONFIRM_QUIT ="generalBehavior.confirmExit" ;
+  public static final String APPEARANCE_FONT_SIZE = "appearance.fontSize";
+  public static final String APPEARANCE_LOOK_AND_FEEL = "appearance.lookAndFeel";
+  public static final String APPEARANCE_CUSTOM_FONT_SIZE = "appearance.customFontSize";
 }
