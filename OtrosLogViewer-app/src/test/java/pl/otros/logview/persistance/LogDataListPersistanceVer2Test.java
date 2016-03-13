@@ -29,7 +29,7 @@ import java.util.logging.Level;
 
 public class LogDataListPersistanceVer2Test {
 
-  LogDataListPersistanceVer2 ver2 = new LogDataListPersistanceVer2();
+  private LogDataListPersistanceVer2 ver2 = new LogDataListPersistanceVer2();
 
   @Test
   public void testLogMessagesWithCarriageReturn() throws IOException {

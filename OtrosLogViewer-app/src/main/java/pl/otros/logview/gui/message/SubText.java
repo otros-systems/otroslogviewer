@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-
-
 public class SubText implements Comparable<SubText> {
 
-  int start = 0;
-
-  int end = 0;
+  private int start = 0;
+  private int end = 0;
 
   public SubText(int start, int end) {
     super();
@@ -57,8 +54,8 @@ public class SubText implements Comparable<SubText> {
     return end - start;
   }
 
-  public String subString(String s){
-    return s.substring(start,end);
+  public String subString(String s) {
+    return s.substring(start, end);
   }
 
   @Override

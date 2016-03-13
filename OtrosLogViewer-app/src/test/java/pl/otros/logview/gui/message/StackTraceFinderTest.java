@@ -15,12 +15,14 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-import static org.testng.AssertJUnit.assertEquals;
-import org.testng.annotations.Test;
 import org.apache.commons.io.IOUtils;
+import org.testng.annotations.Test;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.SortedSet;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 public class StackTraceFinderTest {
 
@@ -38,8 +40,8 @@ public class StackTraceFinderTest {
     assertEquals(1, findStackTraces.size());
 
     SubText subtext = findStackTraces.iterator().next();
-    assertEquals(10, subtext.start);
-    assertEquals(241, subtext.end);
+    assertEquals(10, subtext.getStart());
+    assertEquals(241, subtext.getEnd());
   }
 
   @Test
@@ -54,8 +56,8 @@ public class StackTraceFinderTest {
     assertEquals(1, findStackTraces.size());
     SubText subtext = findStackTraces.iterator().next();
     // TODO check range
-    assertEquals(0, subtext.start);
-    assertEquals(234, subtext.end);
+    assertEquals(0, subtext.getStart());
+    assertEquals(234, subtext.getEnd());
 
   }
 
@@ -70,8 +72,8 @@ public class StackTraceFinderTest {
     // then
     assertEquals(1, findStackTraces.size());
     SubText subtext = findStackTraces.iterator().next();
-    assertEquals(0, subtext.start);
-    assertEquals(213, subtext.end);
+    assertEquals(0, subtext.getStart());
+    assertEquals(213, subtext.getEnd());
   }
 
   @Test
@@ -86,10 +88,10 @@ public class StackTraceFinderTest {
     assertEquals(2, findStackTraces.size());
     Iterator<SubText> iterator = findStackTraces.iterator();
     SubText subtext = iterator.next();
-    assertEquals(44, subtext.start);
-    assertEquals(3142, subtext.end);
+    assertEquals(44, subtext.getStart());
+    assertEquals(3142, subtext.getEnd());
     subtext = iterator.next();
-    assertEquals(3183, subtext.start);
-    assertEquals(3439, subtext.end);
+    assertEquals(3183, subtext.getStart());
+    assertEquals(3439, subtext.getEnd());
   }
 }

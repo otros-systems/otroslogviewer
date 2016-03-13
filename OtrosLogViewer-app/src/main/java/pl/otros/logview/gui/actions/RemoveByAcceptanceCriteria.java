@@ -32,15 +32,16 @@ public class RemoveByAcceptanceCriteria extends OtrosAction {
 		this(acceptCondition, otrosApplication, (Icon) null);
 	}
 
-	public RemoveByAcceptanceCriteria(AcceptCondition acceptCondition, OtrosApplication otrosApplication, Icon smallIcon) {
+	public RemoveByAcceptanceCriteria(AcceptCondition acceptCondition, OtrosApplication otrosApplication, final Icon smallIcon) {
 		super(otrosApplication);
 		this.acceptCondition = acceptCondition;
 		putValue(NAME, acceptCondition.getName());
 		putValue(SHORT_DESCRIPTION, acceptCondition.getDescription());
 		if (smallIcon == null && acceptCondition instanceof HasIcon) {
-			smallIcon = ((HasIcon) acceptCondition).getIcon();
+			putValue(SMALL_ICON, ((HasIcon) acceptCondition).getIcon());
+		} else {
+			putValue(SMALL_ICON,smallIcon);
 		}
-		putValue(SMALL_ICON, smallIcon);
 	}
 
 	public RemoveByAcceptanceCriteria(AcceptCondition acceptCondition, OtrosApplication otrosApplication, String name, Icon icon) {

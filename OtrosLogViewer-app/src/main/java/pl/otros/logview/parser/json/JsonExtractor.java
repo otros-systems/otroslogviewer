@@ -107,7 +107,7 @@ public class JsonExtractor {
    * @param dateFormat instance of DateFormat
    * @return Optional of LogData if log event can be extracted, empty if not.
    */
-  Optional<LogData> parseJsonLog(String s, DateFormat dateFormat) {
+  protected Optional<LogData> parseJsonLog(String s, DateFormat dateFormat) {
     try {
       Validator.validate(s);
       final JSONObject jsonObject = new JSONObject(s);

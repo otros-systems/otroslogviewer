@@ -47,59 +47,59 @@ import java.util.stream.Collectors;
 
 public class ConnectToSocketHubAppenderAction extends OtrosAction {
 
-	private static final int RECONNECT_TIME = 20 * 1000;
+  private static final int RECONNECT_TIME = 20 * 1000;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
 
-	private BufferingLogDataCollectorProxy logDataCollector;
+  private BufferingLogDataCollectorProxy logDataCollector;
 
   private String host = "127.0.0.1";
-	private int port = 50000;
-	private Socket socket;
+  private int port = 50000;
+  private Socket socket;
 
-	public ConnectToSocketHubAppenderAction(OtrosApplication otrosApplication) {
-		super(otrosApplication);
-		putValue(Action.NAME, "Connect to Log4j socket hub");
-		putValue(Action.SHORT_DESCRIPTION, "Connect to Log4j SocketHubAppender");
-		putValue(Action.LONG_DESCRIPTION, "Connect to Log4j SocketHubAppender");
-		putValue(SMALL_ICON, Icons.PLUGIN_CONNECT);
+  public ConnectToSocketHubAppenderAction(OtrosApplication otrosApplication) {
+    super(otrosApplication);
+    putValue(Action.NAME, "Connect to Log4j socket hub");
+    putValue(Action.SHORT_DESCRIPTION, "Connect to Log4j SocketHubAppender");
+    putValue(Action.LONG_DESCRIPTION, "Connect to Log4j SocketHubAppender");
+    putValue(SMALL_ICON, Icons.PLUGIN_CONNECT);
 
-	}
+  }
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
+  @Override
+  public void actionPerformed(ActionEvent arg0) {
 
-		boolean accepted = chooseLogImporter();
-		if (!accepted) {
-			return;
-		}
+    boolean accepted = chooseLogImporter();
+    if (!accepted) {
+      return;
+    }
 
     LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper("Socket", null, TableColumns.values(), getOtrosApplication());
 
-		logViewPanelWrapper.goToLiveMode();
-		BaseConfiguration configuration = new BaseConfiguration();
-		configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
-		configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-		logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
+    logViewPanelWrapper.goToLiveMode();
+    BaseConfiguration configuration = new BaseConfiguration();
+    configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
+    configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
+    logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
 //		JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
 //		int tabCount = jTabbedPane.getTabCount();
-		String hostPort = "Log4j SocketHub " + host + ":" + port;
+    String hostPort = "Log4j SocketHub " + host + ":" + port;
 
-		try {
+    try {
 
-			final LogImporter logImporter = new Log4jSerilizedLogImporter();
-			logImporter.init(new Properties());
-			final ParsingContext parsingContext = new ParsingContext(hostPort, hostPort);
+      final LogImporter logImporter = new Log4jSerilizedLogImporter();
+      logImporter.init(new Properties());
+      final ParsingContext parsingContext = new ParsingContext(hostPort, hostPort);
 
-			logImporter.initParsingContext(parsingContext);
-			TailLogActionListener.ParsingContextStopperForClosingTab contextStopperForClosingTab = new ParsingContextStopperForClosingTab(parsingContext);
-			TailLogActionListener.ReadingStopperForRemove readingStopperForRemove = new TailLogActionListener.ReadingStopperForRemove(contextStopperForClosingTab,
-					logDataCollector);
-			logViewPanelWrapper.addHierarchyListener(readingStopperForRemove);
+      logImporter.initParsingContext(parsingContext);
+      TailLogActionListener.ParsingContextStopperForClosingTab contextStopperForClosingTab = new ParsingContextStopperForClosingTab(parsingContext);
+      TailLogActionListener.ReadingStopperForRemove readingStopperForRemove = new TailLogActionListener.ReadingStopperForRemove(contextStopperForClosingTab,
+        logDataCollector);
+      logViewPanelWrapper.addHierarchyListener(readingStopperForRemove);
 
-            getOtrosApplication().addClosableTab(hostPort,hostPort,Icons.PLUGIN_CONNECT, logViewPanelWrapper,true);
+      getOtrosApplication().addClosableTab(hostPort, hostPort, Icons.PLUGIN_CONNECT, logViewPanelWrapper, true);
 
-			Runnable r = () -> {
+      Runnable r = () -> {
         InetAddress inetAddress = socket.getInetAddress();
         int port2 = socket.getPort();
         InputStream inputStream = null;
@@ -131,78 +131,78 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
         }
         LOGGER.info(String.format("Importing from %s:%d is finished", inetAddress.getHostName(), port2));
       };
-			new Thread(r, hostPort).start();
+      new Thread(r, hostPort).start();
 
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog((Component) arg0.getSource(), "Error importing logs from " + hostPort, "Error importing logs", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog((Component) arg0.getSource(), "Error importing logs from " + hostPort, "Error importing logs", JOptionPane.ERROR_MESSAGE);
 
-		}
+    }
 
-	}
+  }
 
-	private boolean chooseLogImporter() {
-		DataConfiguration configuration = getOtrosApplication().getConfiguration();
-		List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
-		configuration.getInt(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES_MAX_COUNT,20);
+  private boolean chooseLogImporter() {
+    DataConfiguration configuration = getOtrosApplication().getConfiguration();
+    List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
+    configuration.getInt(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES_MAX_COUNT, 20);
 
-		Vector<String> recent = list1.stream().map(Object::toString).collect(Collectors.toCollection(Vector::new));
+    Vector<String> recent = list1.stream().map(Object::toString).collect(Collectors.toCollection(Vector::new));
 
-		JXComboBox box = new JXComboBox(recent);
-		box.setEditable(true);
-		AutoCompleteDecorator.decorate(box);
+    JXComboBox box = new JXComboBox(recent);
+    box.setEditable(true);
+    AutoCompleteDecorator.decorate(box);
 
-		MigLayout migLayout = new MigLayout();
-		JPanel panel = new JPanel(migLayout);
-		panel.add(new JLabel("Host name:port"));
-		panel.add(box, "wrap, width 200:220:440");
+    MigLayout migLayout = new MigLayout();
+    JPanel panel = new JPanel(migLayout);
+    panel.add(new JLabel("Host name:port"));
+    panel.add(box, "wrap, width 200:220:440");
 
-		while (true) {
-			String[] options = {"Connect", "Cancel"};
-			int showConfirmDialog = JOptionPane.showOptionDialog(getOtrosApplication().getApplicationJFrame(), panel, "Enter host name and port",
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-			if (showConfirmDialog != JOptionPane.OK_OPTION) {
+    while (true) {
+      String[] options = {"Connect", "Cancel"};
+      int showConfirmDialog = JOptionPane.showOptionDialog(getOtrosApplication().getApplicationJFrame(), panel, "Enter host name and port",
+        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+      if (showConfirmDialog != JOptionPane.OK_OPTION) {
 
-				return false;
-			}
+        return false;
+      }
 
-			try {
-				String hostAndPortString = box.getSelectedItem().toString().trim();
-				socket = tryToConnectToSocket(configuration, hostAndPortString, SocketFactory.getDefault());
-			} catch (UnknownHostException e) {
-				JOptionPane.showMessageDialog(panel, host + " is unknown host name", "Error", JOptionPane.ERROR_MESSAGE);
-				continue;
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(panel, "Cannot connect to host " + host + ":" + port, "Error", JOptionPane.ERROR_MESSAGE);
-				continue;
-			}  catch (NumberFormatException e){
-				JOptionPane.showMessageDialog(panel, "Can't parse port number.", "Error", JOptionPane.ERROR_MESSAGE);
-				continue;
-			}
-			break;
-		}
-		return true;
-	}
+      try {
+        String hostAndPortString = box.getSelectedItem().toString().trim();
+        socket = tryToConnectToSocket(configuration, hostAndPortString, SocketFactory.getDefault());
+      } catch (UnknownHostException e) {
+        JOptionPane.showMessageDialog(panel, host + " is unknown host name", "Error", JOptionPane.ERROR_MESSAGE);
+        continue;
+      } catch (IOException e) {
+        JOptionPane.showMessageDialog(panel, "Cannot connect to host " + host + ":" + port, "Error", JOptionPane.ERROR_MESSAGE);
+        continue;
+      } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(panel, "Can't parse port number.", "Error", JOptionPane.ERROR_MESSAGE);
+        continue;
+      }
+      break;
+    }
+    return true;
+  }
 
-	protected Socket tryToConnectToSocket(DataConfiguration configuration, String hostAndPortString, SocketFactory socketFactory) throws IOException {
-		List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
-		String[] hostPort = hostAndPortString.split(":");
-		host = hostPort[0];
-		if (hostPort.length>1){
-			port = Integer.parseInt(hostPort[1]);
-		}    else {
-			port = 4560;
-		}
+  protected Socket tryToConnectToSocket(DataConfiguration configuration, String hostAndPortString, SocketFactory socketFactory) throws IOException {
+    List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
+    String[] hostPort = hostAndPortString.split(":");
+    host = hostPort[0];
+    if (hostPort.length > 1) {
+      port = Integer.parseInt(hostPort[1]);
+    } else {
+      port = 4560;
+    }
 
-		Socket socket = socketFactory.createSocket(host, port);
-		if (list1.contains(hostAndPortString)) {
-			list1.remove(hostAndPortString);
-		}
-		list1.add(0, hostAndPortString);
-		if (list1.size()>30){
-			list1.remove(list1.size()-1);
-		}
-		configuration.setProperty(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES,list1);
-		return socket;
-	}
+    Socket socket = socketFactory.createSocket(host, port);
+    if (list1.contains(hostAndPortString)) {
+      list1.remove(hostAndPortString);
+    }
+    list1.add(0, hostAndPortString);
+    if (list1.size() > 30) {
+      list1.remove(list1.size() - 1);
+    }
+    configuration.setProperty(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES, list1);
+    return socket;
+  }
 
 }
