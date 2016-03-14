@@ -29,21 +29,21 @@ public class JAnimatedLogo extends JLabel {
 
   public JAnimatedLogo(String text, int horizontalAlignment) {
     super(text, horizontalAlignment);
-    createTimeline();
+    createTimeLine();
   }
 
   public JAnimatedLogo(String text) {
     super(text);
-    createTimeline();
+    createTimeLine();
   }
 
   public JAnimatedLogo() {
     super();
-    createTimeline();
+    createTimeLine();
 
   }
 
-  private void createTimeline() {
+  private void createTimeLine() {
     LogoIcon icon = new LogoIcon();
     this.setIcon(icon);
 
@@ -69,9 +69,9 @@ public class JAnimatedLogo extends JLabel {
     }
 
     @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      paintConstants(c, g, x, y);
-      paintVary(c, g, x, y);
+    public void paintIcon(Component component, Graphics graphics, int x, int y) {
+      paintConstants(component, graphics, x, y);
+      paintVary(component, graphics, x, y);
     }
 
     private void paintVary(Component c, Graphics g, int x, int y) {

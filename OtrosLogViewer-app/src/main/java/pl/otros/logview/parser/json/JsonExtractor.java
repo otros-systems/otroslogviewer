@@ -191,7 +191,7 @@ public class JsonExtractor {
         .withNdc(map.getOrDefault(propertyNdc, ""))
       ;
       final String color = map.getOrDefault(propertyMarkerColor, "");
-      if (StringUtils.isNotBlank(color)) {
+      if (isNotBlank(color)) {
         builder = builder
           .withMarkerColors(MarkerColors.fromString(color))
           .withMarked(true);

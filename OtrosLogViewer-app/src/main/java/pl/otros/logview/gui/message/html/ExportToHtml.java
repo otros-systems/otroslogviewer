@@ -18,14 +18,14 @@ package pl.otros.logview.gui.message.html;
 
 import com.google.common.base.Joiner;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.message.MessageFragmentStyle;
 
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ExportToHtml {
 
@@ -37,7 +37,7 @@ public class ExportToHtml {
         INLINE_HTML
     }
 
-    public String format(String text, Collection<MessageFragmentStyle> styles, String title, HTML_MODE html_mode) {
+    public String format(String text, Collection<MessageFragmentStyle> styles, String title, HTML_MODE htmlMode) {
         HashMap<String, Map<String, String>> stylesMap = new HashMap<>();
         for (MessageFragmentStyle mfs : styles) {
             Map<String, String> styleMapToCss = styleToCssMap(mfs);
@@ -46,13 +46,13 @@ public class ExportToHtml {
         }
 
         StringBuilder sb = new StringBuilder();
-        appendHeaders(sb, stylesMap, title, html_mode);
-        ArrayList<HtmlSpanFragment> htmlSpanTag = createHtmlSpanTag(styles, html_mode);
-        String htmled = addSpanTagsToText(text, htmlSpanTag, html_mode);
+        appendHeaders(sb, stylesMap, title, htmlMode);
+        ArrayList<HtmlSpanFragment> htmlSpanTag = createHtmlSpanTag(styles, htmlMode);
+        String htmled = addSpanTagsToText(text, htmlSpanTag, htmlMode);
         sb.append(htmled);
 
 
-        appendFooter(sb, html_mode);
+        appendFooter(sb, htmlMode);
 
         return sb.toString();
     }

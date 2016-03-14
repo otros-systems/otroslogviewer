@@ -63,10 +63,7 @@ public class MarkEqualsRule extends AbstractRule {
       marked = Boolean.valueOf(value);
       useOnOffSwith = true;
     } else {
-      // expects value to be a timestamp value represented as a long
-
       try {
-
         markerColors = MarkerColors.valueOf(value);
       } catch (Exception pe) {
         for (MarkerColors mc : MarkerColors.values()) {
