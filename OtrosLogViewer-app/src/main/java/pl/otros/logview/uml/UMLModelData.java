@@ -20,21 +20,21 @@ import java.io.InputStream;
 
 public class UMLModelData {
 
-  int distanceBetweenActors = 100;
-  Color actorColor = Color.BLACK;
-  Color boxColor = Color.BLACK;
-  Color messageColor = new Color(178, 34, 34); // Brown
-  Color messageStringColor = Color.BLUE;
-  Color backgroudColor = Color.WHITE;
-  Color lifeLinesColor = Color.GRAY;
-  double boxWidth = 10;
-  double actorSizeX = 80;
-  double actorSizeY = 40;
-  double messageArrowSize = 5;
-  double selfMessageWidth = 20;
-  Font actorFont = new Font("Arial", Font.BOLD, 10);
-  int yStep = 17;
-  Font messageFont = new Font("Arial", Font.PLAIN, 11);
+  protected int distanceBetweenActors = 100;
+  protected Color actorColor = Color.BLACK;
+  protected Color boxColor = Color.BLACK;
+  protected Color messageColor = new Color(178, 34, 34); // Brown
+  protected Color messageStringColor = Color.BLUE;
+  protected Color backgroundColor = Color.WHITE;
+  protected Color lifeLinesColor = Color.GRAY;
+  protected double boxWidth = 10;
+  protected double actorSizeX = 80;
+  protected double actorSizeY = 40;
+  protected double messageArrowSize = 5;
+  protected double selfMessageWidth = 20;
+  protected Font actorFont = new Font("Arial", Font.BOLD, 10);
+  protected int yStep = 17;
+  protected Font messageFont = new Font("Arial", Font.PLAIN, 11);
 
   public void loadProperties(InputStream in) {
 
@@ -80,12 +80,12 @@ public class UMLModelData {
     this.messageStringColor = messageStringColor;
   }
 
-  public Color getBackgroudColor() {
-    return backgroudColor;
+  public Color getBackgroundColor() {
+    return backgroundColor;
   }
 
-  public void setBackgroudColor(Color backgroudColor) {
-    this.backgroudColor = backgroudColor;
+  public void setBackgroundColor(Color backgroundColor) {
+    this.backgroundColor = backgroundColor;
   }
 
   public double getBoxWidth() {

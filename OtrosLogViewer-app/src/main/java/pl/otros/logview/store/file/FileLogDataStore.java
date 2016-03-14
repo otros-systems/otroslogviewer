@@ -294,8 +294,8 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       this.date = date;
     }
 
-    Integer id;
-    Date date;
+    protected Integer id;
+    protected Date date;
 
     @Override
     public int compareTo(IdAndDate o) {

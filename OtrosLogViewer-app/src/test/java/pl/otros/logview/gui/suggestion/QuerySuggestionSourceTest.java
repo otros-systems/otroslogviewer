@@ -10,7 +10,7 @@ import java.util.Collections;
 
 public class QuerySuggestionSourceTest {
 
-  QuerySuggestionSource underTest = new QuerySuggestionSource(new ArrayList<>(0));
+  private QuerySuggestionSource underTest = new QuerySuggestionSource(new ArrayList<>(0));
 
   @Test(enabled = false)
   public void testGetSuggestions() throws Exception {

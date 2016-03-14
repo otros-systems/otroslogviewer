@@ -15,17 +15,17 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
-import static org.testng.AssertJUnit.assertEquals;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class SynchronizePluginableContainerListenerTest {
 
-  PluginableElementsContainer<PluginableElement> d = null;
-  SynchronizePluginableContainerListener<PluginableElement> s = null;
+  private PluginableElementsContainer<PluginableElement> d = null;
+  private SynchronizePluginableContainerListener<PluginableElement> s = null;
 
   @BeforeMethod
 public void setup() {

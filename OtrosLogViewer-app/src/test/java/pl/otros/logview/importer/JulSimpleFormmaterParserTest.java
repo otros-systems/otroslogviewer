@@ -33,8 +33,8 @@ import static org.testng.AssertJUnit.assertNotNull;
 
 public class JulSimpleFormmaterParserTest {
 
-  LogImporterUsingParser importerUsingParser;
-  JulSimpleFormatterParser parser;
+  private LogImporterUsingParser importerUsingParser;
+  private JulSimpleFormatterParser parser;
 
   @BeforeMethod
 public void init() {

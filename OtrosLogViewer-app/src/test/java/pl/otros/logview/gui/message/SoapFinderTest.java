@@ -91,7 +91,6 @@ public class SoapFinderTest {
     AssertJUnit.assertEquals(38, first.getStart());
     AssertJUnit.assertEquals(299, first.getEnd());
     SubText last = findSoaps.last();
-    stringWithSoaps.substring(last.getStart(), last.getEnd());
     AssertJUnit.assertEquals(369, last.getStart());
     AssertJUnit.assertEquals(645, last.getEnd());
 

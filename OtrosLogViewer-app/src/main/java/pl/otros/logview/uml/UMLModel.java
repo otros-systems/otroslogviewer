@@ -41,10 +41,10 @@ public class UMLModel {
     data = new UMLModelData();
 
     cContent = new SelectableJComponent();
-    cContent.setBackground(data.backgroudColor);
+    cContent.setBackground(data.backgroundColor);
 
     cHeader = new SelectableJComponent();
-    cHeader.setBackground(data.backgroudColor);
+    cHeader.setBackground(data.backgroundColor);
     actorPosition = new LinkedHashMap<>();
     actorActivation = new HashMap<>();
     logUmlMapper = new LogUmlMapper();
@@ -62,7 +62,7 @@ public class UMLModel {
       cHeader.addShape(new ShapeWithColor(data.actorColor, r));
       Rectangle2D.Double r2 = new Rectangle2D.Double(actorPosition.get(actor) - data.actorSizeX / 2 + 1, yPosition + 1, data.actorSizeX - 1,
           data.actorSizeY - 1);
-      cHeader.addShape(new ShapeWithColor(data.backgroudColor, r2, true));
+      cHeader.addShape(new ShapeWithColor(data.backgroundColor, r2, true));
       cHeader.addString(new StringShape(convertClassName(actor), data.actorFont, actorPosition.get(actor), (int) (yPosition + data.actorSizeY / 2),
           data.actorColor));
 
@@ -102,7 +102,7 @@ public class UMLModel {
       int yPos = actorActivation.remove(actor);
       double x = actorPosition.get(actor) - data.boxWidth / 2;
       ShapeWithColor boxOutline = new ShapeWithColor(data.boxColor, new Rectangle2D.Double(x, yPos, data.boxWidth, yPosition - yPos));
-      ShapeWithColor boxInside = new ShapeWithColor(data.backgroudColor, new Rectangle2D.Double(x, yPos, data.boxWidth, yPosition - yPos), true);
+      ShapeWithColor boxInside = new ShapeWithColor(data.backgroundColor, new Rectangle2D.Double(x, yPos, data.boxWidth, yPosition - yPos), true);
       cContent.addShape(boxInside);
       cContent.addShape(boxOutline);
     }

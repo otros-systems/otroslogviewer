@@ -14,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 
 public class JsonXpathSuggestionSourceTest {
 
-  final List<String> allKeys = new ArrayList<>(Arrays.asList(JsonExtractor.KEYS));
+  private final List<String> allKeys = new ArrayList<>(Arrays.asList(JsonExtractor.KEYS));
 
   @BeforeClass
   public void beforeClass() {
@@ -90,7 +90,6 @@ public class JsonXpathSuggestionSourceTest {
 
   @DataProvider(name = "keySuggestion")
   public Object[][] dataProviderKeySuggestion() {
-
     return new Object[][]{
       new Object[]{"level=asdf", 0, allKeys.stream().map(s -> new BasicSuggestion(s, s+"=")).sorted().collect(Collectors.toList())},
       new Object[]{"level=asdf", 1, Arrays.asList(

@@ -23,16 +23,17 @@ public class RulerBarHelper {
    * Add Marker at select position
    * @param pane OtrosJTextWithRulerScrollPane
    * @param charPosition position
-   * @param tooltipText Tooltip message
+   * @param tooltip Tooltip message
    * @param color marker color
    * @param tooltipMode Tooltip mode
    */
   public static void addTextMarkerToPosition(
       OtrosJTextWithRulerScrollPane<? extends JTextComponent> pane,
-      int charPosition, String tooltipText, Color color,
+      int charPosition, final String tooltip, Color color,
       TooltipMode tooltipMode) {
-    MarkerModel markerModel = pane.getRulerBar().getMarkerModel();
 
+    String tooltipText = tooltip;
+    MarkerModel markerModel = pane.getRulerBar().getMarkerModel();
     String text = pane.getjTextComponent().getText();
     int lines = countLines(text);
     int lineOfCharPosition = countLineOfCharPosition(charPosition, text);
