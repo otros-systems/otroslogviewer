@@ -261,9 +261,10 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
   protected int getIndexToInsert(Date date, int downLimit, int upLimit, int startPoint) {
     Date dateInList = logDatasId.get(startPoint).date;
     int compareTo = date.compareTo(dateInList);
-
-    if (upLimit - downLimit < 3) {
-      for (int i = upLimit; i >= downLimit; i--) {
+    int effectiveDownLimit = downLimit;
+    int effectiveUpLimit = upLimit;
+    if (effectiveUpLimit - effectiveDownLimit < 3) {
+      for (int i = effectiveUpLimit; i >= effectiveDownLimit; i--) {
         dateInList = logDatasId.get(i).date;
         compareTo = date.compareTo(dateInList);
         if (compareTo == 0) {
@@ -272,18 +273,18 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
           return i + 1;
         }
       }
-      return downLimit;
+      return effectiveDownLimit;
     }
 
     if (compareTo < 0) {
-      upLimit = startPoint;
+      effectiveUpLimit = startPoint;
     } else if (compareTo > 0) {
-      downLimit = startPoint;
+      effectiveDownLimit = startPoint;
     } else {
       return startPoint;
     }
-    startPoint = (downLimit + upLimit) / 2;
-    return getIndexToInsert(date, downLimit, upLimit, startPoint);
+    startPoint = (effectiveDownLimit + effectiveUpLimit) / 2;
+    return getIndexToInsert(date, effectiveDownLimit, effectiveUpLimit, startPoint);
   }
 
   public static class IdAndDate implements Comparable<IdAndDate> {

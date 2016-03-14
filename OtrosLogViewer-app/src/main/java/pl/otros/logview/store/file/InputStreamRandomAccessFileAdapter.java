@@ -21,7 +21,7 @@ import java.io.RandomAccessFile;
 
 public class InputStreamRandomAccessFileAdapter extends InputStream {
 
-  final RandomAccessFile accessFile;
+  private final RandomAccessFile accessFile;
 
   public InputStreamRandomAccessFileAdapter(RandomAccessFile accessFile) {
     super();
