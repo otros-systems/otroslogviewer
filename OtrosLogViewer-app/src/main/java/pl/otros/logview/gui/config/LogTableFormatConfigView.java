@@ -256,13 +256,13 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       otrosApplication.getStatusObserver().updateStatus("Column layouts have been imported");
     } catch (Exception e) {
       LOGGER.error( "Can't import table layout from clipboard", e);
-      JOptionPane.showMessageDialog(panel.getRootPane(), "Can't import from clipboard");
+      showMessageDialog(panel.getRootPane(), "Can't import from clipboard");
     }
   }
 
   private void importColumnLayouts(List<ColumnLayout> columnLayouts) {
     if (columnLayouts.isEmpty()) {
-      JOptionPane.showMessageDialog(panel.getRootPane(), "No column layout in clipboard have been found");
+      showMessageDialog(panel.getRootPane(), "No column layout in clipboard have been found");
       return;
     }
     JPanel messagePanel = new JPanel(new BorderLayout());
@@ -276,9 +276,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       jList.getSelectionModel().setSelectionInterval(0, listModel.getSize() - 1);
     }
     messagePanel.add(new JScrollPane(jList));
-    final int resp = JOptionPane.showConfirmDialog(LogTableFormatConfigView.this.panel.getRootPane(), messagePanel, "Select column layouts to import",
-        JOptionPane.OK_CANCEL_OPTION);
-    if (resp == JOptionPane.CANCEL_OPTION) {
+    final int resp = showConfirmDialog(LogTableFormatConfigView.this.panel.getRootPane(), messagePanel, "Select column layouts to import",
+        OK_CANCEL_OPTION);
+    if (resp == CANCEL_OPTION) {
       return;
     }
 
@@ -383,8 +383,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         exportToClipBoard(list);
       } catch (ConfigurationException e) {
         LOGGER.error( "Can't export column layouts. ", e);
-        JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(),
-            "Export error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(),
+            "Export error", ERROR_MESSAGE);
       }
     }
   }
@@ -408,7 +408,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
           exportToFile(selectedFile, columnLayoutListModel.getList());
         } catch (Exception e) {
           LOGGER.error( "Can't export column layouts to file " + selectedFile, e);
-          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
+          showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
               .ERROR_MESSAGE);
         }
       }
@@ -430,8 +430,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         importFromClipboard();
       } catch (Exception e) {
         LOGGER.error( "Can't import column layout from clipboard", e);
-        JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(),
-            "Paste error", JOptionPane.ERROR_MESSAGE);
+        showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(),
+            "Paste error", ERROR_MESSAGE);
       }
     }
   }
@@ -460,12 +460,12 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
           importFromFile(selectedFile);
         } catch (ConfigurationException e) {
           LOGGER.error( "Can't import column layout from file", e);
-          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-              JOptionPane.ERROR_MESSAGE);
+          showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
+              ERROR_MESSAGE);
         } catch (FileSystemException e) {
           LOGGER.error( "Can't import column layout from file", e);
-          JOptionPane.showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-              JOptionPane.ERROR_MESSAGE);
+          showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
+              ERROR_MESSAGE);
         }
       }
     }

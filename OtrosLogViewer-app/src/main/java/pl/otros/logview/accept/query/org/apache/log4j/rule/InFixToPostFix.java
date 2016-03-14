@@ -109,7 +109,7 @@ public class InFixToPostFix {
    *          symbol 2
    * @return true if symbol 1 precedes symbol 2
    */
-  boolean precedes(final String symbol1, final String symbol2) {
+  private boolean precedes(final String symbol1, final String symbol2) {
     String sym1 = symbol1.toLowerCase(Locale.ENGLISH);
     String sym2 = symbol2.toLowerCase(Locale.ENGLISH);
 

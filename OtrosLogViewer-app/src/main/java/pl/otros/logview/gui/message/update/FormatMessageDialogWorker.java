@@ -94,7 +94,6 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
   protected void updateChanges(List<TextChunkWithStyle> chunks) {
     LOGGER.trace("Start updating view with chunks, size: " + chunks.size());
     StyledDocument document = otrosJTextWithRulerScrollPane.getjTextComponent().getStyledDocument();
-    List<MessageFragmentStyle> searchResultPositions = new ArrayList<>();
     int i = 0;
     for (TextChunkWithStyle chunk : chunks) {
       LOGGER.trace("Updating with chunk " + i++);

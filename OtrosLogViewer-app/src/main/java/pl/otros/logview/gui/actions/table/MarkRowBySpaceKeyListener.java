@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,19 +18,18 @@ package pl.otros.logview.gui.actions.table;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.gui.LogDataTableModel;
 import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class MarkRowBySpaceKeyListener extends KeyAdapter  {
+public class MarkRowBySpaceKeyListener extends KeyAdapter {
 
-	private final OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
 
-	public MarkRowBySpaceKeyListener(OtrosApplication otrosApplication) {
+  public MarkRowBySpaceKeyListener(OtrosApplication otrosApplication) {
     super();
-		this.otrosApplication = otrosApplication;
-	}
+    this.otrosApplication = otrosApplication;
+  }
 
   @Override
   public void keyReleased(KeyEvent e) {
@@ -41,9 +40,8 @@ public class MarkRowBySpaceKeyListener extends KeyAdapter  {
   }
 
   private void markUnmarkRow() {
-		LogDataTableModel dataTableModel = otrosApplication.getSelectedPaneLogDataTableModel();
-		StatusObserver observer = otrosApplication.getStatusObserver();
-		JXTable table = otrosApplication.getSelectPaneJXTable();
+    LogDataTableModel dataTableModel = otrosApplication.getSelectedPaneLogDataTableModel();
+    JXTable table = otrosApplication.getSelectPaneJXTable();
     int[] selected = table.getSelectedRows();
     if (selected.length == 0) {
       return;

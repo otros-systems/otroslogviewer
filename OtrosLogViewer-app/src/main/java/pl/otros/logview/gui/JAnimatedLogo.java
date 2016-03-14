@@ -25,33 +25,32 @@ import java.awt.*;
 public class JAnimatedLogo extends JLabel {
 
   private double alpha;
-  private LogoIcon icon;
-  private SwingRepaintTimeline timeline;
+  private SwingRepaintTimeline timeLine;
 
   public JAnimatedLogo(String text, int horizontalAlignment) {
     super(text, horizontalAlignment);
-    createTimeline();
+    createTimeLine();
   }
 
   public JAnimatedLogo(String text) {
     super(text);
-    createTimeline();
+    createTimeLine();
   }
 
   public JAnimatedLogo() {
     super();
-    createTimeline();
+    createTimeLine();
 
   }
 
-  private void createTimeline() {
-    icon = new LogoIcon();
+  private void createTimeLine() {
+    LogoIcon icon = new LogoIcon();
     this.setIcon(icon);
 
-    timeline = new SwingRepaintTimeline(this);
-    timeline.addPropertyToInterpolate("alpha", 0, 45);
-    timeline.setDuration(800);
-    timeline.setEase(new Sine());
+    timeLine = new SwingRepaintTimeline(this);
+    timeLine.addPropertyToInterpolate("alpha", 0, 45);
+    timeLine.setDuration(800);
+    timeLine.setEase(new Sine());
   }
 
   class LogoIcon implements Icon {
@@ -70,9 +69,9 @@ public class JAnimatedLogo extends JLabel {
     }
 
     @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      paintConstants(c, g, x, y);
-      paintVary(c, g, x, y);
+    public void paintIcon(Component component, Graphics graphics, int x, int y) {
+      paintConstants(component, graphics, x, y);
+      paintVary(component, graphics, x, y);
     }
 
     private void paintVary(Component c, Graphics g, int x, int y) {
@@ -134,11 +133,11 @@ public class JAnimatedLogo extends JLabel {
   }
 
   public void start() {
-    timeline.playLoop(RepeatBehavior.REVERSE);
+    timeLine.playLoop(RepeatBehavior.REVERSE);
   }
 
   public void stop() {
-    timeline.cancelAtCycleBreak();
+    timeLine.cancelAtCycleBreak();
   }
 
 }

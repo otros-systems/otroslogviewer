@@ -16,6 +16,8 @@
 
 package pl.otros.logview.importer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.LogDataCollector;
 import pl.otros.logview.io.Utils;
 import pl.otros.logview.parser.ParsingContext;
@@ -26,8 +28,6 @@ import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DetectOnTheFlyLogImporter extends AbstractPluginableElement implements LogImporter {
 
@@ -74,7 +74,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
         int read = 0;
         while ((read = in.read(buff)) > 0) {
 
-          ByteArrayOutputStream byteArrayOutputStream = (java.io.ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER);
+          ByteArrayOutputStream byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER);
           int totalRead = byteArrayOutputStream.size();
           totalRead += read;
           if (totalRead < detectTryMinimum) {

@@ -22,9 +22,6 @@ import java.awt.event.ActionListener;
 
 public class CreateUMLActionListener implements ActionListener {
 
-  public CreateUMLActionListener() {
-
-  }
 
   @Override
   public void actionPerformed(ActionEvent arg0) {

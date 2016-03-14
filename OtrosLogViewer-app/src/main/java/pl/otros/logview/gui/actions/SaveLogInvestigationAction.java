@@ -57,7 +57,6 @@ public class SaveLogInvestigationAction extends OtrosAction {
             Memento m = lvFrame.getDataTableModel().saveToMemento();
 
             JXTable jxTable = lvFrame.getLogViewPanel().getTable();
-            int columnCount = jxTable.getColumnCount(true);
             List<TableColumn> columns = jxTable.getColumns(true);
 
             for (int i = 0; i < columns.size(); i++) {

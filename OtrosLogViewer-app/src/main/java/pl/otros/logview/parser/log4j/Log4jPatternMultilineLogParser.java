@@ -482,33 +482,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     }
   }
 
-  private String quoteTimeStampChars(String input) {
-    // put single quotes around text that isn't a supported dateformat char
-    StringBuffer result = new StringBuffer();
-    // ok to default to false because we also check for index zero below
-    boolean lastCharIsDateFormat = false;
-    for (int i = 0; i < input.length(); i++) {
-      String thisVal = input.substring(i, i + 1);
-      boolean thisCharIsDateFormat = VALID_DATEFORMAT_CHARS.contains(thisVal);
-      // we have encountered a non-dateformat char
-      if (!thisCharIsDateFormat && (i == 0 || lastCharIsDateFormat)) {
-        result.append("'");
-      }
-      // we have encountered a dateformat char after previously
-      // encountering a non-dateformat char
-      if (thisCharIsDateFormat && i > 0 && !lastCharIsDateFormat) {
-        result.append("'");
-      }
-      lastCharIsDateFormat = thisCharIsDateFormat;
-      result.append(thisVal);
-    }
-    // append an end single-quote if we ended with non-dateformat char
-    if (!lastCharIsDateFormat) {
-      result.append("'");
-    }
-    return result.toString();
-  }
-
   private String singleReplace(String inputString, String oldString, String newString) {
     String result = inputString;
     int propLength = oldString.length();
@@ -814,10 +787,9 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
         customLevelsParser = new CustomLevelsParser(customLevelDefinitions);
 
         Map<Integer, String> groupMap = new HashMap<>();
-        Enumeration<String> e =
-                (Enumeration<String>) properties.propertyNames();
+        Enumeration<String> e = (Enumeration<String>) properties.propertyNames();
         String key = null, val = null;
-        int keyLen, dotGrouplen;
+        int keyLen;
         int dotGroupLen = ".group".length();
         while (e.hasMoreElements()) try {
             key = e.nextElement();

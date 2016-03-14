@@ -25,8 +25,6 @@ import java.util.logging.Level;
 
 public class SearchByLevel extends OtrosAction {
 
-  private LogDataTableModel model;
-  private JTable table;
   private int lastRow = 0;
   private int direction = 1;
   private final int minLevel;
@@ -55,8 +53,8 @@ public class SearchByLevel extends OtrosAction {
     if (lvFrame == null) {
       return;
     }
-    table = lvFrame.getLogViewPanel().getTable();
-    model = lvFrame.getDataTableModel();
+    JTable table = lvFrame.getLogViewPanel().getTable();
+    LogDataTableModel model = lvFrame.getDataTableModel();
 
 		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
 		if (table.getRowCount() == 0) {

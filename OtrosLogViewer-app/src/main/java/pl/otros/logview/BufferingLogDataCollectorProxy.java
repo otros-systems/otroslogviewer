@@ -27,16 +27,15 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
   private final LogDataCollector delegate;
   private ProxyLogDataCollector proxyLogDataCollector;
   private volatile boolean stop;
-  private final DataConfiguration configuration;
 
   public BufferingLogDataCollectorProxy(LogDataCollector delegate, final long sleepTime, Configuration configuration) {
     super();
     this.delegate = delegate;
-    this.configuration = new DataConfiguration(configuration);
+    final DataConfiguration dataConfiguration = new DataConfiguration(configuration);
     proxyLogDataCollector = new ProxyLogDataCollector();
     Runnable r = () -> {
       while (!stop) {
-        if (BufferingLogDataCollectorProxy.this.configuration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
+        if (dataConfiguration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
           synchronized (BufferingLogDataCollectorProxy.this) {
             LogData[] logData = proxyLogDataCollector.getLogData();
             if (logData.length > 0) {

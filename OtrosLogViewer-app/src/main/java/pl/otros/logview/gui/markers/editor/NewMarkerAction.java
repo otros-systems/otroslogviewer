@@ -106,13 +106,16 @@ public class NewMarkerAction extends AbstractAction {
     f.setVisible(true);
   }
 
-  private void saveMarker(File f, Properties p) throws IOException {
-    if (!f.getName().endsWith(".marker")) {
-      f = new File(f.getAbsoluteFile() + ".marker");
+  private void saveMarker(final File markerFile, final Properties markerProperties) throws IOException {
+    File file;
+    if (!markerFile.getName().endsWith(".marker")) {
+      file = new File(markerFile.getAbsoluteFile() + ".marker");
+    } else {
+      file = markerFile;
     }
-    FileOutputStream fout = new FileOutputStream(f);
-    p.setProperty(PropertyFileAbstractMarker.FILE, f.getName());
-    p.store(fout, "Edited at " + new Date().toString());
+    FileOutputStream fout = new FileOutputStream(file);
+    markerProperties.setProperty(PropertyFileAbstractMarker.FILE, file.getName());
+    markerProperties.store(fout, "Edited at " + new Date().toString());
     fout.close();
   }
 

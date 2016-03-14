@@ -204,7 +204,7 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     if (rest.matches(fieldOperatorValue)) {
 //      System.out.println("rest is: " + rest);
       final Matcher matcher = pattern.matcher(rest);
-      final boolean b = matcher.find();
+      matcher.find();
       for (int i = 0; i <= matcher.groupCount(); i++) {
         System.out.printf("Group %d=\"%s\"%n", i, matcher.group(i));
       }
@@ -336,9 +336,8 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return -1;
   }
 
-  private String trimLeading(String rest) {
-    rest = rest.replaceFirst("^\\s*", "");
-    return rest;
+  private String trimLeading(final String stringToTrim) {
+    return stringToTrim.replaceFirst("^\\s*", "");
   }
 
   public static void main(String[] args) {

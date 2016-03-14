@@ -154,7 +154,7 @@ public class LogImportersLoader {
   }
 
   // TODO
-  private ArrayList<LogImporter> loadFromDir(File file) {
+  private ArrayList<LogImporter> loadFromDir(File dir) {
 
     return new ArrayList<>();
   }

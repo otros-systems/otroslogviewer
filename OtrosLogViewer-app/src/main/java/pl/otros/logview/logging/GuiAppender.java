@@ -51,9 +51,6 @@ public class GuiAppender extends AppenderBase<ILoggingEvent> {
     MessageUpdateUtils.class.getName()//
   };
 
-  public GuiAppender() {
-  }
-
   @Override
   protected void append(ILoggingEvent eventObject) {
     if (bufferingLogDataCollectorProxy != null && !isIgnoringLogRecord(eventObject)) {

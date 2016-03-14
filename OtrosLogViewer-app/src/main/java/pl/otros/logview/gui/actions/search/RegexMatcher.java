@@ -27,15 +27,16 @@ public class RegexMatcher implements SearchMatcher {
   private static final String DOT_ALL_SUFFIX = ".*";
   private final Pattern pattern;
 
-  public RegexMatcher(String regexToMatch) {
+  public RegexMatcher(final String regexToMatch) {
     super();
-    while (regexToMatch.startsWith(DOT_ALL_SUFFIX)) {
-      regexToMatch = regexToMatch.substring(2);
+    String patternToUse = regexToMatch;
+    while (patternToUse.startsWith(DOT_ALL_SUFFIX)) {
+      patternToUse = patternToUse.substring(2);
     }
-    while (regexToMatch.endsWith(DOT_ALL_SUFFIX)) {
-      regexToMatch = regexToMatch.substring(0, regexToMatch.length() - 2);
+    while (patternToUse.endsWith(DOT_ALL_SUFFIX)) {
+      patternToUse = patternToUse.substring(0, patternToUse.length() - 2);
     }
-    pattern = Pattern.compile(regexToMatch, Pattern.CASE_INSENSITIVE);
+    pattern = Pattern.compile(patternToUse, Pattern.CASE_INSENSITIVE);
   }
 
   @Override

@@ -20,9 +20,6 @@ import java.awt.*;
 
 public final class EmptyIcon implements Icon {
 
-  public EmptyIcon() {
-  }
-
   public int getIconHeight() {
     return 0;
   }

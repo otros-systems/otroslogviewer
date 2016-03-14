@@ -2,7 +2,6 @@ package pl.otros.logview.gui.renderers;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.table.TableCellRenderer;
@@ -22,8 +21,8 @@ public class Renderers {
     final DataConfiguration configuration = otrosApplication.getConfiguration();
     classWrapperRenderer = new ClassWrapperRenderer();
     classWrapperRenderer.reloadConfiguration(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, StringUtils.EMPTY));
-    levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
-    dateRenderer = new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
+    levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
+    dateRenderer = new DateRenderer(configuration.getString(LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
     stringRenderer = new StringRenderer();
     configuration.addConfigurationListener(event -> {
       if (event.isBeforeUpdate()) {
@@ -36,7 +35,7 @@ public class Renderers {
           classWrapperRenderer.reloadConfiguration(value);
           break;
         case LOG_TABLE_FORMAT_LEVEL_RENDERER:
-          final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
+          final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
           levelRenderer.setMode(mode);
           break;
         case LOG_TABLE_FORMAT_DATE_FORMAT:

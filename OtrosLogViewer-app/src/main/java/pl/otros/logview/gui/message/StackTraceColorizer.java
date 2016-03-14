@@ -90,7 +90,7 @@ public class StackTraceColorizer implements MessageColorizer {
       String subTextFragment = message.substring(subText.getStart(), subText.getEnd());
       Matcher matcher = exceptionLine.matcher(subTextFragment);
       while (matcher.find()) {
-        int newOffset = subText.start;
+        int newOffset = subText.getStart();
         list.addAll(increaseOffset(colorizeStackTraceRegex(stylePackage, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_PACKAGE), newOffset));
         list.addAll(increaseOffset(colorizeStackTraceRegex(styleClass, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_CLASS), newOffset));
         list.addAll(increaseOffset(colorizeStackTraceRegex(styleMethod, subTextFragment, exceptionLine, EXCEPTION_LINE_GROUP_METHOD), newOffset));
