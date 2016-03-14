@@ -27,7 +27,7 @@ import static org.testng.Assert.*;
 
 public class LogbackUtilTest {
 
-  LogDataBuilder builder = new LogDataBuilder();
+  private LogDataBuilder builder = new LogDataBuilder();
 
   @BeforeMethod
   public void beforeMethod() {

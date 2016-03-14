@@ -25,12 +25,12 @@ public class StringShape {
   private final int centerY;
   private final Color color;
 
-  public StringShape(String string, Font font, int centerX, int centerY, Color color) {
+  public StringShape(String text, Font font, int centerX, int centerY, Color color) {
     super();
-    if (string.length() == 0) {
-      string = " ";
+    if (text.length() == 0) {
+      text = " ";
     }
-    this.string = string;
+    this.string = text;
     this.font = font;
     this.centerX = centerX;
     this.centerY = centerY;

@@ -14,6 +14,8 @@ import static org.testng.Assert.assertEquals;
 
 public class JsonXpathSuggestionSourceTest {
 
+  private final HashSet<String> xpaths = new HashSet<>(Arrays.asList("ala", "aba", "all"));
+
   private final List<String> allKeys = new ArrayList<>(Arrays.asList(JsonExtractor.KEYS));
 
   @BeforeClass
@@ -22,8 +24,6 @@ public class JsonXpathSuggestionSourceTest {
     allKeys.add("type");
     allKeys.add("description");
   }
-
-  final HashSet<String> xpaths = new HashSet<>(Arrays.asList("ala", "aba", "all"));
 
 
   @DataProvider(name = "suggestions")

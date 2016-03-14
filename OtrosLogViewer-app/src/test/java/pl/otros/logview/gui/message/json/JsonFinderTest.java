@@ -81,13 +81,12 @@ public class JsonFinderTest {
     @Test(dataProvider = "testCountParenthesis")
     public void testCountParenthesis(String string, String result) throws Exception {
         //given
-        result = result.replace(" ", "");
 
         //when
         final List<Integer> actual = underTest.countParenthesis(string);
 
         //then
         final String actualString = Joiner.on("").join(actual);
-        Assert.assertEquals(actualString, result,string);
+        Assert.assertEquals(actualString, result.replace(" ", ""),string);
     }
 }

@@ -26,7 +26,7 @@ public class MemoryAsyncLogDataStoreTest {
 
   public static final int LOG_EVENT_COUNT = 1000;
   public static final String TEST_THREAD_POOL_NAME = "TestThreadPoolName";
-  MemoryAsyncLogDataStore store;
+  private MemoryAsyncLogDataStore store;
   private final String[] classes = {
       "com.package.p1.Class",
       "com.package.p1.Dao",

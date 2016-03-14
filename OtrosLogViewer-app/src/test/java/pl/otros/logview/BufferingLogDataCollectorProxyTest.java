@@ -27,14 +27,13 @@ import java.lang.reflect.InvocationTargetException;
 
 public class BufferingLogDataCollectorProxyTest {
 
-  BaseConfiguration configuration;
-  BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy;
-  long sleepTime = 100;
-  ProxyLogDataCollector delegate;
+  private BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy;
+  private long sleepTime = 100;
+  private ProxyLogDataCollector delegate;
 
   @BeforeMethod
   public void initTest() throws InterruptedException, InvocationTargetException {
-    configuration = new BaseConfiguration();
+    BaseConfiguration configuration = new BaseConfiguration();
     configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
 
     delegate = new ProxyLogDataCollector();

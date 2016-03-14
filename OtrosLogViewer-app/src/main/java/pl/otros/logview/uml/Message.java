@@ -25,26 +25,26 @@ public class Message {
   private final String values = "";
   private static final Pattern getExitValuesPattern = Pattern.compile("Exit, return value = (.*)");
 
-  public Message(String m) {
-    m = m.toLowerCase();
+  public Message(String message) {
+    String m = message.toLowerCase();
     if (m.startsWith("entry") || m.startsWith("enter")) {
       type = MessageType.TYPE_ENTRY;
-      message = m;
+      this.message = m;
 
     } else if (m.startsWith("exit") || m.startsWith("return")) {
       type = MessageType.TYPE_EXIT;
       // Exit, return value = false
       Matcher match = getExitValuesPattern.matcher(m);
       if (match.find() && match.groupCount() == 1) {
-        message = match.group(1);
+        this.message = match.group(1);
       }
 
     } else {
       type = MessageType.TYPE_LOG;
-      message = m;
+      this.message = m;
     }
-    if (message.length() > 90) {
-      message = message.substring(0, 90);
+    if (this.message.length() > 90) {
+      this.message = this.message.substring(0, 90);
     }
 
   }
