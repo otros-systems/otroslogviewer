@@ -34,12 +34,6 @@ import java.io.InputStream;
  */
 public final class UtilLoggingEntityResolver implements EntityResolver {
 
-  /**
-   * Create new instance.
-   */
-  public UtilLoggingEntityResolver() {
-    super();
-  }
 
   /** {@inheritDoc} */
   public InputSource resolveEntity(final String publicId, final String systemId) {

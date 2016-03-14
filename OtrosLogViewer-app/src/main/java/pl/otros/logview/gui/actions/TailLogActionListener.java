@@ -18,6 +18,8 @@ package pl.otros.logview.gui.actions;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.Stoppable;
 import pl.otros.logview.gui.Icons;
@@ -41,14 +43,11 @@ import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TailLogActionListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailLogActionListener.class.getName());
   private LogImporter importer;
-  private LogImportStats importStats;
 
   public TailLogActionListener(OtrosApplication otrosApplication, LogImporter importer) {
     super(otrosApplication);
@@ -116,7 +115,7 @@ public class TailLogActionListener extends OtrosAction {
     {
 
       Runnable r = () -> {
-        importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
+        LogImportStats importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
         panel.getStatsTable().setModel(importStats);
         panel.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
             new ParsingContextStopperForClosingTab(parsingContext)));

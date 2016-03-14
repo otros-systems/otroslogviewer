@@ -36,14 +36,13 @@ public class TimeFilter extends AbstractLogFilter {
   private final SpinnerDateModel startM;
   private final SpinnerDateModel endM;
   private final JPanel gui;
-  private final ChangeListner changeListner;
   private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private final JCheckBox startEnable;
   private final JCheckBox endEnable;
 
   public TimeFilter() {
     super(NAME, DESCRIPTION);
-    changeListner = new ChangeListner();
+    MyChangeListener changeListner = new MyChangeListener();
     start = new Date();
     end = new Date();
     startM = new SpinnerDateModel();
@@ -90,7 +89,7 @@ public class TimeFilter extends AbstractLogFilter {
 
   }
 
-  private class ChangeListner implements ChangeListener {
+  private class MyChangeListener implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {

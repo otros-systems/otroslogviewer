@@ -234,8 +234,6 @@ public class ClassFilter extends AbstractLogFilter {
             if (obj instanceof Clazz) {
                 Clazz clazz2 = (Clazz) obj;
                 return pack.equals(clazz2.pack) && this.clazz.equals(clazz2.clazz);
-            } else if (obj instanceof String) {
-
             }
             return false;
         }

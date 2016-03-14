@@ -25,8 +25,7 @@ import java.awt.*;
 public class JAnimatedLogo extends JLabel {
 
   private double alpha;
-  private LogoIcon icon;
-  private SwingRepaintTimeline timeline;
+  private SwingRepaintTimeline timeLine;
 
   public JAnimatedLogo(String text, int horizontalAlignment) {
     super(text, horizontalAlignment);
@@ -45,13 +44,13 @@ public class JAnimatedLogo extends JLabel {
   }
 
   private void createTimeline() {
-    icon = new LogoIcon();
+    LogoIcon icon = new LogoIcon();
     this.setIcon(icon);
 
-    timeline = new SwingRepaintTimeline(this);
-    timeline.addPropertyToInterpolate("alpha", 0, 45);
-    timeline.setDuration(800);
-    timeline.setEase(new Sine());
+    timeLine = new SwingRepaintTimeline(this);
+    timeLine.addPropertyToInterpolate("alpha", 0, 45);
+    timeLine.setDuration(800);
+    timeLine.setEase(new Sine());
   }
 
   class LogoIcon implements Icon {
@@ -134,11 +133,11 @@ public class JAnimatedLogo extends JLabel {
   }
 
   public void start() {
-    timeline.playLoop(RepeatBehavior.REVERSE);
+    timeLine.playLoop(RepeatBehavior.REVERSE);
   }
 
   public void stop() {
-    timeline.cancelAtCycleBreak();
+    timeLine.cancelAtCycleBreak();
   }
 
 }

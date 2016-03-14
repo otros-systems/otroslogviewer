@@ -150,7 +150,7 @@ public class TabHeader extends JPanel {
     add(editor, 0);
     revalidate();
 
-    boolean focus = editor.requestFocusInWindow();
+    editor.requestFocusInWindow();
   }
 
   private void cancelEditing() {

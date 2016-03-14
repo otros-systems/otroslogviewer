@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 public class LevelFilter extends AbstractLogFilter {
   private int passLevel = Level.ALL.intValue();
-  private final JComboBox levelJCombo;
+//  private final JComboBox levelJCombo;
   private final JComboBox modeJCombo;
   private static final String NAME = "Level filter";
   private static final String DESCRIPTION = "Filtering events based on a level. It passes events with selected level or higher.";
@@ -65,7 +65,7 @@ public class LevelFilter extends AbstractLogFilter {
         RenamedLevel.WARNING_WARN,
         RenamedLevel.SEVERE_ERROR_FATAL
     };
-    levelJCombo = new JComboBox(levels);
+    JComboBox<Level> levelJCombo = new JComboBox<>(levels);
     levelJCombo.setRenderer(renderer);
     levelJCombo.setOpaque(true);
     levelJCombo.setEditable(false);
