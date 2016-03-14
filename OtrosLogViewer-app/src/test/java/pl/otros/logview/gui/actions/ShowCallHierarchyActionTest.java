@@ -1,27 +1,14 @@
 package pl.otros.logview.gui.actions;
 
-import org.testng.annotations.Test;
-import org.testng.Assert;
 import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.gui.LogDataTableModel;
-
-import java.util.ArrayList;
 
 public class ShowCallHierarchyActionTest {
 
 
-  @Test(enabled=false)
-  public void testFindCallHierarchyEvents() {
-    ShowCallHierarchyAction callHierarchyAction = new ShowCallHierarchyAction(null,null,null);
-    LogDataTableModel model = new LogDataTableModel();
-    ArrayList<Integer> listOfEvents2 = new ArrayList<>();
-    ArrayList<Integer> listEntryEvents = new ArrayList<>();
-    int selected = 4;
-    Assert.fail("not implemented");
 
-  }
 
   @Test
   public void testTheSameLogMethod() {
