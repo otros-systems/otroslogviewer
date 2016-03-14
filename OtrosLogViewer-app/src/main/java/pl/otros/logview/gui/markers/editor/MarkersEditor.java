@@ -42,7 +42,6 @@ public class MarkersEditor extends JPanel {
   private final MarkerEditor editor;
   private final CardLayout cardLayout;
   private JPanel southPanel;
-  private JButton buttonNew;
   private JButton buttonSave;
   private final MarkersListModel markersListModel;
   private final PluginableElementsContainer<AutomaticMarker> markersContainser;
@@ -103,7 +102,7 @@ public class MarkersEditor extends JPanel {
 
   private void initSouthPanel() {
     southPanel = new JPanel(new MigLayout("", "[right]", ""));
-    buttonNew = new JButton(new NewMarkerAction());
+    JButton buttonNew = new JButton(new NewMarkerAction());
 
     southPanel.add(buttonNew, "right");
     buttonSave = new JButton(new SaveMarkerAction(editor));

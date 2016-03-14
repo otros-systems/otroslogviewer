@@ -21,12 +21,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.StatusObserver;
-import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.MessageFragmentStyle;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
-import pl.otros.logview.pluginable.PluginableElementListModel;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -46,24 +43,20 @@ public class MessageColorizerEditor extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerEditor.class.getName());
 
-  private static String defualtContent;
+  private static String defaultContent;
 
   private final JEditorPane editorPane;
 
   private final JTextPane textPane;
 
   private final DelayedSwingInvoke deleyedSwingInvoke;
-  private final PluginableElementsContainer<MessageColorizer> container;
 
   private final StatusObserver statusObserver;
-
-  private PluginableElementListModel<MessageColorizer> listModel;
 
   private String file;
   private final JLabel label;
 
-  public MessageColorizerEditor(PluginableElementsContainer<MessageColorizer> container, StatusObserver observer) {
-    this.container = container;
+  public MessageColorizerEditor(StatusObserver observer) {
     statusObserver = observer;
     this.setLayout(new BorderLayout());
     DefaultSyntaxKit.initKit();
@@ -151,14 +144,14 @@ public class MessageColorizerEditor extends JPanel {
   }
 
   protected String getDefaultContent() {
-    if (defualtContent == null) {
+    if (defaultContent == null) {
       try {
-        defualtContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
+        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
       } catch (IOException e) {
         LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }
     }
-    return defualtContent;
+    return defaultContent;
   }
 
   public void setTextToColorize(String text) {

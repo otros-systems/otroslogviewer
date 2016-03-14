@@ -71,7 +71,7 @@ public class MessageColorizerBrowser extends JPanel {
 		this.otrosApplication = otrosApplication;
 
     toolBar = new JToolBar();
-    editor = new MessageColorizerEditor(container, otrosApplication.getStatusObserver());
+    editor = new MessageColorizerEditor(otrosApplication.getStatusObserver());
     JLabel noEditable = new JLabel("Selected MessageColorizer is not editable.", SwingConstants.CENTER);
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 

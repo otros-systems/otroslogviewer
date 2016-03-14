@@ -38,7 +38,6 @@ public class SoapMessageColorizer implements MessageColorizer {
 	protected Style styleCData;
 	protected Style styleProcessingInstructions;
 	protected Style styleDOCTYPE;
-  private StyleContext sc;
 
   private static final Pattern pComment = Pattern.compile("(<!--.*?-->)");
   private static final Pattern pContent = Pattern.compile(">(.*?)<");
@@ -57,7 +56,7 @@ public class SoapMessageColorizer implements MessageColorizer {
   }
 
   private void initStyles() {
-    sc = new StyleContext();
+    StyleContext sc = new StyleContext();
     Style parent = sc.getStyle(StyleContext.DEFAULT_STYLE);
 
     StyleConstants.setFontFamily(parent, "courier");
