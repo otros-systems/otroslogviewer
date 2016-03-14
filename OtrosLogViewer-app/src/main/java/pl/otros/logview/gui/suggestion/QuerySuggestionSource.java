@@ -336,9 +336,8 @@ public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion>
     return -1;
   }
 
-  private String trimLeading(String stringToTrim) {
-    stringToTrim = stringToTrim.replaceFirst("^\\s*", "");
-    return stringToTrim;
+  private String trimLeading(final String stringToTrim) {
+    return stringToTrim.replaceFirst("^\\s*", "");
   }
 
   public static void main(String[] args) {

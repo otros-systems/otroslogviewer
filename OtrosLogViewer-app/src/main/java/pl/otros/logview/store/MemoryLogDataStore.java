@@ -56,13 +56,14 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
     }
   }
 
-  protected int getIndexToInsert(Date date, int downLimit, final int upLimit, int startAt) {
+  protected int getIndexToInsert(Date date, final int downLimit, final int upLimit, int startAt) {
     int startPoint = startAt;
+    int effectiveDownLimit = downLimit;
     Date dateInList = list.get(startPoint).getDate();
     int compareTo = date.compareTo(dateInList);
     int effectiveUpLimit = upLimit;
-    if (effectiveUpLimit - downLimit < 3) {
-      for (int i = effectiveUpLimit; i >= downLimit; i--) {
+    if (effectiveUpLimit - effectiveDownLimit < 3) {
+      for (int i = effectiveUpLimit; i >= effectiveDownLimit; i--) {
         dateInList = list.get(i).getDate();
         compareTo = date.compareTo(dateInList);
         if (compareTo == 0) {
@@ -71,18 +72,18 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
           return i + 1;
         }
       }
-      return downLimit;
+      return effectiveDownLimit;
     }
 
     if (compareTo < 0) {
       effectiveUpLimit = startPoint;
     } else if (compareTo > 0) {
-      downLimit = startPoint;
+      effectiveDownLimit = startPoint;
     } else {
       return startPoint;
     }
-    startPoint = (downLimit + effectiveUpLimit) / 2;
-    return getIndexToInsert(date, downLimit, effectiveUpLimit, startPoint);
+    startPoint = (effectiveDownLimit + effectiveUpLimit) / 2;
+    return getIndexToInsert(date, effectiveDownLimit, effectiveUpLimit, startPoint);
   }
 
   @Override
@@ -100,8 +101,7 @@ public class MemoryLogDataStore extends AbstractMemoryLogStore implements LogDat
 
   @Override
   public LogData getLogData(int id) {
-    LogData logData = list.get(id);
-    return logData;
+    return list.get(id);
   }
 
   @Override
