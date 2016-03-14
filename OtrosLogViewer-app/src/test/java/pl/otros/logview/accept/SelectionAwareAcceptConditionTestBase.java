@@ -32,7 +32,7 @@ public class SelectionAwareAcceptConditionTestBase {
   }
 
   @BeforeMethod
-public void setup() {
+public void setUp() {
     dataTableModel = new LogDataTableModel();
     table = new JTable(dataTableModel);
     for (int i = 0; i < 5; i++) {

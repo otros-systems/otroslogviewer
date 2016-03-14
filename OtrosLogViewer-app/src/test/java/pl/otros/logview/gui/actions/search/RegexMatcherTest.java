@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import pl.otros.logview.LogData;
+
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
-import pl.otros.logview.LogData;
 
 public class RegexMatcherTest {
 
@@ -27,7 +28,7 @@ public class RegexMatcherTest {
   private LogData ld2;
 
   @BeforeMethod
-public void setup() {
+  public void setUp() {
     ld1 = new LogData();
     ld1.setMessage("Ala ma kota, a kot ma ale 12");
 

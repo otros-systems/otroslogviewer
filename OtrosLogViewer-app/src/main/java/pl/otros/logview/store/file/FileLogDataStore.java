@@ -258,7 +258,7 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     return notable.getAllNotes();
   }
 
-  protected int getIndexToInsert(Date date, int downLimit, int upLimit, int startPoint) {
+  protected int getIndexToInsert(Date date, final int downLimit, final int upLimit, int startPoint) {
     Date dateInList = logDatasId.get(startPoint).date;
     int compareTo = date.compareTo(dateInList);
     int effectiveDownLimit = downLimit;

@@ -26,7 +26,7 @@ public class PluginableElementsContainerTest {
   public PluginableElementsContainer<PluginableClass> container;
 
   @BeforeMethod
-  public void setup() {
+  public void setUp() {
     container = new PluginableElementsContainer<>();
   }
 

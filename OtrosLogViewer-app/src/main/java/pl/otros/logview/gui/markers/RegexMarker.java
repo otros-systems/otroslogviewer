@@ -16,7 +16,6 @@
 package pl.otros.logview.gui.markers;
 
 import pl.otros.logview.LogData;
-import pl.otros.logview.MarkerColors;
 
 import java.util.Properties;
 import java.util.regex.Pattern;

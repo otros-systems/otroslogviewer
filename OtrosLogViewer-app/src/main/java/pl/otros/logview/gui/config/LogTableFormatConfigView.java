@@ -15,7 +15,6 @@ import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.ConfKeys;
 import pl.otros.logview.gui.Icons;
 import pl.otros.logview.gui.OtrosApplication;
 import pl.otros.logview.gui.renderers.LevelRenderer;
@@ -34,7 +33,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,9 +52,9 @@ import static pl.otros.logview.gui.ConfKeys.*;
 public class LogTableFormatConfigView extends AbstractConfigView implements InMainConfig {
 
   public static final String DEFAULT_ABBREVIATION_HEADER =
-      "#You can define abbreviations for the packages you use\n" +
-          "#put here package abbreviations like in Eclipse (http://java.dzone.com/articles/eclipse-tip-help-tidy-package)\n" +
-          "my.package.project={MP}\n\n";
+    "#You can define abbreviations for the packages you use\n" +
+      "#put here package abbreviations like in Eclipse (http://java.dzone.com/articles/eclipse-tip-help-tidy-package)\n" +
+      "my.package.project={MP}\n\n";
   public static final String ACTION_RENAME = "rename";
   public static final String ACTION_DELETE = "delete";
   public static final String COL_LAYOUT = "colLayout";
@@ -76,12 +78,12 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     panel = new JPanel();
     panel.setLayout(new MigLayout());
     dateFormats = new String[]{
-        "HH:mm:ss", //
-        "HH:mm:ss.SSS",//
-        "dd-MM HH:mm:ss.SSS",//
-        "E HH:mm:ss", //
-        "E HH:mm:ss.SS", //
-        "MMM dd. HH:mm:ss",//
+      "HH:mm:ss", //
+      "HH:mm:ss.SSS",//
+      "dd-MM HH:mm:ss.SSS",//
+      "E HH:mm:ss", //
+      "E HH:mm:ss.SS", //
+      "MMM dd. HH:mm:ss",//
     };
     dateFormatRadio = new JXComboBox(dateFormats);
     addLabel("Date format", 'd', dateFormatRadio, panel);
@@ -255,7 +257,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus("Column layouts have been imported");
     } catch (Exception e) {
-      LOGGER.error( "Can't import table layout from clipboard", e);
+      LOGGER.error("Can't import table layout from clipboard", e);
       showMessageDialog(panel.getRootPane(), "Can't import from clipboard");
     }
   }
@@ -277,7 +279,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     }
     messagePanel.add(new JScrollPane(jList));
     final int resp = showConfirmDialog(LogTableFormatConfigView.this.panel.getRootPane(), messagePanel, "Select column layouts to import",
-        OK_CANCEL_OPTION);
+      OK_CANCEL_OPTION);
     if (resp == CANCEL_OPTION) {
       return;
     }
@@ -331,7 +333,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     String dateFormat = StringUtils.defaultIfBlank(configuration.getString(LOG_TABLE_FORMAT_DATE_FORMAT), dateFormats[1]);
     dateFormatRadio.setSelectedItem(dateFormat);
 
-    packageAbbreviationTa.setText(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, DEFAULT_ABBREVIATION_HEADER));
+    packageAbbreviationTa.setText(configuration.getString(LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS, DEFAULT_ABBREVIATION_HEADER));
     packageAbbreviationTa.setCaretPosition(packageAbbreviationTa.getText().length());
 
     columnLayoutListModel = new MutableListModel<>();
@@ -382,9 +384,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         }
         exportToClipBoard(list);
       } catch (ConfigurationException e) {
-        LOGGER.error( "Can't export column layouts. ", e);
+        LOGGER.error("Can't export column layouts. ", e);
         showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to clipboard: " + e.getMessage(),
-            "Export error", ERROR_MESSAGE);
+          "Export error", ERROR_MESSAGE);
       }
     }
   }
@@ -407,9 +409,11 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         try {
           exportToFile(selectedFile, columnLayoutListModel.getList());
         } catch (Exception e) {
-          LOGGER.error( "Can't export column layouts to file " + selectedFile, e);
-          showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't export column layout to file: " + e.getMessage(), "Export error", JOptionPane
-              .ERROR_MESSAGE);
+          LOGGER.error("Can't export column layouts to file " + selectedFile, e);
+          showMessageDialog(columnLayoutsPanel.getRootPane(),
+            "Can't export column layout to file: " + e.getMessage(),
+            "Export error",
+            ERROR_MESSAGE);
         }
       }
     }
@@ -429,9 +433,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       try {
         importFromClipboard();
       } catch (Exception e) {
-        LOGGER.error( "Can't import column layout from clipboard", e);
+        LOGGER.error("Can't import column layout from clipboard", e);
         showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(),
-            "Paste error", ERROR_MESSAGE);
+          "Paste error", ERROR_MESSAGE);
       }
     }
   }
@@ -459,13 +463,13 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         try {
           importFromFile(selectedFile);
         } catch (ConfigurationException e) {
-          LOGGER.error( "Can't import column layout from file", e);
+          LOGGER.error("Can't import column layout from file", e);
           showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-              ERROR_MESSAGE);
+            ERROR_MESSAGE);
         } catch (FileSystemException e) {
-          LOGGER.error( "Can't import column layout from file", e);
+          LOGGER.error("Can't import column layout from file", e);
           showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
-              ERROR_MESSAGE);
+            ERROR_MESSAGE);
         }
       }
     }

@@ -28,7 +28,7 @@ public class SynchronizePluginableContainerListenerTest {
   private SynchronizePluginableContainerListener<PluginableElement> s = null;
 
   @BeforeMethod
-public void setup() {
+public void setUp() {
     d = mock(PluginableElementsContainer.class);
     s = new SynchronizePluginableContainerListener<>(d);
   }

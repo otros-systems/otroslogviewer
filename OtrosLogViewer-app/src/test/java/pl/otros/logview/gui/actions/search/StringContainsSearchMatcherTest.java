@@ -27,7 +27,7 @@ public class StringContainsSearchMatcherTest {
   private final StringContainsSearchMatcher matcher = new StringContainsSearchMatcher("ala");
 
   @BeforeMethod
-public void setup() {
+public void setUp() {
     logData = new LogData();
     logData.setMessage("ala ma kota");
 
