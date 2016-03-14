@@ -283,8 +283,8 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     } else {
       return startPoint;
     }
-    startPoint = (effectiveDownLimit + effectiveUpLimit) / 2;
-    return getIndexToInsert(date, effectiveDownLimit, effectiveUpLimit, startPoint);
+    int newStartPoint = (effectiveDownLimit + effectiveUpLimit) / 2;
+    return getIndexToInsert(date, effectiveDownLimit, effectiveUpLimit, newStartPoint);
   }
 
   public static class IdAndDate implements Comparable<IdAndDate> {
