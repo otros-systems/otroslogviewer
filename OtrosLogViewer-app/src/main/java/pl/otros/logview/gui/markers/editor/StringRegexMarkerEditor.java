@@ -41,13 +41,9 @@ import java.util.Properties;
 
 public class StringRegexMarkerEditor extends JPanel {
 
-  private final JButton loadButton;
   private final JButton saveButton;
-  private final JButton saveAsButton;
-  private final JButton newButton;
   private final JFileChooser chooser;
   private final MarkerFileFilter fileFilterString;
-  private final SaveEnableListener saveEnableListener;
 
   private final JTextField condition;
   private final JTextField file;
@@ -60,7 +56,6 @@ public class StringRegexMarkerEditor extends JPanel {
   private final JComboBox<String> type;
   private final JComboBox<MarkerColors> colors;
   private final JLabel preConditionLabel = new JLabel("Precondition:");
-  private final JLabel includeLabel = new JLabel("(Pre)condition matches:");
 
   private final JTextField[] testFields;
 
@@ -69,7 +64,7 @@ public class StringRegexMarkerEditor extends JPanel {
 
   public StringRegexMarkerEditor() {
     markersContainer = AllPluginables.getInstance().getMarkersContainser();
-    saveEnableListener = new SaveEnableListener();
+    SaveEnableListener saveEnableListener = new SaveEnableListener();
     chooser = new JFileChooser("./plugins/markers");
     chooser.setMultiSelectionEnabled(false);
     fileFilterString = new MarkerFileFilter();
@@ -80,13 +75,13 @@ public class StringRegexMarkerEditor extends JPanel {
     this.setLayout(bagLayout);
     TestAfterChangeActionListener testAfterChangeActionListener = new TestAfterChangeActionListener();
 
-    loadButton = new JButton("Load");
+    JButton loadButton = new JButton("Load");
     loadButton.addActionListener(new LoadctionListener());
     saveButton = new JButton("Save");
     saveButton.addActionListener(new SaveActionListener());
-    saveAsButton = new JButton("Save as");
+    JButton saveAsButton = new JButton("Save as");
     saveAsButton.addActionListener(new SaveAsActionListener());
-    newButton = new JButton("New");
+    JButton newButton = new JButton("New");
     newButton.addActionListener(new NewMarkerActionListener());
 
     type = new JComboBox<>(new String[]{"String matcher", "Regex matcher"});
@@ -161,6 +156,7 @@ public class StringRegexMarkerEditor extends JPanel {
     c.gridy++;
     this.addFormLabelsLeftLong(new JLabel("Ignore case:"), ignoreCase, c);
     c.gridy++;
+    JLabel includeLabel = new JLabel("(Pre)condition matches:");
     this.addFormLabelsLeftLong(includeLabel, include, c);
     c.gridy++;
     this.addFormLabelsLeftLong(new JLabel("Color"), colors, c);

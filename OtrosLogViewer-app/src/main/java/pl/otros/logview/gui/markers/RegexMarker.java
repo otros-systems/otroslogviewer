@@ -28,8 +28,6 @@ public class RegexMarker extends PropertyFileAbstractMarker {
 
   private final boolean preconditionInclude = true;
 
-  private final MarkerColors markerColors = MarkerColors.Aqua;
-
   public RegexMarker(Properties p) throws Exception {
     super(p);
     if (!p.containsKey(PRECONDITION) || !p.containsKey(CONDITION) || !p.containsKey(PRECONDITION_INCLUDE)) {
