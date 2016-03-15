@@ -51,8 +51,6 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
 
-  private BufferingLogDataCollectorProxy logDataCollector;
-
   private String host = "127.0.0.1";
   private int port = 50000;
   private Socket socket;
@@ -80,7 +78,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
     BaseConfiguration configuration = new BaseConfiguration();
     configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
     configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-    logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
+    BufferingLogDataCollectorProxy logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
 //		JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
 //		int tabCount = jTabbedPane.getTabCount();
     String hostPort = "Log4j SocketHub " + host + ":" + port;

@@ -20,7 +20,6 @@ import javax.swing.*;
 public class FilteredTableNextRowProvider implements NextRowProvider {
 
   private final JTable table;
-  private int rowSearchStart;
   private final int increase;
   private int currentRow = 0;
   private int rowsChecked;
@@ -28,7 +27,7 @@ public class FilteredTableNextRowProvider implements NextRowProvider {
   public FilteredTableNextRowProvider(JTable table, SearchDirection direction) {
     super();
     this.table = table;
-    rowSearchStart = table.getRowCount();
+    int rowSearchStart = table.getRowCount();
     increase = SearchDirection.FORWARD.equals(direction) ? 1 : -1;
     if (table.getSelectedRow() >= 0) {
       rowSearchStart = table.getSelectedRow();

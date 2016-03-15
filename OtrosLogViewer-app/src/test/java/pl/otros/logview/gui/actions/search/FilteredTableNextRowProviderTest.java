@@ -15,11 +15,13 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import static org.testng.AssertJUnit.assertEquals;
 import org.testng.annotations.Test;
+
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 public class FilteredTableNextRowProviderTest {
 
@@ -52,9 +54,7 @@ public class FilteredTableNextRowProviderTest {
     JTable jTable = new JTable(10, 1);
     NextRowProvider nextRowProvider = NextRowProviderFactory.getPreviousFilteredTableRow(jTable);
     for (int i = 9; i >= 0; i--) {
-      int nextRow = nextRowProvider.getNextRow();
-
-      // assertEquals(i, nextRow);
+      nextRowProvider.getNextRow();
     }
     assertEquals(-1, nextRowProvider.getNextRow());
   }

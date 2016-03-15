@@ -2,8 +2,6 @@ package pl.otros.logview.gui.suggestion;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.otros.logview.MarkerColors;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.Rule;
@@ -21,21 +19,17 @@ import java.util.stream.Stream;
 
 public class QuerySuggestionSource implements SuggestionSource<SearchSuggestion> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(QuerySuggestionSource.class.getName());
-
-  private List<String> operators = Splitter.on(" ").splitToList("!= == ~= like exists < > <= >=");
+  private final List<String> operators = Splitter.on(" ").splitToList("!= == ~= like exists < > <= >=");
   private final String operatorsPattern = operators.stream().collect(Collectors.joining("|", "(", ")"));
-  private List<String> joins = Splitter.on(" ").splitToList("&& ||");
-  private List<String> fields = Splitter.on(" ").splitToList("level logger message class method file line thread mark note prop. date");
+  private final List<String> joins = Splitter.on(" ").splitToList("&& ||");
+  private final List<String> fields = Splitter.on(" ").splitToList("level logger message class method file line thread mark note prop. date");
   private final String fieldsPattern = fields.stream().collect(Collectors.joining("|", "(", ")")) + "\\s*";
   private final String levelPattern = "level\\s*" + operatorsPattern + "\\s*\\w*";
 
-  private Set<String> fieldsSet;
-  private List<SuggestionQuery> history;
+  private final List<SuggestionQuery> history;
 
   public QuerySuggestionSource(List<SuggestionQuery> history) {
     this.history = history;
-    fieldsSet = new HashSet<>(fields);
   }
 
   public enum ExpectedType {

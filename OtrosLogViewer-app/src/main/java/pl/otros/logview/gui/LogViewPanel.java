@@ -73,10 +73,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
   private final MessageDetailListener messageDetailListener;
   private final Font menuLabelFont;
-  private final JPanel filtersPanel;
-  private final JPanel logsTablePanel;
   private final JPanel logsMarkersPanel;
-  private final JPanel leftPanel;
   private JMenu automaticMarkersMenu;
   private JMenu automaticUnmarkersMenu;
   private final LogDataTableModel dataTableModel;
@@ -86,8 +83,6 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
   private final TableRowSorter<LogDataTableModel> sorter;
   private final StatusObserver statusObserver;
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-  private final JTabbedPane jTabbedPane;
-  private final JTextArea notes;
   //  private JScrollPane scrollPane;
   private FocusOnThisThreadAction focusOnThisThreadAction;
   private FocusOnEventsAfter focusOnEventsAfter;
@@ -132,10 +127,10 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
 
     menuLabelFont = new JLabel().getFont().deriveFont(Font.BOLD);
-    filtersPanel = new JPanel();
-    logsTablePanel = new JPanel();
+    JPanel filtersPanel = new JPanel();
+    JPanel logsTablePanel = new JPanel();
     logsMarkersPanel = new JPanel();
-    leftPanel = new JPanel(new MigLayout());
+    JPanel leftPanel = new JPanel(new MigLayout());
     logDetailTextArea = new FullWidthJTextPane();
     logDetailTextArea.setEditable(false);
     MouseAdapter locationInfo = new LocationClickMouseAdapter(otrosApplication, logDetailTextArea);
@@ -265,7 +260,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
     table.getSelectionModel().addListSelectionListener(new JumpToCodeSelectionListener(otrosApplication, dataTableModel, table, 100));
 
-    notes = new JTextArea();
+    JTextArea notes = new JTextArea();
     notes.setEditable(false);
     NoteObserver allNotesObserver = new AllNotesTextAreaObserver(notes);
     dataTableModel.addNoteObserver(allNotesObserver);
@@ -279,7 +274,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     messageDetailsPanel.add(logDetailWithRulerScrollPane);
     initMessageDetailsToolbar();
 
-    jTabbedPane = new JTabbedPane();
+    JTabbedPane jTabbedPane = new JTabbedPane();
     jTabbedPane.add("Message detail", messageDetailsPanel);
     jTabbedPane.add("All notes", new JScrollPane(notes));
 

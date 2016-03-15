@@ -135,7 +135,7 @@ project(':OtrosLogViewer-app') {
 
     test {
         useTestNG()
-        maxParallelForks = 4 
+        maxParallelForks = 2
     }
 
 }

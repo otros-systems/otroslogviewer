@@ -16,28 +16,24 @@
 
 package pl.otros.logview.exceptionshandler;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pl.otros.logview.gui.StatusObserver;
+
+import java.lang.Thread.UncaughtExceptionHandler;
 
 public class StatusObserverExceptionHandler implements UncaughtExceptionHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(StatusObserverExceptionHandler.class.getName());
-	
-	private final StatusObserver statusObserver;
-	
-	public StatusObserverExceptionHandler(StatusObserver statusObserver) {
-		super();
-		this.statusObserver = statusObserver;
-	}
+  private final StatusObserver statusObserver;
+
+  public StatusObserverExceptionHandler(StatusObserver statusObserver) {
+    super();
+    this.statusObserver = statusObserver;
+  }
 
 
-	@Override
-	public void uncaughtException(Thread thread, Throwable throwable) {		
-		String msg = String.format("Error in thread \"%s\": %s", thread.getName(),throwable.getLocalizedMessage());
-		statusObserver.updateStatus(msg, StatusObserver.LEVEL_ERROR);		
-	}
+  @Override
+  public void uncaughtException(Thread thread, Throwable throwable) {
+    String msg = String.format("Error in thread \"%s\": %s", thread.getName(), throwable.getLocalizedMessage());
+    statusObserver.updateStatus(msg, StatusObserver.LEVEL_ERROR);
+  }
 
 }

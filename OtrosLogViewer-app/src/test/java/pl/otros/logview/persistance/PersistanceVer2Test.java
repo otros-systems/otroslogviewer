@@ -35,7 +35,6 @@ import static org.testng.AssertJUnit.assertEquals;
 //TODO check assert order
 public class PersistanceVer2Test {
 
-  private LogData[] datas;
   private ArrayList<LogData> list;
   private final String result = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n"
       + "0|0|message\\nno \\P0\\P|class|method|INFO|LN|Thread|a=l0\\n|ndc|File|123|file:/a.txt|Note|true|Red|\n" //
@@ -50,7 +49,7 @@ public class PersistanceVer2Test {
   @BeforeMethod
 public void prepare() {
     p = new LogDataListPersistanceVer2();
-    datas = new LogData[5];
+    LogData[] datas = new LogData[5];
     list = new ArrayList<>();
     for (int i = 0; i < datas.length; i++) {
       LogData ld = new LogData();

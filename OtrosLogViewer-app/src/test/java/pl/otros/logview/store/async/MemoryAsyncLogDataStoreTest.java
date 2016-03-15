@@ -28,32 +28,32 @@ public class MemoryAsyncLogDataStoreTest {
   public static final String TEST_THREAD_POOL_NAME = "TestThreadPoolName";
   private MemoryAsyncLogDataStore store;
   private final String[] classes = {
-      "com.package.p1.Class",
-      "com.package.p1.Dao",
-      "com.package.p1.Bean",
-      "com.package.p2.ExtraBean",
-      "com.package.p2.Class",
+    "com.package.p1.Class",
+    "com.package.p1.Dao",
+    "com.package.p1.Bean",
+    "com.package.p2.ExtraBean",
+    "com.package.p2.Class",
   };
   private final String[] threads = {
-      "t1",
-      "t3",
-      "tsfsa",
-      "tsdf",
-      "tsf",
+    "t1",
+    "t3",
+    "tsfsa",
+    "tsdf",
+    "tsf",
   };
 
   @BeforeMethod
   public void setUp() throws Exception {
     ExecutorService executorService =
-        Executors.newSingleThreadExecutor(r -> new Thread(r, TEST_THREAD_POOL_NAME));
+      Executors.newSingleThreadExecutor(r -> new Thread(r, TEST_THREAD_POOL_NAME));
     ListeningExecutorService service = MoreExecutors.listeningDecorator(executorService);
     final MemoryLogDataStore memorylogDataStore = new MemoryLogDataStore();
     LogDataStore logDataStore = (LogDataStore) Proxy.newProxyInstance(memorylogDataStore.getClass().getClassLoader(),
-        new Class[]{LogDataStore.class}, (proxy, method, args) -> {
-          String logStoreThreadName = Thread.currentThread().getName();
-          AssertJUnit.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
-          return method.invoke(memorylogDataStore, args);
-        });
+      new Class[]{LogDataStore.class}, (proxy, method, args) -> {
+        String logStoreThreadName = Thread.currentThread().getName();
+        AssertJUnit.assertEquals("Async operation was performed out of designed thread pool", "TestThreadPoolName", logStoreThreadName);
+        return method.invoke(memorylogDataStore, args);
+      });
 
 
     store = new MemoryAsyncLogDataStore(service, logDataStore);
@@ -81,10 +81,9 @@ public class MemoryAsyncLogDataStoreTest {
 
   }
 
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testRemove() throws Exception {
     //given
-    LogData logDataRow1 = store.getLogData(11);
 
     //when
     store.remove(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 22, 23).get();
@@ -97,12 +96,12 @@ public class MemoryAsyncLogDataStoreTest {
 
   }
 
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testFilter() throws Exception {
     Assert.fail("not implemented");
   }
 
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testSearch() throws Exception {
     Assert.fail("not implemented");
   }
@@ -146,7 +145,7 @@ public class MemoryAsyncLogDataStoreTest {
     AssertJUnit.assertEquals(testMessage, store.getLogData(store.getCount() - 1).getMessage());
   }
 
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testGetLogData1() throws Exception {
     Assert.fail("not implemented");
   }

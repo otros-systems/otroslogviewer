@@ -1,12 +1,13 @@
 package pl.otros.logview.store.async;
 
-import static org.testng.AssertJUnit.assertEquals;
-import org.testng.annotations.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 import pl.otros.logview.LogData;
 import pl.otros.logview.LogDataBuilder;
 
 import java.util.Date;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 @Test(enabled=false)
 public class MemoryLogDataStore2Test {
@@ -23,7 +24,7 @@ public class MemoryLogDataStore2Test {
     logDataStore2.add(logDatas);
 
     //when
-    FilterResult filterResult = logDataStore2.filter(new LogDataFilter("kot"));
+    logDataStore2.filter(new LogDataFilter("kot"));
 
     //then
     int filteredCount = logDataStore2.getCount();

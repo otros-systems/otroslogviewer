@@ -46,7 +46,7 @@ public class OpenPreferencesAction extends OtrosAction {
       }
     };
     if (configComponent == null) {
-      configComponent = new ConfigComponent(configurationProvider, actionAfterSave, null, configViews);
+      configComponent = new ConfigComponent(configurationProvider, actionAfterSave, configViews);
     } else {
       configComponent.reload();
     }

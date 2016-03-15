@@ -71,11 +71,11 @@ public class JAnimatedLogo extends JLabel {
     @Override
     public void paintIcon(Component component, Graphics graphics, int x, int y) {
       paintConstants(component, graphics, x, y);
-      paintVary(component, graphics, x, y);
+      paintVary(graphics);
     }
 
-    private void paintVary(Component c, Graphics g, int x, int y) {
-      Graphics2D g2 = (Graphics2D) g;
+    private void paintVary(Graphics graphics) {
+      Graphics2D g2 = (Graphics2D) graphics;
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
       Point upLeft = new Point((int) (Math.sqrt(size * size * 2) * Math.sin(Math.PI * (alpha - 45) / 180)),
           (int) (-Math.sqrt(size * size * 2) * Math.cos(Math.PI * (alpha - 45) / 180)));
@@ -89,10 +89,10 @@ public class JAnimatedLogo extends JLabel {
       move(upRight);
       move(downRight);
       move(downLeft);
-      g.setColor(Color.WHITE);
-      g.fillPolygon(new int[] { upLeft.x, upRight.x, downRight.x, downLeft.x }, new int[] { upLeft.y, upRight.y, downRight.y, downLeft.y }, 4);
-      g.setColor(Color.BLACK);
-      g.drawPolygon(new int[] { upLeft.x, upRight.x, downRight.x, downLeft.x }, new int[] { upLeft.y, upRight.y, downRight.y, downLeft.y }, 4);
+      graphics.setColor(Color.WHITE);
+      graphics.fillPolygon(new int[] { upLeft.x, upRight.x, downRight.x, downLeft.x }, new int[] { upLeft.y, upRight.y, downRight.y, downLeft.y }, 4);
+      graphics.setColor(Color.BLACK);
+      graphics.drawPolygon(new int[] { upLeft.x, upRight.x, downRight.x, downLeft.x }, new int[] { upLeft.y, upRight.y, downRight.y, downLeft.y }, 4);
     }
 
     private void move(Point p) {

@@ -13,38 +13,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class ConfigComponent extends JPanel {
-  private final JLabel upLabel;
-  private final JPanel centralPanel;
   private final ConfigView[] configViews;
-  private final JXList list;
   private final ConfigurationProvider configurationProvider;
-  private final Action actionAfterSave;
-  private final Action actionAfterCancel;
+  private final Optional<Action> actionAfterSave;
 
   public ConfigComponent(final ConfigurationProvider configurationProvider, final ConfigView... configViews) {
-    this(configurationProvider, null, null, configViews);
+    this(configurationProvider, null, configViews);
   }
 
   @SuppressWarnings("serial")
-  public ConfigComponent(final ConfigurationProvider configurationProvider, Action actionAfterSave, Action actionAfterCancel, final ConfigView... configViews) {
+  public ConfigComponent(final ConfigurationProvider configurationProvider, Action actionAfterSave, final ConfigView... configViews) {
     super();
     this.configurationProvider = configurationProvider;
-    this.actionAfterSave = actionAfterSave;
-    this.actionAfterCancel = actionAfterCancel;
+    this.actionAfterSave = Optional.ofNullable(actionAfterSave);
     this.configViews = configViews;
     this.setLayout(new MigLayout());
     JPanel leftPanel = new JPanel(new BorderLayout());
-    list = new JXList(this.configViews);
+    JXList list = new JXList(this.configViews);
     list.setCellRenderer(new ConfigViewListRenderer());
     leftPanel.add(list);
-    upLabel = new JLabel(" ");
+    JLabel upLabel = new JLabel(" ");
     upLabel.setBounds(10, 10, 10, 10);
     upLabel.setHorizontalTextPosition(SwingConstants.CENTER);
     upLabel
-        .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(upLabel.getForeground()), BorderFactory.createEmptyBorder(4, 10, 4, 10)));
-    centralPanel = new JPanel(new BorderLayout());
+      .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(upLabel.getForeground()), BorderFactory.createEmptyBorder(4, 10, 4, 10)));
+    JPanel centralPanel = new JPanel(new BorderLayout());
     list.getSelectionModel().addListSelectionListener(e -> {
       if (e.getValueIsAdjusting()) {
         return;
@@ -165,8 +161,6 @@ public class ConfigComponent extends JPanel {
       //TODO what to do?
       e.printStackTrace();
     }
-    if (actionAfterSave != null) {
-      actionAfterSave.actionPerformed(null);
-    }
+    actionAfterSave.ifPresent(a->a.actionPerformed(null));
   }
 }

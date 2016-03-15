@@ -36,7 +36,6 @@ public class TimeFilter extends AbstractLogFilter {
   private final SpinnerDateModel startM;
   private final SpinnerDateModel endM;
   private final JPanel gui;
-  private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private final JCheckBox startEnable;
   private final JCheckBox endEnable;
 

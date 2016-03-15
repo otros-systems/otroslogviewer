@@ -40,7 +40,6 @@ public class Utils {
   private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getName());
   private static final int GZIP_MIN_SIZE = 26;
   private static final int GZIP_CHECK_BUFFER_SIZE = 8 * 1024;
-  private static final int DETECT_LOAD_SIZE = 8 * 1024;
 
   public static boolean checkIfIsGzipped(FileObject fileObject) throws IOException {
     boolean gziped = false;

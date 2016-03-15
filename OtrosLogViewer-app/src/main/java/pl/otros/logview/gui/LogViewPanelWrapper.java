@@ -42,10 +42,7 @@ public class LogViewPanelWrapper extends JPanel {
   private static final String CARD_LAYOUT_CONTENT = "card layout content";
   private final JProgressBar loadingProgressBar;
   private final JTable statsTable;
-  private final JButton stopButton;
   private JCheckBox follow;
-  private final SoftReference<Stoppable> stopableReference;
-  private Mode mode = Mode.Static;
   private JCheckBox playTailing;
   private DataConfiguration configuration;
   private final OtrosApplication otrosApplication;
@@ -88,7 +85,7 @@ public class LogViewPanelWrapper extends JPanel {
 
     fillDefaultConfiguration();
 
-    stopableReference = new SoftReference<>(stoppable);
+    SoftReference<Stoppable> stoppableReference = new SoftReference<>(stoppable);
     // this.statusObserver = statusObserver;
     dataTableModel = logDataTableModel == null ? new LogDataTableModel() : logDataTableModel;
     logViewPanel = new LogViewPanel(dataTableModel, columns, otrosApplication);
@@ -123,9 +120,9 @@ public class LogViewPanelWrapper extends JPanel {
     panelLoading.add(statsTable, c);
     c.gridy++;
     c.weightx = 1;
-    stopButton = new JButton("Stop, you have imported already enough!");
+    JButton stopButton = new JButton("Stop, you have imported already enough!");
     stopButton.addActionListener(e -> {
-      Stoppable stoppable1 = stopableReference.get();
+      Stoppable stoppable1 = stoppableReference.get();
       if (stoppable1 != null) {
         stoppable1.stop();
       }
@@ -191,7 +188,7 @@ public class LogViewPanelWrapper extends JPanel {
   }
 
   public void goToLiveMode() {
-    mode = Mode.Live;
+    Mode mode = Mode.Live;
     JToolBar jToolBar = new JToolBar();
     createFollowCheckBox();
     createPauseCheckBox();

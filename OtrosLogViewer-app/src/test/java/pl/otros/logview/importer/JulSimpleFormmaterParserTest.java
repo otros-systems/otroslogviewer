@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,65 +34,64 @@ import static org.testng.AssertJUnit.assertNotNull;
 public class JulSimpleFormmaterParserTest {
 
   private LogImporterUsingParser importerUsingParser;
-  private JulSimpleFormatterParser parser;
 
   @BeforeMethod
-public void init() {
-    parser = new JulSimpleFormatterParser();
+  public void init() {
+    JulSimpleFormatterParser parser = new JulSimpleFormatterParser();
     importerUsingParser = new LogImporterUsingParser(parser);
   }
 
   @Test
   public void testLocalesEnUs() throws IOException {
-    importLogs(new Locale("en", "US"),false);
+    importLogs(new Locale("en", "US"), false);
   }
 
   @Test
   public void testLocalesPlPL() throws IOException {
-    importLogs(new Locale("pl", "PL"),false);
+    importLogs(new Locale("pl", "PL"), false);
   }
 
   @Test
   public void testLocalesDeDe() throws IOException {
-    importLogs(new Locale("de", "DE"),false);
+    importLogs(new Locale("de", "DE"), false);
   }
 
   @Test
   public void testLocalesEsEs() throws IOException {
-    importLogs(new Locale("es", "ES"),false);
+    importLogs(new Locale("es", "ES"), false);
   }
 
   @Test
   public void testLocalesEnGb() throws IOException {
-    importLogs(new Locale("en", "GB"),false);
+    importLogs(new Locale("en", "GB"), false);
   }
 
   @Test
   public void testTailLocalesEnUs() throws IOException {
-    importLogs(new Locale("en", "US"),true);
+    importLogs(new Locale("en", "US"), true);
   }
 
   @Test
   public void testTailLocalesPlPL() throws IOException {
-    importLogs(new Locale("pl", "PL"),true);
+    importLogs(new Locale("pl", "PL"), true);
   }
 
   @Test
   public void testTailLocalesDeDe() throws IOException {
-    importLogs(new Locale("de", "DE"),true);
+    importLogs(new Locale("de", "DE"), true);
   }
 
   @Test
   public void testTailLocalesEsEs() throws IOException {
-    importLogs(new Locale("es", "ES"),true);
+    importLogs(new Locale("es", "ES"), true);
   }
 
   @Test
   public void testTailLocalesEnGb() throws IOException {
-    importLogs(new Locale("en", "GB"),true);
+    importLogs(new Locale("en", "GB"), true);
   }
 
-  
+
   private LogDataCollector importLogs(Locale locale, boolean tail) throws IOException {
     String s = locale.toString();
     String resName = "log_" + s + ".txt";
@@ -102,10 +101,10 @@ public void init() {
     ProxyLogDataCollector collector = new ProxyLogDataCollector();
     ParsingContext parsingContext = new ParsingContext(resName, resName);
     importerUsingParser.initParsingContext(parsingContext);
-    if (tail){
-    	TestUtils.tailLog(importerUsingParser, in, collector, parsingContext);
+    if (tail) {
+      TestUtils.tailLog(importerUsingParser, in, collector, parsingContext);
     } else {
-    	importerUsingParser.importLogs(in, collector, parsingContext);
+      importerUsingParser.importLogs(in, collector, parsingContext);
     }
 
     LogData[] logDatas = collector.getLogData();
@@ -120,6 +119,6 @@ public void init() {
 
     return collector;
   }
-  
-  
+
+
 }

@@ -68,5 +68,7 @@ public class StackTraceColorizerTest {
     Collection<MessageFragmentStyle> colorize = colorizer.colorize(string);
     //then
     //TODO
+    AssertJUnit.assertTrue(colorize.size()>2);
+
   }
 }
