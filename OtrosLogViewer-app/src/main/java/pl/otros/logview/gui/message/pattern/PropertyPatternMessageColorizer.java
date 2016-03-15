@@ -52,13 +52,11 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
 
   private DataConfiguration configuration;
   private Pattern pattern;
-  private Style style;
   private String name;
   private String description;
   private int groupCount;
   private String file;
   private String testMessage;
-  private int version = 1;
   private PropertiesConfiguration propertiesConfiguration;
 
   public void init(InputStream in) throws ConfigurationException {
@@ -83,7 +81,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
     name = configuration.getString(PROP_NAME, "NAME NOT SET!");
     description = configuration.getString(PROP_DESCRIPTION, "DESCRIPTION NOT SET!");
     testMessage = configuration.getString(PROP_TEST_MESSAGE, "");
-    version = configuration.getInt(PROP_VERSION, 1);
+    int version = configuration.getInt(PROP_VERSION, 1);
   }
 
   public void store(OutputStream out) throws ConfigurationException {
@@ -103,7 +101,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
     StyleContext styleContext = new StyleContext();
     for (int i = 0; i <= groupCount; i++) {
       if (StyleProperties.isStyleForGroupDeclared(i, configuration)) {
-        style = StyleProperties.getStyle(styleContext, configuration, "propStyle" + getName(), i);
+        Style style = StyleProperties.getStyle(styleContext, configuration, "propStyle" + getName(), i);
         list.addAll(MessageColorizerUtils.colorizeRegex(style, message, pattern, i));
       }
     }

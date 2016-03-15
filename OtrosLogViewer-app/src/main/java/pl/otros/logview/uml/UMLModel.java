@@ -28,7 +28,6 @@ public class UMLModel {
   private int yPosition;
   private final LinkedList<String> actors;
   private final SelectableJComponent cContent;
-  private final SelectableJComponent cHeader;
   private final JScrollPane spContent;
   private final JPanel panel;
   private final HashMap<String, Integer> actorPosition;
@@ -43,7 +42,7 @@ public class UMLModel {
     cContent = new SelectableJComponent();
     cContent.setBackground(data.backgroundColor);
 
-    cHeader = new SelectableJComponent();
+    SelectableJComponent cHeader = new SelectableJComponent();
     cHeader.setBackground(data.backgroundColor);
     actorPosition = new LinkedHashMap<>();
     actorActivation = new HashMap<>();

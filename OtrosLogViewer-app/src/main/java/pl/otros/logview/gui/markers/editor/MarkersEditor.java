@@ -44,14 +44,13 @@ public class MarkersEditor extends JPanel {
   private JPanel southPanel;
   private JButton buttonSave;
   private final MarkersListModel markersListModel;
-  private final PluginableElementsContainer<AutomaticMarker> markersContainser;
 
   public MarkersEditor() {
     final JPanel editorPanel = new JPanel();
     cardLayout = new CardLayout();
     editorPanel.setLayout(cardLayout);
 
-    markersContainser = AllPluginables.getInstance().getMarkersContainser();
+    PluginableElementsContainer<AutomaticMarker> markersContainser = AllPluginables.getInstance().getMarkersContainser();
     markersListModel = new MarkersListModel(markersContainser.getElements());
     markersList = new JList(markersListModel);
     markersList.setCellRenderer(new AutomaticMarkerRenderer());

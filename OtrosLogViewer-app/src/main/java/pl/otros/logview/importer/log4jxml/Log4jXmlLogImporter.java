@@ -34,8 +34,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
 
 	private static final int DEFAULT_PARSE_BUFFER_SIZE = 16 * 1024;	
 	private static final String LOG4J_XML_LOG_IMPORTER_DECODER = "Log4jXmlLogImporter.decoder";
-	private final int parseBufferSize =DEFAULT_PARSE_BUFFER_SIZE;
-	
+
 	public Log4jXmlLogImporter() {
 		super("Log4j xml", "Parser log4j xml");
 
@@ -53,6 +52,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
 					.getCustomConextProperties().get(
 							LOG4J_XML_LOG_IMPORTER_DECODER);
 			String line = null;
+			int parseBufferSize = DEFAULT_PARSE_BUFFER_SIZE;
 			byte[] buff = new byte[parseBufferSize];
 			int read = 0;
 			while ((read = in.read(buff)) > 0) {

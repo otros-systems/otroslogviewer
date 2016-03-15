@@ -45,7 +45,6 @@ public class SoapMessageFormatter implements MessageFormatter {
   private static final int PATTERN_MULTIREF_VALUES_GROUP_ID = 1;
   private static final int PATTERN_MULTIREF_VALUES_GROUP_SCHEMA_DEF = 2;
   private static final int PATTERN_MULTIREF_VALUES_GROUP_VALUE = 3;
-  private final int formantIndent = 2;
   private final SoapFinder soapFinder = new SoapFinder();
   private boolean removeMultiRefs = false;
   private boolean removeXsiForNilElements;
@@ -186,6 +185,7 @@ public class SoapMessageFormatter implements MessageFormatter {
   }
 
   public String prettyFormat(String input) {
+    int formantIndent = 2;
     return prettyFormat(input, formantIndent, false);
   }
 

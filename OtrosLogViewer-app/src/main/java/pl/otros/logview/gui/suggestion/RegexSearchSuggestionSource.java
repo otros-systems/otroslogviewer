@@ -13,7 +13,6 @@ public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
 
   private static final String COUNT_N_M = "^.*\\{(\\d+),(\\d+)$";
   private static final String COUNT_N = "^.*\\{(\\d+)$";
-  private final String COUNT_N_TO = "^.*\\{(\\d+),$";
 
   public RegexSearchSuggestionSource(List<SuggestionQuery> history) {
     super(history);
@@ -47,6 +46,7 @@ public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
     }
 
 
+    String COUNT_N_TO = "^.*\\{(\\d+),$";
     if (queryString.matches(COUNT_N_TO)) {
       final Matcher matcher = Pattern.compile(COUNT_N_TO).matcher(queryString);
       final boolean b = matcher.find();

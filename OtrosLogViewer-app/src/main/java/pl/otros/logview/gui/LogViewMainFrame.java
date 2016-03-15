@@ -103,9 +103,7 @@ public class LogViewMainFrame extends JFrame {
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class.getName());
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
-  private static SingleInstance singleInstance;
   private JToolBar toolBar;
-  private JButton buttonSearch;
   private JLabelStatusObserver observer;
   private JTabbedPane logsTabbedPane;
   private EnableDisableComponetsForTabs enableDisableComponetsForTabs;
@@ -262,8 +260,8 @@ public class LogViewMainFrame extends JFrame {
       return;
     }
     SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
-    singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
-        singleInstanceRequestResponseDelegate, args);
+    SingleInstance singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
+      singleInstanceRequestResponseDelegate, args);
     if (singleInstance == null) {
       LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
       System.exit(0);
@@ -601,7 +599,7 @@ public class LogViewMainFrame extends JFrame {
       otrosApplication.setSelectedMarkColors(markerColors);
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
-    buttonSearch = new JButton(searchActionForward);
+    JButton buttonSearch = new JButton(searchActionForward);
     buttonSearch.setMnemonic(KeyEvent.VK_N);
     JButton buttonSearchPrev = new JButton(searchActionBackward);
     buttonSearchPrev.setMnemonic(KeyEvent.VK_P);

@@ -54,8 +54,6 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   private LogDataStore logDataStore;
   private final Map<String, ClassWrapper> classWrapperCache;
 
-  private final int maximumMessageLength = 2000;
-
   public LogDataTableModel() {
     classWrapperCache = new HashMap<>(100);
 
@@ -127,6 +125,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
         result = classWrapperCache.get(clazz);
         break;
       case METHOD:
+        int maximumMessageLength = 2000;
         result = StringUtils.left(ld.getMethod(), maximumMessageLength);
         break;
       case THREAD:

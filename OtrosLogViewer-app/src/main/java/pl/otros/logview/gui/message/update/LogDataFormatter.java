@@ -51,8 +51,7 @@ public class LogDataFormatter {
     private final LogData ld;
     private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
     private final DateFormat dateFormat;
-    private Style defaultStyle = null;
-    private Style mainStyle = null;
+  private Style mainStyle = null;
     private Style classMethodStyle = null;
     private Style boldArialStyle = null;
     private Style propertyNameStyle = null;
@@ -87,7 +86,7 @@ public class LogDataFormatter {
 
 
       sc = new StyleContext();
-        defaultStyle = sc.getStyle(StyleContext.DEFAULT_STYLE);
+      Style defaultStyle = sc.getStyle(StyleContext.DEFAULT_STYLE);
         mainStyle = sc.addStyle("MainStyle", defaultStyle);
         StyleConstants.setForeground(mainStyle, Color.BLACK);
 

@@ -19,19 +19,6 @@ public class JsonMessageFormatterTest {
             "  \"date\": \"2014-10-23\"\n" +
             "  }}";
 
-    private final String _2jsons = "tickets {\"tickets\":{\"city\":\"Sacramento\",\"date\":\"2014-10-23\"}} tickets {\"tickets\":{\"city\":\"Sacramento\",\"date\":\"2014-10-23\"}} something";
-    private final String _2JsonsFormatted = "tickets \n" +
-            "{\"tickets\": {\n" +
-            "  \"city\": \"Sacramento\",\n" +
-            "  \"date\": \"2014-10-23\"\n" +
-            "  }}\n" +
-            " tickets \n" +
-            "{\"tickets\": {\n" +
-            "  \"city\": \"Sacramento\",\n" +
-            "  \"date\": \"2014-10-23\"\n" +
-            "  }}\n" +
-            " something";
-
 
     private JsonMessageFormatter underTest;
 
@@ -59,6 +46,18 @@ public class JsonMessageFormatterTest {
 
     @DataProvider(name = "formatData")
     public Object[][] formatDataProvider() {
+        String _2jsons = "tickets {\"tickets\":{\"city\":\"Sacramento\",\"date\":\"2014-10-23\"}} tickets {\"tickets\":{\"city\":\"Sacramento\",\"date\":\"2014-10-23\"}} something";
+        String _2JsonsFormatted = "tickets \n" +
+          "{\"tickets\": {\n" +
+          "  \"city\": \"Sacramento\",\n" +
+          "  \"date\": \"2014-10-23\"\n" +
+          "  }}\n" +
+          " tickets \n" +
+          "{\"tickets\": {\n" +
+          "  \"city\": \"Sacramento\",\n" +
+          "  \"date\": \"2014-10-23\"\n" +
+          "  }}\n" +
+          " something";
         return new Object[][]{
                 {singleLine, format2x, "Single line to formatted"},
                 {formatted4x, format2x, "Formatted with 4x spaces to 2x"},
