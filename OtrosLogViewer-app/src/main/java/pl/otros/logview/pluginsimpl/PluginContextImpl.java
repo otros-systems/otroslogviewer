@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PluginContextImpl implements PluginContext {
-  private static final Logger LOGGER = LoggerFactory.getLogger(PluginContextImpl.class.getName());
 
   private final OtrosApplication application;
   private final LogOpenHandler logOpenHandler;

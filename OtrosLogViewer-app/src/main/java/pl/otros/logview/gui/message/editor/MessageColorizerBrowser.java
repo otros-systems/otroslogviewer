@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,9 +46,8 @@ public class MessageColorizerBrowser extends JPanel {
   private static final String MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT = "MessageColorizerEditorDefaultContent.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerBrowser.class.getName());
   private final PluginableElementsContainer<MessageColorizer> container;
-	private final OtrosApplication otrosApplication;
-	private final JList jList;
-  private final PluginableElementListModel<MessageColorizer> listModel;
+  private final OtrosApplication otrosApplication;
+  private final JList jList;
   private final JPanel contentPanel;
   private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_EDITOR = "editor";
@@ -56,7 +55,6 @@ public class MessageColorizerBrowser extends JPanel {
   private static final String CARD_LAYOUT_NO_SELECTED = "noSelected";
   private final MessageColorizerEditor editor;
   private String defaultContent;
-  private final JToolBar toolBar;
   private final JButton useButton;
   private final JButton saveButton;
   private final JButton saveAsButton;
@@ -68,14 +66,14 @@ public class MessageColorizerBrowser extends JPanel {
   public MessageColorizerBrowser(OtrosApplication otrosApplication) {
     super(new BorderLayout());
     this.container = otrosApplication.getAllPluginables().getMessageColorizers();
-		this.otrosApplication = otrosApplication;
+    this.otrosApplication = otrosApplication;
 
-    toolBar = new JToolBar();
+    JToolBar toolBar = new JToolBar();
     editor = new MessageColorizerEditor(otrosApplication.getStatusObserver());
     JLabel noEditable = new JLabel("Selected MessageColorizer is not editable.", SwingConstants.CENTER);
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 
-    listModel = new PluginableElementListModel<>(container);
+    PluginableElementListModel<MessageColorizer> listModel = new PluginableElementListModel<>(container);
     jList = new JList<>(listModel);
     jList.setCellRenderer(new PluginableElementNameListRenderer());
     cardLayout = new CardLayout();
@@ -103,7 +101,6 @@ public class MessageColorizerBrowser extends JPanel {
         }
       }
     });
-
 
 
     saveButton = new JButton("Save and use", Icons.DISK);
@@ -215,7 +212,7 @@ public class MessageColorizerBrowser extends JPanel {
         otrosApplication.getStatusObserver().updateStatus(String.format("Message colorizer \"%s\" have been deleted [file %s]", mc.getName(), mc.getFile()));
       } else {
         otrosApplication.getStatusObserver().updateStatus(String.format("Message colorizer \"%s\" have been not deleted [file %s]", mc.getName(), mc.getFile()),
-            StatusObserver.LEVEL_ERROR);
+          StatusObserver.LEVEL_ERROR);
       }
 
     }
@@ -324,7 +321,7 @@ public class MessageColorizerBrowser extends JPanel {
   class DeleteSelected extends AbstractActionWithConfirmation {
 
     public DeleteSelected(OtrosApplication otrosApplication) {
-			super(otrosApplication);
+      super(otrosApplication);
       putValue(NAME, "Delete");
       putValue(SHORT_DESCRIPTION, "Wiil delete selected message colorizer");
       putValue(SMALL_ICON, Icons.DELETE);

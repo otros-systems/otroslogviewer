@@ -70,7 +70,7 @@ public class JAnimatedLogo extends JLabel {
 
     @Override
     public void paintIcon(Component component, Graphics graphics, int x, int y) {
-      paintConstants(component, graphics, x, y);
+      paintConstants(graphics, x, y);
       paintVary(graphics);
     }
 
@@ -100,9 +100,8 @@ public class JAnimatedLogo extends JLabel {
       p.y = p.y + 64 - inset - size - inset;
     }
 
-    private void paintConstants(Component c, Graphics g, int x, int y) {
-
-      // BOttom left
+    private void paintConstants(Graphics g, int x, int y) {
+      // Bottom left
       g.setColor(Color.BLACK);
       g.fillRect(inset, 64 - inset - size, size, size);
       g.setColor(Color.GREEN);

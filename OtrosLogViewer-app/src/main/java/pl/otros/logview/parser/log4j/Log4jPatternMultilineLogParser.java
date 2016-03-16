@@ -326,20 +326,6 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     regexpPattern = Pattern.compile(regexp);
   }
 
-  /**
-   * Helper method that supports the evaluation of the expression
-   * 
-   * @param event
-   * @return true if expression isn't set, or the result of the evaluation otherwise
-   */
-  private boolean passesExpression(LoggingEvent event) {
-    if (event != null) {
-      // if (expressionRule != null) {
-      // return (expressionRule.evaluate(event));
-      // }
-    }
-    return true;
-  }
 
   /**
    * Convert the match into a map.
@@ -677,7 +663,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     if (eventMatcher.matches()) {
       // build an event from the previous match (held in current map)
       LoggingEvent event = buildEvent(parsingContext);
-      if (event != null && passesExpression(event)) {
+      if (event != null) {
           // doPost(event);
           logData = Log4jUtil.translateLog4j(event);
       }
@@ -709,9 +695,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
         if (logEventParsingProperties.size() > 0) {
           LoggingEvent event = buildEvent(parsingContext);
           if (event != null) {
-            if (passesExpression(event)) {
               logData = Log4jUtil.translateLog4j(event);
-            }
           }
         }
         if (lastTime != null) {
@@ -740,10 +724,7 @@ public class  Log4jPatternMultilineLogParser implements MultiLineLogParser, Tabl
     // build an event from the previous match (held in current map)
     LoggingEvent event = buildEvent(parsingContext);
     if (event != null) {
-      if (passesExpression(event)) {
-        // doPost(event);
         logData = Log4jUtil.translateLog4j(event);
-      }
     }
     return logData;
     // data.currentMap.putAll(processEvent(eventMatcher.toMatchResult(), data));

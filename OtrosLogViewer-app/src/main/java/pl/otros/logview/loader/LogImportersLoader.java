@@ -155,7 +155,7 @@ public class LogImportersLoader {
 
   // TODO
   private ArrayList<LogImporter> loadFromDir(File dir) {
-
+    LOGGER.debug("Will not load from dir {}, method is not implemented", dir.getAbsolutePath() );
     return new ArrayList<>();
   }
 }

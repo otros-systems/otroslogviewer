@@ -48,7 +48,7 @@ public class ExportToHtml {
         StringBuilder sb = new StringBuilder();
         appendHeaders(sb, stylesMap, title, htmlMode);
         ArrayList<HtmlSpanFragment> htmlSpanTag = createHtmlSpanTag(styles, htmlMode);
-        String htmled = addSpanTagsToText(text, htmlSpanTag, htmlMode);
+        String htmled = addSpanTagsToText(text, htmlSpanTag);
         sb.append(htmled);
 
 
@@ -63,7 +63,7 @@ public class ExportToHtml {
         }
     }
 
-    private String addSpanTagsToText(String text, ArrayList<HtmlSpanFragment> htmlSpanTag, HTML_MODE html_mode) {
+    private String addSpanTagsToText(String text, ArrayList<HtmlSpanFragment> htmlSpanTag) {
         StringBuilder sb = new StringBuilder();
         int lastPosition = 0;
         for (HtmlSpanFragment htmlSpanFragment : htmlSpanTag) {

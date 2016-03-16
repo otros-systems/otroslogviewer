@@ -71,9 +71,6 @@ public class LogdataConverter {
         }
 
         model.step();
-
-      } else {
-
       }
 
     }
@@ -195,17 +192,12 @@ public class LogdataConverter {
       }
     }
 
-    LinkedList<String> list = new LinkedList<>(map);
-    return list;
+    return new LinkedList<>(map);
   }
 
   private String getShortClassName(String className) {
-    String name = className.substring(className.lastIndexOf('.') + 1);
-    return name;
+    return className.substring(className.lastIndexOf('.') + 1);
   }
 
-  private String removeBadCharsFromMessage(String message) {
-    return message.replace('"', ' ');
-  }
 
 }

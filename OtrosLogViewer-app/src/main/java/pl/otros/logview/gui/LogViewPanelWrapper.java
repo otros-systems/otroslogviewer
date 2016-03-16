@@ -188,7 +188,6 @@ public class LogViewPanelWrapper extends JPanel {
   }
 
   public void goToLiveMode() {
-    Mode mode = Mode.Live;
     JToolBar jToolBar = new JToolBar();
     createFollowCheckBox();
     createPauseCheckBox();

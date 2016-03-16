@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 public class StackTraceFormatter extends AbstractPluginableElement implements MessageFormatter {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(StackTraceFormatter.class.getName());
   public static final String STACK_TRACE_REGEX = "(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))";
   private final JumpToCodeService jumpToCodeService;
 

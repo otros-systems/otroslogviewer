@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +14,6 @@
  * limitations under the License.
  ******************************************************************************/
 package pl.otros.logview.gui;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -28,7 +25,6 @@ import java.util.Locale;
 
 public class LogImportStats extends AbstractTableModel {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LogImportStats.class.getName());
   private final String fileName;
 
   private final NumberFormat speedFormat = NumberFormat.getInstance();
@@ -42,7 +38,7 @@ public class LogImportStats extends AbstractTableModel {
   private long timeleft;
   private float speedKbPerSecond;
   private final Date eta = new Date();
-  private final String[] rowsNames = { "File", "Downloaded", "ETA", "Time left", "Speed [kb/s]" };
+  private final String[] rowsNames = {"File", "Downloaded", "ETA", "Time left", "Speed [kb/s]"};
 
   public LogImportStats(String fileName) {
     super();

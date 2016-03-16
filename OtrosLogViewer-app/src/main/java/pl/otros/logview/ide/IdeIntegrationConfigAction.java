@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 /**
  */
 public class IdeIntegrationConfigAction extends OtrosAction {
-  private static final Logger LOGGER = LoggerFactory.getLogger(IdeIntegrationConfigAction.class.getName());
 
   public IdeIntegrationConfigAction(OtrosApplication otrosApplication) {
     super(otrosApplication);

@@ -81,7 +81,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
     name = configuration.getString(PROP_NAME, "NAME NOT SET!");
     description = configuration.getString(PROP_DESCRIPTION, "DESCRIPTION NOT SET!");
     testMessage = configuration.getString(PROP_TEST_MESSAGE, "");
-    int version = configuration.getInt(PROP_VERSION, 1);
+
   }
 
   public void store(OutputStream out) throws ConfigurationException {
@@ -91,8 +91,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
   @Override
   public boolean colorizingNeeded(String message) {
     Matcher matcher = pattern.matcher(message);
-    boolean find = matcher.find();
-    return find;
+    return matcher.find();
   }
 
   @Override
@@ -120,8 +119,7 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
   }
 
   protected int countGroups(Pattern pattern) {
-    int count = StringUtils.countMatches(pattern.pattern().replace("\\(", ""), "(");
-    return count;
+    return StringUtils.countMatches(pattern.pattern().replace("\\(", ""), "(");
   }
 
   @Override

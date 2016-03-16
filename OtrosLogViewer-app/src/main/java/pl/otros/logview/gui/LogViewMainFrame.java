@@ -113,10 +113,8 @@ public class LogViewMainFrame extends JFrame {
   private JTextField searchField;
   private AllPluginables allPluginables;
   private PluginableElementsContainer<LogImporter> logImportersContainer;
-  private PluginableElementsContainer<MessageColorizer> messageColorizercontainer;
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
-  private DefaultComboBoxModel searchFieldCbxModel;
   private ExitAction exitAction;
   private PersistedSuggestionSource searchSuggestionSource;
 
@@ -159,7 +157,7 @@ public class LogViewMainFrame extends JFrame {
     OtrosSplash.setMessage("Initializing GUI");
     allPluginables = AllPluginables.getInstance();
     logImportersContainer = allPluginables.getLogImportersContainer();
-    messageColorizercontainer = allPluginables.getMessageColorizers();
+    PluginableElementsContainer<MessageColorizer> messageColorizercontainer = allPluginables.getMessageColorizers();
     searchResultColorizer = (SearchResultColorizer) messageColorizercontainer.getElement(SearchResultColorizer.class.getName());
     cardLayout = new CardLayout();
     cardLayoutPanel = new JPanel(cardLayout);
@@ -527,41 +525,38 @@ public class LogViewMainFrame extends JFrame {
       });
       sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
       sfTf.setText(lastSearchString);
-    searchMode.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        SearchMode mode = null;
-        boolean validationEnabled = false;
-        String lastSearch = searchField.getText();
-        if (searchMode.getSelectedIndex() == 0) {
-          mode = SearchMode.STRING_CONTAINS;
-          searchValidatorDocumentListener.setSearchMode(mode);
-          validationEnabled = false;
-          searchMode.setToolTipText("Checking if log message contains string (case is ignored)");
-        } else if (searchMode.getSelectedIndex() == 1) {
-          mode = SearchMode.REGEX;
-          validationEnabled = true;
-          searchMode.setToolTipText("Checking if log message matches regular expression (case is ignored)");
-        } else if (searchMode.getSelectedIndex() == 2) {
-          mode = SearchMode.QUERY;
-          validationEnabled = true;
-          String querySearchTooltip = "<HTML>" + //
-              "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
-              "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
-              "See wiki for more info<BR/>" + //
-              "</HTML>";
-          searchMode.setToolTipText(querySearchTooltip);
-        }
+    searchMode.addActionListener(e -> {
+      SearchMode mode = null;
+      boolean validationEnabled = false;
+      String lastSearch = searchField.getText();
+      if (searchMode.getSelectedIndex() == 0) {
+        mode = SearchMode.STRING_CONTAINS;
         searchValidatorDocumentListener.setSearchMode(mode);
-        searchValidatorDocumentListener.setEnable(validationEnabled);
-        searchActionForward.setSearchMode(mode);
-        searchActionBackward.setSearchMode(mode);
-        markAllFoundAction.setSearchMode(mode);
-        configuration.setProperty("gui.searchMode", mode);
-        searchResultColorizer.setSearchMode(mode);
-        searchSuggestionSource.setSearchMode(mode);
-        searchField.setText(lastSearch);
+        validationEnabled = false;
+        searchMode.setToolTipText("Checking if log message contains string (case is ignored)");
+      } else if (searchMode.getSelectedIndex() == 1) {
+        mode = SearchMode.REGEX;
+        validationEnabled = true;
+        searchMode.setToolTipText("Checking if log message matches regular expression (case is ignored)");
+      } else if (searchMode.getSelectedIndex() == 2) {
+        mode = SearchMode.QUERY;
+        validationEnabled = true;
+        String querySearchTooltip = "<HTML>" + //
+            "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
+            "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
+            "See wiki for more info<BR/>" + //
+            "</HTML>";
+        searchMode.setToolTipText(querySearchTooltip);
       }
+      searchValidatorDocumentListener.setSearchMode(mode);
+      searchValidatorDocumentListener.setEnable(validationEnabled);
+      searchActionForward.setSearchMode(mode);
+      searchActionBackward.setSearchMode(mode);
+      markAllFoundAction.setSearchMode(mode);
+      configuration.setProperty("gui.searchMode", mode);
+      searchResultColorizer.setSearchMode(mode);
+      searchSuggestionSource.setSearchMode(mode);
+      searchField.setText(lastSearch);
     });
     searchMode.setSelectedIndex(selectedSearchMode);
     final JCheckBox markFound = new JCheckBox("Mark search result");
