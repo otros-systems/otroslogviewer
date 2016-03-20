@@ -37,7 +37,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
       if (locationInfo != null && jumpToCodeService.isJumpable(locationInfo)) {
         Optional<Integer> lineNumber = locationInfo.getLineNumber();
         textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append(locationInfo.toString()).append(" in IDEA using JumpToCode plugin<BR/>");
+        StringBuilder toolTipText = new StringBuilder("<HTML>On click will open ").append(locationInfo.stringForm()).append(" in IDEA using JumpToCode plugin<BR/>");
         String content = jumpToCodeService.getContent(locationInfo);
         String[] split = content.split("\n");
         for (String s : split) {

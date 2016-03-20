@@ -136,16 +136,21 @@ public class LocationInfo {
 
   @Override
   public String toString() {
-    return "LocationInfo{" +
-      "packageName='" + packageName + '\'' +
-      ", className='" + className + '\'' +
-      ", method='" + method + '\'' +
-      ", fileName='" + fileName + '\'' +
-      ", lineNumber=" + lineNumber +
-      ", message=" + message +
-      '}';
+    return stringForm();
   }
 
+
+  public String stringForm() {
+    StringBuilder sb = new StringBuilder("LocationInfo{\n");
+    packageName.ifPresent(s -> sb.append("package='").append(s).append("'\n"));
+    className.ifPresent(s -> sb.append("class='").append(s).append("'\n"));
+    method.ifPresent(s -> sb.append("method='").append(s).append("'\n"));
+    fileName.ifPresent(s -> sb.append("file='").append(s).append("'\n"));
+    lineNumber.ifPresent(s -> sb.append("line='").append(s).append("'\n"));
+    message.ifPresent(s -> sb.append("message'").append(s).append("'\n"));
+    sb.append("}");
+    return sb.toString();
+  }
 // -------------------------- STATIC METHODS --------------------------
 
   /**
