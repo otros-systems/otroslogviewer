@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import com.google.common.base.Splitter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.message.LocationInfo;
 import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;

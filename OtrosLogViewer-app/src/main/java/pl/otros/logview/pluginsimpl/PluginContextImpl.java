@@ -22,8 +22,6 @@ import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PluginContextImpl implements PluginContext {
 

@@ -8,8 +8,6 @@ import pl.otros.logview.gui.actions.OtrosAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
