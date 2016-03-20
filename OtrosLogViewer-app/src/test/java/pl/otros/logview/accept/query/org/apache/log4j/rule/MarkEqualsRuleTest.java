@@ -27,7 +27,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateColorPostive() {
     // given
-    Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString(), false);
+    Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString());
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -39,7 +39,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateColorNegative() {
     // given
-    Rule rule = MarkEqualsRule.getRule("brown", false);
+    Rule rule = MarkEqualsRule.getRule("brown");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -51,7 +51,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateMarkedWithMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("true", false);
+    Rule rule = MarkEqualsRule.getRule("true");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -63,7 +63,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateMarkedWithNotMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("true", false);
+    Rule rule = MarkEqualsRule.getRule("true");
 
     // when
     boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
@@ -75,7 +75,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateNotMarkedWithMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("false", false);
+    Rule rule = MarkEqualsRule.getRule("false");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -87,7 +87,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testEvaluateNotMarkedWithNotMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("false", false);
+    Rule rule = MarkEqualsRule.getRule("false");
 
     // when
     boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
@@ -100,7 +100,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateColorPostive() {
     // given
-    Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString(), true);
+    Rule rule = MarkEqualsRule.getRule(MarkerColors.Black.toString());
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -112,7 +112,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateColorNegative() {
     // given
-    Rule rule = MarkEqualsRule.getRule("brown", true);
+    Rule rule = MarkEqualsRule.getRule("brown");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -124,7 +124,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateMarkedWithMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("true", true);
+    Rule rule = MarkEqualsRule.getRule("true");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -136,7 +136,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateMarkedWithNotMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("true", true);
+    Rule rule = MarkEqualsRule.getRule("true");
 
     // when
     boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());
@@ -148,7 +148,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateNotMarkedWithMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("false", true);
+    Rule rule = MarkEqualsRule.getRule("false");
 
     // when
     boolean evaluate = rule.evaluate(ldBlack, new HashMap<>());
@@ -160,7 +160,7 @@ public class MarkEqualsRuleTest {
   @Test
   public void testNegationEvaluateNotMarkedWithNotMarked() {
     // given
-    Rule rule = MarkEqualsRule.getRule("false", true);
+    Rule rule = MarkEqualsRule.getRule("false");
 
     // when
     boolean evaluate = rule.evaluate(ldNotMarked, new HashMap<>());

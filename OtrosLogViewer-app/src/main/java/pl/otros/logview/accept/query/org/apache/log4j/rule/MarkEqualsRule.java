@@ -57,7 +57,7 @@ public class MarkEqualsRule extends AbstractRule {
    * @param value
    *          string representation of marker colors or true/false.
    */
-  private MarkEqualsRule(final String value, final boolean negation) {
+  private MarkEqualsRule(final String value) {
     super();
     if (StringUtils.equalsIgnoreCase(value, "true") || StringUtils.equalsIgnoreCase(value, "false")) {
       marked = Boolean.valueOf(value);
@@ -84,8 +84,8 @@ public class MarkEqualsRule extends AbstractRule {
    *          string representation of marker colors or true/false.
    * @return new instance
    */
-  public static Rule getRule(final String value, final boolean negation) {
-    return new MarkEqualsRule(value, negation);
+  public static Rule getRule(final String value) {
+    return new MarkEqualsRule(value);
   }
 
   /**

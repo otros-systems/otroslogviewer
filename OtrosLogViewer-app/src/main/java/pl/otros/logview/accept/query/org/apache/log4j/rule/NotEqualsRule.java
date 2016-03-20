@@ -103,7 +103,7 @@ public class NotEqualsRule extends AbstractRule {
     if (p1.equalsIgnoreCase(LoggingEventFieldResolver.LEVEL_FIELD)) {
       return NotLevelEqualsRule.getRule(p2);
     } else if (p1.equalsIgnoreCase(LoggingEventFieldResolver.MARK_FIELD)) {
-      return MarkEqualsRule.getRule(p2, true);
+      return MarkEqualsRule.getRule(p2);
     } else {
       return new NotEqualsRule(p1, p2);
     }

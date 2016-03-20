@@ -116,7 +116,6 @@ public class LogViewMainFrame extends JFrame {
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
   private ExitAction exitAction;
-  private PersistedSuggestionSource searchSuggestionSource;
 
   public LogViewMainFrame(DataConfiguration c) throws InitializationException {
     super();
@@ -448,7 +447,7 @@ public class LogViewMainFrame extends JFrame {
     final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
     searchField = new JTextField();
 
-    searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS),otrosApplication.getServices().getPersistService());
+    PersistedSuggestionSource searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS), otrosApplication.getServices().getPersistService());
     SuggestDecorator.decorate(
       searchField,
       searchSuggestionSource,

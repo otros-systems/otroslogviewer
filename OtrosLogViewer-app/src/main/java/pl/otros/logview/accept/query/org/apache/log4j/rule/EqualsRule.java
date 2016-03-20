@@ -101,7 +101,7 @@ public class EqualsRule extends AbstractRule {
     } else if (p1.equalsIgnoreCase(LoggingEventFieldResolver.TIMESTAMP_FIELD) || p1.equalsIgnoreCase(LoggingEventFieldResolver.DATE_FIELD)) {
       return TimestampEqualsRule.getRule(p2);
     } else if (p1.equalsIgnoreCase(LoggingEventFieldResolver.MARK_FIELD)) {
-      return MarkEqualsRule.getRule(p2, false);
+      return MarkEqualsRule.getRule(p2);
     } else {
       return new EqualsRule(p1, p2);
     }
