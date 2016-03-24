@@ -1,9 +1,9 @@
 package pl.otros.logview.store.async;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 import pl.otros.logview.gui.actions.search.SearchResult;
-import pl.otros.logview.store.MemoryLogDataStore;
+import pl.otros.logview.api.store.MemoryLogDataStore;
 
 public class MemoryLogDataStore2 extends MemoryLogDataStore implements LogDataStore2  {
 

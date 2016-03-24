@@ -18,16 +18,15 @@ package pl.otros.logview.gui.actions;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.Stoppable;
+import pl.otros.logview.api.*;
 import pl.otros.logview.gui.*;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.ObservableInputStreamImpl;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.TableColumnNameSelfDescribable;
-import pl.otros.logview.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.ObservableInputStreamImpl;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -41,13 +40,13 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 
-public class ImportLogActionListener extends  OtrosAction {
+public class ImportLogActionListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
   private LogImporter importer;
   private LogImportStats importStats;
 
-  public ImportLogActionListener(LogImporter importer, OtrosApplication  otrosApplication) {
+  public ImportLogActionListener(LogImporter importer, OtrosApplication otrosApplication) {
     super(otrosApplication);
     this.importer = importer;
 		this.putValue(SMALL_ICON,importer.getIcon());

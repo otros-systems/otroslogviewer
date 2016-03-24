@@ -16,6 +16,8 @@
 package pl.otros.logview.pluginable;
 
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+
 public abstract class AbstractPluginableElement implements PluginableElement {
 
   protected String name;

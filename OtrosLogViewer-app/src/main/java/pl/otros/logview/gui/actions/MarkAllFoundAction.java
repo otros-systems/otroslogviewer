@@ -17,10 +17,9 @@ package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.*;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
-import pl.otros.logview.gui.*;
 import pl.otros.logview.gui.actions.search.AcceptConditionSearchMatcher;
 import pl.otros.logview.gui.actions.search.RegexMatcher;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;

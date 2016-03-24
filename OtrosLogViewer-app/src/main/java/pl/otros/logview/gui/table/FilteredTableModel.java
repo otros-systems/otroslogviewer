@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.table;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogFilter;
+import pl.otros.logview.api.LogDataTableModel;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;

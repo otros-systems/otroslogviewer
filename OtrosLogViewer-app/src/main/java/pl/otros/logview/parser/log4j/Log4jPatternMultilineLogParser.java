@@ -38,9 +38,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.InitializationException;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.ParserDescription;
+import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.parser.MultiLineLogParser;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.parser.*;
 
 import java.text.DateFormat;

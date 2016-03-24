@@ -6,12 +6,12 @@ import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

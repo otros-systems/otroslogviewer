@@ -18,7 +18,7 @@ package pl.otros.logview.accept;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 
 public class HigherIdAcceptConditionTest extends 
 SelectionAwareAcceptConditionTestBase {

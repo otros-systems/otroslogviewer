@@ -2,7 +2,8 @@ package pl.otros.logview.gui.services.persist;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.pluginable.AllPluginables;
+import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.api.pluginable.AllPluginables;
 
 import java.io.*;
 import java.util.Objects;

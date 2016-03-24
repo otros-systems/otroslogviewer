@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+
 import java.util.Comparator;
 
 class PlugiableByNameComparator<T extends PluginableElement> implements Comparator<T> {

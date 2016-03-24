@@ -4,7 +4,7 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.message.MessageFormatter;
+import pl.otros.logview.api.MessageFormatter;
 import pl.otros.logview.gui.message.SubText;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

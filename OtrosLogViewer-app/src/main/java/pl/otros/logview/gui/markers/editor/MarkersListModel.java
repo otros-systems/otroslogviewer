@@ -15,10 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers.editor;
 
-import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElementEventListener;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import java.util.ArrayList;

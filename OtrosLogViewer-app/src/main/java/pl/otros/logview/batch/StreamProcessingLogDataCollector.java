@@ -15,11 +15,13 @@
  ******************************************************************************/
 package pl.otros.logview.batch;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataCollector;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataCollector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.batch.BatchProcessingContext;
+import pl.otros.logview.api.batch.LogDataParsedListener;
 
 public class StreamProcessingLogDataCollector implements LogDataCollector {
 

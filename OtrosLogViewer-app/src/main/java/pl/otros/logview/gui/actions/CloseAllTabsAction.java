@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 import java.awt.event.ActionEvent;
 

@@ -16,10 +16,10 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.gui.ConfKeys;
+import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.gui.GuiUtils;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 
 import javax.swing.*;
 import java.awt.*;

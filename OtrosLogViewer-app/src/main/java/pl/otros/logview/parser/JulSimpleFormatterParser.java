@@ -17,9 +17,13 @@ package pl.otros.logview.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.InitializationException;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.ParserDescription;
+import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.parser.MultiLineLogParser;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

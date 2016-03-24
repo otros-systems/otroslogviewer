@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.read;
 
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 public class ImportLogWithAutoDetectedImporterActionListener extends ImportLogActionListener {
 

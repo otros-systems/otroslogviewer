@@ -1,6 +1,6 @@
 package pl.otros.logview.exceptionshandler.errrorreport;
 
-import pl.otros.logview.gui.ConfKeys;
+import pl.otros.logview.api.ConfKeys;
 
 import java.util.HashMap;
 import java.util.Map;

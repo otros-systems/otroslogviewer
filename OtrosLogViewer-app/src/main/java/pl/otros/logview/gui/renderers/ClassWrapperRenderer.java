@@ -3,7 +3,7 @@ package pl.otros.logview.gui.renderers;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.ClassWrapper;
+import pl.otros.logview.api.ClassWrapper;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

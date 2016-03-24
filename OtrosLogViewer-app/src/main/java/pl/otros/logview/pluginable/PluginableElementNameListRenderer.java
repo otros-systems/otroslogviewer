@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;

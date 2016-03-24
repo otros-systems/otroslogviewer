@@ -1,7 +1,7 @@
 package pl.otros.logview.store.async;
 
 import pl.otros.logview.gui.actions.search.SearchResult;
-import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.api.LogDataStore;
 
 public interface LogDataStore2 extends LogDataStore {
 

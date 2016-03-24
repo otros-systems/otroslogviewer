@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
+import pl.otros.logview.api.AutomaticMarker;
+
 public interface MarkersEventListener {
 
   void markerAdded(AutomaticMarker marker);

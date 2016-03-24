@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 import pl.otros.logview.filter.PropertyFilter;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

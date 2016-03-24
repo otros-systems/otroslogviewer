@@ -17,8 +17,11 @@ package pl.otros.logview;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.Stoppable;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import javax.swing.*;
 

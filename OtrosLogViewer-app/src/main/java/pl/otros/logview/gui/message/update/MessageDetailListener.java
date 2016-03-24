@@ -17,26 +17,20 @@
 package pl.otros.logview.gui.message.update;
 
 import com.google.common.base.Throwables;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.LogDataTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.*;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.LogViewPanel;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.note.NoteEvent;
-import pl.otros.logview.gui.note.NoteObserver;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
-import pl.otros.logview.pluginable.PluginableElement;
-import pl.otros.logview.pluginable.PluginableElementEventListener;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.text.SimpleDateFormat;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MessageDetailListener implements ListSelectionListener, NoteObserver {
 

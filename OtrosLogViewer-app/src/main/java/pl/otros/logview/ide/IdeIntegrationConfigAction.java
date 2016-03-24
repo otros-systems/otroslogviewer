@@ -2,9 +2,9 @@ package pl.otros.logview.ide;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.actions.OtrosAction;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.OtrosAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

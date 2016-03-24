@@ -15,9 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.OtrosApplication;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

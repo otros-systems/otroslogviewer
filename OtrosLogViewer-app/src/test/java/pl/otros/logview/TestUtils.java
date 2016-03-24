@@ -16,8 +16,10 @@
 package pl.otros.logview;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.ParsingContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

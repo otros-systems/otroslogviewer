@@ -18,6 +18,7 @@ package pl.otros.logview.gui;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.RepeatBehavior;
 import org.pushingpixels.trident.ease.Sine;
+import pl.otros.logview.api.StatusObserver;
 
 import javax.swing.*;
 import java.awt.*;

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 
 import java.awt.*;

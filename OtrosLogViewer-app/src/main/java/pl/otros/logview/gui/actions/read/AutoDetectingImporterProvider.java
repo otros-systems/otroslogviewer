@@ -19,9 +19,9 @@ package pl.otros.logview.gui.actions.read;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
 
 import java.util.Collection;
 

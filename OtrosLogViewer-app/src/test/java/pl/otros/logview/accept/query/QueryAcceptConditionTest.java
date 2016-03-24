@@ -19,10 +19,10 @@ package pl.otros.logview.accept.query;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataBuilder;
+import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.Note;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
 
 import java.util.*;

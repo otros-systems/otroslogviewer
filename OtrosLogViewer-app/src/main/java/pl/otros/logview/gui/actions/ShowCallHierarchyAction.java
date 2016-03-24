@@ -20,10 +20,10 @@ import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 import pl.otros.logview.filter.CallHierarchyLogFilter;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.uml.Message;
 import pl.otros.logview.uml.Message.MessageType;
 

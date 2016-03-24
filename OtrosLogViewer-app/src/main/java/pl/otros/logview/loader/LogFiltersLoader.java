@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import pl.otros.logview.api.LogFilter;
 import pl.otros.logview.filter.*;
 
 import java.util.ArrayList;

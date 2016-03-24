@@ -16,7 +16,7 @@
 
 package pl.otros.logview.gui.message.update;
 
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import pl.otros.logview.api.MessageFragmentStyle;
 
 import javax.swing.*;
 import javax.swing.text.Style;

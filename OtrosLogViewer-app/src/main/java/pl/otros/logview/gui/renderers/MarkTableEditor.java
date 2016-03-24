@@ -15,8 +15,8 @@
  */
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.*;

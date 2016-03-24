@@ -16,8 +16,9 @@
 
 package pl.otros.logview.loader;
 
+import pl.otros.logview.api.BaseLoader;
 import pl.otros.logview.api.plugins.PluginInfo;
-import pl.otros.logview.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.AllPluginables;
 
 import java.io.File;
 import java.util.ArrayList;

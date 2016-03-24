@@ -15,6 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+
 public class SynchronizePluginableContainerListener<T extends PluginableElement> implements PluginableElementEventListener<T> {
 
   protected PluginableElementsContainer<T> destination;

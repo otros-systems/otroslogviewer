@@ -16,7 +16,7 @@
 
 package pl.otros.logview.exceptionshandler;
 
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.StatusObserver;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 

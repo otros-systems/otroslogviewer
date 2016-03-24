@@ -15,7 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.LogData;
 
 import java.util.Properties;
 

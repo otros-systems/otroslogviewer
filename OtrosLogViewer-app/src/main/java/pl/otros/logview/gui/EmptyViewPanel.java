@@ -17,12 +17,14 @@
 package pl.otros.logview.gui;
 
 import org.jdesktop.swingx.JXHyperlink;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterActionListener;
 import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.pluginable.PluginableElementEventListener;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;

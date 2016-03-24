@@ -16,14 +16,14 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogDataTableModel;
 import pl.otros.logview.gui.LogImportStats;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.LogDataStore;
 
 import javax.swing.*;
 

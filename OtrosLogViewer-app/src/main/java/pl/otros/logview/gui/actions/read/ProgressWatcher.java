@@ -17,8 +17,8 @@ package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
 import pl.otros.logview.gui.LogImportStats;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.io.ObservableInputStreamImpl;
+import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.io.ObservableInputStreamImpl;
 
 import javax.swing.*;
 import java.io.IOException;

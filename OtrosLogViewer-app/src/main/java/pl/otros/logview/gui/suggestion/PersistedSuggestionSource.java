@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.suggestion;
 
 import pl.otros.logview.gui.actions.search.SearchAction;
-import pl.otros.logview.gui.services.persist.PersistService;
+import pl.otros.logview.api.services.PersistService;
 import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 

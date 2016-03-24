@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.actions.search;
 
 import pl.otros.logview.accept.query.QueryAcceptCondition;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 
 import javax.swing.*;

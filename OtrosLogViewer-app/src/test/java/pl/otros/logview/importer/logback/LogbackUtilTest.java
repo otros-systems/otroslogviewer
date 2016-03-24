@@ -11,9 +11,9 @@ import org.slf4j.helpers.BasicMarkerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataBuilder;
+import pl.otros.logview.api.MarkerColors;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

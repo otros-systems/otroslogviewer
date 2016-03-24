@@ -16,10 +16,10 @@
 package pl.otros.logview.store.async;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataCollector;
-import pl.otros.logview.Note;
-import pl.otros.logview.gui.MarkableTableModel;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.Note;
+import pl.otros.logview.api.MarkableTableModel;
 import pl.otros.logview.gui.actions.search.SearchResult;
 
 import java.util.TreeMap;

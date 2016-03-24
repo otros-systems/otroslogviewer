@@ -1,9 +1,9 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import pl.otros.logview.api.plugins.*;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.MessageFormatter;
+import pl.otros.logview.api.services.JumpToCodeService;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 public class StackTraceFormatterPlugin implements Plugin {
 

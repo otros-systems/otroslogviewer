@@ -16,8 +16,8 @@
 package pl.otros.logview.accept;
 
 import com.google.common.base.Joiner;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataTableModel;
 
 import javax.swing.*;
 import java.util.Set;

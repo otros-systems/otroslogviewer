@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.MarkerColors;
 
 public class ErrorMarker extends AbstractAutomaticMarker {
 

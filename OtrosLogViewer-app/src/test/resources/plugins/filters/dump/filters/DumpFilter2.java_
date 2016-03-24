@@ -3,9 +3,9 @@ import java.awt.Component;
 import java.util.Properties;
 
 import pl.otros.logview.LogData;
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.filter.LogFilterValueChangeListener;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogFilter;
+import pl.otros.logview.api.LogFilterValueChangeListener;
+import pl.otros.logview.api.LogDataTableModel;
 
 
 public class DumpFilter2 implements LogFilter {

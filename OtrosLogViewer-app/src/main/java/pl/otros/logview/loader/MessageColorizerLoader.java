@@ -16,7 +16,8 @@
 package pl.otros.logview.loader;
 
 import org.apache.commons.io.IOUtils;
-import pl.otros.logview.gui.message.MessageColorizer;
+import pl.otros.logview.api.BaseLoader;
+import pl.otros.logview.api.MessageColorizer;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageColorizer;
 import pl.otros.logview.gui.message.StackTraceColorizer;

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.reader;
 
+import pl.otros.logview.api.LogReader;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

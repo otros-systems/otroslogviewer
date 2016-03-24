@@ -18,10 +18,10 @@ package pl.otros.logview.gui.actions;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.BaseConfiguration;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
-import pl.otros.logview.gui.*;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.pluginable.AllPluginables;
+import pl.otros.logview.api.*;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.reader.SocketLogReader;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public class StartSocketListener extends OtrosAction {
 
   private LogViewPanelWrapper logViewPanelWrapper;
 
-  public StartSocketListener(OtrosApplication otrosApplication,Collection<SocketLogReader> logReaders) {
+  public StartSocketListener(OtrosApplication otrosApplication, Collection<SocketLogReader> logReaders) {
 		super(otrosApplication);
 		this.logReaders = logReaders;
     putValue(Action.NAME, "Start socket listener");

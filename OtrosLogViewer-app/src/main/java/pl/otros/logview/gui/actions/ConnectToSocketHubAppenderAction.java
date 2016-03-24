@@ -23,12 +23,11 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.*;
 import pl.otros.logview.gui.actions.TailLogActionListener.ParsingContextStopperForClosingTab;
-import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.importer.Log4jSerilizedLogImporter;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.importer.LogImporter;
 
 import javax.net.SocketFactory;
 import javax.swing.*;

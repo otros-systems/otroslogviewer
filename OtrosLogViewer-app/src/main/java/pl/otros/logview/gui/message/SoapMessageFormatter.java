@@ -17,6 +17,7 @@ package pl.otros.logview.gui.message;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.MessageFormatter;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -53,7 +54,7 @@ public class SoapMessageFormatter implements MessageFormatter {
   /*
        * (non-Javadoc)
        *
-       * @see pl.otros.logview.gui.message.MessageFormatter#formattingNeeded(java.lang.String)
+       * @see pl.otros.logview.api.MessageFormatter#formattingNeeded(java.lang.String)
        */
   @Override
   public boolean formattingNeeded(String message) {
@@ -63,7 +64,7 @@ public class SoapMessageFormatter implements MessageFormatter {
   /*
      * (non-Javadoc)
      *
-     * @see pl.otros.logview.gui.message.MessageFormatter#format(java.lang.String, javax.swing.text.StyledDocument)
+     * @see pl.otros.logview.api.MessageFormatter#format(java.lang.String, javax.swing.text.StyledDocument)
      */
   @Override
   public String format(String message) {

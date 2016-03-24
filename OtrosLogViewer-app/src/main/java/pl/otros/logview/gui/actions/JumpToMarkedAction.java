@@ -15,8 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.Note;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.*;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,11 @@
 package pl.otros.logview.gui.services.jumptocode;
 
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.services.Services;
-import pl.otros.logview.gui.services.persist.PersistService;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.Services;
+import pl.otros.logview.api.services.JumpToCodeService;
+import pl.otros.logview.api.services.PersistService;
 import pl.otros.logview.gui.services.persist.SerializePersisService;
-import pl.otros.logview.gui.services.tasks.TaskSchedulerService;
+import pl.otros.logview.api.services.TaskSchedulerService;
 import pl.otros.logview.gui.services.tasks.TaskSchedulerServiceImpl;
 
 public class ServicesImpl implements Services {

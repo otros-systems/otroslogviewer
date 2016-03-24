@@ -8,9 +8,10 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.ide.Ide;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.services.JumpToCodeService;
+import pl.otros.logview.api.Ide;
 
 import java.io.IOException;
 import java.util.ArrayList;

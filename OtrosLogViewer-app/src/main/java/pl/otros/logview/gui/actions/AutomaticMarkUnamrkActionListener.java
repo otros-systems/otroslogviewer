@@ -15,10 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.StatusObserver;
-import pl.otros.logview.gui.markers.AutomaticMarker;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.AutomaticMarker;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

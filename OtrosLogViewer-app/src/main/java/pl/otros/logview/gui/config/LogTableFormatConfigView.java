@@ -15,10 +15,10 @@ import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.renderers.LevelRenderer;
-import pl.otros.logview.io.Utils;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
 import pl.otros.swing.config.ValidationResult;
@@ -47,7 +47,7 @@ import java.util.List;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.SwingConstants.LEFT;
 import static javax.swing.SwingConstants.VERTICAL;
-import static pl.otros.logview.gui.ConfKeys.*;
+import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogTableFormatConfigView extends AbstractConfigView implements InMainConfig {
 

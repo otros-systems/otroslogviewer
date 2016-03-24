@@ -2,6 +2,7 @@ package pl.otros.logview.gui.services.tasks;
 
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import pl.otros.logview.api.services.TaskSchedulerService;
 
 import java.util.concurrent.Executors;
 

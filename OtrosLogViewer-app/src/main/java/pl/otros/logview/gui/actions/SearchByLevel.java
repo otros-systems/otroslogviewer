@@ -15,8 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ public class SearchByLevel extends OtrosAction {
   private int direction = 1;
   private final int minLevel;
 
-  public SearchByLevel(OtrosApplication otrosApplication,int direction, Level minLevel) {
+  public SearchByLevel(OtrosApplication otrosApplication, int direction, Level minLevel) {
     super(otrosApplication);
     putValue(SHORT_DESCRIPTION, "Search for " + (direction > 0 ? "next" : "previous") + " event with level " + minLevel.getName() + " or higher.");
 

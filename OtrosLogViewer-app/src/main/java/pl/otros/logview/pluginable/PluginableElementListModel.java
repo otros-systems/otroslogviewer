@@ -15,6 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.pluginable;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;

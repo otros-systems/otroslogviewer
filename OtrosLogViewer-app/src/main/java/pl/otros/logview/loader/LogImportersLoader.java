@@ -17,11 +17,15 @@ package pl.otros.logview.loader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.BaseLoader;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.LogImporterUsingParser;
+import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.importer.*;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
-import pl.otros.logview.parser.LogParser;
+import pl.otros.logview.api.LogParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.parser.log4j.Log4jUtil;

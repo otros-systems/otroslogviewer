@@ -7,11 +7,11 @@ import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTextField;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.services.Services;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.Services;
+import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.*;
 import java.awt.*;

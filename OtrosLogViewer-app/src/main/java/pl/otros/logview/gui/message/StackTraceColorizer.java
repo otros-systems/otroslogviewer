@@ -15,6 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.MessageColorizer;
+import pl.otros.logview.api.MessageFragmentStyle;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -127,7 +131,7 @@ public class StackTraceColorizer implements MessageColorizer {
   }
 
   protected LocationInfo getLocationInfo(String stackTraceLine) {
-    return pl.otros.logview.gui.message.LocationInfo.parse(stackTraceLine);
+    return LocationInfo.parse(stackTraceLine);
   }
 
   @Override

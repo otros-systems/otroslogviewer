@@ -15,6 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import pl.otros.logview.api.MessageColorizer;
+import pl.otros.logview.api.MessageFragmentStyle;
+
 import javax.swing.text.*;
 import java.awt.*;
 import java.util.*;

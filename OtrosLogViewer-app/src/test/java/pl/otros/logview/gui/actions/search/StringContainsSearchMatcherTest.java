@@ -18,7 +18,7 @@ package pl.otros.logview.gui.actions.search;
 import static org.testng.AssertJUnit.assertEquals;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 
 public class StringContainsSearchMatcherTest {
 

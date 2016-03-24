@@ -19,8 +19,8 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 
 import java.io.IOException;

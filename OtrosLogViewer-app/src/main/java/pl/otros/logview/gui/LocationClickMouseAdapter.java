@@ -2,8 +2,11 @@ package pl.otros.logview.gui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;

@@ -17,11 +17,11 @@ package pl.otros.logview.parser.log4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.parser.MultiLineLogParser;
-import pl.otros.logview.parser.ParserDescription;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.parser.MultiLineLogParser;
+import pl.otros.logview.api.ParserDescription;
+import pl.otros.logview.api.ParsingContext;
 
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;

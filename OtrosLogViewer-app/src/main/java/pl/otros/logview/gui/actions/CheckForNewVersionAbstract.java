@@ -20,14 +20,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-import static pl.otros.logview.gui.ConfKeys.*;
+import static pl.otros.logview.api.ConfKeys.*;
 
 public abstract class CheckForNewVersionAbstract extends OtrosAction {
   private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());

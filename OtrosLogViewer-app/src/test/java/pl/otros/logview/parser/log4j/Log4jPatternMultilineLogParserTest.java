@@ -17,11 +17,11 @@ package pl.otros.logview.parser.log4j;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporterUsingParser;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.LogImporterUsingParser;
+import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

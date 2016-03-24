@@ -2,7 +2,8 @@ package pl.otros.logview.ide;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.Ide;
+import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.*;
 

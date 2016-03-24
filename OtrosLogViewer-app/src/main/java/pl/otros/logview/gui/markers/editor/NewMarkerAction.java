@@ -15,11 +15,11 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers.editor;
 
-import pl.otros.logview.gui.markers.AutomaticMarker;
+import pl.otros.logview.api.AutomaticMarker;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.loader.AutomaticMarkerLoader;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;

@@ -16,7 +16,7 @@
 package pl.otros.logview.parser.log4j;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.importer.InitializationException;
+import pl.otros.logview.api.InitializationException;
 
 import java.util.Properties;
 import java.util.logging.Level;

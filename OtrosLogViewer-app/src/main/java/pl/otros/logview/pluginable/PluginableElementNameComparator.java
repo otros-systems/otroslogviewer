@@ -1,5 +1,7 @@
 package pl.otros.logview.pluginable;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+
 import java.util.Comparator;
 
 public class PluginableElementNameComparator implements Comparator<PluginableElement> {

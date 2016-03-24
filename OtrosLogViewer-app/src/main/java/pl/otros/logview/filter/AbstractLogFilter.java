@@ -15,7 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogFilter;
+import pl.otros.logview.api.LogFilterValueChangeListener;
+import pl.otros.logview.api.LogDataTableModel;
 
 import java.util.Properties;
 

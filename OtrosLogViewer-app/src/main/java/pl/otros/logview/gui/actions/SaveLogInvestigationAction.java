@@ -16,12 +16,13 @@
 package pl.otros.logview.gui.actions;
 
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.LogInvestiagionPersitanceUtil;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogDataTableModel.Memento;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.LogInvestiagionPersitanceUtil;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.LogDataTableModel.Memento;
+import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;

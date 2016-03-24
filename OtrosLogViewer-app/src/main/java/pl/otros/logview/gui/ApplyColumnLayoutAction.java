@@ -3,7 +3,7 @@ package pl.otros.logview.gui;
 import org.jdesktop.swingx.JXTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.swing.table.ColumnLayout;
 import pl.otros.swing.table.TablesUtils;
 

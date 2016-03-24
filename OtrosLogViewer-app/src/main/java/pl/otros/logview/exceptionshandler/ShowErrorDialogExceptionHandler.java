@@ -20,9 +20,9 @@ import com.google.common.base.Throwables;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.DataConfiguration;
 import pl.otros.logview.exceptionshandler.errrorreport.*;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.*;

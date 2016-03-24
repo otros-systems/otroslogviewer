@@ -16,12 +16,12 @@
 package pl.otros.logview.gui.markers.editor;
 
 import org.apache.commons.io.IOUtils;
-import pl.otros.logview.gui.markers.AutomaticMarker;
+import pl.otros.logview.api.AutomaticMarker;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;
 import pl.otros.logview.gui.markers.StringMarker;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

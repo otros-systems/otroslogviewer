@@ -1,6 +1,6 @@
 package pl.otros.logview.exceptionshandler.errrorreport;
 
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 public class ErrorReportCollectingContext {
 

@@ -16,6 +16,7 @@
 package pl.otros.logview.gui;
 
 import pl.otros.logview.VersionUtil;
+import pl.otros.logview.api.StatusObserver;
 
 import java.awt.*;
 import java.io.IOException;

@@ -19,7 +19,7 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 
 import java.beans.PropertyChangeListener;
 import java.util.Map;

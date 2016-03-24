@@ -15,15 +15,16 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElement;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.LogFilter;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.MessageColorizer;
+import pl.otros.logview.api.MessageFormatter;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

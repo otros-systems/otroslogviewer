@@ -19,9 +19,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.message.MessageColorizer;
+import pl.otros.logview.api.MessageColorizer;
 import pl.otros.logview.gui.message.MessageColorizerUtils;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import pl.otros.logview.api.MessageFragmentStyle;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;

@@ -17,9 +17,10 @@
 package pl.otros.logview.gui.actions;
 
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.LogData;
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogFilter;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

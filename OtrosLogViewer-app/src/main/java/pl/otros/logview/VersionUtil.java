@@ -16,8 +16,8 @@
 package pl.otros.logview;
 
 import org.apache.commons.io.IOUtils;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

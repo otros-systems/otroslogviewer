@@ -16,8 +16,8 @@
 
 package pl.otros.logview.accept;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.filter.LogFilter;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogFilter;
 
 import java.util.Collection;
 

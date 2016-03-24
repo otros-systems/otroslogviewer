@@ -3,10 +3,10 @@ package pl.otros.logview.exceptionshandler.errrorreport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElement;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;

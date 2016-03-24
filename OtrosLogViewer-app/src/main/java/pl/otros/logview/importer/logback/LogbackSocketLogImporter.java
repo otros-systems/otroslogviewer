@@ -1,11 +1,11 @@
 package pl.otros.logview.importer.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.LogDataCollector;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.LogDataBuilder;
+import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.swing.*;

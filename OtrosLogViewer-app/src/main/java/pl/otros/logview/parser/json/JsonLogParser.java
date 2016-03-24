@@ -1,10 +1,10 @@
 package pl.otros.logview.parser.json;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.parser.LogParser;
-import pl.otros.logview.parser.ParserDescription;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.LogParser;
+import pl.otros.logview.api.ParserDescription;
+import pl.otros.logview.api.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.text.ParseException;

@@ -5,10 +5,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.util.Validator;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataBuilder;
+import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.Note;
 import pl.otros.logview.parser.I18nLevelParser;
 
 import java.text.DateFormat;

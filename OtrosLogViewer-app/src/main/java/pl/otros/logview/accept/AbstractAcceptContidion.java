@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.accept;
 
+import pl.otros.logview.api.AcceptCondition;
+
 public abstract class AbstractAcceptContidion implements AcceptCondition {
 
   protected String name;

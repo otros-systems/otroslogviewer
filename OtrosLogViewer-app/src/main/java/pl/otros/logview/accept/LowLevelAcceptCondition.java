@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.accept;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 
 import java.util.logging.Level;
 

@@ -15,11 +15,12 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.logging.GuiAppender;
 
 import java.awt.event.ActionEvent;

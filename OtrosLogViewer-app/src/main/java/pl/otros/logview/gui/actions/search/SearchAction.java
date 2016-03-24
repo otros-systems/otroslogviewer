@@ -15,11 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.*;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
-import pl.otros.logview.gui.*;
-import pl.otros.logview.gui.actions.OtrosAction;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

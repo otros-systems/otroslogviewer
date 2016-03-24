@@ -8,8 +8,8 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.AppProperties;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.AppProperties;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.swing.OtrosSwingUtils;
 

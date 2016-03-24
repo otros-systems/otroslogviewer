@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.read;
 
-import pl.otros.logview.Stoppable;
+import pl.otros.logview.api.Stoppable;
 
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;

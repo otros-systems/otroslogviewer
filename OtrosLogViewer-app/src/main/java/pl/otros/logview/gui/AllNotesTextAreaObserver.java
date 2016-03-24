@@ -15,10 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import pl.otros.logview.Note;
-import pl.otros.logview.gui.note.NotableTableModel;
-import pl.otros.logview.gui.note.NoteEvent;
-import pl.otros.logview.gui.note.NoteObserver;
+import pl.otros.logview.api.Note;
+import pl.otros.logview.api.NotableTableModel;
+import pl.otros.logview.api.NoteEvent;
+import pl.otros.logview.api.NoteObserver;
 
 import javax.swing.*;
 import java.util.TreeMap;

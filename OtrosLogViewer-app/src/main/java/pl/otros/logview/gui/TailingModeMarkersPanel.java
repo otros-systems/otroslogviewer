@@ -16,13 +16,15 @@
 package pl.otros.logview.gui;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.markers.AutomaticMarker;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.LogDataTableModel;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElementEventListener;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElementEventListener;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

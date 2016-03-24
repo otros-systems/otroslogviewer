@@ -1,8 +1,9 @@
 package pl.otros.logview.gui.services.jumptocode;
 
 import org.apache.commons.configuration.Configuration;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.ide.Ide;
+import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.services.JumpToCodeService;
+import pl.otros.logview.api.Ide;
 
 import java.io.IOException;
 import org.slf4j.Logger;

@@ -15,11 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.accept.AcceptCondition;
-import pl.otros.logview.gui.HasIcon;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.AcceptCondition;
+import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.HasIcon;
+import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -17,8 +17,8 @@ package pl.otros.logview.gui.renderers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.gui.MarkableTableModel;
+import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.MarkableTableModel;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

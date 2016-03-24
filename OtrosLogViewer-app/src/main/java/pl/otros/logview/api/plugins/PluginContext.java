@@ -17,7 +17,7 @@
 package pl.otros.logview.api.plugins;
 
 import com.google.common.annotations.Beta;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 

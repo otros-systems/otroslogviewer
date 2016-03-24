@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataTableModel;
 
 public class SearchEngine {
 

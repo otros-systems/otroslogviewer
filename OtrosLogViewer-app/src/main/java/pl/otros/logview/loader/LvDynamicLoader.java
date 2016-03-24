@@ -15,21 +15,16 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import pl.otros.logview.api.*;
 import pl.otros.logview.api.plugins.Plugin;
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.gui.StatusObserver;
-import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.json.JsonMessageFormatter;
 import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElement;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
-import pl.otros.logview.pluginable.PluginablePluginAdapter;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.pluginable.PluginablePluginAdapter;
 
 import java.io.File;
 import java.io.IOException;

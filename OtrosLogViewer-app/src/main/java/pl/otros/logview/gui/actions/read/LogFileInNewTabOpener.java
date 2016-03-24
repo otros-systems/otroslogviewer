@@ -18,14 +18,14 @@ package pl.otros.logview.gui.actions.read;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 
 import javax.swing.*;
 

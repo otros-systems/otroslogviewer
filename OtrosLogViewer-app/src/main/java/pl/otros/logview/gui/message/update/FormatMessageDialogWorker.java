@@ -18,11 +18,11 @@ package pl.otros.logview.gui.message.update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.MessageColorizer;
+import pl.otros.logview.api.MessageFormatter;
+import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 

@@ -15,12 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
 
 import java.util.Collection;
 

@@ -16,13 +16,10 @@
 
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogViewPanel;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.*;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.message.html.ExportToHtml;
 import pl.otros.logview.gui.message.update.CancelStatus;
 import pl.otros.logview.gui.message.update.LogDataFormatter;
@@ -30,15 +27,11 @@ import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.message.update.TextChunkWithStyle;
 import pl.otros.logview.gui.util.ClipboardUtil;
 import pl.otros.logview.gui.util.PlainTextAndHtml;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
 
 import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -65,7 +58,7 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         MessageUpdateUtils messageUpdateUtils = new MessageUpdateUtils();
-        LogViewPanel selectedLogViewPanel = getOtrosApplication().getSelectedLogViewPanel();
+        LogViewPanelI selectedLogViewPanel = getOtrosApplication().getSelectedLogViewPanel();
         if (selectedLogViewPanel == null ){
             LOGGER.warn("Currently selected component is not LogViewPanel, will not copy");
             return;

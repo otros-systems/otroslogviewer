@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.MarkerColors;
 import pl.otros.logview.gui.ColorIcon;
 
 import javax.swing.*;

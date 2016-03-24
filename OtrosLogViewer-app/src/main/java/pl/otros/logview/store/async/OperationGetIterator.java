@@ -1,7 +1,7 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataStore;
 
 import java.util.Iterator;
 import java.util.concurrent.Callable;

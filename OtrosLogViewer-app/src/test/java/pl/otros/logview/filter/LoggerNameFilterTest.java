@@ -19,8 +19,8 @@ import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.LogDataBuilder;
 
 public class LoggerNameFilterTest {
 

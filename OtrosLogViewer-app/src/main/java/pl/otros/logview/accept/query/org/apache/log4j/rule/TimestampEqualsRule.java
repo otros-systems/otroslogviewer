@@ -19,7 +19,7 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
 
 import java.io.IOException;

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.LogData;
 
 import java.util.ArrayList;
 import java.util.HashSet;

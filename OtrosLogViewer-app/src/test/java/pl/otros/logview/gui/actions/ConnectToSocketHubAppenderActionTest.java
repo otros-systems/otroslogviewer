@@ -20,8 +20,8 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.net.SocketFactory;
 import java.io.IOException;
