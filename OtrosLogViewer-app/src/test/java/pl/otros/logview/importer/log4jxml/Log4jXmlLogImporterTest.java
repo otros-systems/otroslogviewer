@@ -18,8 +18,8 @@ package pl.otros.logview.importer.log4jxml;
 import org.testng.annotations.Test;
 import pl.otros.logview.TestUtils;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.IOException;

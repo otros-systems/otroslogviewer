@@ -15,10 +15,6 @@
  ******************************************************************************/
 package pl.otros.logview.api.pluginable;
 
-import pl.otros.logview.api.LogFilter;
-import pl.otros.logview.api.AutomaticMarker;
-import pl.otros.logview.api.MessageColorizer;
-import pl.otros.logview.api.MessageFormatter;
 import pl.otros.logview.api.importer.LogImporter;
 
 import java.io.File;

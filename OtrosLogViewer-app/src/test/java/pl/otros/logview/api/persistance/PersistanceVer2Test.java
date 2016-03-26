@@ -18,9 +18,9 @@ package pl.otros.logview.api.persistance;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

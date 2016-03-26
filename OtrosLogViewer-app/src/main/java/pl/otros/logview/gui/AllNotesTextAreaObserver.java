@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import pl.otros.logview.api.Note;
-import pl.otros.logview.api.NotableTableModel;
-import pl.otros.logview.api.NoteEvent;
+import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.gui.NotableTableModel;
+import pl.otros.logview.api.gui.NoteEvent;
 import pl.otros.logview.api.NoteObserver;
 
 import javax.swing.*;

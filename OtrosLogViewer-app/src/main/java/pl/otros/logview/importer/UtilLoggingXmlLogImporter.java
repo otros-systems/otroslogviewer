@@ -23,13 +23,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
 import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

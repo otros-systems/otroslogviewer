@@ -18,10 +18,9 @@ package pl.otros.logview.api.persistance;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataListPersistance;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
 
 import java.io.*;
 import java.util.*;

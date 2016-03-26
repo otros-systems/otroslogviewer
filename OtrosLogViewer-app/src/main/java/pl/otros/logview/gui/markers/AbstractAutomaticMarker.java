@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
-import pl.otros.logview.api.AutomaticMarker;
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
+import pl.otros.logview.api.model.MarkerColors;
 
 public abstract class AbstractAutomaticMarker implements AutomaticMarker {
 

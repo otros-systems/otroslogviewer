@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.DataConfiguration;
 import pl.otros.logview.exceptionshandler.errrorreport.*;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;

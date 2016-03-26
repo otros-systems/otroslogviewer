@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.services.jumptocode;
 
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.Services;
+import pl.otros.logview.api.services.Services;
 import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.api.services.PersistService;
 import pl.otros.logview.gui.services.persist.SerializePersisService;

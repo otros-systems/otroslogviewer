@@ -15,10 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.api.store;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.LogDataStore;
-import pl.otros.logview.api.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.Note;
 
 import java.util.Iterator;
 import java.util.TreeMap;

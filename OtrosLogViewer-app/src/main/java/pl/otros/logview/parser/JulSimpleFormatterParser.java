@@ -17,9 +17,9 @@ package pl.otros.logview.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.ParserDescription;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.ParserDescription;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.parser.MultiLineLogParser;

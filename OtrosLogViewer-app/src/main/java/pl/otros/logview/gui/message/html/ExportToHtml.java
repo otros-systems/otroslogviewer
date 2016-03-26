@@ -20,7 +20,7 @@ import com.google.common.base.Joiner;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;

@@ -17,6 +17,7 @@ package pl.otros.logview.api;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
+import pl.otros.logview.api.pluginable.LogFilter;
 
 import java.io.File;
 import java.net.URI;

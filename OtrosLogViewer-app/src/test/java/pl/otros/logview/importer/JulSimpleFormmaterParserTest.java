@@ -17,12 +17,12 @@ package pl.otros.logview.importer;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.TestUtils;
-import pl.otros.logview.api.LogImporterUsingParser;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.IOException;

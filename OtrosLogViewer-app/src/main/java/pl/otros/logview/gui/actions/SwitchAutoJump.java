@@ -1,9 +1,9 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;

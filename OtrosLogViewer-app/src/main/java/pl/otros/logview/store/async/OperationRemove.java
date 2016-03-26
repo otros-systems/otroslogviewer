@@ -1,6 +1,6 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogDataStore;
 
 class OperationRemove implements Runnable {
   private final int[] ids;

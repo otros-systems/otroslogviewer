@@ -15,9 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.parser;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogParser;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogData;
 
 import java.text.ParseException;
 

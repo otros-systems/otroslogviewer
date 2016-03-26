@@ -18,7 +18,7 @@ package pl.otros.logview.gui.editor.log4j;
 import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogParser;
+import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
 import java.util.Properties;

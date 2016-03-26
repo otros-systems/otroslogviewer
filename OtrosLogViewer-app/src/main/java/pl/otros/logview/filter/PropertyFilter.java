@@ -16,7 +16,7 @@
 package pl.otros.logview.filter;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.Collection;
 

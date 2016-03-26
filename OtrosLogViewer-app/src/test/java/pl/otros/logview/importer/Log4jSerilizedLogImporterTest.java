@@ -22,8 +22,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.ByteArrayInputStream;

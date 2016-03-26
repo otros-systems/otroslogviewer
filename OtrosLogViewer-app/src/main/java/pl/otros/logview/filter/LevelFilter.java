@@ -16,9 +16,9 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.RenamedLevel;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
 import javax.swing.*;

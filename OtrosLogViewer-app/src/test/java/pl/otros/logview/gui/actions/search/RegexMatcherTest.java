@@ -17,7 +17,7 @@ package pl.otros.logview.gui.actions.search;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;

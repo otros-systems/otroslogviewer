@@ -18,8 +18,8 @@ package pl.otros.logview.gui.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
-import pl.otros.logview.api.OtrosAction;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.gui.JAnimatedLogo;
 import pl.otros.logview.api.OtrosApplication;
 

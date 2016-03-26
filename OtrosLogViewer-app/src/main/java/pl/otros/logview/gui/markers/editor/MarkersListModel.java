@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers.editor;
 
-import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.PluginableElementEventListener;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;

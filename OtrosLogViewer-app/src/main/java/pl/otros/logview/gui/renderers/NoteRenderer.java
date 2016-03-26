@@ -16,8 +16,8 @@
 package pl.otros.logview.gui.renderers;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.Note;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.gui.Icons;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

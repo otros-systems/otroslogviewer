@@ -1,5 +1,7 @@
 package pl.otros.logview.api;
 
+import pl.otros.logview.api.gui.Icons;
+
 import javax.swing.*;
 
 /**

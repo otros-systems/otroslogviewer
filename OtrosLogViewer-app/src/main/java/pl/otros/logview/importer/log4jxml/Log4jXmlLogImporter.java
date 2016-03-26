@@ -16,11 +16,11 @@
 package pl.otros.logview.importer.log4jxml;
 
 import org.apache.log4j.spi.LoggingEvent;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

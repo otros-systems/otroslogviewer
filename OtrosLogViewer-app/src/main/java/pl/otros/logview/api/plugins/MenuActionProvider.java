@@ -1,8 +1,8 @@
 package pl.otros.logview.api.plugins;
 
-import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.LogViewPanelI;
+import pl.otros.logview.api.gui.LogViewPanelI;
 
 import java.util.List;
 

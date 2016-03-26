@@ -1,8 +1,8 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import com.google.common.base.Splitter;
-import pl.otros.logview.api.LocationInfo;
-import pl.otros.logview.api.MessageFormatter;
+import pl.otros.logview.api.model.LocationInfo;
+import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

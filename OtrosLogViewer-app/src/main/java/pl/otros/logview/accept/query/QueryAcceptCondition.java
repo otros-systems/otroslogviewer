@@ -16,7 +16,7 @@
 
 package pl.otros.logview.accept.query;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.AcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.ExpressionRule;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.Rule;

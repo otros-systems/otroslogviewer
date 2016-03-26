@@ -16,8 +16,8 @@
 package pl.otros.logview.accept;
 
 import org.testng.annotations.BeforeMethod;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.gui.LogDataTableModel;
 
 import javax.swing.*;
 

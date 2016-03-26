@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.markers;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.Properties;
 

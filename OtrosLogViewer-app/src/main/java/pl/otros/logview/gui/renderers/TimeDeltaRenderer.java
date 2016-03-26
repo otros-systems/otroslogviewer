@@ -1,6 +1,6 @@
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.api.TimeDelta;
+import pl.otros.logview.api.model.TimeDelta;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

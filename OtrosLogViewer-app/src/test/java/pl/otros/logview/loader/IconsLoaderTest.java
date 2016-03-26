@@ -1,8 +1,8 @@
 package pl.otros.logview.loader;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.api.Icons;
-import pl.otros.logview.api.Path;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.Path;
 
 import java.lang.reflect.Field;
 

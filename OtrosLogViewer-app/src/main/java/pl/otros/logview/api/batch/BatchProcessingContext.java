@@ -19,10 +19,10 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogInvestiagionPersitanceUtil;
-import pl.otros.logview.api.LogDataTableModel.Memento;
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.persistance.LogInvestiagionPersitanceUtil;
+import pl.otros.logview.api.gui.LogDataTableModel.Memento;
+import pl.otros.logview.api.model.LogDataStore;
 import pl.otros.logview.api.store.MemoryLogDataStore;
 import pl.otros.logview.api.store.file.FileLogDataStore;
 

@@ -8,9 +8,9 @@ import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTextField;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.Services;
+import pl.otros.logview.api.services.Services;
 import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.*;

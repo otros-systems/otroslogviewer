@@ -16,10 +16,10 @@
 package pl.otros.logview.gui;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.Icons;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.AutomaticMarker;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
 import pl.otros.logview.api.pluginable.AllPluginables;

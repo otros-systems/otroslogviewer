@@ -19,12 +19,12 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogDataCollector;
-import pl.otros.logview.api.LogImporterUsingParser;
+import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 

@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
-import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;

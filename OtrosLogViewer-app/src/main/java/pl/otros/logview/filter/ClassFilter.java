@@ -16,10 +16,10 @@
 
 package pl.otros.logview.filter;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogFilterValueChangeListener;
-import pl.otros.logview.api.Icons;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.gui.PopupListener;
 
 import javax.swing.*;

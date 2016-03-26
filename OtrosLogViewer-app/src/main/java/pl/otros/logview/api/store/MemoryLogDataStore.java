@@ -18,8 +18,8 @@ package pl.otros.logview.api.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataStore;
 
 import java.util.*;
 

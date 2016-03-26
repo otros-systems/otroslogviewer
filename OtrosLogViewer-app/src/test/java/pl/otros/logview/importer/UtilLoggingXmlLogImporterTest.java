@@ -5,8 +5,8 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.apache.commons.io.IOUtils;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.IOException;

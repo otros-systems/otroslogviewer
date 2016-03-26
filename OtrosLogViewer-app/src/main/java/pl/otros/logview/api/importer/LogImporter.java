@@ -16,8 +16,8 @@
 package pl.otros.logview.api.importer;
 
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogDataCollector;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.PluginableElement;
 
 import javax.swing.*;

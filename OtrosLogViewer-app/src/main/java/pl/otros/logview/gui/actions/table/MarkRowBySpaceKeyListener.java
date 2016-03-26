@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.actions.table;
 
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.OtrosApplication;
 
 import java.awt.event.KeyAdapter;

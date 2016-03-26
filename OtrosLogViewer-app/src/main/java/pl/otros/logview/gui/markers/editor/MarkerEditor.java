@@ -16,9 +16,9 @@
 package pl.otros.logview.gui.markers.editor;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;
 import pl.otros.logview.gui.markers.StringMarker;

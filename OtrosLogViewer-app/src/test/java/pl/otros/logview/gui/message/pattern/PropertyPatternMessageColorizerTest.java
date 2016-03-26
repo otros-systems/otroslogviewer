@@ -18,7 +18,7 @@ package pl.otros.logview.gui.message.pattern;
 import org.apache.commons.configuration.ConfigurationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;

@@ -16,8 +16,8 @@
 package pl.otros.logview.api.store;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogDataBuilder;
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.LogDataStore;
 
 import java.util.Date;
 

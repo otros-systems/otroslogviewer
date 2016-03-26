@@ -23,7 +23,7 @@ import org.apache.commons.vfs2.RandomAccessContent;
 import org.apache.commons.vfs2.util.RandomAccessMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;

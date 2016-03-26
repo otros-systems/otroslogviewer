@@ -17,7 +17,7 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.*;
 

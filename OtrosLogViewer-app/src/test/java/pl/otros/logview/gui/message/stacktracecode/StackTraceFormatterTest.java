@@ -3,7 +3,7 @@ package pl.otros.logview.gui.message.stacktracecode;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
 
 public class StackTraceFormatterTest {

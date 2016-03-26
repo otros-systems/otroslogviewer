@@ -17,7 +17,7 @@ package pl.otros.logview.gui.message;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.MessageFormatter;
+import pl.otros.logview.api.pluginable.MessageFormatter;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;

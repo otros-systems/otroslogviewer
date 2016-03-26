@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.Icons;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.Path;
+import pl.otros.logview.api.gui.Path;
 
 public class IconsLoader {
 

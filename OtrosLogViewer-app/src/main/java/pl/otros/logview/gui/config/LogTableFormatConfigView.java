@@ -15,7 +15,7 @@ import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.api.io.Utils;

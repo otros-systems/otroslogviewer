@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.services.jumptocode;
 
 import org.apache.commons.configuration.Configuration;
-import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.api.Ide;
 

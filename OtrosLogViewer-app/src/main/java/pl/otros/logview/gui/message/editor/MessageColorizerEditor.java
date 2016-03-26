@@ -21,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.StatusObserver;
-import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 

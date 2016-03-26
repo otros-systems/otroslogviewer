@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.batch;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 public interface LogDataParsedListener {
 

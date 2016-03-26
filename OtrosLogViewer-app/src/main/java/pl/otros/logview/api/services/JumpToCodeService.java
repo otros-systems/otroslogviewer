@@ -1,6 +1,6 @@
 package pl.otros.logview.api.services;
 
-import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.Ide;
 
 import java.io.IOException;

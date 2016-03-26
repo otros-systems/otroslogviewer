@@ -15,8 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.persistance;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataListPersistance;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.*;
 import java.util.ArrayList;

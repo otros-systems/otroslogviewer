@@ -18,7 +18,7 @@ package pl.otros.logview.gui.actions;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 

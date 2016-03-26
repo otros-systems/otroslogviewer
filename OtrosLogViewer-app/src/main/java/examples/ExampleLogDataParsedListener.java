@@ -17,7 +17,7 @@ package examples;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.vfs2.FileObject;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.batch.BatchProcessingContext;
 import pl.otros.logview.api.batch.BatchProcessingListener;
 import pl.otros.logview.api.batch.LogDataParsedListener;

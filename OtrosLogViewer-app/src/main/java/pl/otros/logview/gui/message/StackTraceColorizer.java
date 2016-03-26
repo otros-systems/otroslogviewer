@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-import pl.otros.logview.api.LocationInfo;
-import pl.otros.logview.api.MessageColorizer;
-import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.model.LocationInfo;
+import pl.otros.logview.api.pluginable.MessageColorizer;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;

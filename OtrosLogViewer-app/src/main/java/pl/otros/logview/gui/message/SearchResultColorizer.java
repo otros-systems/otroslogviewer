@@ -16,8 +16,8 @@
 package pl.otros.logview.gui.message;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.MessageColorizer;
-import pl.otros.logview.api.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.MessageColorizer;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

@@ -16,6 +16,11 @@
 package pl.otros.logview.gui.actions;
 
 import pl.otros.logview.api.*;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.model.LogData;
 
 import javax.swing.*;
 import java.awt.*;

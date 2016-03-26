@@ -20,7 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.logging.Level;
 
-import static pl.otros.logview.api.Icons.*;
+import static pl.otros.logview.api.gui.Icons.*;
 
 public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
 

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 public class LoggerNameFilter extends AbstractStringBasedFilter {
 

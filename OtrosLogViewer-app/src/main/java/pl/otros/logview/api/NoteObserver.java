@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api;
 
+import pl.otros.logview.api.gui.NoteEvent;
+
 public interface NoteObserver {
 
   void update(NoteEvent noteEvent);

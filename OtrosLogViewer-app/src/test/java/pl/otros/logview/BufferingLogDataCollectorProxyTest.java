@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
 import org.apache.commons.configuration.BaseConfiguration;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 

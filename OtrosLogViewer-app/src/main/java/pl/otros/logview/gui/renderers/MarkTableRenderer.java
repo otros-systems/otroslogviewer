@@ -15,7 +15,7 @@
  */
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.model.MarkerColors;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

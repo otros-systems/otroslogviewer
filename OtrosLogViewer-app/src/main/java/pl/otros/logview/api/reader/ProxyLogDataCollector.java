@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api.reader;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 
 import java.util.LinkedList;
 

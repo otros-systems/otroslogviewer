@@ -17,8 +17,8 @@ package pl.otros.logview;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;

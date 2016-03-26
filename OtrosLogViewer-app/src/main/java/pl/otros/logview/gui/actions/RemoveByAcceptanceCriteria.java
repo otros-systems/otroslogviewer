@@ -16,9 +16,9 @@
 package pl.otros.logview.gui.actions;
 
 import pl.otros.logview.api.AcceptCondition;
-import pl.otros.logview.api.OtrosAction;
-import pl.otros.logview.api.HasIcon;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.gui.HasIcon;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
 

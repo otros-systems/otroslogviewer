@@ -3,7 +3,7 @@ package pl.otros.logview.gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.LocationInfo;
+import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.services.JumpToCodeService;

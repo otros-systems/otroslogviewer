@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import pl.otros.logview.api.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

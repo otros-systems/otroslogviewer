@@ -16,7 +16,7 @@
 package pl.otros.logview.accept;
 
 import pl.otros.logview.api.AcceptCondition;
-import pl.otros.logview.api.LogDataTableModel;
+import pl.otros.logview.api.gui.LogDataTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

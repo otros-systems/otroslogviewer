@@ -16,9 +16,9 @@
 package pl.otros.logview.api.store.file;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataStore;
-import pl.otros.logview.api.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.Note;
 import pl.otros.logview.api.store.LogDataStoreTestBase;
 
 import java.io.IOException;

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.store;
 
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogDataStore;
 import pl.otros.logview.api.store.file.FileLogDataStore;
 
 public class CachedLogStoreTest extends LogDataStoreTestBase {

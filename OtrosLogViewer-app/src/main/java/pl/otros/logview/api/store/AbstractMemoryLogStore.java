@@ -15,12 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.api.store;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.LogDataStore;
-import pl.otros.logview.api.Note;
-import pl.otros.logview.api.NotableTableModel;
-import pl.otros.logview.api.NotableTableModelImpl;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.gui.NotableTableModel;
+import pl.otros.logview.api.gui.NotableTableModelImpl;
 
 import java.util.Comparator;
 import java.util.TreeMap;

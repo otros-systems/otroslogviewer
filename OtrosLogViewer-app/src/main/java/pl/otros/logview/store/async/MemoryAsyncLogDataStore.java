@@ -2,11 +2,11 @@ package pl.otros.logview.store.async;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
-import pl.otros.logview.api.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
 import pl.otros.logview.gui.actions.search.SearchResult;
-import pl.otros.logview.api.LogDataStore;
+import pl.otros.logview.api.model.LogDataStore;
 
 import java.util.Iterator;
 import java.util.TreeMap;

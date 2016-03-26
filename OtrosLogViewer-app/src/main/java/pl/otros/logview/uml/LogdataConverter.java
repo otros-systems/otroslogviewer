@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.uml;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.PrintWriter;
 import java.util.*;

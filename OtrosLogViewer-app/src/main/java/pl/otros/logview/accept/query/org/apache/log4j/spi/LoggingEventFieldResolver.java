@@ -1,6 +1,6 @@
 package pl.otros.logview.accept.query.org.apache.log4j.spi;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 
 import java.util.ArrayList;

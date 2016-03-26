@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
-import pl.otros.logview.api.AutomaticMarker;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
 
 public class BadWordsMarker extends AbstractAutomaticMarker implements AutomaticMarker {
 

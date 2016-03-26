@@ -18,7 +18,10 @@ package pl.otros.logview.api;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 import pl.otros.logview.TestUtils;
-import pl.otros.logview.api.LogDataTableModel.Memento;
+import pl.otros.logview.api.gui.LogDataTableModel.Memento;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.persistance.LogInvestiagionPersitanceUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,7 +1,7 @@
 package pl.otros.logview.accept;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 
 /**
  * Accept LogData if contains specific property/value

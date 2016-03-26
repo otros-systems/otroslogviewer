@@ -17,9 +17,16 @@ package pl.otros.logview.api;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXTable;
+import pl.otros.logview.api.gui.LogPatternParserEditor;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelI;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.TabHeader;
+import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.api.services.Services;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;

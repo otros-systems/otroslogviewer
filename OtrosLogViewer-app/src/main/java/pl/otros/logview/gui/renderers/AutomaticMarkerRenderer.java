@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.renderers;
 
 import pl.otros.logview.gui.ColorIcon;
-import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

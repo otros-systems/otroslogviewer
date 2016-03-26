@@ -33,7 +33,7 @@ import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.BaseLoader;
 import pl.otros.logview.loader.LvDynamicLoader;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
 
 import java.io.File;

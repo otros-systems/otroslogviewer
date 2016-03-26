@@ -16,8 +16,8 @@
 package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.OtrosAction;
-import pl.otros.logview.api.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.reader.SocketLogReader;

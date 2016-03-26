@@ -15,10 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.reader;
 
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.api.ParsingContext;
+import pl.otros.logview.api.parser.ParsingContext;
 
 import java.io.IOException;
 import java.io.InputStream;

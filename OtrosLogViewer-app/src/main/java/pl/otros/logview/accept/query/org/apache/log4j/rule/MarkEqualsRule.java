@@ -18,8 +18,8 @@
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
 
 import java.io.IOException;

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.batch;
 
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataCollector;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

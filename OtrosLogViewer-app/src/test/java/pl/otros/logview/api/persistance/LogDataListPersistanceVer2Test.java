@@ -18,8 +18,8 @@ package pl.otros.logview.api.persistance;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.LogData;
-import pl.otros.logview.api.LogDataBuilder;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

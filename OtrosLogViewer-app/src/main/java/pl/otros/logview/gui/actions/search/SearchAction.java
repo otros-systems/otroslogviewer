@@ -18,6 +18,10 @@ package pl.otros.logview.gui.actions.search;
 import pl.otros.logview.api.*;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.model.MarkerColors;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

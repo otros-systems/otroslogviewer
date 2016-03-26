@@ -16,8 +16,8 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.LogFilter;
-import pl.otros.logview.api.LogFilterValueChangeListener;
+import pl.otros.logview.api.pluginable.LogFilter;
+import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import java.awt.*;

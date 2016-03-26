@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.LogParser;
+import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.parser.json.JsonExtractor;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.swing.suggest.StringInsertSuggestionListener;

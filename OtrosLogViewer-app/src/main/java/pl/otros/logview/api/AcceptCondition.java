@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api;
 
+import pl.otros.logview.api.model.LogData;
+
 public interface AcceptCondition {
 
   boolean accept(LogData data);

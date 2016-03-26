@@ -16,7 +16,7 @@
 package pl.otros.logview.loader;
 
 import com.google.common.base.Splitter;
-import pl.otros.logview.api.AutomaticMarker;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.BaseLoader;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;

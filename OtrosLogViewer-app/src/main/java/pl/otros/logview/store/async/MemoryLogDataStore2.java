@@ -1,7 +1,7 @@
 package pl.otros.logview.store.async;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.gui.actions.search.SearchResult;
 import pl.otros.logview.api.store.MemoryLogDataStore;
 

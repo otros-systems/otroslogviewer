@@ -4,8 +4,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import org.slf4j.Marker;
-import pl.otros.logview.api.LogDataBuilder;
-import pl.otros.logview.api.MarkerColors;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.Date;
 import java.util.HashMap;

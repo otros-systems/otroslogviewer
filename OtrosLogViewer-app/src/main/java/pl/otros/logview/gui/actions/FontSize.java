@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.OtrosAction;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;

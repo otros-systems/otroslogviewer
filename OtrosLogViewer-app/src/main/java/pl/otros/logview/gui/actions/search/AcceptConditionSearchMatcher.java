@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
-import pl.otros.logview.api.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.AcceptCondition;
 
 import java.util.ArrayList;
