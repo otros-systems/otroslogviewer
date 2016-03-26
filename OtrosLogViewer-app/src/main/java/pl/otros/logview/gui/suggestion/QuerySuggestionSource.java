@@ -2,11 +2,11 @@ package pl.otros.logview.gui.suggestion;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.Rule;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleFactory;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.TimestampInequalityRule;
+import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 

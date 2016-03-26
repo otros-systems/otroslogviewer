@@ -23,17 +23,17 @@ import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.store.AbstractMemoryLogStore;
+import pl.otros.logview.api.store.CachedLogStore;
+import pl.otros.logview.api.store.MemoryLogDataStore;
+import pl.otros.logview.api.store.SynchronizedLogDataStore;
+import pl.otros.logview.api.store.file.FileLogDataStore;
 import pl.otros.logview.gui.message.update.FormatMessageDialogWorker;
 import pl.otros.logview.gui.message.update.LogDataFormatter;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.TableMarkDecoratorRenderer;
 import pl.otros.logview.importer.logback.LogbackUtil;
-import pl.otros.logview.api.store.AbstractMemoryLogStore;
-import pl.otros.logview.api.store.CachedLogStore;
-import pl.otros.logview.api.store.MemoryLogDataStore;
-import pl.otros.logview.api.store.SynchronizedLogDataStore;
-import pl.otros.logview.api.store.file.FileLogDataStore;
 
 public class GuiAppender extends AppenderBase<ILoggingEvent> {
 

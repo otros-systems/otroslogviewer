@@ -16,18 +16,17 @@
 
 package pl.otros.logview.exceptionshandler;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
+import java.awt.*;
 
 public class EventQueueProxy extends EventQueue {
 
-	@Override
-	protected void dispatchEvent(AWTEvent arg0) {
-		try {
-		    super.dispatchEvent(arg0);
-		} catch (Exception e) {
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-		}
-	}
+  @Override
+  protected void dispatchEvent(AWTEvent arg0) {
+    try {
+      super.dispatchEvent(arg0);
+    } catch (Exception e) {
+      Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+    }
+  }
 
 }

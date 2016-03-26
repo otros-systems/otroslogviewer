@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,19 +16,18 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.gui.LogDataTableModel;
-import pl.otros.logview.gui.LogImportStats;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
-import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.gui.LogImportStats;
 
 import javax.swing.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ImportLogRunnable implements Runnable {
 
@@ -62,7 +61,7 @@ public final class ImportLogRunnable implements Runnable {
       importer.importLogs(openFileObject.getContentInputStream(), logDataStore, parsingContext);
       LOGGER.info("File " + file.getName().getFriendlyURI() + " loaded");
     } catch (Exception e) {
-      LOGGER.error( "Error when importing log", e);
+      LOGGER.error("Error when importing log", e);
     }
     SwingUtilities.invokeLater(() -> {
       dataTableModel.fireTableDataChanged();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ public class AllPluginables {
   public static final File USER_LOG_IMPORTERS = new File(USER_CONFIGURATION_DIRECTORY, "plugins" + File.separator + "logimporters");
   public static final File USER_MESSAGE_FORMATTER_COLORZIERS = new File(USER_CONFIGURATION_DIRECTORY, "plugins" + File.separator + "message");
   public static final File USER_PLUGINS = new File(USER_CONFIGURATION_DIRECTORY, "plugins" + File.separator + "plugins");
-public static final File SYSTEM_PLUGINS = new File("plugins" + File.separator + "plugins");
+  public static final File SYSTEM_PLUGINS = new File("plugins" + File.separator + "plugins");
 
   private static final AllPluginables instance = new AllPluginables();
 
@@ -78,9 +78,9 @@ public static final File SYSTEM_PLUGINS = new File("plugins" + File.separator + 
     return messageFormatters;
   }
 
-public PluginableElementsContainer<PluginablePluginAdapter> getPluginsInfoContainer() {
-	return pluginsInfoContainer;
-}
+  public PluginableElementsContainer<PluginablePluginAdapter> getPluginsInfoContainer() {
+    return pluginsInfoContainer;
+  }
 
-  
+
 }

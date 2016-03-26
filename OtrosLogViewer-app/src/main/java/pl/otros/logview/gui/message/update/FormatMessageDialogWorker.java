@@ -83,7 +83,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
     try {
       styledDocument.remove(0, styledDocument.getLength());
     } catch (BadLocationException e) {
-      LOGGER.error( "Can't clear log events text  area", e);
+      LOGGER.error("Can't clear log events text  area", e);
     }
     if (!isCancelled()) {
       updateChanges(chunks);
@@ -114,7 +114,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
           otrosJTextWithRulerScrollPane.getjTextComponent().insertIcon(chunk.getIcon());
         }
       } catch (BadLocationException e) {
-        LOGGER.error( "Can't update log details text area", e);
+        LOGGER.error("Can't update log details text area", e);
       }
     }
 

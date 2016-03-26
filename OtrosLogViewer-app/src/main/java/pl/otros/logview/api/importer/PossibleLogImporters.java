@@ -22,22 +22,22 @@ import java.util.List;
 /**
  */
 public class PossibleLogImporters {
-    private LogImporter logImporter;
-    private List<LogImporter> availableImporters = new ArrayList<>();
+  private LogImporter logImporter;
+  private List<LogImporter> availableImporters = new ArrayList<>();
 
-    public List<LogImporter> getAvailableImporters() {
-        return availableImporters;
-    }
+  public List<LogImporter> getAvailableImporters() {
+    return availableImporters;
+  }
 
-    public void setAvailableImporters(List<LogImporter> availableImporters) {
-        this.availableImporters = availableImporters;
-    }
+  public void setAvailableImporters(List<LogImporter> availableImporters) {
+    this.availableImporters = availableImporters;
+  }
 
-    public LogImporter getLogImporter() {
-        return logImporter;
-    }
+  public LogImporter getLogImporter() {
+    return logImporter;
+  }
 
-    public void setLogImporter(LogImporter logImporter) {
-        this.logImporter = logImporter;
-    }
+  public void setLogImporter(LogImporter logImporter) {
+    this.logImporter = logImporter;
+  }
 }

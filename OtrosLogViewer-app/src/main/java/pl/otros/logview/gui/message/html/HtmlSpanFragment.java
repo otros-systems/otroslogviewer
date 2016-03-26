@@ -18,67 +18,67 @@ package pl.otros.logview.gui.message.html;
 
 public class HtmlSpanFragment implements Comparable<HtmlSpanFragment> {
 
-    private int position;
-    private String text;
+  private int position;
+  private String text;
 
-    public HtmlSpanFragment(int position, String text) {
-        super();
-        this.position = position;
-        this.text = text;
-    }
+  public HtmlSpanFragment(int position, String text) {
+    super();
+    this.position = position;
+    this.text = text;
+  }
 
-    public int getPosition() {
-        return position;
-    }
+  public int getPosition() {
+    return position;
+  }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
+  public void setPosition(int position) {
+    this.position = position;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    @Override
-    public int compareTo(HtmlSpanFragment o) {
-        int i = position - o.position;
-        if (i == 0) {
-            o.text.compareTo(text);
-        }
-        return i;
+  @Override
+  public int compareTo(HtmlSpanFragment o) {
+    int i = position - o.position;
+    if (i == 0) {
+      o.text.compareTo(text);
     }
+    return i;
+  }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + position;
-        result = prime * result + ((text == null) ? 0 : text.hashCode());
-        return result;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + position;
+    result = prime * result + ((text == null) ? 0 : text.hashCode());
+    return result;
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HtmlSpanFragment other = (HtmlSpanFragment) obj;
-        if (position != other.position)
-            return false;
-        if (text == null) {
-            if (other.text != null)
-                return false;
-        } else if (!text.equals(other.text))
-            return false;
-        return true;
-    }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    HtmlSpanFragment other = (HtmlSpanFragment) obj;
+    if (position != other.position)
+      return false;
+    if (text == null) {
+      if (other.text != null)
+        return false;
+    } else if (!text.equals(other.text))
+      return false;
+    return true;
+  }
 
 
 }

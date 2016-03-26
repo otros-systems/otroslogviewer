@@ -16,6 +16,6 @@ class OperationGetLogData implements Callable<LogData> {
 
   @Override
   public LogData call() {
-     return logDataStore.getLogData(id);
+    return logDataStore.getLogData(id);
   }
 }

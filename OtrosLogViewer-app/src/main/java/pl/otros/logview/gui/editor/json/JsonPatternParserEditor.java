@@ -21,10 +21,10 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.parser.LogParser;
+import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 import pl.otros.logview.parser.json.JsonExtractor;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.swing.suggest.StringInsertSuggestionListener;
@@ -84,7 +84,7 @@ public class JsonPatternParserEditor extends LogPatternParserEditorBase {
         processLogLine(sb, keys, line);
       }
     }
-    LOGGER.debug("Updating json paths with {} elements: {}",keys.size(), Joiner.on(", ").join(keys));
+    LOGGER.debug("Updating json paths with {} elements: {}", keys.size(), Joiner.on(", ").join(keys));
     suggestionSource.setJsonPaths(keys);
     suggestionSource.setJsonDoc(text);
     suggestionSource.setPropertyDoc(propertyEditor.getText());

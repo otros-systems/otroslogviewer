@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * A Rule evaluates to true of false given a LoggingEvent object, and can notify listeners when the underlying implementation of this Rule has it's criteria
  * changed by using the standard PropertyChangeListener infrastructure.
- * 
+ *
  * @author Paul Smith (psmith@apache.org)
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
@@ -36,15 +36,13 @@ public interface Rule {
 
   /**
    * Returns true if this implementation of the rule accepts the LoggingEvent, or false if not.
-   * <p/>
+   * <p>
    * <p>
    * What True/False means can be client-specific.
-   * 
-   * @param ld
-   *          LoggingEvent this instance will evaluate
-   * @param matches
-   *          a Map of event field keys to Sets of matching strings (may be null) which will be updated during execution of this method to include field and
-   *          string matches based on the rule evaluation results
+   *
+   * @param ld      LoggingEvent this instance will evaluate
+   * @param matches a Map of event field keys to Sets of matching strings (may be null) which will be updated during execution of this method to include field and
+   *                string matches based on the rule evaluation results
    * @return true if this Rule instance accepts the event, otherwise false.
    */
   @SuppressWarnings("rawtypes")
@@ -53,17 +51,15 @@ public interface Rule {
   /**
    * Adds a PropertyChangeListener to this instance, which is notified when underlying Rule information has changed. (there are no specific property name
    * events).
-   * 
-   * @param listener
-   *          listener
+   *
+   * @param listener listener
    */
   void addPropertyChangeListener(PropertyChangeListener listener);
 
   /**
    * Removes a known PropertyChangeListener from this Rule.
-   * 
-   * @param listener
-   *          listener
+   *
+   * @param listener listener
    */
   void removePropertyChangeListener(PropertyChangeListener listener);
 }

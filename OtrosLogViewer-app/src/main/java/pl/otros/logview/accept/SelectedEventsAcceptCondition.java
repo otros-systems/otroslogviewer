@@ -15,10 +15,10 @@
  */
 package pl.otros.logview.accept;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.gui.HasIcon;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
 
 import javax.swing.*;
 import java.util.HashSet;

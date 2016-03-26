@@ -13,6 +13,6 @@ class OperationGetCount implements Callable<Integer> {
 
   @Override
   public Integer call() {
-     return logDataStore.getCount();
+    return logDataStore.getCount();
   }
 }

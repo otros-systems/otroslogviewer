@@ -20,8 +20,8 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.pluginable.MessageColorizer;
-import pl.otros.logview.gui.message.MessageColorizerUtils;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.gui.message.MessageColorizerUtils;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;

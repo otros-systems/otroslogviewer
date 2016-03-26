@@ -1,7 +1,7 @@
 package pl.otros.logview.api.services;
 
-import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.Ide;
+import pl.otros.logview.api.model.LocationInfo;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -14,8 +14,9 @@ public interface JumpToCodeService {
 
 
   boolean isIdeAvailable();
+
   boolean isIdeAvailable(String host, int port);
-  
+
   Ide getIde();
 
   void jump(LocationInfo locationInfo) throws IOException;
@@ -24,13 +25,13 @@ public interface JumpToCodeService {
 
   String getContent(LocationInfo locationInfo) throws IOException;
 
-  default Optional<String> getContentOptional(LocationInfo locationInfo){
-    if (locationInfo == null){
+  default Optional<String> getContentOptional(LocationInfo locationInfo) {
+    if (locationInfo == null) {
       return Optional.empty();
     }
     try {
       return Optional.of(getContent(locationInfo));
-    } catch (Exception e){
+    } catch (Exception e) {
       return Optional.empty();
     }
   }

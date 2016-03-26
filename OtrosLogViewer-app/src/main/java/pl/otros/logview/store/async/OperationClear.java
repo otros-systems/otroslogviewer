@@ -13,6 +13,6 @@ class OperationClear implements Callable<Integer> {
 
   @Override
   public Integer call() {
-     return logDataStore.clear();
+    return logDataStore.clear();
   }
 }

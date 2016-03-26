@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,15 @@ package pl.otros.logview.gui.message;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.regex.Pattern;
 
 import static pl.otros.logview.gui.message.MessageColorizerUtils.colorizeRegex;
@@ -33,14 +38,14 @@ public class SoapMessageColorizer implements MessageColorizer {
   private final SoapFinder soapFinder = new SoapFinder();
 
   protected Style styleElementName;
-	protected Style styleAttribtuteName;
-	protected Style styleAttribtuteValue;
-	protected Style styleContent;
-	protected Style styleOperator;
-	protected Style styleComments;
-	protected Style styleCData;
-	protected Style styleProcessingInstructions;
-	protected Style styleDOCTYPE;
+  protected Style styleAttribtuteName;
+  protected Style styleAttribtuteValue;
+  protected Style styleContent;
+  protected Style styleOperator;
+  protected Style styleComments;
+  protected Style styleCData;
+  protected Style styleProcessingInstructions;
+  protected Style styleDOCTYPE;
 
   private static final Pattern pComment = Pattern.compile("(<!--.*?-->)");
   private static final Pattern pContent = Pattern.compile(">(.*?)<");
@@ -98,27 +103,27 @@ public class SoapMessageColorizer implements MessageColorizer {
 
   @Override
   public Collection<MessageFragmentStyle> colorize(String message) throws BadLocationException {
-		List<MessageFragmentStyle> list = new ArrayList<>();
+    List<MessageFragmentStyle> list = new ArrayList<>();
 
     SortedSet<SubText> findSoaps = soapFinder.findSoaps(message);
     for (SubText subText : findSoaps) {
       int fragmentStart = subText.getStart();
       int fragmentEnd = subText.getEnd();
-      colorizeFragment(message, fragmentStart, fragmentEnd,list);
+      colorizeFragment(message, fragmentStart, fragmentEnd, list);
     }
-		return list;
+    return list;
   }
 
   private void colorizeFragment(String soap, int fragmentStart, int fragmentEnd, Collection<MessageFragmentStyle> list) throws BadLocationException {
-    list.addAll(colorizeRegex( styleOperator, soap, fragmentStart, pOperator, 1));
-		list.addAll(colorizeRegex( styleContent, soap, fragmentStart, pContent, 1));
-		list.addAll(colorizeRegex( styleElementName, soap, fragmentStart, pElementName, 1));
-		list.addAll(colorizeRegex( styleComments, soap, fragmentStart, pComment, 1));
-		list.addAll(colorizeRegex( styleAttribtuteName, soap, fragmentStart, pAttributeName, 1));
-		list.addAll(colorizeRegex( styleAttribtuteValue, soap, fragmentStart, pAttributeValue, 1));
-		list.addAll(colorizeRegex( styleComments, soap, fragmentStart, pXmlHeader, 1));
-		list.addAll(colorizeRegex( styleCData, soap, fragmentStart, pCdata, 1));
-		list.addAll(colorizeRegex( styleDOCTYPE, soap, fragmentStart, pDoctype, 1));
+    list.addAll(colorizeRegex(styleOperator, soap, fragmentStart, pOperator, 1));
+    list.addAll(colorizeRegex(styleContent, soap, fragmentStart, pContent, 1));
+    list.addAll(colorizeRegex(styleElementName, soap, fragmentStart, pElementName, 1));
+    list.addAll(colorizeRegex(styleComments, soap, fragmentStart, pComment, 1));
+    list.addAll(colorizeRegex(styleAttribtuteName, soap, fragmentStart, pAttributeName, 1));
+    list.addAll(colorizeRegex(styleAttribtuteValue, soap, fragmentStart, pAttributeValue, 1));
+    list.addAll(colorizeRegex(styleComments, soap, fragmentStart, pXmlHeader, 1));
+    list.addAll(colorizeRegex(styleCData, soap, fragmentStart, pCdata, 1));
+    list.addAll(colorizeRegex(styleDOCTYPE, soap, fragmentStart, pDoctype, 1));
   }
 
   @Override

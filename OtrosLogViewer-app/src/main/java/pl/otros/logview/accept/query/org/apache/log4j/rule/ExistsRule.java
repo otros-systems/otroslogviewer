@@ -17,8 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Stack;
 
 /**
  * A Rule class implementing a not null (and not empty string) check.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -48,9 +48,8 @@ public class ExistsRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param fld
-   *          field name.
+   *
+   * @param fld field name.
    */
   private ExistsRule(final String fld) {
     super();
@@ -63,9 +62,8 @@ public class ExistsRule extends AbstractRule {
 
   /**
    * Get an instance of ExistsRule.
-   * 
-   * @param field
-   *          field.
+   *
+   * @param field field.
    * @return instance of ExistsRule.
    */
   public static Rule getRule(final String field) {
@@ -74,9 +72,8 @@ public class ExistsRule extends AbstractRule {
 
   /**
    * Create an instance of ExistsRule using the top name on the stack.
-   * 
-   * @param stack
-   *          stack
+   *
+   * @param stack stack
    * @return instance of ExistsRule.
    */
   public static Rule getRule(@SuppressWarnings("rawtypes") final Stack stack) {
@@ -90,7 +87,7 @@ public class ExistsRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     Object p2 = RESOLVER.getValue(field, event);
 

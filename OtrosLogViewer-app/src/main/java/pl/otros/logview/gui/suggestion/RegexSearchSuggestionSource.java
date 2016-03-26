@@ -82,12 +82,12 @@ public class RegexSearchSuggestionSource extends StringSearchSuggestionSource {
       result.add(new SearchSuggestion(String.format("{%s,%d}  - exactly %d times", count, c + 1, c + 1), queryString + (c + 1) + "}"));
     }
 
-    if (queryString.matches(".*\\{\\d+,?\\d*\\}") ) {
+    if (queryString.matches(".*\\{\\d+,?\\d*\\}")) {
       result.add(new SearchSuggestion("? - Reluctant", queryString + "?"));
       result.add(new SearchSuggestion("+  - Possessive", queryString + "+"));
     }
 
-    if (queryString.matches(".*\\[.+\\]")){
+    if (queryString.matches(".*\\[.+\\]")) {
       result.addAll(getQuantifiers(queryString));
     }
 

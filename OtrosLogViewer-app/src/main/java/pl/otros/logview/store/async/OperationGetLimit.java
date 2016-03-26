@@ -13,6 +13,6 @@ class OperationGetLimit implements Callable<Integer> {
 
   @Override
   public Integer call() {
-     return logDataStore.getLimit();
+    return logDataStore.getLimit();
   }
 }

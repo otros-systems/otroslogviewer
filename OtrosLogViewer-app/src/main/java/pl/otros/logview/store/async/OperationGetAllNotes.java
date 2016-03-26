@@ -1,12 +1,12 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.api.model.Note;
 import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.Note;
 
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
-public class OperationGetAllNotes implements Callable<TreeMap<Integer,Note>> {
+public class OperationGetAllNotes implements Callable<TreeMap<Integer, Note>> {
 
 
   private final LogDataStore logDataStore;
@@ -16,7 +16,7 @@ public class OperationGetAllNotes implements Callable<TreeMap<Integer,Note>> {
   }
 
   @Override
-  public TreeMap<Integer,Note> call() throws Exception {
+  public TreeMap<Integer, Note> call() throws Exception {
     return logDataStore.getAllNotes();
   }
 

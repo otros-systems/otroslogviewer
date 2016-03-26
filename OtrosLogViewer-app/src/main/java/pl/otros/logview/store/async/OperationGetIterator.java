@@ -15,6 +15,6 @@ class OperationGetIterator implements Callable<Iterator<LogData>> {
 
   @Override
   public Iterator<LogData> call() {
-     return logDataStore.iterator();
+    return logDataStore.iterator();
   }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,7 +53,7 @@ public class ConfKeys {
   public static final String LOG_TABLE_FORMAT_DATE_FORMAT = "gui.LogTableFormat.dateFormat";
   public static final String LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS = "gui.LogTableFormat.packageAbbreviations";
   public static final String MESSAGE_DETAIL_SCROLL_HORIZONTAL = "gui.messageDetail.scrollHorizontal";
-  public static final String CONFIRM_QUIT ="generalBehavior.confirmExit" ;
+  public static final String CONFIRM_QUIT = "generalBehavior.confirmExit";
   public static final String APPEARANCE_FONT_SIZE = "appearance.fontSize";
   public static final String APPEARANCE_LOOK_AND_FEEL = "appearance.lookAndFeel";
   public static final String APPEARANCE_CUSTOM_FONT_SIZE = "appearance.customFontSize";

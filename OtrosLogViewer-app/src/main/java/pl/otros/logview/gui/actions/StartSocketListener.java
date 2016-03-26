@@ -18,7 +18,9 @@ package pl.otros.logview.gui.actions;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.BaseConfiguration;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
-import pl.otros.logview.api.*;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
@@ -39,8 +41,8 @@ public class StartSocketListener extends OtrosAction {
   private LogViewPanelWrapper logViewPanelWrapper;
 
   public StartSocketListener(OtrosApplication otrosApplication, Collection<SocketLogReader> logReaders) {
-		super(otrosApplication);
-		this.logReaders = logReaders;
+    super(otrosApplication);
+    this.logReaders = logReaders;
     putValue(Action.NAME, "Start socket listener");
     putValue(Action.SHORT_DESCRIPTION, "Start socket listener on port.");
     putValue(Action.LONG_DESCRIPTION, "Start socket listener on port.");
@@ -56,9 +58,9 @@ public class StartSocketListener extends OtrosAction {
       return;
     }
 
-		StatusObserver observer = getOtrosApplication().getStatusObserver();
-		if (logViewPanelWrapper == null) {
-      logViewPanelWrapper = new LogViewPanelWrapper("Socket", null, TableColumns.values(),getOtrosApplication());
+    StatusObserver observer = getOtrosApplication().getStatusObserver();
+    if (logViewPanelWrapper == null) {
+      logViewPanelWrapper = new LogViewPanelWrapper("Socket", null, TableColumns.values(), getOtrosApplication());
 
       logViewPanelWrapper.goToLiveMode();
       BaseConfiguration configuration = new BaseConfiguration();
@@ -68,7 +70,7 @@ public class StartSocketListener extends OtrosAction {
     }
 
 
-    getOtrosApplication().addClosableTab("Socket listener","Socket listener",Icons.PLUGIN_CONNECT,logViewPanelWrapper,true);
+    getOtrosApplication().addClosableTab("Socket listener", "Socket listener", Icons.PLUGIN_CONNECT, logViewPanelWrapper, true);
 
     //TODO solve this warning
     SocketLogReader logReader = null;

@@ -15,9 +15,9 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.api.gui.OtrosAction;
-import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.gui.message.editor.MessageColorizerBrowser;
 
 import java.awt.event.ActionEvent;
@@ -40,11 +40,11 @@ public class ShowMessageColorizerEditor extends OtrosAction {
 //		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
 //		PluginableElementsContainer<MessageColorizer> container = getOtrosApplication().getAllPluginables().getMessageColorizers();
 //		JTabbedPane tabbedPane = getOtrosApplication().getJTabbedPane();
-		if (mcEditor == null) {
-      mcEditor = new MessageColorizerBrowser( getOtrosApplication());
-		}
+    if (mcEditor == null) {
+      mcEditor = new MessageColorizerBrowser(getOtrosApplication());
+    }
 
-    getOtrosApplication().addClosableTab("MessageColorizer editor","MessageColorizer editor",Icons.MESSAGE_COLORIZER,mcEditor,true);
+    getOtrosApplication().addClosableTab("MessageColorizer editor", "MessageColorizer editor", Icons.MESSAGE_COLORIZER, mcEditor, true);
   }
 
   public String getMessageText() {

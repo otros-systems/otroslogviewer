@@ -7,19 +7,18 @@ import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.services.Services;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.services.JumpToCodeService;
+import pl.otros.logview.api.services.Services;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URI;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IdeIntegrationConfigurationPanel extends JXPanel {
   private static final Logger LOGGER = LoggerFactory.getLogger(IdeIntegrationConfigurationPanel.class.getName());
@@ -83,7 +82,7 @@ public class IdeIntegrationConfigurationPanel extends JXPanel {
           try {
             Desktop.getDesktop().browse(new URI("https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode"));
           } catch (Exception e1) {
-            LOGGER.error( "Can't open page", e1);
+            LOGGER.error("Can't open page", e1);
           }
         });
       }

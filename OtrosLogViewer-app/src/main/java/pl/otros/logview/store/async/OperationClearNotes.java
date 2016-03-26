@@ -11,6 +11,6 @@ class OperationClearNotes implements Runnable {
 
   @Override
   public void run() {
-     logDataStore.clearNotes();
+    logDataStore.clearNotes();
   }
 }

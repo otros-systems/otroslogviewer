@@ -142,8 +142,8 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof LogImporterUsingParser){
-        return parser.equals(((LogImporterUsingParser) obj).getParser());
+    if (obj instanceof LogImporterUsingParser) {
+      return parser.equals(((LogImporterUsingParser) obj).getParser());
     }
     return false;
   }
@@ -187,12 +187,12 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
     return LOG_IMPORTER_VERSION_1;
   }
 
-    @Override
-    public String toString() {
-        String s = super.toString();
-        if (parser != null && parser.getParserDescription() != null){
-          s= parser.getParserDescription().getDisplayName();
-        }
-        return s;
+  @Override
+  public String toString() {
+    String s = super.toString();
+    if (parser != null && parser.getParserDescription() != null) {
+      s = parser.getParserDescription().getDisplayName();
     }
+    return s;
+  }
 }

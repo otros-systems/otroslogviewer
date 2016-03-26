@@ -27,28 +27,28 @@ import javax.swing.*;
  * Time: 6:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract  class OtrosAction extends AbstractAction {
-    private OtrosApplication otrosApplication;
+public abstract class OtrosAction extends AbstractAction {
+  private OtrosApplication otrosApplication;
 
-    protected OtrosAction(OtrosApplication otrosApplication) {
-        this.otrosApplication = otrosApplication;
-    }
+  protected OtrosAction(OtrosApplication otrosApplication) {
+    this.otrosApplication = otrosApplication;
+  }
 
-    protected OtrosAction(String name, OtrosApplication otrosApplication) {
-        super(name);
-        this.otrosApplication = otrosApplication;
-    }
+  protected OtrosAction(String name, OtrosApplication otrosApplication) {
+    super(name);
+    this.otrosApplication = otrosApplication;
+  }
 
-    protected OtrosAction(String name, Icon icon, OtrosApplication otrosApplication) {
-        super(name, icon);
-        this.otrosApplication = otrosApplication;
-    }
+  protected OtrosAction(String name, Icon icon, OtrosApplication otrosApplication) {
+    super(name, icon);
+    this.otrosApplication = otrosApplication;
+  }
 
-    public OtrosApplication getOtrosApplication() {
-        return otrosApplication;
-    }
+  public OtrosApplication getOtrosApplication() {
+    return otrosApplication;
+  }
 
-    public void setOtrosApplication(OtrosApplication otrosApplication) {
-        this.otrosApplication = otrosApplication;
-    }
+  public void setOtrosApplication(OtrosApplication otrosApplication) {
+    this.otrosApplication = otrosApplication;
+  }
 }

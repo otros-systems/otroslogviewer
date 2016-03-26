@@ -18,10 +18,10 @@ package pl.otros.logview.gui.actions.read;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.gui.Icons;
-import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
@@ -59,7 +59,7 @@ public class LogFileInNewTabOpener {
       otrosApplication.addClosableTab(getTabName(file), file.getName().getFriendlyURI(), Icons.FOLDER_OPEN, panel, true);
       startThreadToImportLogDataFromFile(file, openFileObject, importer, panel);
     } catch (Exception e1) {
-      LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage(),e1);
+      LOGGER.error("Error loading log (" + file.getName().getFriendlyURI() + "): " + e1.getMessage(), e1);
       JOptionPane.showMessageDialog(null, "Error loading log: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }

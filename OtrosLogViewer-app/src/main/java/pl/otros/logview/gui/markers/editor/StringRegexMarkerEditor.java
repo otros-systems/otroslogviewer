@@ -18,13 +18,13 @@ package pl.otros.logview.gui.markers.editor;
 import org.apache.commons.io.IOUtils;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;
 import pl.otros.logview.gui.markers.StringMarker;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
-import pl.otros.logview.api.pluginable.AllPluginables;
-import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

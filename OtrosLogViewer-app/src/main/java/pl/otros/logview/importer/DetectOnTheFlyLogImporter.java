@@ -19,9 +19,9 @@ package pl.otros.logview.importer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 

@@ -15,16 +15,10 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.api.pluginable.LogFilter;
-import pl.otros.logview.api.gui.OtrosAction;
-import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.pluginable.AutomaticMarker;
-import pl.otros.logview.api.pluginable.MessageColorizer;
-import pl.otros.logview.api.pluginable.MessageFormatter;
-import pl.otros.logview.api.pluginable.AllPluginables;
-import pl.otros.logview.api.pluginable.PluginableElement;
-import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.pluginable.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -50,7 +44,7 @@ public class ShowLoadedPlugins extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent arg0) {
     refreshData();
-    getOtrosApplication().addClosableTab("Loaded plugins","List loaded plugins",Icons.PLUGIN,loadedComponents,true);
+    getOtrosApplication().addClosableTab("Loaded plugins", "List loaded plugins", Icons.PLUGIN, loadedComponents, true);
 
   }
 

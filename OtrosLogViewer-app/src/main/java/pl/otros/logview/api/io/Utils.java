@@ -23,9 +23,9 @@ import org.apache.commons.vfs2.RandomAccessContent;
 import org.apache.commons.vfs2.util.RandomAccessMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.*;
@@ -168,37 +168,37 @@ public class Utils {
   }
 
   public static LogImporter detectLogImporter(Collection<LogImporter> importers, byte[] buff) {
-    return detectPossibleLogImporter(importers,buff).getLogImporter();
+    return detectPossibleLogImporter(importers, buff).getLogImporter();
   }
 
-  public static PossibleLogImporters detectPossibleLogImporter(Collection<LogImporter> importers, byte[] buff){
-      PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
-      int messageImported = 0;
-      for (LogImporter logImporter : importers) {
-          ByteArrayInputStream bin = new ByteArrayInputStream(buff);
-          ProxyLogDataCollector logCollector = new ProxyLogDataCollector();
+  public static PossibleLogImporters detectPossibleLogImporter(Collection<LogImporter> importers, byte[] buff) {
+    PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
+    int messageImported = 0;
+    for (LogImporter logImporter : importers) {
+      ByteArrayInputStream bin = new ByteArrayInputStream(buff);
+      ProxyLogDataCollector logCollector = new ProxyLogDataCollector();
 
-          ParsingContext parsingContext = new ParsingContext();
-          try {
-              logImporter.initParsingContext(parsingContext);
-          } catch (Exception e) {
-              LOGGER.warn(String.format("Exception when initializing parsing context for logger %s: %s", logImporter.getName(), e.getMessage()));
-          }
-          try {
-              logImporter.importLogs(bin, logCollector, parsingContext);
-          } catch (Exception e1) {
-              // Some log parser can throw exception, due to incomplete line
-          }
-          int currentLogMessageImported = logCollector.getLogData().length;
-          if (messageImported < currentLogMessageImported) {
-              messageImported = currentLogMessageImported;
-              possibleLogImporters.setLogImporter(logImporter);
-          }
-          if (currentLogMessageImported>0){
-              possibleLogImporters.getAvailableImporters().add(logImporter);
-          }
+      ParsingContext parsingContext = new ParsingContext();
+      try {
+        logImporter.initParsingContext(parsingContext);
+      } catch (Exception e) {
+        LOGGER.warn(String.format("Exception when initializing parsing context for logger %s: %s", logImporter.getName(), e.getMessage()));
       }
-      return possibleLogImporters;
+      try {
+        logImporter.importLogs(bin, logCollector, parsingContext);
+      } catch (Exception e1) {
+        // Some log parser can throw exception, due to incomplete line
+      }
+      int currentLogMessageImported = logCollector.getLogData().length;
+      if (messageImported < currentLogMessageImported) {
+        messageImported = currentLogMessageImported;
+        possibleLogImporters.setLogImporter(logImporter);
+      }
+      if (currentLogMessageImported > 0) {
+        possibleLogImporters.getAvailableImporters().add(logImporter);
+      }
+    }
+    return possibleLogImporters;
 
   }
 
@@ -218,7 +218,7 @@ public class Utils {
 
   /**
    * Get short name for URL
-   * 
+   *
    * @param fileObject
    * @return scheme://hostWithoutDomain/fileBaseName
    */

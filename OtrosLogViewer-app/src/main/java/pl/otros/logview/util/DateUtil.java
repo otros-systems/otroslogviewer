@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 public class DateUtil {
 
-  public Collection<String> allDateFormats(){
+  public Collection<String> allDateFormats() {
     final ArrayList<String> list = new ArrayList<>(dateFormatsInAllLocales());
     list.addAll(getPredefinedDateFormats());
     return list;
   }
 
-  public Set<String> dateFormatsInAllLocales(){
+  public Set<String> dateFormatsInAllLocales() {
     final Locale[] availableLocales = Locale.getAvailableLocales();
     return Arrays.asList(availableLocales).stream()
       .map(l -> DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, l))
@@ -24,7 +24,7 @@ public class DateUtil {
       .collect(Collectors.toSet());
   }
 
-  public Collection<String> getPredefinedDateFormats(){
+  public Collection<String> getPredefinedDateFormats() {
     return Arrays.asList(
       "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ",
       "yyyy-MM-dd HH:mm:ss.SSSZZZZ",
@@ -35,7 +35,7 @@ public class DateUtil {
     );
   }
 
-  public Set<String> matchingDateFormat(Collection<String> definedDateFormats,Collection<String> dates) {
+  public Set<String> matchingDateFormat(Collection<String> definedDateFormats, Collection<String> dates) {
     return definedDateFormats.stream()
       .filter(df ->
         dates.stream()
@@ -46,7 +46,7 @@ public class DateUtil {
   }
 
 
-  private boolean canParseDate(String dateFormat, String formattedDate){
+  private boolean canParseDate(String dateFormat, String formattedDate) {
     try {
       new SimpleDateFormat(dateFormat).parse(formattedDate);
       return true;

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,9 +22,9 @@ import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
-import pl.otros.logview.api.importer.LogImporter;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 /**
  * Responsible for global drag-and-drop operations.
- * 
+ *
  * Currently supports dropping possibly multiple log files that are then opened by autodetection.
- * 
+ *
  * @author murat
  */
 public class DragAndDropFilesHandler extends TransferHandler {
@@ -54,12 +54,12 @@ public class DragAndDropFilesHandler extends TransferHandler {
   private static final long serialVersionUID = 3830464109280595888L;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
-	private final OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
 
 
-	public DragAndDropFilesHandler(OtrosApplication otrosApplication) {
-		this.otrosApplication = otrosApplication;
-	}
+  public DragAndDropFilesHandler(OtrosApplication otrosApplication) {
+    this.otrosApplication = otrosApplication;
+  }
 
   @Override
   public boolean canImport(TransferSupport support) {
@@ -138,7 +138,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
     try {
       return tryToImportListOfFiles(support);
     } catch (RuntimeException e) {
-      LOGGER.error( "Problem dropping files on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping files on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of files: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -167,7 +167,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
       tryToImportString(support);
       return true;
     } catch (RuntimeException e) {
-      LOGGER.error( "Problem dropping something on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -178,11 +178,11 @@ public class DragAndDropFilesHandler extends TransferHandler {
       tryToImportUrl(support);
       return true;
     } catch (RuntimeException e) {
-      LOGGER.error( "Problem dropping something on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     } catch (Exception e) {
-      LOGGER.error( "Problem dropping something on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -193,11 +193,11 @@ public class DragAndDropFilesHandler extends TransferHandler {
       tryToImportUriList(support);
       return true;
     } catch (RuntimeException e) {
-      LOGGER.error( "Problem dropping something on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     } catch (Exception e) {
-      LOGGER.error( "Problem dropping something on the GUI: " + e.getMessage(), e);
+      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     }
@@ -265,8 +265,8 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   private void openLogFile(FileObject file) {
-		Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
-		LogImporter importer = new DetectOnTheFlyLogImporter(importers);
+    Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+    LogImporter importer = new DetectOnTheFlyLogImporter(importers);
     TailLogActionListener tailLogActionListener = new TailLogActionListener(otrosApplication, importer);
     tailLogActionListener.openFileObjectInTailMode(file);
 

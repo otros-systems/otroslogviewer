@@ -1,7 +1,7 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.concurrent.Callable;
 
@@ -18,7 +18,7 @@ public class OperationMarkRows implements Callable<Void> {
 
   @Override
   public Void call() throws Exception {
-    logDataStore.markRows(markerColors,rows);
+    logDataStore.markRows(markerColors, rows);
     return null;
   }
 }

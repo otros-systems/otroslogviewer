@@ -62,7 +62,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         socket.close();
       }
     } catch (IOException e) {
-      LOGGER.error( "Can't write params to socket", e);
+      LOGGER.error("Can't write params to socket", e);
       e.printStackTrace();
     }
   }
@@ -94,10 +94,10 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         socket.close();
       }
     } catch (IOException e) {
-      LOGGER.error( "Can't read params from socket", e);
+      LOGGER.error("Can't read params from socket", e);
     }
 
-    openFilesFromStartArgs(otrosApplication,filesList, path);
+    openFilesFromStartArgs(otrosApplication, filesList, path);
     try {
       socket.getOutputStream().write("QUIT\n".getBytes());
     } catch (IOException e) {
@@ -112,7 +112,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
         FileObject fo = VFS.getManager().resolveFile(new File(path), file);
         fileObjects.add(fo);
       } catch (FileSystemException e) {
-        LOGGER.error( "Cant resolve " + file + " in path " + path, e);
+        LOGGER.error("Cant resolve " + file + " in path " + path, e);
       }
     }
     final FileObject[] files = fileObjects.toArray(new FileObject[fileObjects.size()]);

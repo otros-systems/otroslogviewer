@@ -35,7 +35,7 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
     StringBuilder sb = new StringBuilder(message.length());
     final Iterable<String> split = Splitter.on("\n").split(message);
     for (String line : split) {
-      sb.append(line.replaceFirst("\\s+at","  at"));
+      sb.append(line.replaceFirst("\\s+at", "  at"));
       if (Pattern.compile(STACK_TRACE_REGEX).matcher(line).find()) {
         addCodeToLine(sb, line);
       }

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

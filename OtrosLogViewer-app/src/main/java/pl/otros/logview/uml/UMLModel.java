@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,10 +60,10 @@ public class UMLModel {
       Rectangle2D.Double r = new Rectangle2D.Double(actorPosition.get(actor) - data.actorSizeX / 2, yPosition, data.actorSizeX, data.actorSizeY);
       cHeader.addShape(new ShapeWithColor(data.actorColor, r));
       Rectangle2D.Double r2 = new Rectangle2D.Double(actorPosition.get(actor) - data.actorSizeX / 2 + 1, yPosition + 1, data.actorSizeX - 1,
-          data.actorSizeY - 1);
+        data.actorSizeY - 1);
       cHeader.addShape(new ShapeWithColor(data.backgroundColor, r2, true));
       cHeader.addString(new StringShape(convertClassName(actor), data.actorFont, actorPosition.get(actor), (int) (yPosition + data.actorSizeY / 2),
-          data.actorColor));
+        data.actorColor));
 
     }
 
@@ -141,22 +141,22 @@ public class UMLModel {
     x = x + (int) (data.boxWidth / 2);
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x, yPosition, x + data.selfMessageWidth, yPosition)));
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x + data.selfMessageWidth, yPosition, x + data.selfMessageWidth, yPosition
-        + data.yStep)));
+      + data.yStep)));
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x, yPosition + data.yStep, x + data.selfMessageWidth, yPosition + data.yStep)));
 
     int xArrowHead2 = (int) (x + data.messageArrowSize);
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x, yPosition + data.yStep, xArrowHead2, yPosition + data.yStep
-        - data.messageArrowSize)));
+      - data.messageArrowSize)));
     cContent.addShape(new ShapeWithColor(data.messageColor, new Line2D.Double(x, yPosition + data.yStep, xArrowHead2, yPosition + data.yStep
-        + data.messageArrowSize)));
+      + data.messageArrowSize)));
     cContent.addString(new StringShape(message, data.messageFont, x + data.distanceBetweenActors / 2, yPosition + data.yStep / 2,
-        data.messageStringColor));
+      data.messageStringColor));
     step();
   }
 
   /**
    * Gets horizontal arrow on y height from x=s to x=d
-   * 
+   *
    * @param s
    * @param d
    * @param y

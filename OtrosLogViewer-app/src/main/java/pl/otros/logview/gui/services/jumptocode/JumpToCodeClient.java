@@ -9,9 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
-import pl.otros.logview.api.Ide;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,9 +70,9 @@ public class JumpToCodeClient {
     if (configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true) && isJumpable(locationInfo)) {
       HttpMethod method = buildMethod(getUrl(), locationInfo, HttpOperation.JUMP);
       return String.format("http://%s:%d/?%s",
-          configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, "localhost"),
-          configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT),
-          method.getQueryString());
+        configuration.getString(ConfKeys.JUMP_TO_CODE_HOST, "localhost"),
+        configuration.getInt(ConfKeys.JUMP_TO_CODE_PORT, JumpToCodeService.DEFAULT_PORT),
+        method.getQueryString());
     } else {
       return null;
     }
@@ -93,13 +93,13 @@ public class JumpToCodeClient {
   private HttpMethod buildMethod(String url, LocationInfo locationInfo, HttpOperation httpOperation) {
     HttpMethod method = new GetMethod(url);
     ArrayList<NameValuePair> list = new ArrayList<>(5);
-    list.add( new NameValuePair("o", httpOperation.getOperation()));
+    list.add(new NameValuePair("o", httpOperation.getOperation()));
 
-    locationInfo.getPackageName().ifPresent(p->list.add(new NameValuePair("p", p)));
-    locationInfo.getClassName().ifPresent(p->list.add(new NameValuePair("c", p)));
-    locationInfo.getFileName().ifPresent(p->list.add(new NameValuePair("f", p)));
-    locationInfo.getMessage().ifPresent(m->list.add(new NameValuePair("m", m)));
-    locationInfo.getLineNumber().map(i->Integer.toString(i)).ifPresent(l -> list.add(new NameValuePair("l",l)));
+    locationInfo.getPackageName().ifPresent(p -> list.add(new NameValuePair("p", p)));
+    locationInfo.getClassName().ifPresent(p -> list.add(new NameValuePair("c", p)));
+    locationInfo.getFileName().ifPresent(p -> list.add(new NameValuePair("f", p)));
+    locationInfo.getMessage().ifPresent(m -> list.add(new NameValuePair("m", m)));
+    locationInfo.getLineNumber().map(i -> Integer.toString(i)).ifPresent(l -> list.add(new NameValuePair("l", l)));
 
 
     NameValuePair[] pair = list.toArray(new NameValuePair[0]);
@@ -116,8 +116,8 @@ public class JumpToCodeClient {
 
   private String getCheckIdeUrl(String host, int port) {
     return String.format("http://%s:%d/",
-        host,
-        port);
+      host,
+      port);
   }
 
   public boolean isJumpable(final LocationInfo locationInfo) {

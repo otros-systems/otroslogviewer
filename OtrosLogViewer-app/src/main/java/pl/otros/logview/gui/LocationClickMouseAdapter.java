@@ -3,9 +3,9 @@ package pl.otros.logview.gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
 
 import javax.swing.*;
@@ -80,7 +80,7 @@ class LocationClickMouseAdapter extends MouseAdapter {
         }
       } catch (IOException e1) {
         otrosApplication.getStatusObserver().updateStatus("Can't go to location " + locationInfo.toString(), StatusObserver.LEVEL_WARNING);
-        LOGGER.warn( "Can't open location in IDE", e1);
+        LOGGER.warn("Can't open location in IDE", e1);
       }
     }
   }

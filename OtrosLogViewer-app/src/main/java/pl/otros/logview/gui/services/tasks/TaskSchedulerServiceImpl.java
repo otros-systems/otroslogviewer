@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 public class TaskSchedulerServiceImpl implements TaskSchedulerService {
   private final ListeningScheduledExecutorService listeningScheduledExecutorService;
 
-  public TaskSchedulerServiceImpl(){
+  public TaskSchedulerServiceImpl() {
     listeningScheduledExecutorService = MoreExecutors.listeningDecorator(Executors.newScheduledThreadPool(4));
   }
 

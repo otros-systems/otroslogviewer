@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,14 +23,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
-import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
+import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.imageio.ImageIO;
@@ -217,7 +217,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    *
    * @param document
    *          XML document
-   * @return  Vector of LoggingEvents
+   * @return Vector of LoggingEvents
    */
   private void decodeEvents(final Document document, LogDataCollector collector, ParsingContext parsingContext) {
 
@@ -233,7 +233,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       Object message = null;
       String className = null;
       String methodName = null;
-      String exceptionStackTrace=null;
+      String exceptionStackTrace = null;
 
       // format of date: 2003-05-04T11:04:52
       // ignore date or set as a property? using millis in constructor instead
@@ -250,39 +250,28 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
         if (tagName.equalsIgnoreCase("logger")) {
           logger = LoggerFactory.getLogger(getCData(list.item(y)));
-        } else
-        if (tagName.equalsIgnoreCase("millis")) {
+        } else if (tagName.equalsIgnoreCase("millis")) {
           timeStamp = Long.parseLong(getCData(list.item(y)));
-        } else
-
-        if (tagName.equalsIgnoreCase("level")) {
+        } else if (tagName.equalsIgnoreCase("level")) {
           level = Level.parse(getCData(list.item(y)));
-        } else
-
-        if (tagName.equalsIgnoreCase("thread")) {
+        } else if (tagName.equalsIgnoreCase("thread")) {
           threadName = getCData(list.item(y));
-        } else
-
-        if (tagName.equalsIgnoreCase("message")) {
+        } else if (tagName.equalsIgnoreCase("message")) {
           message = getCData(list.item(y));
-        } else
-
-        if (tagName.equalsIgnoreCase("class")) {
+        } else if (tagName.equalsIgnoreCase("class")) {
           className = getCData(list.item(y));
-        } else
-
-        if (tagName.equalsIgnoreCase("method")) {
+        } else if (tagName.equalsIgnoreCase("method")) {
           methodName = getCData(list.item(y));
-        }  else if (tagName.equalsIgnoreCase("exception")){
+        } else if (tagName.equalsIgnoreCase("exception")) {
           exceptionStackTrace = getExceptionStackTrace(list.item(y));
 
         }
 
 
       }
-      if (message !=null && exceptionStackTrace!=null){
-        message = message + "\n"+exceptionStackTrace;
-      } else if (exceptionStackTrace!=null){
+      if (message != null && exceptionStackTrace != null) {
+        message = message + "\n" + exceptionStackTrace;
+      } else if (exceptionStackTrace != null) {
         message = exceptionStackTrace;
       }
       LogData logData = new LogData();
@@ -291,7 +280,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       logData.setId(parsingContext.getGeneratedIdAndIncrease());
       logData.setDate(new Date(timeStamp));
       logData.setLoggerName(logger.getName());
-      logData.setMessage(StringUtils.defaultString(message!=null?message.toString():""));
+      logData.setMessage(StringUtils.defaultString(message != null ? message.toString() : ""));
       logData.setThread(threadName);
       logData.setMethod(methodName);
       logData.setLogSource(parsingContext.getLogSource());
@@ -305,11 +294,11 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
     NodeList childNodes = eventNode.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
-      String tagName=childNode.getNodeName();
-      if (tagName.equalsIgnoreCase("message")){
+      String tagName = childNode.getNodeName();
+      if (tagName.equalsIgnoreCase("message")) {
         sb.append(getCData(childNodes.item(i)));
-      }  else if (tagName.equalsIgnoreCase("frame")){
-        getStackTraceFrame(childNodes.item(i),sb);
+      } else if (tagName.equalsIgnoreCase("frame")) {
+        getStackTraceFrame(childNodes.item(i), sb);
       }
     }
 
@@ -320,17 +309,17 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   protected void getStackTraceFrame(Node item, StringBuilder sb) {
     NodeList childNodes = item.getChildNodes();
 
-    String clazz=null;
+    String clazz = null;
     String method = null;
     String line = null;
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       String tagName = childNode.getNodeName();
-      if (tagName.equalsIgnoreCase("class")){
+      if (tagName.equalsIgnoreCase("class")) {
         clazz = getCData(childNode);
-      }  else if (tagName.equalsIgnoreCase("method")){
+      } else if (tagName.equalsIgnoreCase("method")) {
         method = getCData(childNode);
-      }  else if (tagName.equalsIgnoreCase("line")){
+      } else if (tagName.equalsIgnoreCase("line")) {
         line = getCData(childNode);
       }
     }
@@ -345,10 +334,10 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   protected StringBuilder appendStackFrame(StringBuilder sb, String clazz, String method, String line, String fileName) {
     sb.append("\n\tat ");
     sb.append(clazz).append(".").append(method);
-    if (fileName!=null){
+    if (fileName != null) {
       sb.append("(");
       sb.append(fileName).append(".java");
-      if (line!=null){
+      if (line != null) {
         sb.append(":").append(line);
       }
       sb.append(")");
@@ -357,11 +346,11 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   }
 
   protected String extractFileName(String clazz) {
-    int clazzStart = StringUtils.lastIndexOf(clazz, '.')+1;
+    int clazzStart = StringUtils.lastIndexOf(clazz, '.') + 1;
     clazzStart = Math.max(0, clazzStart);
     int clazzEnd = StringUtils.indexOf(clazz, '$');
-    if (clazzEnd<0){
-      clazzEnd=clazz.length();
+    if (clazzEnd < 0) {
+      clazzEnd = clazz.length();
     }
     return StringUtils.substring(clazz, clazzStart, clazzEnd);
   }

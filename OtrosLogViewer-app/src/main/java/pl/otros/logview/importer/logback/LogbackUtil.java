@@ -49,7 +49,7 @@ public class LogbackUtil {
       for (StackTraceElementProxy stackTraceElementProxy : throwableProxy.getStackTraceElementProxyArray()) {
         sb.append("\t").append(stackTraceElementProxy.getSTEAsString()).append("\n");
       }
-      builder.withMessage( sb.toString());
+      builder.withMessage(sb.toString());
     }
   }
 

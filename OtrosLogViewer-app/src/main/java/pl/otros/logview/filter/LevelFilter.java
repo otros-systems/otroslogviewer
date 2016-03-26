@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,9 +16,9 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.RenamedLevel;
 import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 public class LevelFilter extends AbstractLogFilter {
   private int passLevel = Level.ALL.intValue();
-//  private final JComboBox levelJCombo;
+  //  private final JComboBox levelJCombo;
   private static final String NAME = "Level filter";
   private static final String DESCRIPTION = "Filtering events based on a level. It passes events with selected level or higher.";
   private static final LevelRenderer renderer = new LevelRenderer();
@@ -56,13 +56,13 @@ public class LevelFilter extends AbstractLogFilter {
   public LevelFilter() {
     super(NAME, DESCRIPTION);
     Level[] levels = {
-        RenamedLevel.FINEST_TRACE,
-        RenamedLevel.FINER,
-        RenamedLevel.FINE_DEBUG,
-        RenamedLevel.CONFIG,
-        RenamedLevel.INFO,
-        RenamedLevel.WARNING_WARN,
-        RenamedLevel.SEVERE_ERROR_FATAL
+      RenamedLevel.FINEST_TRACE,
+      RenamedLevel.FINER,
+      RenamedLevel.FINE_DEBUG,
+      RenamedLevel.CONFIG,
+      RenamedLevel.INFO,
+      RenamedLevel.WARNING_WARN,
+      RenamedLevel.SEVERE_ERROR_FATAL
     };
     JComboBox<Level> levelJCombo = new JComboBox<>(levels);
     levelJCombo.setRenderer(renderer);
@@ -94,10 +94,10 @@ public class LevelFilter extends AbstractLogFilter {
     modeLabel.setLabelFor(modeJCombo);
 
     gui = new JPanel(new MigLayout());
-    gui.add(levelLabel,"wrap, growx");
-    gui.add(levelJCombo,"right, wrap, growx");
-    gui.add(modeLabel,"wrap, growx");
-    gui.add(modeJCombo,"right, wrap, growx");
+    gui.add(levelLabel, "wrap, growx");
+    gui.add(levelJCombo, "right, wrap, growx");
+    gui.add(modeLabel, "wrap, growx");
+    gui.add(modeJCombo, "right, wrap, growx");
 
   }
 
@@ -113,7 +113,7 @@ public class LevelFilter extends AbstractLogFilter {
     if (logData.getLevel() == null) {
       return true;
     }
-    switch (filterMode){
+    switch (filterMode) {
       case LOWER_OR_EQUAL:
         return logData.getLevel().intValue() <= passLevel;
       case EQUAL:

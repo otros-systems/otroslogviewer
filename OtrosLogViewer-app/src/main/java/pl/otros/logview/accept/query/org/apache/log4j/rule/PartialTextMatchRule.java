@@ -17,8 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Stack;
 
 /**
  * A Rule class implementing case-insensitive partial-text matches against two strings.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -36,7 +36,7 @@ public class PartialTextMatchRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-   private static final long serialVersionUID = 6963284773637727558L;
+  private static final long serialVersionUID = 6963284773637727558L;
   /**
    * Resolver.
    */
@@ -52,11 +52,9 @@ public class PartialTextMatchRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param field
-   *          field
-   * @param value
-   *          value
+   *
+   * @param field field
+   * @param value value
    */
   private PartialTextMatchRule(final String field, final String value) {
     super();
@@ -70,11 +68,9 @@ public class PartialTextMatchRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param field
-   *          field
-   * @param value
-   *          value
+   *
+   * @param field field
+   * @param value value
    * @return new instance
    */
   public static Rule getRule(final String field, final String value) {
@@ -83,9 +79,8 @@ public class PartialTextMatchRule extends AbstractRule {
 
   /**
    * Create new instance from top two elements of stack.
-   * 
-   * @param stack
-   *          stack
+   *
+   * @param stack stack
    * @return new instance
    */
   public static Rule getRule(final Stack<Object> stack) {
@@ -102,7 +97,7 @@ public class PartialTextMatchRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     Object p2 = RESOLVER.getValue(field, event);
     boolean result = ((p2 != null) && (value != null) && (p2.toString().toLowerCase().contains(value.toLowerCase())));

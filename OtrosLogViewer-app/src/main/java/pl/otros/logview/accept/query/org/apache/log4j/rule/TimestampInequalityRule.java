@@ -19,8 +19,8 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 /**
  * A Rule class implementing inequality evaluation for timestamps.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -42,7 +42,7 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-   private static final long serialVersionUID = -4642641663914789241L;
+  private static final long serialVersionUID = -4642641663914789241L;
   /**
    * Resolver.
    */
@@ -50,22 +50,22 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * Date format.
    */
-  public static final SimpleDateFormat[] DATE_FORMATS = new SimpleDateFormat[] {//
-  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
-      new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
-      new SimpleDateFormat("yyyy-MM-dd HH"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH"),//
-      new SimpleDateFormat("yyyy-MM-dd"),//
+  public static final SimpleDateFormat[] DATE_FORMATS = new SimpleDateFormat[]{//
+    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
+    new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
+    new SimpleDateFormat("yyyy-MM-dd HH"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH"),//
+    new SimpleDateFormat("yyyy-MM-dd"),//
 
   };
   /**
    * Time format.
    */
-  public static final SimpleDateFormat[] TIME_FORMATS = new SimpleDateFormat[] {//
-  new SimpleDateFormat("HH:mm:ss"),//
-      new SimpleDateFormat("HH:mm") //
+  public static final SimpleDateFormat[] TIME_FORMATS = new SimpleDateFormat[]{//
+    new SimpleDateFormat("HH:mm:ss"),//
+    new SimpleDateFormat("HH:mm") //
   };
 
   /**
@@ -79,11 +79,9 @@ public class TimestampInequalityRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol.
-   * @param value
-   *          string representation of date.
+   *
+   * @param inequalitySymbol inequality symbol.
+   * @param value            string representation of date.
    */
   private TimestampInequalityRule(final String inequalitySymbol, final String value) {
     super();
@@ -162,11 +160,9 @@ public class TimestampInequalityRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol
-   * @param value
-   *          string representation of date
+   *
+   * @param inequalitySymbol inequality symbol
+   * @param value            string representation of date
    * @return new instance
    */
   public static Rule getRule(final String inequalitySymbol, final String value) {
@@ -176,7 +172,7 @@ public class TimestampInequalityRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     String eventTimeStampString = RESOLVER.getValue(LoggingEventFieldResolver.TIMESTAMP_FIELD, event).toString();
     // long eventTimeStamp = Long.parseLong(
@@ -206,13 +202,10 @@ public class TimestampInequalityRule extends AbstractRule {
 
   /**
    * Deserialize the state of the object.
-   * 
-   * @param in
-   *          object input stream
-   * @throws IOException
-   *           if IO error during deserialization
-   * @throws ClassNotFoundException
-   *           if class not found
+   *
+   * @param in object input stream
+   * @throws IOException            if IO error during deserialization
+   * @throws ClassNotFoundException if class not found
    */
   private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
     inequalitySymbol = (String) in.readObject();
@@ -221,11 +214,9 @@ public class TimestampInequalityRule extends AbstractRule {
 
   /**
    * Serialize the state of the object.
-   * 
-   * @param out
-   *          object output stream
-   * @throws IOException
-   *           if IO error during serialization
+   *
+   * @param out object output stream
+   * @throws IOException if IO error during serialization
    */
   private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
     out.writeObject(inequalitySymbol);

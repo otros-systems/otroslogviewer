@@ -14,7 +14,7 @@ public class SearchSuggestionSource implements SuggestionSource<SearchSuggestion
   private List<SearchHistory> history;
 
   public SearchSuggestionSource(SearchAction.SearchMode searchMode) {
-    this(searchMode,new ArrayList<>());
+    this(searchMode, new ArrayList<>());
   }
 
   public SearchSuggestionSource(SearchAction.SearchMode searchMode, List<SearchHistory> history) {
@@ -32,7 +32,7 @@ public class SearchSuggestionSource implements SuggestionSource<SearchSuggestion
     final List<SuggestionQuery> historyForMode = getHistory()
       .stream()
       .filter(h -> h.getSearchMode().equals(searchMode))
-      .map(sh -> new SuggestionQuery(sh.getQuery(),sh.getQuery().length()))
+      .map(sh -> new SuggestionQuery(sh.getQuery(), sh.getQuery().length()))
       .collect(Collectors.toList());
     if (searchMode.equals(SearchAction.SearchMode.STRING_CONTAINS)) {
       source = new StringSearchSuggestionSource(historyForMode);
@@ -49,7 +49,7 @@ public class SearchSuggestionSource implements SuggestionSource<SearchSuggestion
 
 
   public void addHistory(SearchAction.SearchMode searchMode, String query) {
-    history.add(new SearchHistory(searchMode,query));
+    history.add(new SearchHistory(searchMode, query));
   }
 
   public SearchAction.SearchMode getSearchMode() {

@@ -15,6 +15,6 @@ class OperationIsMarked implements Callable<Boolean> {
 
   @Override
   public Boolean call() {
-     return logDataStore.isMarked(row);
+    return logDataStore.isMarked(row);
   }
 }

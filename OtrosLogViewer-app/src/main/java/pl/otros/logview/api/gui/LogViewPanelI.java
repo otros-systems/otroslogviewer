@@ -1,9 +1,9 @@
 package pl.otros.logview.api.gui;
 
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
@@ -44,5 +44,5 @@ public abstract class LogViewPanelI extends JPanel implements LogDataCollector {
 
   public abstract PluginableElementsContainer<MessageFormatter> getSelectedMessageFormattersContainer();
 
-  public abstract  JToolBar getMessageDetailToolbar();
+  public abstract JToolBar getMessageDetailToolbar();
 }

@@ -13,6 +13,6 @@ class OperationRemove implements Runnable {
 
   @Override
   public void run() {
-     logDataStore.remove(ids);
+    logDataStore.remove(ids);
   }
 }

@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
  * A Rule class implementing logical not.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -32,7 +32,7 @@ public class NotRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-   private static final long serialVersionUID = -6827159473117969306L;
+  private static final long serialVersionUID = -6827159473117969306L;
   /**
    * Enclosed rule.
    */
@@ -40,9 +40,8 @@ public class NotRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param rule
-   *          enclosed rule.
+   *
+   * @param rule enclosed rule.
    */
   private NotRule(final Rule rule) {
     super();
@@ -51,9 +50,8 @@ public class NotRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param rule
-   *          enclosed rule.
+   *
+   * @param rule enclosed rule.
    * @return new rule.
    */
   public static Rule getRule(final Rule rule) {
@@ -62,9 +60,8 @@ public class NotRule extends AbstractRule {
 
   /**
    * Create new instance from top element of stack.
-   * 
-   * @param stack
-   *          stack
+   *
+   * @param stack stack
    * @return new rule.
    */
   public static Rule getRule(final Stack<Object> stack) {
@@ -82,7 +79,7 @@ public class NotRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     if (matches == null) {
       return !(rule.evaluate(event, null));

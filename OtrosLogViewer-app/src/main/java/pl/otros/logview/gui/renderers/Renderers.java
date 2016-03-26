@@ -29,7 +29,7 @@ public class Renderers {
         return;
       }
       final String property = event.getPropertyName();
-      final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
+      final String value = event.getPropertyValue() != null ? event.getPropertyValue().toString() : "";
       switch (property) {
         case LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS:
           classWrapperRenderer.reloadConfiguration(value);

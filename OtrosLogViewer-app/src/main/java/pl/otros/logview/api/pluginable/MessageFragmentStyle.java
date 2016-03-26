@@ -22,24 +22,24 @@ import javax.swing.text.Style;
  * Class contains information about style.
  */
 public class MessageFragmentStyle {
-	private int offset;
-	private int length;
-	private Style style;
-	private boolean replace;
+  private int offset;
+  private int length;
+  private Style style;
+  private boolean replace;
   private boolean searchResult;
 
 
   public MessageFragmentStyle() {
-	}
+  }
 
-	public MessageFragmentStyle(int offset, int length, Style style, boolean replace) {
-		this.style = style;
-		this.length = length;
-		this.offset = offset;
-		this.replace = replace;
-	}
+  public MessageFragmentStyle(int offset, int length, Style style, boolean replace) {
+    this.style = style;
+    this.length = length;
+    this.offset = offset;
+    this.replace = replace;
+  }
 
-  public MessageFragmentStyle(int offset, int length,Style style, boolean replace,  boolean searchResult) {
+  public MessageFragmentStyle(int offset, int length, Style style, boolean replace, boolean searchResult) {
     this(offset, length, style, replace);
     this.searchResult = searchResult;
   }
@@ -52,58 +52,58 @@ public class MessageFragmentStyle {
     this.searchResult = searchResult;
   }
 
-	public Style getStyle() {
-		return style;
-	}
+  public Style getStyle() {
+    return style;
+  }
 
-	public void setStyle(Style style) {
-		this.style = style;
-	}
+  public void setStyle(Style style) {
+    this.style = style;
+  }
 
-	public int getLength() {
-		return length;
-	}
+  public int getLength() {
+    return length;
+  }
 
-	public void setLength(int length) {
-		this.length = length;
-	}
+  public void setLength(int length) {
+    this.length = length;
+  }
 
-	public int getOffset() {
-		return offset;
-	}
+  public int getOffset() {
+    return offset;
+  }
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
+  public void setOffset(int offset) {
+    this.offset = offset;
+  }
 
-	public boolean isReplace() {
-		return replace;
-	}
+  public boolean isReplace() {
+    return replace;
+  }
 
-	public void setReplace(boolean replace) {
-		this.replace = replace;
-	}
+  public void setReplace(boolean replace) {
+    this.replace = replace;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof MessageFragmentStyle)) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof MessageFragmentStyle)) return false;
 
-		MessageFragmentStyle that = (MessageFragmentStyle) o;
+    MessageFragmentStyle that = (MessageFragmentStyle) o;
 
-		if (length != that.length) return false;
-		if (offset != that.offset) return false;
-		if (replace != that.replace) return false;
-		return !(style != null ? !style.equals(that.style) : that.style != null);
+    if (length != that.length) return false;
+    if (offset != that.offset) return false;
+    if (replace != that.replace) return false;
+    return !(style != null ? !style.equals(that.style) : that.style != null);
 
-	}
+  }
 
-	@Override
-	public int hashCode() {
-		int result = offset;
-		result = 31 * result + length;
-		result = 31 * result + (style != null ? style.hashCode() : 0);
-		result = 31 * result + (replace ? 1 : 0);
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    int result = offset;
+    result = 31 * result + length;
+    result = 31 * result + (style != null ? style.hashCode() : 0);
+    result = 31 * result + (replace ? 1 : 0);
+    return result;
+  }
 }

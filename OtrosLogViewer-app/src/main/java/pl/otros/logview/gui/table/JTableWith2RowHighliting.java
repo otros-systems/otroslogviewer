@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +60,7 @@ public class JTableWith2RowHighliting extends JXTable {
     Component prepareRenderer = super.prepareRenderer(renderer, row, column);
     if (row % 2 == 1) {
       Color bkg = prepareRenderer.getBackground();
-      Color bkgNew = new Color(Math.max( bkg.getRed() - 25, 0), Math.max( bkg.getGreen() - 25, 0), Math.max( bkg.getBlue() - 25, 0));
+      Color bkgNew = new Color(Math.max(bkg.getRed() - 25, 0), Math.max(bkg.getGreen() - 25, 0), Math.max(bkg.getBlue() - 25, 0));
       prepareRenderer.setBackground(bkgNew);
     }
     return prepareRenderer;

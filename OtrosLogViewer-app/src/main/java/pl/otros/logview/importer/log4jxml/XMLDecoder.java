@@ -42,16 +42,14 @@ import java.util.*;
 
 /**
  * Decodes Logging Events in XML formated into elements that are used by Chainsaw.
- * 
+ * <p>
  * This decoder can process a collection of log4j:event nodes ONLY (no XML declaration nor eventSet node)
- * 
+ * <p>
  * NOTE: Only a single LoggingEvent is returned from the decode method even though the DTD supports multiple events nested in an eventSet.
- * 
- * @since 1.3
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Paul Smith (psmith@apache.org)
- * 
+ * @since 1.3
  */
 public class XMLDecoder {
 
@@ -59,7 +57,7 @@ public class XMLDecoder {
    * Document prolog.
    */
   private static final String BEGINPART = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + "<!DOCTYPE log4j:eventSet SYSTEM \"http://localhost/log4j.dtd\">"
-      + "<log4j:eventSet version=\"1.2\" " + "xmlns:log4j=\"http://jakarta.apache.org/log4j/\">";
+    + "<log4j:eventSet version=\"1.2\" " + "xmlns:log4j=\"http://jakarta.apache.org/log4j/\">";
   /**
    * Document close.
    */
@@ -88,9 +86,8 @@ public class XMLDecoder {
 
   /**
    * Create new instance.
-   * 
-   * @param o
-   *          owner
+   *
+   * @param o owner
    */
   public XMLDecoder(final Component o) {
     this();
@@ -116,11 +113,10 @@ public class XMLDecoder {
 
   /**
    * Sets an additionalProperty map, where each Key/Value pair is automatically added to each LoggingEvent as it is decoded.
-   * 
+   * <p>
    * This is useful, say, to include the source file name of the Logging events
-   * 
-   * @param properties
-   *          additional properties
+   *
+   * @param properties additional properties
    */
   public void setAdditionalProperties(final Map properties) {
     this.additionalProperties = properties;
@@ -128,9 +124,8 @@ public class XMLDecoder {
 
   /**
    * Converts the LoggingEvent data in XML string format into an actual XML Document class instance.
-   * 
-   * @param data
-   *          XML fragment
+   *
+   * @param data XML fragment
    * @return dom document
    */
   private Document parse(final String data) {
@@ -164,12 +159,10 @@ public class XMLDecoder {
 
   /**
    * Decodes a File into a Vector of LoggingEvents.
-   * 
-   * @param url
-   *          the url of a file containing events to decode
+   *
+   * @param url the url of a file containing events to decode
    * @return Vector of LoggingEvents
-   * @throws IOException
-   *           if IO error during processing.
+   * @throws IOException if IO error during processing.
    */
   public Vector decode(final URL url) throws IOException {
     LineNumberReader reader;
@@ -209,9 +202,8 @@ public class XMLDecoder {
 
   /**
    * Decodes a String representing a number of events into a Vector of LoggingEvents.
-   * 
-   * @param document
-   *          to decode events from
+   *
+   * @param document to decode events from
    * @return Vector of LoggingEvents
    */
   public Vector decodeEvents(final String document) {
@@ -255,9 +247,8 @@ public class XMLDecoder {
   /**
    * Converts the string data into an XML Document, and then soaks out the relevant bits to form a new LoggingEvent instance which can be used by any Log4j
    * element locally.
-   * 
-   * @param data
-   *          XML fragment
+   *
+   * @param data XML fragment
    * @return a single LoggingEvent
    */
   public LoggingEvent decode(final String data) {
@@ -278,9 +269,8 @@ public class XMLDecoder {
 
   /**
    * Given a Document, converts the XML into a Vector of LoggingEvents.
-   * 
-   * @param document
-   *          XML document
+   *
+   * @param document XML document
    * @return Vector of LoggingEvents
    */
   private Vector decodeEvents(final Document document) {
@@ -347,7 +337,7 @@ public class XMLDecoder {
         }
 
         if (tagName.equalsIgnoreCase("log4j:throwable")) {
-          exception = new String[] { getCData(list.item(y)) };
+          exception = new String[]{getCData(list.item(y))};
         }
 
         if (tagName.equalsIgnoreCase("log4j:locationinfo")) {
@@ -402,11 +392,11 @@ public class XMLDecoder {
         info = LocationInfo.NA_LOCATION_INFO;
       }
       if (exception == null) {
-        exception = new String[] { "" };
+        exception = new String[]{""};
       }
 
       LoggingEvent loggingEvent = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, new ThrowableInformation(exception), ndc, info,
-          properties);
+        properties);
       // loggingEvent.setLogger(logger);
       // loggingEvent.setTimeStamp(timeStamp);
       // loggingEvent.setLevel(levelImpl);
@@ -434,9 +424,8 @@ public class XMLDecoder {
 
   /**
    * Get contents of CDATASection.
-   * 
-   * @param n
-   *          CDATASection
+   *
+   * @param n CDATASection
    * @return text content of all text or CDATA children of node.
    */
   private String getCData(final Node n) {

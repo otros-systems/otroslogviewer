@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,14 +17,14 @@ package pl.otros.logview.gui;
 
 import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.api.gui.Icons;
-import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.gui.LogDataTableModel;
-import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
-import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.PluginableElementEventListener;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
+import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -32,12 +32,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.TreeSet;
 
 public class TailingModeMarkersPanel extends JPanel implements PluginableElementEventListener<AutomaticMarker>, TableModelListener {
 

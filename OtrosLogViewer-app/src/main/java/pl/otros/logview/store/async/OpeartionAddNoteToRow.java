@@ -1,7 +1,7 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.api.model.Note;
 import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.Note;
 
 import java.util.concurrent.Callable;
 
@@ -18,7 +18,7 @@ public class OpeartionAddNoteToRow implements Callable<Void> {
 
   @Override
   public Void call() throws Exception {
-    logDataStore.addNoteToRow(row,note);
+    logDataStore.addNoteToRow(row, note);
     return null;
   }
 }

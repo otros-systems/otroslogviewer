@@ -19,7 +19,7 @@ package pl.otros.logview.gui.message.update;
 import com.google.common.base.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.*;
+import pl.otros.logview.api.NoteObserver;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.NoteEvent;
 import pl.otros.logview.api.model.LogData;
@@ -80,7 +80,7 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
     if (row >= 0 && row < table.getRowCount()) {
       int rowConverted = table.convertRowIndexToModel(row);
       LogData displayedLogData = dataTableModel.getLogData(rowConverted);
-      if (!displayedLogData.equals(logViewPanel.getDisplayedLogData())){
+      if (!displayedLogData.equals(logViewPanel.getDisplayedLogData())) {
         updateInfo();
       }
     }
@@ -105,7 +105,7 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
         LogData displayedLogData = dataTableModel.getLogData(rowConverted);
         logViewPanel.setDisplayedLogData(displayedLogData);
         messageFormatSwingWorker = new FormatMessageDialogWorker(displayedLogData, dateFormat, logViewPanel.getLogDetailWithRulerScrollPane(),
-            colorizersContainer, formattersContainer, maximumMessageSize);
+          colorizersContainer, formattersContainer, maximumMessageSize);
         if (displayedLogData.getMessage().length() > FORMAT_IN_SEPARATE_THREAD_THRESHOLD) {
           logDetailTextArea.setText("Updating log event details...");
           messageFormatSwingWorker.execute();

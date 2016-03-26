@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class JsonMessageFormatter extends AbstractPluginableElement implements MessageFormatter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonMessageFormatter.class.getName());
+
   public JsonMessageFormatter() {
     super("Json formatter", "Formats json in message");
   }
@@ -43,7 +44,7 @@ public class JsonMessageFormatter extends AbstractPluginableElement implements M
         final String jsonFormatted = o.toString(2);
         toAppend = jsonFormatted;
       } catch (JSONException e) {
-        LOGGER.debug("There is no need to format {}",group);
+        LOGGER.debug("There is no need to format {}", group);
       }
       if (!sb.toString().endsWith("\n")) {
         sb.append("\n");

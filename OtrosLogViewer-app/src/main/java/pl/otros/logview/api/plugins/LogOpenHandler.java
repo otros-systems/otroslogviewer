@@ -23,6 +23,7 @@ import org.apache.commons.vfs2.FileObject;
 public interface LogOpenHandler {
   /**
    * Open logs in tail mode with auto detect log format.
+   *
    * @param tabName
    * @param fileObjects
    */

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,12 @@ package pl.otros.logview.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.TableColumns;
-import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 
 import javax.imageio.ImageIO;
@@ -50,7 +50,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumn
     new I18nLevelParser(Locale.GERMAN),
     new I18nLevelParser(new Locale("es")),
     new I18nLevelParser(new Locale("fr"))
-};
+  };
 
   public JulSimpleFormatterParser() {
     pd = new ParserDescription();
@@ -180,11 +180,11 @@ public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumn
 
   @Override
   public void initParsingContext(ParsingContext parsingContext) {
-    SimpleDateFormat[] datePatterns = { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
-        new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
-        new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
-        new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))
-};
+    SimpleDateFormat[] datePatterns = {new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
+      new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
+      new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
+      new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))
+    };
     parsingContext.getCustomConextProperties().put(DATE_PATTERNS, datePatterns);
 
   }

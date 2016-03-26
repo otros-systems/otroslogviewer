@@ -20,54 +20,53 @@ package pl.otros.logview.api.plugins;
  */
 public class PluginInfo {
 
-    private final String name;
+  private final String name;
 
-    private final String description;
+  private final String description;
 
-    private final String pluginableId;
+  private final String pluginableId;
 
-    private final int apiVersion;
+  private final int apiVersion;
 
-    private final Class<? extends Plugin> pluginClass;
+  private final Class<? extends Plugin> pluginClass;
 
 
+  PluginInfo(String name, String description, String pluginableId, int apiVersion, Class<? extends Plugin> pluginClass) {
+    this.name = name;
+    this.description = description;
+    this.pluginableId = pluginableId;
+    this.apiVersion = apiVersion;
+    this.pluginClass = pluginClass;
+  }
 
-    PluginInfo(String name, String description, String pluginableId, int apiVersion, Class<? extends Plugin> pluginClass) {
-        this.name = name;
-        this.description = description;
-        this.pluginableId = pluginableId;
-        this.apiVersion = apiVersion;
-        this.pluginClass = pluginClass;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getPluginId() {
+    return pluginableId;
+  }
 
-    public String getPluginId() {
-        return pluginableId;
-    }
+  public int getApiVersion() {
+    return apiVersion;
+  }
 
-    public int getApiVersion() {
-        return apiVersion;
-    }
+  public Class<? extends Plugin> getPluginClass() {
+    return pluginClass;
+  }
 
-    public Class<? extends Plugin> getPluginClass() {
-        return pluginClass;
-    }
-
-    @Override
-    public String toString() {
-        return "PluginInfo{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", pluginableId='" + pluginableId + '\'' +
-                ", apiVersion=" + apiVersion +
-                ", pluginClass=" + pluginClass +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "PluginInfo{" +
+      "name='" + name + '\'' +
+      ", description='" + description + '\'' +
+      ", pluginableId='" + pluginableId + '\'' +
+      ", apiVersion=" + apiVersion +
+      ", pluginClass=" + pluginClass +
+      '}';
+  }
 }

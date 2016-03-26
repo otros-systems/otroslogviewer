@@ -5,8 +5,8 @@ public class AppProperties {
   private String currentDir;
 
   public AppProperties() {
-    appDir = System.getProperty("OLV_HOME","");
-    currentDir = System.getProperty("CURRENT_DIR","");
+    appDir = System.getProperty("OLV_HOME", "");
+    currentDir = System.getProperty("CURRENT_DIR", "");
   }
 
   public String getCurrentDir() {

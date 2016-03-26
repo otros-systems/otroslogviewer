@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
  * A Rule class implementing logical or.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -44,11 +44,9 @@ public class OrRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param firstParam
-   *          first rule
-   * @param secondParam
-   *          second rule
+   *
+   * @param firstParam  first rule
+   * @param secondParam second rule
    */
   private OrRule(final Rule firstParam, final Rule secondParam) {
     super();
@@ -58,11 +56,9 @@ public class OrRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param firstParam
-   *          first rule
-   * @param secondParam
-   *          second rule
+   *
+   * @param firstParam  first rule
+   * @param secondParam second rule
    * @return new instance
    */
   public static Rule getRule(final Rule firstParam, final Rule secondParam) {
@@ -71,9 +67,8 @@ public class OrRule extends AbstractRule {
 
   /**
    * Create new instance from top two elements of stack.
-   * 
-   * @param stack
-   *          stack
+   *
+   * @param stack stack
    * @return new instance
    */
   public static Rule getRule(final Stack<Object> stack) {
@@ -93,7 +88,7 @@ public class OrRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     if (matches == null) {
       return (rule1.evaluate(event, null) || rule2.evaluate(event, null));

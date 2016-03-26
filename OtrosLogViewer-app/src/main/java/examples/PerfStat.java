@@ -1,8 +1,8 @@
 package examples;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.batch.BatchProcessingContext;
 import pl.otros.logview.api.batch.LogDataParsedListener;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class PerfStat implements LogDataParsedListener {
 
 
-  private Map<String,List<Event>> eventsOnStations;
+  private Map<String, List<Event>> eventsOnStations;
 
   @Override
   public void logDataParsed(LogData data, BatchProcessingContext context) throws Exception {
@@ -20,33 +20,30 @@ public class PerfStat implements LogDataParsedListener {
   }
 
 
-  public Optional<String> stationId(String msg){
+  public Optional<String> stationId(String msg) {
     String[] stationNames = "AD01A06,AD01A06.AD01A08.AD01A09".split(",");
-    for (String s:stationNames){
-      if (msg.contains(s)){
+    for (String s : stationNames) {
+      if (msg.contains(s)) {
         return Optional.of(s);
       }
     }
     return Optional.empty();
   }
 
-  public Optional<Event> event(LogData logData){
+  public Optional<Event> event(LogData logData) {
     final String msg = logData.getMessage();
     final Date date = logData.getDate();
     final String logger = logData.getLoggerName();
     if (logger.equalsIgnoreCase("com.ocado.cfc.stations.scan.ScanManager") && msg.contains("Received LpnScanned(StationId")) {
-      return Optional.of(new Event("scanned",date));
-    } else if (logger.contentEquals("") && msg.contains("")){
+      return Optional.of(new Event("scanned", date));
+    } else if (logger.contentEquals("") && msg.contains("")) {
       //occupiedLocations=[RT1057511 (UNKNOWN) @37881963982091670
-      return Optional.of(new Event("",date));
+      return Optional.of(new Event("", date));
     }
-
 
 
 //    Logger name: com.ocado.cfc.stations.externalsystems.wcs.WcsServiceClient
 //    Message: None Sending request 7707dd7e-9ee0-479b-81d8-4e74acc40ec5 to http://cr2-decant-ambient-wcs.rainbow.os.andover.ocado.com:8091/v1/stations/AD01A07/container-weight-request: WeighContainerRequestV1(56fa3582-e61c-4631-9d49-b651fab0983a,AD01A07,RT1057511,37881963982091670)[0m
-
-
 
 
     return Optional.empty();
@@ -64,7 +61,7 @@ public class PerfStat implements LogDataParsedListener {
     }
   }
 
-  private class Event{
+  private class Event {
     String event;
     Date date;
 

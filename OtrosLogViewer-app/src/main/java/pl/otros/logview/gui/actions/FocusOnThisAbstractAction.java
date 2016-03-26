@@ -17,16 +17,15 @@
 package pl.otros.logview.gui.actions;
 
 import org.jdesktop.swingx.JXTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.LogFilter;
-import pl.otros.logview.api.gui.OtrosAction;
-import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends OtrosAction {
 
@@ -43,8 +42,8 @@ public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends Otr
 
   @Override
   public void actionPerformed(ActionEvent e) {
-      JXTable jxTable = getOtrosApplication().getSelectPaneJXTable();
-      int[] selectedRows = jxTable.getSelectedRows();
+    JXTable jxTable = getOtrosApplication().getSelectPaneJXTable();
+    int[] selectedRows = jxTable.getSelectedRows();
     if (selectedRows.length <= 0) {
       return;
     }
@@ -58,7 +57,7 @@ public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends Otr
       filterEnableCheckBox.setSelected(true);
       filter.setEnable(true);
     } catch (Exception e1) {
-      LOGGER.error("Error occurred when focusing on events ",e1);
+      LOGGER.error("Error occurred when focusing on events ", e1);
       JOptionPane.showMessageDialog(getOtrosApplication().getApplicationJFrame(), e1.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }

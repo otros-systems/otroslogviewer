@@ -25,7 +25,7 @@ import java.util.Stack;
 /**
  * A Factory class which, given a string representation of the rule, and a context stack, will return a Rule ready for evaluation against events. If an operator
  * is requested that isn't supported, an IllegalArgumentException is thrown.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -112,7 +112,7 @@ public final class RuleFactory {
 
   /**
    * Get instance.
-   * 
+   *
    * @return rule factory instance.
    */
   public static RuleFactory getInstance() {
@@ -121,9 +121,8 @@ public final class RuleFactory {
 
   /**
    * Determine if specified string is a known operator.
-   * 
-   * @param symbol
-   *          string
+   *
+   * @param symbol string
    * @return true if string is a known operator
    */
   public boolean isRule(final String symbol) {
@@ -132,11 +131,9 @@ public final class RuleFactory {
 
   /**
    * Create rule from applying operator to stack.
-   * 
-   * @param symbol
-   *          symbol
-   * @param stack
-   *          stack
+   *
+   * @param symbol symbol
+   * @param stack  stack
    * @return new instance
    */
   public Rule getRule(final String symbol, final Stack<Object> stack) {

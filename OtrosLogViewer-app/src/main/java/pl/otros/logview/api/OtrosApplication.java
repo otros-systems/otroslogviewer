@@ -17,11 +17,7 @@ package pl.otros.logview.api;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.api.gui.LogPatternParserEditor;
-import pl.otros.logview.api.gui.LogDataTableModel;
-import pl.otros.logview.api.gui.LogViewPanelI;
-import pl.otros.logview.api.gui.LogViewPanelWrapper;
-import pl.otros.logview.api.gui.TabHeader;
+import pl.otros.logview.api.gui.*;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.MenuActionProvider;
@@ -57,8 +53,8 @@ public class OtrosApplication {
 
   private Services services;
 
-  public OtrosApplication(){
-    menuActionProviders=new ArrayList<MenuActionProvider>();
+  public OtrosApplication() {
+    menuActionProviders = new ArrayList<MenuActionProvider>();
     appProperties = new AppProperties();
   }
 
@@ -202,9 +198,10 @@ public class OtrosApplication {
 
   /**
    * Return menu action providers
+   *
    * @return
    */
-  public List<MenuActionProvider> getLogViewPanelMenuActionProvider(){
+  public List<MenuActionProvider> getLogViewPanelMenuActionProvider() {
     return new ArrayList<MenuActionProvider>(menuActionProviders);
   }
 

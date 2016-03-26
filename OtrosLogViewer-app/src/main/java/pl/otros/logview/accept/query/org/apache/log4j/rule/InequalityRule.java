@@ -17,8 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -31,7 +31,7 @@ import static pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFie
 /**
  * A Rule class implementing inequality evaluation. expects to be able to convert two values to longs. If a specific inequality evaluation class has been
  * provided for the event field, the appropriate rule is returned. (For example, if the expression is Level &lt DEBUG, a LevelInequalityRule is returned).
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -40,7 +40,7 @@ public class InequalityRule extends AbstractRule {
   /**
    * Serialization ID.
    */
-   private static final long serialVersionUID = -5592986598528885122L;
+  private static final long serialVersionUID = -5592986598528885122L;
   /**
    * field RESOLVER.
    */
@@ -60,13 +60,10 @@ public class InequalityRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol.
-   * @param field
-   *          field
-   * @param value
-   *          comparison value.
+   *
+   * @param inequalitySymbol inequality symbol.
+   * @param field            field
+   * @param value            comparison value.
    */
   private InequalityRule(final String inequalitySymbol, final String field, final String value) {
     super();
@@ -81,11 +78,9 @@ public class InequalityRule extends AbstractRule {
 
   /**
    * Create new instance from top two elements on stack.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol.
-   * @param stack
-   *          stack.
+   *
+   * @param inequalitySymbol inequality symbol.
+   * @param stack            stack.
    * @return rule.
    */
   public static Rule getRule(final String inequalitySymbol, final Stack<Object> stack) {
@@ -100,13 +95,10 @@ public class InequalityRule extends AbstractRule {
 
   /**
    * Create new instance from top two elements on stack.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol.
-   * @param field
-   *          field.
-   * @param value
-   *          comparison value.
+   *
+   * @param inequalitySymbol inequality symbol.
+   * @param field            field.
+   * @param value            comparison value.
    * @return rule.
    */
   public static Rule getRule(final String inequalitySymbol, final String field, final String value) {
@@ -124,7 +116,7 @@ public class InequalityRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     long first;
     try {

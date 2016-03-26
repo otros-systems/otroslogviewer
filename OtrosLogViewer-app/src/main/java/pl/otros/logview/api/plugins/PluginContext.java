@@ -35,6 +35,7 @@ public interface PluginContext {
   /**
    * Adds MenuActionProvider. Before displaying log table context menu, actions from providers will be collected and
    * displayed in menu.
+   *
    * @param menuActionProvider
    */
   void addLogViewPanelMenuActionProvider(MenuActionProvider menuActionProvider);

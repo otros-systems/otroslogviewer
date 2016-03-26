@@ -16,10 +16,10 @@
 package pl.otros.logview.gui.actions;
 
 import org.jdesktop.swingx.JXTable;
-import pl.otros.logview.api.gui.OtrosAction;
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.OtrosAction;
 
 import java.awt.event.ActionEvent;
 
