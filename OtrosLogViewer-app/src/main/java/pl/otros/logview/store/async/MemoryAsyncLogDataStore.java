@@ -2,11 +2,11 @@ package pl.otros.logview.store.async;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import pl.otros.logview.LogData;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
 import pl.otros.logview.gui.actions.search.SearchResult;
-import pl.otros.logview.store.LogDataStore;
 
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -60,7 +60,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public Integer getLogDataIdInRow(int row) {
-    return runCallableInDedicatedThread(new OperationGetDataIdInRow(logDataStore,row));
+    return runCallableInDedicatedThread(new OperationGetDataIdInRow(logDataStore, row));
   }
 
   @Override
@@ -101,7 +101,7 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public void addNoteToRow(int row, Note note) {
-    runCallableInDedicatedThread(new OpeartionAddNoteToRow(logDataStore,row,note));
+    runCallableInDedicatedThread(new OpeartionAddNoteToRow(logDataStore, row, note));
   }
 
   @Override
@@ -175,12 +175,12 @@ public class MemoryAsyncLogDataStore implements AsyncLogDataStore {
 
   @Override
   public void markRows(MarkerColors markerColors, int... rows) {
-    runCallableInDedicatedThread(new OperationMarkRows(logDataStore,markerColors,rows));
+    runCallableInDedicatedThread(new OperationMarkRows(logDataStore, markerColors, rows));
   }
 
   @Override
   public void unmarkRows(int... rows) {
-    runCallableInDedicatedThread(new OperationUnMarkRows(logDataStore,rows));
+    runCallableInDedicatedThread(new OperationUnMarkRows(logDataStore, rows));
 
   }
 

@@ -1,37 +1,32 @@
 package pl.otros.logview.accept.query.org.apache.log4j.spi;
 
-import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.InFixToPostFix;
+import pl.otros.logview.api.model.LogData;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A singleton helper utility which accepts a field name and a LoggingEvent and returns the value of that field.
- * 
+ * <p>
  * This class defines a grammar used in creation of an expression-based Rule.
- * 
+ * <p>
  * The only available method is Object getField(String fieldName, LoggingEvent event).
- * 
+ * <p>
  * Here is a description of the mapping of field names in the grammar to fields on the logging event. While the getField method returns an Object, the
  * individual types returned per field are described here:
- * 
+ * <p>
  * Field Name Field value (String representation Return type LOGGER category name (logger) String LEVEL level Level CLASS locationInformation's class name
  * String FILE locationInformation's file name String LINE locationInformation's line number String METHOD locationInformation's method name String MSG message
  * Object NDC NDC String EXCEPTION throwable string representation ThrowableInformation TIMESTAMP timestamp Long DATE date Long THREAD thread String
  * PROP.keyName entry in the Property hashtable String mapped to the key [keyName]
- * 
+ * <p>
  * NOTE: the values for the 'keyName' portion of the MDC and PROP mappings must be an exact match to the key in the hashTable (case sensitive).
- * 
+ * <p>
  * If the passed-in field is null or doesn't match an entry in the above-described mapping, an exception is thrown.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Paul Smith (psmith@apache.org)
  * @author Krzysztof Otrebski
- * 
  */
 public final class LoggingEventFieldResolver {
 
@@ -134,11 +129,9 @@ public final class LoggingEventFieldResolver {
 
   /**
    * Apply fields.
-   * 
-   * @param replaceText
-   *          replacement text.
-   * @param event
-   *          logging event.
+   *
+   * @param replaceText replacement text.
+   * @param event       logging event.
    * @return evaluted expression
    */
   public String applyFields(final String replaceText, final LogData event) {
@@ -166,7 +159,7 @@ public final class LoggingEventFieldResolver {
 
   /**
    * Get singleton instance.
-   * 
+   *
    * @return singleton instance
    */
   public static LoggingEventFieldResolver getInstance() {
@@ -175,9 +168,8 @@ public final class LoggingEventFieldResolver {
 
   /**
    * Determines if specified string is a recognized field.
-   * 
-   * @param fieldName
-   *          field name
+   *
+   * @param fieldName field name
    * @return true if recognized field.
    */
   public boolean isField(final String fieldName) {
@@ -189,11 +181,9 @@ public final class LoggingEventFieldResolver {
 
   /**
    * Get value of field.
-   * 
-   * @param fieldName
-   *          field
-   * @param event
-   *          event
+   *
+   * @param fieldName field
+   * @param event     event
    * @return value of field
    */
   @SuppressWarnings("rawtypes")

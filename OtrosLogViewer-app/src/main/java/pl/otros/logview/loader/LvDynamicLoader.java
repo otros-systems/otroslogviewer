@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,17 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.BaseLoader;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
-import pl.otros.logview.filter.LogFilter;
-import pl.otros.logview.gui.StatusObserver;
-import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.json.JsonMessageFormatter;
 import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElement;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
-import pl.otros.logview.pluginable.PluginablePluginAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +34,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LvDynamicLoader {
 
@@ -96,11 +89,11 @@ public class LvDynamicLoader {
     updateStatus("Loading log importers");
     InitializationException nonfatalIE = null;
     try {
-        loadLogImporters();
+      loadLogImporters();
     } catch (InitializationException ie) {
-        // This attempts to complete initialization in degraded state, but
-        // still notify user of the problem.
-        nonfatalIE = ie;
+      // This attempts to complete initialization in degraded state, but
+      // still notify user of the problem.
+      nonfatalIE = ie;
     }
 
     updateStatus("Loading message colorizers");
@@ -108,19 +101,19 @@ public class LvDynamicLoader {
 
     updateStatus("Loading message formatters");
     loadMessageFormatter();
-    
+
     updateStatus("Loading plugins");
     loadPlugins();
     if (nonfatalIE != null) throw nonfatalIE;
   }
 
-private void loadPlugins() {
-	pluginInfos.add(new StackTraceFormatterPlugin());
-	pluginInfos.addAll(baseLoader.load(AllPluginables.USER_PLUGINS, Plugin.class));
+  private void loadPlugins() {
+    pluginInfos.add(new StackTraceFormatterPlugin());
+    pluginInfos.addAll(baseLoader.load(AllPluginables.USER_PLUGINS, Plugin.class));
     pluginInfos.addAll(baseLoader.load(AllPluginables.SYSTEM_PLUGINS, Plugin.class));
     ArrayList<PluginablePluginAdapter> pluList = pluginInfos.stream().map(PluginablePluginAdapter::new).collect(Collectors.toCollection(ArrayList::new));
-  addElementsToList(AllPluginables.getInstance().getPluginsInfoContainer(), pluList, 0);
-}
+    addElementsToList(AllPluginables.getInstance().getPluginsInfoContainer(), pluList, 0);
+  }
 
   private void loadMessageFormatter() {
     messageFormatters.add(new SoapMessageFormatter());
@@ -166,11 +159,11 @@ private void loadPlugins() {
     loadLogImportersFromUserHome();
     InitializationException deferredIE = null;
     try {
-        loadLogImportersFromPluginDirectory();
+      loadLogImportersFromPluginDirectory();
     } catch (InitializationException ie) {
-        // This is so we can still attempt to load other LogImporters even
-        // though some may have failed.
-        deferredIE = ie;
+      // This is so we can still attempt to load other LogImporters even
+      // though some may have failed.
+      deferredIE = ie;
     }
     loadLogImportsThatAreProvidedInternally();
     PluginableElementsContainer<LogImporter> logImportersContainer = AllPluginables.getInstance().getLogImportersContainer();
@@ -183,7 +176,7 @@ private void loadPlugins() {
   }
 
   private void loadLogImportersFromPluginDirectory()
-  throws InitializationException {
+    throws InitializationException {
     File f = new File("plugins/logimporters");
     logImporters.addAll(logImportersLoader.load(f));
     logImporters.addAll(logImportersLoader.loadPropertyPatternFileFromDir(f));

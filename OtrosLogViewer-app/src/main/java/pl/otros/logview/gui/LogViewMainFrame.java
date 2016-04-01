@@ -28,8 +28,15 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.MarkerColors;
 import pl.otros.logview.VersionUtil;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.Ide;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
 import pl.otros.logview.batch.BatchProcessor;
 import pl.otros.logview.exceptionshandler.*;
@@ -45,7 +52,6 @@ import pl.otros.logview.gui.actions.search.*;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 import pl.otros.logview.gui.editor.json.JsonPatternParserEditor;
 import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
-import pl.otros.logview.gui.message.MessageColorizer;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
@@ -57,17 +63,10 @@ import pl.otros.logview.gui.suggestion.SearchSuggestionSource;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
-import pl.otros.logview.ide.Ide;
 import pl.otros.logview.ide.IdeAvailabilityCheck;
 import pl.otros.logview.ide.IdeIntegrationConfigAction;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
 import pl.otros.logview.loader.IconsLoader;
 import pl.otros.logview.loader.LvDynamicLoader;
-import pl.otros.logview.pluginable.AllPluginables;
-import pl.otros.logview.pluginable.PluginableElementEventListener;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
-import pl.otros.logview.pluginable.PluginablePluginAdapter;
 import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
 import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
@@ -94,9 +93,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import static pl.otros.logview.gui.ConfKeys.APPEARANCE_CUSTOM_FONT_SIZE;
-import static pl.otros.logview.gui.ConfKeys.APPEARANCE_FONT_SIZE;
-import static pl.otros.logview.gui.ConfKeys.FORMATTER_SOAP_REMOVE_XSI_FOR_NIL;
+import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogViewMainFrame extends JFrame {
   public static final String VFS_IDENTITIES = "vfs.Identities";
@@ -215,10 +212,10 @@ public class LogViewMainFrame extends JFrame {
     setVisible(true);
     if (modalDisplayException != null)
       JOptionPane.showMessageDialog(this,
-          "Problem with loading automatic markers,"
-              + "filter or log importers:\n"
-              + modalDisplayException.getMessage(), "Initialization Error",
-          JOptionPane.ERROR_MESSAGE);
+        "Problem with loading automatic markers,"
+          + "filter or log importers:\n"
+          + modalDisplayException.getMessage(), "Initialization Error",
+        JOptionPane.ERROR_MESSAGE);
     // Check new version on start
     if (c.getBoolean(ConfKeys.VERSION_CHECK_ON_STARTUP, true)) {
       new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
@@ -226,15 +223,15 @@ public class LogViewMainFrame extends JFrame {
     new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);
     Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
     ListUncaughtExceptionHandlers listUncaughtExceptionHandlers = new ListUncaughtExceptionHandlers(//
-        new LoggingExceptionHandler(),//
-        new ShowErrorDialogExceptionHandler(otrosApplication),//
-        new StatusObserverExceptionHandler(observer)
+      new LoggingExceptionHandler(),//
+      new ShowErrorDialogExceptionHandler(otrosApplication),//
+      new StatusObserverExceptionHandler(observer)
     );
     Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
     ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
     listeningScheduledExecutorService.scheduleAtFixedRate(
-        new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
-        25, 25, TimeUnit.SECONDS);
+      new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
+      25, 25, TimeUnit.SECONDS);
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
   }
 
@@ -274,14 +271,14 @@ public class LogViewMainFrame extends JFrame {
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(() -> {
-      if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE,false)){
+      if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
         final int fontSize = c.getInt(APPEARANCE_FONT_SIZE, 12);
         FontSize.setDefaultSize(fontSize);
       }
 
       try {
         String lookAndFeel = c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-        OtrosSplash.setMessage("Loading L&F " + lookAndFeel );
+        OtrosSplash.setMessage("Loading L&F " + lookAndFeel);
         LOGGER.debug("Initializing look and feel: " + lookAndFeel);
         PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(lookAndFeel);
@@ -456,12 +453,12 @@ public class LogViewMainFrame extends JFrame {
     searchField.setEditable(true);
 
     final SearchListener searchListener = searchSuggestionSource::addHistory;
-    final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD,searchListener);
-    final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE,searchListener);
+    final SearchAction searchActionForward = new SearchAction(otrosApplication, SearchDirection.FORWARD, searchListener);
+    final SearchAction searchActionBackward = new SearchAction(otrosApplication, SearchDirection.REVERSE, searchListener);
     searchField.setMinimumSize(new Dimension(150, 10));
     searchField.setPreferredSize(new Dimension(250, 10));
     searchField.setToolTipText("<HTML>Enter text to search.<BR/>" + "Enter - search next,<BR/>Alt+Enter search previous,<BR/>"
-        + "Ctrl+Enter - mark all found</HTML>");
+      + "Ctrl+Enter - mark all found</HTML>");
     final DelayedSwingInvoke delayedSearchResultUpdate = new DelayedSwingInvoke() {
       @Override
       protected void performActionHook() {
@@ -490,7 +487,7 @@ public class LogViewMainFrame extends JFrame {
     });
     final MarkAllFoundAction markAllFoundAction = new MarkAllFoundAction(otrosApplication);
     final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener(searchField, observer,
-        SearchMode.STRING_CONTAINS);
+      SearchMode.STRING_CONTAINS);
     SearchMode searchModeFromConfig = configuration.get(SearchMode.class, "gui.searchMode", SearchMode.STRING_CONTAINS);
     final String lastSearchString;
     int selectedSearchMode = 0;
@@ -507,23 +504,23 @@ public class LogViewMainFrame extends JFrame {
       LOGGER.warn("Unknown search mode " + searchModeFromConfig);
       lastSearchString = "";
     }
-      final JTextField sfTf = searchField;
-      sfTf.getDocument().addDocumentListener(searchValidatorDocumentListener);
-      sfTf.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
-        @Override
-        protected void documentChanged(DocumentEvent e) {
-          try {
-            int length = e.getDocument().getLength();
-            if (length > 0) {
-              searchResultColorizer.setSearchString(e.getDocument().getText(0, length));
-            }
-          } catch (BadLocationException e1) {
-            LOGGER.error("Error: ", e1);
+    final JTextField sfTf = searchField;
+    sfTf.getDocument().addDocumentListener(searchValidatorDocumentListener);
+    sfTf.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+      @Override
+      protected void documentChanged(DocumentEvent e) {
+        try {
+          int length = e.getDocument().getLength();
+          if (length > 0) {
+            searchResultColorizer.setSearchString(e.getDocument().getText(0, length));
           }
+        } catch (BadLocationException e1) {
+          LOGGER.error("Error: ", e1);
         }
-      });
-      sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
-      sfTf.setText(lastSearchString);
+      }
+    });
+    sfTf.addKeyListener(new SearchFieldKeyListener(searchActionForward, sfTf));
+    sfTf.setText(lastSearchString);
     searchMode.addActionListener(e -> {
       SearchMode mode = null;
       boolean validationEnabled = false;
@@ -541,10 +538,10 @@ public class LogViewMainFrame extends JFrame {
         mode = SearchMode.QUERY;
         validationEnabled = true;
         String querySearchTooltip = "<HTML>" + //
-            "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
-            "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
-            "See wiki for more info<BR/>" + //
-            "</HTML>";
+          "Advance search using SQL-like quries (i.e. level>=warning && msg~=failed && thread==t1)<BR/>" + //
+          "Valid operator for query search is ==, ~=, !=, LIKE, EXISTS, <, <=, >, >=, &&, ||, ! <BR/>" + //
+          "See wiki for more info<BR/>" + //
+          "</HTML>";
         searchMode.setToolTipText(querySearchTooltip);
       }
       searchValidatorDocumentListener.setSearchMode(mode);
@@ -717,8 +714,8 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
-    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt","Show Log4j pattern parser editor", "Show Log4j pattern parser editor.", Icons.WRENCH,()->new Log4jPatternParserEditor(otrosApplication,"log4jDefaultPatternParser.txt")));
-    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties","Show JSON pattern parser editor", "Show JSON pattern parser editor.", Icons.JSON,()->new JsonPatternParserEditor(otrosApplication,"jsonDefaultPatternParser.properties")));
+    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt", "Show Log4j pattern parser editor", "Show Log4j pattern parser editor.", Icons.WRENCH, () -> new Log4jPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt")));
+    toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties", "Show JSON pattern parser editor", "Show JSON pattern parser editor.", Icons.JSON, () -> new JsonPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties")));
     toolsMenu.add(new ShowMessageColorizerEditor(otrosApplication));
     toolsMenu.add(new ShowLoadedPlugins(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,11 +17,11 @@ package examples;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.vfs2.FileObject;
-import pl.otros.logview.LogData;
-import pl.otros.logview.batch.BatchProcessingContext;
-import pl.otros.logview.batch.BatchProcessingListener;
-import pl.otros.logview.batch.LogDataParsedListener;
-import pl.otros.logview.batch.SingleFileBatchProcessingListener;
+import pl.otros.logview.api.batch.BatchProcessingContext;
+import pl.otros.logview.api.batch.BatchProcessingListener;
+import pl.otros.logview.api.batch.LogDataParsedListener;
+import pl.otros.logview.api.batch.SingleFileBatchProcessingListener;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.Iterator;
 import java.util.logging.Level;

@@ -20,8 +20,8 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.apache.log4j.Logger;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 
 import java.io.IOException;

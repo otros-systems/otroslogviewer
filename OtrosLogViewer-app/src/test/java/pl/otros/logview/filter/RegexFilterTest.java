@@ -2,8 +2,8 @@ package pl.otros.logview.filter;
 
 import static org.testng.AssertJUnit.assertFalse;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
 
 public class RegexFilterTest {
 

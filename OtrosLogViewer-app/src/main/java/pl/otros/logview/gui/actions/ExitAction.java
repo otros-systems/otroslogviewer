@@ -17,8 +17,9 @@ package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

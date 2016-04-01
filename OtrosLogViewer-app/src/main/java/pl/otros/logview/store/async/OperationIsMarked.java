@@ -1,6 +1,6 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.api.model.LogDataStore;
 
 import java.util.concurrent.Callable;
 
@@ -15,6 +15,6 @@ class OperationIsMarked implements Callable<Boolean> {
 
   @Override
   public Boolean call() {
-     return logDataStore.isMarked(row);
+    return logDataStore.isMarked(row);
   }
 }

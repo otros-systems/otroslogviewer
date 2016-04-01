@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,13 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.Note;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.model.Note;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +36,7 @@ public class JumpToMarkedAction extends OtrosAction {
   }
 
   public JumpToMarkedAction(OtrosApplication otrosApplication, Direction direction) {
-		super(otrosApplication);
+    super(otrosApplication);
     this.direction = direction;
     if (direction == Direction.FORWARD) {
       putValue(Action.NAME, "Next marked/noted");
@@ -45,9 +50,9 @@ public class JumpToMarkedAction extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent arg0) {
-		JTabbedPane tabbedPane = getOtrosApplication().getJTabbedPane();
-		StatusObserver observer = getOtrosApplication().getStatusObserver();
-		LogViewPanelWrapper lvPanel = (LogViewPanelWrapper) tabbedPane.getSelectedComponent();
+    JTabbedPane tabbedPane = getOtrosApplication().getJTabbedPane();
+    StatusObserver observer = getOtrosApplication().getStatusObserver();
+    LogViewPanelWrapper lvPanel = (LogViewPanelWrapper) tabbedPane.getSelectedComponent();
     if (lvPanel == null) {
       observer.updateStatus("Log file not open", StatusObserver.LEVEL_ERROR);
       return;

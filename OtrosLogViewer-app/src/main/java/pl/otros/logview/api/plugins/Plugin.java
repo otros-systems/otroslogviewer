@@ -24,9 +24,9 @@ import com.google.common.annotations.Beta;
 @Beta
 public interface Plugin {
 
-    int PLUGIN_VERSION_1 = 1;
+  int PLUGIN_VERSION_1 = 1;
 
-    void initialize(PluginContext pluginContext) throws PluginException;
+  void initialize(PluginContext pluginContext) throws PluginException;
 
-    PluginInfo getPluginInfo();
+  PluginInfo getPluginInfo();
 }

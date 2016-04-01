@@ -15,11 +15,12 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogDataTableModel;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.table.TableColumns;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.logging.GuiAppender;
 
 import java.awt.event.ActionEvent;
@@ -38,10 +39,10 @@ public class ShowOlvLogs extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-		if (logViewPanelWrapper == null) {
+    if (logViewPanelWrapper == null) {
       LogDataTableModel dataTableModel = new LogDataTableModel();
       dataTableModel.setDataLimit(10000);
-      logViewPanelWrapper = new LogViewPanelWrapper("Olv logs", null, TableColumns.JUL_COLUMNS, dataTableModel,getOtrosApplication());
+      logViewPanelWrapper = new LogViewPanelWrapper("Olv logs", null, TableColumns.JUL_COLUMNS, dataTableModel, getOtrosApplication());
       logViewPanelWrapper.goToLiveMode();
 
       logViewPanelWrapper.addHierarchyListener(e1 -> {
@@ -51,7 +52,7 @@ public class ShowOlvLogs extends OtrosAction {
       });
     }
 
-    getOtrosApplication().addClosableTab("OLV internal Logs","OLV internal Logs",Icons.LEVEL_INFO,logViewPanelWrapper,true);
+    getOtrosApplication().addClosableTab("OLV internal Logs", "OLV internal Logs", Icons.LEVEL_INFO, logViewPanelWrapper, true);
     GuiAppender.start(logViewPanelWrapper.getDataTableModel(), logViewPanelWrapper.getConfiguration());
   }
 }

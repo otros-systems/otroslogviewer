@@ -17,8 +17,8 @@ package pl.otros.logview.loader;
 
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.importer.InitializationException;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.InitializationException;
 
 import java.io.File;
 import java.net.URI;

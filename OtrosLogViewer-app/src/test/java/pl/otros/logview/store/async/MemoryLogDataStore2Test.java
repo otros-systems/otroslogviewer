@@ -2,8 +2,8 @@ package pl.otros.logview.store.async;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
 
 import java.util.Date;
 

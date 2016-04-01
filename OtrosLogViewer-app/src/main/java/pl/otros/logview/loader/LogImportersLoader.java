@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,11 +17,16 @@ package pl.otros.logview.loader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.importer.*;
+import pl.otros.logview.api.BaseLoader;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.parser.LogParser;
+import pl.otros.logview.importer.Log4jSerilizedLogImporter;
+import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
-import pl.otros.logview.parser.LogParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.parser.log4j.Log4jUtil;
@@ -110,7 +115,7 @@ public class LogImportersLoader {
   }
 
   public Collection<LogImporter> loadPropertyPatternFileFromDir(File dir)
-  throws InitializationException {
+    throws InitializationException {
     ArrayList<LogImporter> logImporters = new ArrayList<>();
     File[] listFiles = dir.listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith("pattern")));
     if (listFiles != null) {
@@ -131,20 +136,19 @@ public class LogImportersLoader {
             LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);
             logImporter.init(p);
             logImporters.add(logImporter);
-          } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE,"").equals("json")){
+          } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, "").equals("json")) {
             final JsonLogParser jsonLogParser = new JsonLogParser();
             jsonLogParser.init(p);
             logImporters.add(new LogImporterUsingParser(jsonLogParser));
-          }
-          else {
-            LOGGER.error( "Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
+          } else {
+            LOGGER.error("Unknown log type: " + p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, ""));
           }
         } catch (Exception e) {
           LOGGER.error(
-                  "Can't load property file based logger [" + file.getName() + ": " + e.getMessage(), e);
+            "Can't load property file based logger [" + file.getName() + ": " + e.getMessage(), e);
           if (exceptionMessages.length() > 0) exceptionMessages.append("\n");
           exceptionMessages.append("Can't load property file based logger [")
-                  .append(file.getName()).append(": ").append(e.getMessage());
+            .append(file.getName()).append(": ").append(e.getMessage());
         }
       }
       if (exceptionMessages.length() > 0)
@@ -155,7 +159,7 @@ public class LogImportersLoader {
 
   // TODO
   private ArrayList<LogImporter> loadFromDir(File dir) {
-    LOGGER.debug("Will not load from dir {}, method is not implemented", dir.getAbsolutePath() );
+    LOGGER.debug("Will not load from dir {}, method is not implemented", dir.getAbsolutePath());
     return new ArrayList<>();
   }
 }

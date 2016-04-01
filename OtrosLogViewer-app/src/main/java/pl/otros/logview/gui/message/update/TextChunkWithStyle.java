@@ -16,7 +16,7 @@
 
 package pl.otros.logview.gui.message.update;
 
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -24,51 +24,51 @@ import javax.swing.text.Style;
 /**
  */
 public class TextChunkWithStyle {
-    private String string;
-    private MessageFragmentStyle messageFragmentStyle;
-    private Style style;
-    private Icon icon;
+  private String string;
+  private MessageFragmentStyle messageFragmentStyle;
+  private Style style;
+  private Icon icon;
 
-    public TextChunkWithStyle(Icon icon) {
-        this.icon = icon;
-    }
-
-
-    public TextChunkWithStyle(String string, Style style) {
-
-        this.string = string;
-        this.style = style;
-    }
-
-    public TextChunkWithStyle(String string, MessageFragmentStyle messageFragmentStyle) {
-        this.string = string;
-        this.messageFragmentStyle = messageFragmentStyle;
-    }
-
-    public Icon getIcon() {
-        return icon;
-    }
-
-    public Style getStyle() {
-        return style;
-    }
-
-    public String getString() {
-        return string;
-    }
+  public TextChunkWithStyle(Icon icon) {
+    this.icon = icon;
+  }
 
 
-    public MessageFragmentStyle getMessageFragmentStyle() {
-        return messageFragmentStyle;
-    }
+  public TextChunkWithStyle(String string, Style style) {
 
-    @Override
-    public String toString() {
-        return "TextChunkWithStyle{" +
-                "string='" + string + '\'' +
-                ", messageFragmentStyle=" + messageFragmentStyle +
-                ", style=" + style +
-                ", icon=" + icon +
-                '}';
-    }
+    this.string = string;
+    this.style = style;
+  }
+
+  public TextChunkWithStyle(String string, MessageFragmentStyle messageFragmentStyle) {
+    this.string = string;
+    this.messageFragmentStyle = messageFragmentStyle;
+  }
+
+  public Icon getIcon() {
+    return icon;
+  }
+
+  public Style getStyle() {
+    return style;
+  }
+
+  public String getString() {
+    return string;
+  }
+
+
+  public MessageFragmentStyle getMessageFragmentStyle() {
+    return messageFragmentStyle;
+  }
+
+  @Override
+  public String toString() {
+    return "TextChunkWithStyle{" +
+      "string='" + string + '\'' +
+      ", messageFragmentStyle=" + messageFragmentStyle +
+      ", style=" + style +
+      ", icon=" + icon +
+      '}';
+  }
 }

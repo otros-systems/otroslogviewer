@@ -1,7 +1,8 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,6 @@ public class FontSize extends OtrosAction {
   }
 
 
-
   @Override
   public void actionPerformed(ActionEvent e) {
     setDefaultSize(fontSize);
@@ -28,7 +28,7 @@ public class FontSize extends OtrosAction {
   public static void setDefaultSize(int size) {
 
     UIManager.getLookAndFeelDefaults().keySet().stream()
-      .filter(key -> StringUtils.containsIgnoreCase(key.toString(),"font"))
+      .filter(key -> StringUtils.containsIgnoreCase(key.toString(), "font"))
       .forEach(key -> {
         Font font = UIManager.getDefaults().getFont(key);
         if (font != null) {

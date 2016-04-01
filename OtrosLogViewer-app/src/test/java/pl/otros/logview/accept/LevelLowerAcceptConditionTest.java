@@ -16,7 +16,7 @@
 package pl.otros.logview.accept;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.logging.Level;
 

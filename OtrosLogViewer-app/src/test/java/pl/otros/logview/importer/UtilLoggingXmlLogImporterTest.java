@@ -4,9 +4,10 @@ import static org.testng.AssertJUnit.assertEquals;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.apache.commons.io.IOUtils;
-import pl.otros.logview.LogData;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -17,13 +17,13 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.*;
 
 /**
  * A Rule class implementing a logical 'and'.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -40,15 +40,13 @@ public class AndRule extends AbstractRule {
   /**
    * Serialization id.
    */
-   private static final long serialVersionUID = -8233444426923854651L;
+  private static final long serialVersionUID = -8233444426923854651L;
 
   /**
    * Create new instance.
-   * 
-   * @param first
-   *          first rule.
-   * @param second
-   *          second rule.
+   *
+   * @param first  first rule.
+   * @param second second rule.
    */
   private AndRule(final Rule first, final Rule second) {
     super();
@@ -58,9 +56,8 @@ public class AndRule extends AbstractRule {
 
   /**
    * Create rule from top two elements of stack.
-   * 
-   * @param stack
-   *          stack of rules.
+   *
+   * @param stack stack of rules.
    * @return Rule that evaluates true only if both rules are true.
    */
   public static Rule getRule(final Stack<Object> stack) {
@@ -79,11 +76,9 @@ public class AndRule extends AbstractRule {
 
   /**
    * Get rule.
-   * 
-   * @param firstParam
-   *          first rule.
-   * @param secondParam
-   *          second rule.
+   *
+   * @param firstParam  first rule.
+   * @param secondParam second rule.
    * @return Rule that evaluates true only if both rules are true.
    */
   public static Rule getRule(final Rule firstParam, final Rule secondParam) {
@@ -93,7 +88,7 @@ public class AndRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     if (matches == null) {
       return firstRule.evaluate(event, null) && secondRule.evaluate(event, null);

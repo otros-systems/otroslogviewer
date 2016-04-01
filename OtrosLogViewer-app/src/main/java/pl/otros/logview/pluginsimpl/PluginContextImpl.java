@@ -16,10 +16,10 @@
 
 package pl.otros.logview.pluginsimpl;
 
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.plugins.LogOpenHandler;
 import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.api.plugins.PluginContext;
-import pl.otros.logview.gui.OtrosApplication;
 
 import javax.swing.*;
 

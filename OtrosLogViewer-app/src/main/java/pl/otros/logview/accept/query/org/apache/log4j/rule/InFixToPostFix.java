@@ -24,12 +24,12 @@ import java.util.*;
 /**
  * A helper class which converts infix expressions to postfix expressions Currently grouping is supported, as well as all of the Rules supported by
  * <code>RuleFactory</code>
- * <p/>
+ * <p>
  * Supports grouping via parens, mult-word operands using single or double quotes, and these operators:
- * <p/>
+ * <p>
  * ! NOT operator != NOT EQUALS operator == EQUALS operator ~= CASE-INSENSITIVE equals operator || OR operator && AND operator like REGEXP operator exists NOT
  * NULL operator &lt LESS THAN operator &gt GREATER THAN operator &lt= LESS THAN EQUALS operator &gt= GREATER THAN EQUALS operator
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -79,9 +79,8 @@ public class InFixToPostFix {
 
   /**
    * Convert in-fix expression to post-fix.
-   * 
-   * @param expression
-   *          in-fix expression.
+   *
+   * @param expression in-fix expression.
    * @return post-fix expression.
    */
   public String convert(final String expression) {
@@ -90,9 +89,8 @@ public class InFixToPostFix {
 
   /**
    * Evaluates whether symbol is operand.
-   * 
-   * @param s
-   *          symbol.
+   *
+   * @param s symbol.
    * @return true if operand.
    */
   public static boolean isOperand(final String s) {
@@ -102,11 +100,9 @@ public class InFixToPostFix {
 
   /**
    * Determines whether one symbol precedes another.
-   * 
-   * @param symbol1
-   *          symbol 1
-   * @param symbol2
-   *          symbol 2
+   *
+   * @param symbol1 symbol 1
+   * @param symbol2 symbol 2
    * @return true if symbol 1 precedes symbol 2
    */
   private boolean precedes(final String symbol1, final String symbol2) {
@@ -131,9 +127,8 @@ public class InFixToPostFix {
 
   /**
    * convert in-fix expression to post-fix.
-   * 
-   * @param tokenizer
-   *          tokenizer.
+   *
+   * @param tokenizer tokenizer.
    * @return post-fix expression.
    */
   private String infixToPostFix(final CustomTokenizer tokenizer) {
@@ -270,13 +265,13 @@ public class InFixToPostFix {
       return (input.length() >= (pos + value.length())) && (input.substring(pos, pos + value.length()).equalsIgnoreCase(value));
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private int handle(int pos, LinkedList linkedList, String value) {
       linkedList.add(value);
       return pos + value.length();
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private int handleQuotedString(String input, int pos, LinkedList linkedList) {
       String quoteChar = input.substring(pos, pos + 1);
       int nextSingleQuotePos = input.indexOf(quoteChar, pos + 1);
@@ -288,7 +283,7 @@ public class InFixToPostFix {
       return nextSingleQuotePos + 1;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private int handleText(String input, int pos, LinkedList linkedList) {
       StringBuilder text = new StringBuilder("");
       int newPos = pos;
@@ -320,7 +315,7 @@ public class InFixToPostFix {
       return newPos;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private int handleProperty(String input, int pos, LinkedList linkedList) {
       int propertyPos = pos + "PROP.".length();
       StringBuffer propertyName = new StringBuffer("PROP.");

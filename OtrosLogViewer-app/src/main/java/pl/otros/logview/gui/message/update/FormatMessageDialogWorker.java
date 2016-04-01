@@ -18,11 +18,11 @@ package pl.otros.logview.gui.message.update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.pluginable.MessageColorizer;
+import pl.otros.logview.api.pluginable.MessageFormatter;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 
@@ -83,7 +83,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
     try {
       styledDocument.remove(0, styledDocument.getLength());
     } catch (BadLocationException e) {
-      LOGGER.error( "Can't clear log events text  area", e);
+      LOGGER.error("Can't clear log events text  area", e);
     }
     if (!isCancelled()) {
       updateChanges(chunks);
@@ -114,7 +114,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
           otrosJTextWithRulerScrollPane.getjTextComponent().insertIcon(chunk.getIcon());
         }
       } catch (BadLocationException e) {
-        LOGGER.error( "Can't update log details text area", e);
+        LOGGER.error("Can't update log details text area", e);
       }
     }
 

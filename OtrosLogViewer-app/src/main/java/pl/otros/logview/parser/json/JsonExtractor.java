@@ -5,10 +5,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.util.Validator;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
 import pl.otros.logview.parser.I18nLevelParser;
 
 import java.text.DateFormat;
@@ -119,13 +119,13 @@ public class JsonExtractor {
     }
   }
 
-  public  List<String> extractFieldValues(String json, String field){
+  public List<String> extractFieldValues(String json, String field) {
     final List<String> lines = Arrays.asList(json.split("\n")).stream().map(String::trim).collect(Collectors.toList());
     StringBuilder buffer = new StringBuilder();
     List<String> result = new ArrayList<>();
     for (String line : lines) {
       buffer.append(line);
-      if (isJson(buffer.toString())){
+      if (isJson(buffer.toString())) {
         try {
           final JSONObject jsonObject = new JSONObject(buffer.toString());
           buffer.setLength(0);
@@ -139,11 +139,11 @@ public class JsonExtractor {
     return result;
   }
 
-  public boolean isJson(String s){
+  public boolean isJson(String s) {
     try {
       Validator.validate(s);
       return true;
-    }  catch (JSONException e){
+    } catch (JSONException e) {
       return false;
     }
   }
@@ -174,7 +174,7 @@ public class JsonExtractor {
 
     try {
       String message = map.getOrDefault(propertyMessage, "");
-      if (map.containsKey(propertyException)){
+      if (map.containsKey(propertyException)) {
         message = message + "\n" + map.get(propertyException);
       }
 

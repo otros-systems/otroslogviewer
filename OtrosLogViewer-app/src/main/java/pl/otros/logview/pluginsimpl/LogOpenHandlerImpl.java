@@ -18,15 +18,14 @@ package pl.otros.logview.pluginsimpl;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.plugins.LogOpenHandler;
 import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -42,7 +41,7 @@ public class LogOpenHandlerImpl implements LogOpenHandler {
 
   @Override
   public void openLogs(final String tabName, final FileObject... fileObjects) {
-    SwingWorker<Void, String> worker = new OpenLogsSwingWorker(pluginContext, tabName,fileObjects);
+    SwingWorker<Void, String> worker = new OpenLogsSwingWorker(pluginContext, tabName, fileObjects);
     new Thread(worker).start();
   }
 
@@ -53,7 +52,7 @@ public class LogOpenHandlerImpl implements LogOpenHandler {
       try {
         list.add(VFSUtils.resolveFileObject(uri));
       } catch (FileSystemException e) {
-        LOGGER.error("Can't resolve uri " + uri,e);
+        LOGGER.error("Can't resolve uri " + uri, e);
       }
     }
     FileObject[] fileObjects = new FileObject[0];

@@ -15,8 +15,8 @@ public class SearchSuggestion {
   }
 
   public SearchSuggestion(String toDisplay, String fullContent, int highlightStart, int highlightEnd) {
-    this(toDisplay,fullContent);
-    highlightRange = Optional.of(new SubText(highlightStart,highlightEnd));
+    this(toDisplay, fullContent);
+    highlightRange = Optional.of(new SubText(highlightStart, highlightEnd));
   }
 
   public String getToDisplay() {

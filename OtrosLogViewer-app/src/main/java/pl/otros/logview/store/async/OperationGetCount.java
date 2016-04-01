@@ -1,6 +1,6 @@
 package pl.otros.logview.store.async;
 
-import pl.otros.logview.store.LogDataStore;
+import pl.otros.logview.api.model.LogDataStore;
 
 import java.util.concurrent.Callable;
 
@@ -13,6 +13,6 @@ class OperationGetCount implements Callable<Integer> {
 
   @Override
   public Integer call() {
-     return logDataStore.getCount();
+    return logDataStore.getCount();
   }
 }

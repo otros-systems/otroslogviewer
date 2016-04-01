@@ -16,17 +16,17 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.DataConfiguration;
-import pl.otros.logview.gui.ConfKeys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.gui.GuiUtils;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.StatusObserver;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract {
 
@@ -45,8 +45,8 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
   @Override
   protected void handleNewVersionIsAvailable(final String current, String running) {
     LOGGER.info(String.format("Running version is %s, current is %s", running, current));
-		DataConfiguration configuration = getOtrosApplication().getConfiguration();
-		String doNotNotifyThisVersion = configuration.getString(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, "2000-01-01");
+    DataConfiguration configuration = getOtrosApplication().getConfiguration();
+    String doNotNotifyThisVersion = configuration.getString(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, "2000-01-01");
     if (current != null && doNotNotifyThisVersion.compareTo(current) > 0) {
       return;
     }
@@ -77,7 +77,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
     jp.add(new JButton(new AbstractAction("Ok") {
 
       /**
-       * 
+       *
        */
       private static final long serialVersionUID = 7930093775785431184L;
 

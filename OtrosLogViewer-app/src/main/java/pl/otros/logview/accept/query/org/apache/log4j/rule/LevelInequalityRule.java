@@ -17,15 +17,15 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.*;
 import java.util.logging.Level;
 
 /**
  * A Rule class implementing inequality evaluation for Levels (log4j and util.logging) using the toInt method.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -64,11 +64,9 @@ public class LevelInequalityRule {
 
   /**
    * Create new rule.
-   * 
-   * @param inequalitySymbol
-   *          inequality symbol.
-   * @param value
-   *          Symbolic name of comparison level.
+   *
+   * @param inequalitySymbol inequality symbol.
+   * @param value            Symbolic name of comparison level.
    * @return instance of AbstractRule.
    */
   public static Rule getRule(final String inequalitySymbol, final String value) {
@@ -107,7 +105,7 @@ public class LevelInequalityRule {
   /**
    * Rule returning true if event level less than specified level.
    */
-  @SuppressWarnings({ "rawtypes", "unchecked", "serial" })
+  @SuppressWarnings({"rawtypes", "unchecked", "serial"})
   private static final class LessThanRule extends AbstractRule {
 
     /**
@@ -117,9 +115,8 @@ public class LevelInequalityRule {
 
     /**
      * Create new instance.
-     * 
-     * @param level
-     *          comparison level.
+     *
+     * @param level comparison level.
      */
     public LessThanRule(final Level level) {
       super();
@@ -157,9 +154,8 @@ public class LevelInequalityRule {
 
     /**
      * Create new instance.
-     * 
-     * @param level
-     *          comparison level.
+     *
+     * @param level comparison level.
      */
     public GreaterThanRule(final Level level) {
       super();
@@ -169,7 +165,7 @@ public class LevelInequalityRule {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean evaluate(final LogData event, Map matches) {
       Level eventLevel = event.getLevel();
       boolean result = (eventLevel.intValue() > newLevelInt);
@@ -199,9 +195,8 @@ public class LevelInequalityRule {
 
     /**
      * Create new instance.
-     * 
-     * @param level
-     *          comparison level.
+     *
+     * @param level comparison level.
      */
     public GreaterThanEqualsRule(final Level level) {
       super();
@@ -211,7 +206,7 @@ public class LevelInequalityRule {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public boolean evaluate(final LogData event, Map matches) {
       Level eventLevel = event.getLevel();
       boolean result = eventLevel.intValue() >= newLevelInt;
@@ -241,9 +236,8 @@ public class LevelInequalityRule {
 
     /**
      * Create new instance.
-     * 
-     * @param level
-     *          comparison level.
+     *
+     * @param level comparison level.
      */
     public LessThanEqualsRule(final Level level) {
       super();
@@ -253,7 +247,7 @@ public class LevelInequalityRule {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public boolean evaluate(final LogData event, Map matches) {
       Level eventLevel = event.getLevel();
       boolean result = eventLevel.intValue() <= newLevelInt;

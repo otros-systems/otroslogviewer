@@ -17,8 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,7 +26,7 @@ import java.util.logging.Level;
 
 /**
  * A Rule class implementing equals against two levels.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -53,9 +53,8 @@ public class LevelEqualsRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param level
-   *          level.
+   *
+   * @param level level.
    */
   private LevelEqualsRule(final Level level) {
     super();
@@ -79,9 +78,8 @@ public class LevelEqualsRule extends AbstractRule {
 
   /**
    * Create new rule.
-   * 
-   * @param value
-   *          name of level.
+   *
+   * @param value name of level.
    * @return instance of LevelEqualsRule.
    */
   public static Rule getRule(final String value) {
@@ -98,7 +96,7 @@ public class LevelEqualsRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     // both util.logging and log4j contain 'info' - use the int values instead of equality
     // info level set to the same value for both levels
@@ -117,11 +115,9 @@ public class LevelEqualsRule extends AbstractRule {
 
   /**
    * Deserialize the state of the object.
-   * 
-   * @param in
-   *          object input stream.
-   * @throws IOException
-   *           if error in reading stream for deserialization.
+   *
+   * @param in object input stream.
+   * @throws IOException if error in reading stream for deserialization.
    */
   private void readObject(final java.io.ObjectInputStream in) throws IOException {
     populateLevels();
@@ -147,11 +143,9 @@ public class LevelEqualsRule extends AbstractRule {
 
   /**
    * Serialize the state of the object.
-   * 
-   * @param out
-   *          object output stream.
-   * @throws IOException
-   *           if error in writing stream during serialization.
+   *
+   * @param out object output stream.
+   * @throws IOException if error in writing stream during serialization.
    */
   private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
     out.writeInt(level.intValue());

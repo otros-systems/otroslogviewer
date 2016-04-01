@@ -9,8 +9,8 @@ import org.apache.commons.configuration.Configuration;
 import org.pushingpixels.substance.api.skin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.actions.FontSize;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
@@ -94,7 +94,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       new SubstanceTwilightLookAndFeel()
     );
 
-    final List<UIManager.LookAndFeelInfo> extraLf = Stream.concat(plastic.stream(),substance.stream())
+    final List<UIManager.LookAndFeelInfo> extraLf = Stream.concat(plastic.stream(), substance.stream())
       .map(l -> new UIManager.LookAndFeelInfo(l.getName(), l.getClass().getName()))
       .collect(Collectors.toList());
     final ArrayList<UIManager.LookAndFeelInfo> result = new ArrayList<>();
@@ -152,13 +152,13 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       final UIManager.LookAndFeelInfo feelInfo = (UIManager.LookAndFeelInfo) value;
       ((JLabel) component).setText(feelInfo.getName());
       try {
-        LOGGER.info("Creating look and feel " + feelInfo.getName() + "/" + feelInfo.getClassName() );
+        LOGGER.info("Creating look and feel " + feelInfo.getName() + "/" + feelInfo.getClassName());
         final LookAndFeel lf = (LookAndFeel) Class.forName(feelInfo.getClassName()).newInstance();
         component.setBackground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionBackground" : "Label.background"));
         component.setForeground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionForeground" : "Label.foreground"));
         component.setFont(lf.getDefaults().getFont("Label.font"));
       } catch (Throwable e) {
-        LOGGER.error("Can't get look and feel properties for "  + feelInfo.getName() + "/" + feelInfo.getClassName(),e);
+        LOGGER.error("Can't get look and feel properties for " + feelInfo.getName() + "/" + feelInfo.getClassName(), e);
       }
       if (isSelected) {
         ((JLabel) component).setBorder(BorderFactory.createLineBorder(Color.BLACK));

@@ -1,11 +1,13 @@
 package pl.otros.logview.importer.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.LogDataCollector;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.parser.ParsingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.swing.*;
@@ -13,9 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogbackSocketLogImporter extends AbstractPluginableElement implements LogImporter {
   private static final Logger LOGGER = LoggerFactory.getLogger(LogbackSocketLogImporter.class.getName());
@@ -55,10 +54,9 @@ public class LogbackSocketLogImporter extends AbstractPluginableElement implemen
         }
       }
     } catch (IOException | ClassNotFoundException e) {
-      LOGGER.error( "Can't read serialized logback events from stream: " + e.getMessage(), e);
+      LOGGER.error("Can't read serialized logback events from stream: " + e.getMessage(), e);
     }
   }
-
 
 
   @Override

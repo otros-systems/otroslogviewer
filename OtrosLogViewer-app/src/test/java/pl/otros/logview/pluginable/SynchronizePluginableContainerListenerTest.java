@@ -17,6 +17,8 @@ package pl.otros.logview.pluginable;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 
 import static org.mockito.Mockito.*;

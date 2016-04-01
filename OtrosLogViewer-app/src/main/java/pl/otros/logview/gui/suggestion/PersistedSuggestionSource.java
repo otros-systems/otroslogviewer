@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.suggestion;
 
+import pl.otros.logview.api.services.PersistService;
 import pl.otros.logview.gui.actions.search.SearchAction;
-import pl.otros.logview.gui.services.persist.PersistService;
 import pl.otros.swing.suggest.SuggestionQuery;
 import pl.otros.swing.suggest.SuggestionSource;
 
@@ -26,7 +26,7 @@ public class PersistedSuggestionSource implements SuggestionSource<SearchSuggest
     if (history.contains(item)) {
       history.remove(item);
     }
-    history.add(0,item);
+    history.add(0, item);
     decorate.setHistory(history);
     persist(history);
   }
@@ -36,15 +36,16 @@ public class PersistedSuggestionSource implements SuggestionSource<SearchSuggest
     persist(history);
   }
 
-  private void persist(List<SearchHistory> history){
+  private void persist(List<SearchHistory> history) {
     try {
-      persistService.persist(KEY,history);
+      persistService.persist(KEY, history);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   private List<SearchHistory> load() {
-    return persistService.load(KEY,new ArrayList<>());
+    return persistService.load(KEY, new ArrayList<>());
   }
 
   public void setSearchMode(SearchAction.SearchMode searchMode) {

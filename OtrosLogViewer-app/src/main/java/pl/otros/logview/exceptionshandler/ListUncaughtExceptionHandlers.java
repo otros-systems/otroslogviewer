@@ -23,32 +23,32 @@ import java.util.List;
 
 public class ListUncaughtExceptionHandlers implements UncaughtExceptionHandler {
 
-	private final List<UncaughtExceptionHandler> list;
-	
+  private final List<UncaughtExceptionHandler> list;
 
-	public ListUncaughtExceptionHandlers(UncaughtExceptionHandler...handlers){
-		list = new ArrayList<>();
-		Collections.addAll(list, handlers);
-	}
-	
-	@Override
-	public void uncaughtException(Thread thread, Throwable throwable) {
-		synchronized (list) {
-			for (UncaughtExceptionHandler handler : list) {
-				handler.uncaughtException(thread, throwable);
-			}			
-		}
-	}
 
-	public boolean add(UncaughtExceptionHandler arg0) {
-		synchronized(list){
-			return list.add(arg0);			
-		}
-	}
-	
-	public boolean remove(UncaughtExceptionHandler arg0) {
-		synchronized (list) {
-			return list.remove(arg0);			
-		}
-	}
+  public ListUncaughtExceptionHandlers(UncaughtExceptionHandler... handlers) {
+    list = new ArrayList<>();
+    Collections.addAll(list, handlers);
+  }
+
+  @Override
+  public void uncaughtException(Thread thread, Throwable throwable) {
+    synchronized (list) {
+      for (UncaughtExceptionHandler handler : list) {
+        handler.uncaughtException(thread, throwable);
+      }
+    }
+  }
+
+  public boolean add(UncaughtExceptionHandler arg0) {
+    synchronized (list) {
+      return list.add(arg0);
+    }
+  }
+
+  public boolean remove(UncaughtExceptionHandler arg0) {
+    synchronized (list) {
+      return list.remove(arg0);
+    }
+  }
 }

@@ -25,11 +25,11 @@ import org.xml.sax.SAXParseException;
 
 public class SAXErrorHandler implements ErrorHandler {
   private static final Logger LOGGER = LogManager.getLogger(SAXErrorHandler.class);
-  
+
   public void error(SAXParseException ex) {
     LOGGER.error(
       "Parsing error on line " + ex.getLineNumber() + " and column "
-      + ex.getColumnNumber());
+        + ex.getColumnNumber());
     LOGGER.error(ex.getMessage(), ex.getException());
     //LogLog.error("pid="+ex.getPublicId()+" sid="+ex.getSystemId());
   }
@@ -41,7 +41,7 @@ public class SAXErrorHandler implements ErrorHandler {
   public void warning(SAXParseException ex) {
     LOGGER.warn(
       "Parsing error on line " + ex.getLineNumber() + " and column "
-      + ex.getColumnNumber());
+        + ex.getColumnNumber());
     LOGGER.warn(ex.getMessage(), ex.getException());
   }
 }

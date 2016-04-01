@@ -4,8 +4,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import org.slf4j.Marker;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class LogbackUtil {
       for (StackTraceElementProxy stackTraceElementProxy : throwableProxy.getStackTraceElementProxyArray()) {
         sb.append("\t").append(stackTraceElementProxy.getSTEAsString()).append("\n");
       }
-      builder.withMessage( sb.toString());
+      builder.withMessage(sb.toString());
     }
   }
 

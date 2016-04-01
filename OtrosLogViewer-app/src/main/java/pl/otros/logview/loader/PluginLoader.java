@@ -16,49 +16,50 @@
 
 package pl.otros.logview.loader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.BaseLoader;
+import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.PluginInfo;
-import pl.otros.logview.pluginable.AllPluginables;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
 public class PluginLoader {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PluginLoader.class
-			.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(PluginLoader.class
+    .getName());
 
-	protected Collection<PluginInfo> loadPlugins(File dirWithPlugins) {
-		BaseLoader baseLoader = new BaseLoader();
-		File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
+  protected Collection<PluginInfo> loadPlugins(File dirWithPlugins) {
+    BaseLoader baseLoader = new BaseLoader();
+    File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
 
-		Collection<PluginInfo> pluginCollection = new ArrayList<>();
-		for (File dir : dirs) {
-			pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
-			LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader
-					.load(dir, PluginInfo.class).size(), dir.getAbsolutePath()));
-		}
+    Collection<PluginInfo> pluginCollection = new ArrayList<>();
+    for (File dir : dirs) {
+      pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
+      LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader
+        .load(dir, PluginInfo.class).size(), dir.getAbsolutePath()));
+    }
 
-		return pluginCollection;
-	}
+    return pluginCollection;
+  }
 
-	public Collection<PluginInfo> loadUserPlugins() {
-		ArrayList<PluginInfo> list = new ArrayList<>(
-				loadPlugins(AllPluginables.USER_PLUGINS));
-		return list;
-	}
+  public Collection<PluginInfo> loadUserPlugins() {
+    ArrayList<PluginInfo> list = new ArrayList<>(
+      loadPlugins(AllPluginables.USER_PLUGINS));
+    return list;
+  }
 
-	public Collection<PluginInfo> loadSystenPlugins() {
-		ArrayList<PluginInfo> list = new ArrayList<>(
-				loadPlugins(AllPluginables.SYSTEM_PLUGINS));
-		return list;
-	}
+  public Collection<PluginInfo> loadSystenPlugins() {
+    ArrayList<PluginInfo> list = new ArrayList<>(
+      loadPlugins(AllPluginables.SYSTEM_PLUGINS));
+    return list;
+  }
 
-	public static void main(String[] args) {
-		new PluginLoader().loadPlugins(new File("./"));
-	}
+  public static void main(String[] args) {
+    new PluginLoader().loadPlugins(new File("./"));
+  }
 }

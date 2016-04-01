@@ -1,10 +1,10 @@
 package pl.otros.logview.parser.json;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.parser.LogParser;
-import pl.otros.logview.parser.ParserDescription;
-import pl.otros.logview.parser.ParsingContext;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.parser.LogParser;
+import pl.otros.logview.api.parser.ParserDescription;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.text.ParseException;
@@ -33,8 +33,8 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   @Override
   public void init(Properties properties) throws InitializationException {
     jsonExtractor.init(properties);
-    parserDescription.setDisplayName(properties.getProperty("name","Unnamed json parser"));
-    parserDescription.setDescription(properties.getProperty("description","<Without description>"));
+    parserDescription.setDisplayName(properties.getProperty("name", "Unnamed json parser"));
+    parserDescription.setDescription(properties.getProperty("description", "<Without description>"));
   }
 
   @Override
@@ -47,7 +47,7 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
 
     final StringBuilder unmatchedLog = parsingContext.getUnmatchedLog();
-    if (unmatchedLog.length()==0 && !line.startsWith("{")){
+    if (unmatchedLog.length() == 0 && !line.startsWith("{")) {
       return null;
     }
 
@@ -75,7 +75,6 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   public int getApiVersion() {
     return LOG_PARSER_VERSION_1;
   }
-
 
 
   @Override

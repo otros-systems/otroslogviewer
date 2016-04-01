@@ -24,8 +24,8 @@ public class HistoryOnlySuggestions implements SuggestionSource<SearchSuggestion
     String s = q.getValue();
     return history.stream()
       .map(SuggestionQuery::getValue)
-      .filter(x-> StringUtils.containsIgnoreCase(x,s))
-      .map(x->new SearchSuggestion(x,x))
+      .filter(x -> StringUtils.containsIgnoreCase(x, s))
+      .map(x -> new SearchSuggestion(x, x))
       .collect(Collectors.toList());
   }
 }

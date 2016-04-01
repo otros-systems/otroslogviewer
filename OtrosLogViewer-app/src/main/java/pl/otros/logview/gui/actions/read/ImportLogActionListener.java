@@ -18,8 +18,8 @@ package pl.otros.logview.gui.actions.read;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.actions.OtrosAction;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 

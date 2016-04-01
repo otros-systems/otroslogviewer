@@ -18,16 +18,21 @@ package pl.otros.logview.gui.actions;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.Stoppable;
-import pl.otros.logview.gui.*;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.ObservableInputStreamImpl;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.TableColumnNameSelfDescribable;
-import pl.otros.logview.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.Stoppable;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.ObservableInputStreamImpl;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.api.reader.ProxyLogDataCollector;
+import pl.otros.logview.gui.LogImportStats;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -41,23 +46,23 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 
-public class ImportLogActionListener extends  OtrosAction {
+public class ImportLogActionListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImportLogActionListener.class.getName());
   private LogImporter importer;
   private LogImportStats importStats;
 
-  public ImportLogActionListener(LogImporter importer, OtrosApplication  otrosApplication) {
+  public ImportLogActionListener(LogImporter importer, OtrosApplication otrosApplication) {
     super(otrosApplication);
     this.importer = importer;
-		this.putValue(SMALL_ICON,importer.getIcon());
-		this.putValue(NAME,String.format("Open %s log",importer.getName()));
+    this.putValue(SMALL_ICON, importer.getIcon());
+    this.putValue(NAME, String.format("Open %s log", importer.getName()));
   }
 
   public void actionPerformed(ActionEvent e) {
     JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
-		initFileChooser(chooser);
-    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(),"Open " + importer.getName() + " log");
+    initFileChooser(chooser);
+    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), "Open " + importer.getName() + " log");
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       return;
     }
@@ -152,7 +157,7 @@ public class ImportLogActionListener extends  OtrosAction {
             long maxInKb = max / 1024;
             importStats.updateStats(System.currentTimeMillis(), currentInKb, maxInKb);
             String message = "Loading " + fileName.getName().getBaseName() + " ... " + npf.format(percent) + "[" + nbf.format(currentInKb) + "kb of "
-                + nbf.format(maxInKb) + "kb]";
+              + nbf.format(maxInKb) + "kb]";
             updateProgress(message, (int) current, 0, (int) max);
 
           }

@@ -16,8 +16,8 @@
 package pl.otros.logview.filter;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.gui.LogDataTableModel;
 
 import java.util.Properties;
 import java.util.logging.Level;

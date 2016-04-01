@@ -18,7 +18,8 @@ package pl.otros.logview.gui.actions;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.gui.editor.LogPatternParserEditorBase;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class ShowLogPatternParserEditor extends OtrosAction {
                                     String logPatternResourceName,
                                     String actionName,
                                     String shortDescription,
-                                    Icon icon, Supplier<LogPatternParserEditorBase> viewSupplier)  {
+                                    Icon icon, Supplier<LogPatternParserEditorBase> viewSupplier) {
     super(otrosApplication);
     this.viewSupplier = viewSupplier;
     putValue(NAME, actionName);

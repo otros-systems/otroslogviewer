@@ -1,12 +1,13 @@
 package pl.otros.logview.gui.services.jumptocode;
 
 import org.apache.commons.configuration.Configuration;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.ide.Ide;
-
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.Ide;
+import pl.otros.logview.api.model.LocationInfo;
+import pl.otros.logview.api.services.JumpToCodeService;
+
+import java.io.IOException;
 
 public class JumpToCodeServiceImpl implements JumpToCodeService {
 

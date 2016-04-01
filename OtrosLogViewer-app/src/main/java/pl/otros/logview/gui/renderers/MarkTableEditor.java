@@ -15,8 +15,8 @@
  */
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.model.MarkerColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,19 +24,19 @@ import java.awt.*;
 public class MarkTableEditor extends DefaultCellEditor {
 
   private final JCheckBox checkBox;
-	private final OtrosApplication otrosApplication;
+  private final OtrosApplication otrosApplication;
 
   public MarkTableEditor(OtrosApplication otrosApplication) {
     super(new JCheckBox());
     checkBox = (JCheckBox) getComponent();
-		this.otrosApplication = otrosApplication;
+    this.otrosApplication = otrosApplication;
   }
 
   @Override
   public Object getCellEditorValue() {
-		if (checkBox.isSelected()) {
-			return otrosApplication.getSelectedMarkColors();
-		}
+    if (checkBox.isSelected()) {
+      return otrosApplication.getSelectedMarkColors();
+    }
     return null;
   }
 

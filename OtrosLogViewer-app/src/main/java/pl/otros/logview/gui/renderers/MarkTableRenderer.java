@@ -15,7 +15,7 @@
  */
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.model.MarkerColors;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -23,24 +23,24 @@ import java.awt.*;
 
 public class MarkTableRenderer extends DefaultTableCellRenderer {
 
-	private final JCheckBox checkBox;
+  private final JCheckBox checkBox;
 
-	public MarkTableRenderer() {
-		super();
-		checkBox = new JCheckBox();
-		checkBox.setOpaque(true);
-	}
+  public MarkTableRenderer() {
+    super();
+    checkBox = new JCheckBox();
+    checkBox.setOpaque(true);
+  }
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		// super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    // super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		if (value instanceof MarkerColors) {
-			checkBox.setSelected(true);
-		} else {
-			checkBox.setSelected(false);
-		}
-		return checkBox;
-	}
+    if (value instanceof MarkerColors) {
+      checkBox.setSelected(true);
+    } else {
+      checkBox.setSelected(false);
+    }
+    return checkBox;
+  }
 
 }

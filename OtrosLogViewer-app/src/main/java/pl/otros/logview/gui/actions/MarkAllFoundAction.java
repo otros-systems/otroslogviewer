@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,15 @@ package pl.otros.logview.gui.actions;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import pl.otros.logview.MarkerColors;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.gui.actions.search.AcceptConditionSearchMatcher;
 import pl.otros.logview.gui.actions.search.RegexMatcher;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
@@ -47,20 +52,20 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
 
   @Override
   public void actionPerformed(ActionEvent e) {
-		JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
-		LogViewPanelWrapper lvFrame = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
+    JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
+    LogViewPanelWrapper lvFrame = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
     if (lvFrame == null) {
       return;
     }
     JTable table = lvFrame.getLogViewPanel().getTable();
     LogDataTableModel model = lvFrame.getDataTableModel();
-		JTextField searchField = getOtrosApplication().getSearchField();
-		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
-		int marked = markAllFound(table, model, searchField.getText().trim(), markerColors);
-		statusObserver.updateStatus(marked + " messages marked for string \"" + searchField.getText().trim() + "\"");
+    JTextField searchField = getOtrosApplication().getSearchField();
+    StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
+    int marked = markAllFound(table, model, searchField.getText().trim(), markerColors);
+    statusObserver.updateStatus(marked + " messages marked for string \"" + searchField.getText().trim() + "\"");
   }
 
-  public int markAllFound(final JTable table, final LogDataTableModel dataTableModel,final  String searchText, final MarkerColors markerColors) {
+  public int markAllFound(final JTable table, final LogDataTableModel dataTableModel, final String searchText, final MarkerColors markerColors) {
     String searchTextLc = searchText.trim().toLowerCase();
     if (searchTextLc.length() == 0) {
       return 0;
@@ -76,7 +81,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
         getOtrosApplication().getStatusObserver().updateStatus("Error in regular expression: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
         return 0;
       }
-    } else if (SearchMode.QUERY.equals(searchMode)){
+    } else if (SearchMode.QUERY.equals(searchMode)) {
       QueryAcceptCondition acceptCondition;
       try {
         acceptCondition = new QueryAcceptCondition(searchTextLc);
@@ -85,7 +90,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
         getOtrosApplication().getStatusObserver().updateStatus("Wrong query rule: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
         return 0;
       }
-    }  else {
+    } else {
       getOtrosApplication().getStatusObserver().updateStatus("Unknown search mode", StatusObserver.LEVEL_ERROR);
       return 0;
     }

@@ -1,9 +1,9 @@
 package pl.otros.logview.gui.message.stacktracecode;
 
 import com.google.common.base.Splitter;
-import pl.otros.logview.gui.message.LocationInfo;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.model.LocationInfo;
+import pl.otros.logview.api.pluginable.MessageFormatter;
+import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
     StringBuilder sb = new StringBuilder(message.length());
     final Iterable<String> split = Splitter.on("\n").split(message);
     for (String line : split) {
-      sb.append(line.replaceFirst("\\s+at","  at"));
+      sb.append(line.replaceFirst("\\s+at", "  at"));
       if (Pattern.compile(STACK_TRACE_REGEX).matcher(line).find()) {
         addCodeToLine(sb, line);
       }

@@ -20,16 +20,16 @@ import java.util.Map;
 
 public class CssUtils {
 
-    public String toString(String styleName, Map<String, String> css) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("span.").append(styleName).append(" {\n");
-        for (String key : css.keySet()) {
-            sb.append("\t").append(key).append(": ").append(css.get(key)).append(";\n");
-        }
-
-        sb.append("}\n");
-        return sb.toString();
+  public String toString(String styleName, Map<String, String> css) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("span.").append(styleName).append(" {\n");
+    for (String key : css.keySet()) {
+      sb.append("\t").append(key).append(": ").append(css.get(key)).append(";\n");
     }
+
+    sb.append("}\n");
+    return sb.toString();
+  }
 
 
 }

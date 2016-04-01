@@ -3,18 +3,14 @@ package pl.otros.logview.gui.renderers;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.ClassWrapper;
+import pl.otros.logview.api.model.ClassWrapper;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Properties;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ClassWrapperRenderer implements TableCellRenderer {
 
@@ -72,7 +68,7 @@ public class ClassWrapperRenderer implements TableCellRenderer {
         java.util.List<String> list = new ArrayList<>(split.size());
         for (int i = 0; i < split.size(); i++) {
           final String s = split.get(i);
-          list.add(i <= index && s.length()>0 ? s.substring(0, 1) : s);
+          list.add(i <= index && s.length() > 0 ? s.substring(0, 1) : s);
         }
         result = Joiner.on(".").join(list);
         index++;

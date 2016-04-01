@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,7 @@ public class SoapFinder {
   // static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/2003/05/soap-envelope\"", Pattern.MULTILINE);
   private static Pattern p2 = Pattern.compile("xmlns:(.+?)=\"http://www\\.w3\\.org/\\d+/\\d+/soap-envelope\"", Pattern.MULTILINE);
   // http://www.w3.org/2002/06/soap-envelope
-  private static final Pattern[] patterns = { p1, p2 };
+  private static final Pattern[] patterns = {p1, p2};
 
   public String findSoapTag(String string) {
     String result = null;

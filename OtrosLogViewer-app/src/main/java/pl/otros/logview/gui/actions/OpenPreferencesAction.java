@@ -1,13 +1,10 @@
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.config.GeneralConfigView;
-import pl.otros.logview.gui.config.Appearance;
-import pl.otros.logview.gui.config.IdeIntegrationConfigView;
-import pl.otros.logview.gui.config.LogTableFormatConfigView;
-import pl.otros.logview.gui.config.VersionCheckConfigView;
-import pl.otros.logview.pluginable.AllPluginables;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.gui.config.*;
 import pl.otros.swing.config.ConfigComponent;
 import pl.otros.swing.config.ConfigView;
 import pl.otros.swing.config.provider.ConfigurationProvider;

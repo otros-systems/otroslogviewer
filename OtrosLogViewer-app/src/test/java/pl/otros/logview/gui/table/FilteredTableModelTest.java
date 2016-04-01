@@ -17,9 +17,9 @@ package pl.otros.logview.gui.table;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.filter.AbstractLogFilter;
-import pl.otros.logview.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogDataTableModel;
 
 import java.awt.*;
 import java.util.Date;

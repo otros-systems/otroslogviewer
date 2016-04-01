@@ -16,8 +16,9 @@
 
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.gui.util.ClipboardUtil;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class CopySelectedText extends OtrosAction {
   public CopySelectedText(OtrosApplication otrosApplication, JTextPane logDetailTextArea) {
     super(otrosApplication);
     this.logDetailTextArea = logDetailTextArea;
-    putValue(NAME,"Copy selected text");
+    putValue(NAME, "Copy selected text");
     putValue(SMALL_ICON, Icons.DOCUMENT_COPY);
 
   }
@@ -39,7 +40,7 @@ public class CopySelectedText extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     String selectedText = logDetailTextArea.getSelectedText();
-    if (logDetailTextArea.getSelectionStart()==logDetailTextArea.getSelectionEnd()){
+    if (logDetailTextArea.getSelectionStart() == logDetailTextArea.getSelectionEnd()) {
       selectedText = logDetailTextArea.getText();
     }
     ClipboardUtil.copyToClipboard(selectedText);

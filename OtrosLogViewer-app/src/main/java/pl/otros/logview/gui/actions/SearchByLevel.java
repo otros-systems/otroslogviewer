@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,13 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.model.LogData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +34,7 @@ public class SearchByLevel extends OtrosAction {
   private int direction = 1;
   private final int minLevel;
 
-  public SearchByLevel(OtrosApplication otrosApplication,int direction, Level minLevel) {
+  public SearchByLevel(OtrosApplication otrosApplication, int direction, Level minLevel) {
     super(otrosApplication);
     putValue(SHORT_DESCRIPTION, "Search for " + (direction > 0 ? "next" : "previous") + " event with level " + minLevel.getName() + " or higher.");
 
@@ -48,17 +53,17 @@ public class SearchByLevel extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-		JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
-		LogViewPanelWrapper lvFrame = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
+    JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
+    LogViewPanelWrapper lvFrame = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
     if (lvFrame == null) {
       return;
     }
     JTable table = lvFrame.getLogViewPanel().getTable();
     LogDataTableModel model = lvFrame.getDataTableModel();
 
-		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
-		if (table.getRowCount() == 0) {
-			statusObserver.updateStatus("Empty log", StatusObserver.LEVEL_WARNING);
+    StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
+    if (table.getRowCount() == 0) {
+      statusObserver.updateStatus("Empty log", StatusObserver.LEVEL_WARNING);
       return;
     }
 
@@ -91,7 +96,7 @@ public class SearchByLevel extends OtrosAction {
         table.clearSelection();
         table.setRowSelectionInterval(lastRow, lastRow);
         lastRow += direction;
-				statusObserver.updateStatus("Founded at row " + (lastRow - direction), StatusObserver.LEVEL_NORMAL);
+        statusObserver.updateStatus("Founded at row " + (lastRow - direction), StatusObserver.LEVEL_NORMAL);
         break;
       }
       lastRow += direction;
@@ -103,8 +108,8 @@ public class SearchByLevel extends OtrosAction {
       }
 
       if (lastRow == rowSearchStart) {
-				lastRow = 0;
-				statusObserver.updateStatus("Not found", StatusObserver.LEVEL_ERROR);
+        lastRow = 0;
+        statusObserver.updateStatus("Not found", StatusObserver.LEVEL_ERROR);
         break;
       }
     }

@@ -17,8 +17,8 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * A Rule class supporting java.util.regex regular expression syntax.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -61,11 +61,9 @@ public class LikeRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param field
-   *          field
-   * @param pattern
-   *          pattern
+   *
+   * @param field   field
+   * @param pattern pattern
    */
   private LikeRule(final String field, final Pattern pattern) {
     super();
@@ -79,9 +77,8 @@ public class LikeRule extends AbstractRule {
 
   /**
    * Create new instance from top two elements of stack.
-   * 
-   * @param stack
-   *          stack
+   *
+   * @param stack stack
    * @return new instance
    */
   public static Rule getRule(final Stack<Object> stack) {
@@ -96,11 +93,9 @@ public class LikeRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param field
-   *          field
-   * @param pattern
-   *          pattern
+   *
+   * @param field   field
+   * @param pattern pattern
    * @return new instance
    */
   public static Rule getRule(final String field, final String pattern) {
@@ -114,7 +109,7 @@ public class LikeRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     // no need to figure out what part of the string matched, just set the entire string as a match
     Object input = RESOLVER.getValue(field, event);
@@ -140,13 +135,10 @@ public class LikeRule extends AbstractRule {
 
   /**
    * Deserialize the state of the object.
-   * 
-   * @param in
-   *          object input stream
-   * @throws IOException
-   *           if IOException during deserialization
-   * @throws ClassNotFoundException
-   *           if class not found.
+   *
+   * @param in object input stream
+   * @throws IOException            if IOException during deserialization
+   * @throws ClassNotFoundException if class not found.
    */
   private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
     try {
@@ -160,11 +152,9 @@ public class LikeRule extends AbstractRule {
 
   /**
    * Serialize the state of the object.
-   * 
-   * @param out
-   *          object output stream
-   * @throws IOException
-   *           if IOException during serialization
+   *
+   * @param out object output stream
+   * @throws IOException if IOException during serialization
    */
   private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
     out.writeObject(field);

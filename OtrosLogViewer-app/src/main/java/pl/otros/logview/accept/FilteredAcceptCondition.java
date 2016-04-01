@@ -16,12 +16,12 @@
 
 package pl.otros.logview.accept;
 
-import pl.otros.logview.LogData;
-import pl.otros.logview.filter.LogFilter;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.pluginable.LogFilter;
 
 import java.util.Collection;
 
-public class FilteredAcceptCondition extends  AbstractAcceptContidion{
+public class FilteredAcceptCondition extends AbstractAcceptContidion {
   private final Collection<LogFilter> filtersList;
 
   public FilteredAcceptCondition(Collection<LogFilter> filtersList) {
@@ -33,8 +33,8 @@ public class FilteredAcceptCondition extends  AbstractAcceptContidion{
   @Override
   public boolean accept(LogData data) {
     for (LogFilter logFilter : filtersList) {
-      if (logFilter.isEnable() && !logFilter.accept(data, 0)){
-           return true;
+      if (logFilter.isEnable() && !logFilter.accept(data, 0)) {
+        return true;
       }
     }
     return false;

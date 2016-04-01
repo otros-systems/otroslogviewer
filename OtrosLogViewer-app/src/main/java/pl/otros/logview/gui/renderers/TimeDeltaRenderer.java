@@ -1,6 +1,6 @@
 package pl.otros.logview.gui.renderers;
 
-import pl.otros.logview.gui.TimeDelta;
+import pl.otros.logview.api.model.TimeDelta;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -17,7 +17,7 @@ public class TimeDeltaRenderer implements TableCellRenderer {
   private final JLabel label;
 
   public TimeDeltaRenderer() {
-    label  = new JLabel();
+    label = new JLabel();
     label.setOpaque(true);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
 

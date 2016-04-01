@@ -2,7 +2,7 @@ package pl.otros.logview.exceptionshandler;
 
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
-import pl.otros.logview.gui.StatusObserver;
+import pl.otros.logview.api.StatusObserver;
 
 public class StatusObserverExceptionHandlerTest {
 

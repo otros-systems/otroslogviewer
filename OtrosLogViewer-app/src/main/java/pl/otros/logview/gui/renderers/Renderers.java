@@ -2,12 +2,12 @@ package pl.otros.logview.gui.renderers;
 
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.table.TableCellRenderer;
 import java.text.SimpleDateFormat;
 
-import static pl.otros.logview.gui.ConfKeys.*;
+import static pl.otros.logview.api.ConfKeys.*;
 
 public class Renderers {
 
@@ -29,7 +29,7 @@ public class Renderers {
         return;
       }
       final String property = event.getPropertyName();
-      final String value = event.getPropertyValue()!=null?event.getPropertyValue().toString():"";
+      final String value = event.getPropertyValue() != null ? event.getPropertyValue().toString() : "";
       switch (property) {
         case LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS:
           classWrapperRenderer.reloadConfiguration(value);

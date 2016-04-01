@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,9 +16,11 @@
 package pl.otros.logview.gui.markers.editor;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.LogData;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.gui.markers.AutomaticMarker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.markers.RegexMarker;
 import pl.otros.logview.gui.markers.StringMarker;
@@ -35,8 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MarkerEditor extends JPanel {
 
@@ -76,7 +76,7 @@ public class MarkerEditor extends JPanel {
     stringMatcherComponents = new ArrayList<>();
     file = new JTextField(20);
     file.setEditable(false);
-    type = new JComboBox(new String[] { "String matcher", "Regex matcher" });
+    type = new JComboBox(new String[]{"String matcher", "Regex matcher"});
     type.addActionListener(arg0 -> disbableUnessasaryComponents());
     type.addActionListener(testAfterChangeActionListener);
 
@@ -207,7 +207,7 @@ public class MarkerEditor extends JPanel {
     stringConditionInclude.setToolTipText("Will match events that message contains or does not contain this string.");
     regexMatcherCondition.setToolTipText("Regular expression to match.");
     regexPreCondition
-        .setToolTipText("Part of string from regular expression for increase performance. For example if you regular exrepssion is \".*return: \\d+\" set precondition to \"return\".");
+      .setToolTipText("Part of string from regular expression for increase performance. For example if you regular exrepssion is \".*return: \\d+\" set precondition to \"return\".");
     regexPreConditionInclude.setToolTipText("Disable if you want to mark rows that does not contains precondition value.");
     for (JTextArea aTestStringTextArea : testStringTextArea) {
       aTestStringTextArea.setToolTipText("Enter part of log message to test if marker works as you want.");

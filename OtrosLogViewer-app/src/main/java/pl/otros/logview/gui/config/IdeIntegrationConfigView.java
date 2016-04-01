@@ -1,9 +1,9 @@
 package pl.otros.logview.gui.config;
 
 import org.apache.commons.configuration.Configuration;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeService;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.ide.IdeIntegrationConfigurationPanel;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;

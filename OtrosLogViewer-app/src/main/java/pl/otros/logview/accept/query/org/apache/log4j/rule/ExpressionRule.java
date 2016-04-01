@@ -17,20 +17,20 @@
 
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
-import pl.otros.logview.LogData;
+import pl.otros.logview.api.model.LogData;
 
 import java.util.Map;
 import java.util.Stack;
 
 /**
  * A Rule class supporting both infix and postfix expressions, accepting any rule which is supported by the <code>RuleFactory</code>.
- * <p/>
+ * <p>
  * NOTE: parsing is supported through the use of <code>StringTokenizer</code>, which implies two limitations: 1: all tokens in the expression must be separated
  * by spaces, including parenthesis 2: operands which contain spaces MUST be wrapped in single quotes. For example, the expression: msg == 'some msg' is a valid
  * expression. 3: To group expressions, use parentheses. For example, the expression: level >= INFO || ( msg == 'some msg' || logger == 'test' ) is a valid
  * expression. See org.apache.log4j.rule.InFixToPostFix for a description of supported operators. See org.apache.log4j.spi.LoggingEventFieldResolver for field
  * keywords.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -55,9 +55,8 @@ public class ExpressionRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param r
-   *          rule
+   *
+   * @param r rule
    */
   private ExpressionRule(final Rule r) {
     super();
@@ -66,9 +65,8 @@ public class ExpressionRule extends AbstractRule {
 
   /**
    * Get rule.
-   * 
-   * @param expression
-   *          expression.
+   *
+   * @param expression expression.
    * @return rule.
    */
   public static Rule getRule(final String expression) {
@@ -77,11 +75,9 @@ public class ExpressionRule extends AbstractRule {
 
   /**
    * Get rule.
-   * 
-   * @param expression
-   *          expression.
-   * @param isPostFix
-   *          If post-fix.
+   *
+   * @param expression expression.
+   * @param isPostFix  If post-fix.
    * @return rule
    */
   public static Rule getRule(final String expression, final boolean isPostFix) {
@@ -96,7 +92,7 @@ public class ExpressionRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes" })
+  @SuppressWarnings({"rawtypes"})
   public boolean evaluate(final LogData event, Map matches) {
     return rule.evaluate(event, matches);
   }
@@ -116,9 +112,8 @@ public class ExpressionRule extends AbstractRule {
 
     /**
      * Compile expression.
-     * 
-     * @param expression
-     *          expression.
+     *
+     * @param expression expression.
      * @return rule.
      */
     public Rule compileExpression(final String expression) {

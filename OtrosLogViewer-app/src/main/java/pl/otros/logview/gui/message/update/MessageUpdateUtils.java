@@ -17,11 +17,13 @@
 package pl.otros.logview.gui.message.update;
 
 import org.apache.commons.lang.StringUtils;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.pluginable.MessageColorizer;
+import pl.otros.logview.api.pluginable.MessageFormatter;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.message.SearchResultColorizer;
-import pl.otros.logview.pluginable.PluginableElementsContainer;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 
@@ -32,9 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -98,7 +97,7 @@ public class MessageUpdateUtils {
           list.addAll(colorize);
         }
       } catch (Throwable e) {
-        LOGGER.error(String.format("Error occurred when using message colorizer %s: %s%n", messageColorizer.getName(), e.getMessage()),e);
+        LOGGER.error(String.format("Error occurred when using message colorizer %s: %s%n", messageColorizer.getName(), e.getMessage()), e);
         LOGGER.debug(String.format("Error occurred when using message colorizer %s with message\"%s\"", messageColorizer.getName(), StringUtils.left(message, 1500)));
         e.printStackTrace();
       } finally {
@@ -123,7 +122,7 @@ public class MessageUpdateUtils {
 
 
   private static void markSearchResult(List<MessageFragmentStyle> searchResultPositions, OtrosJTextWithRulerScrollPane<? extends
-      JTextComponent> otrosJTextWithRulerScrollPane) {
+    JTextComponent> otrosJTextWithRulerScrollPane) {
     RulerBarHelper.clearMarkers(otrosJTextWithRulerScrollPane);
     otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().removeAllHighlights();
     Highlighter.HighlightPainter highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
@@ -131,13 +130,13 @@ public class MessageUpdateUtils {
     for (MessageFragmentStyle mfs : searchResultPositions) {
       int position = mfs.getOffset();
       RulerBarHelper.addTextMarkerToPosition(otrosJTextWithRulerScrollPane, position, "Search result",
-          Color.YELLOW.darker().darker().darker(),
-          RulerBarHelper.TooltipMode.LINE_NUMBER_PREFIX);
+        Color.YELLOW.darker().darker().darker(),
+        RulerBarHelper.TooltipMode.LINE_NUMBER_PREFIX);
       try {
         otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().addHighlight(mfs.getOffset(), mfs.getLength() + mfs.getOffset(),
-            highlighter);
+          highlighter);
       } catch (BadLocationException e) {
-        LOGGER.error( "Cant get text of log detail view for highlighting search result", e);
+        LOGGER.error("Cant get text of log detail view for highlighting search result", e);
       }
     }
     LOGGER.trace("Update with chunks finished");
@@ -151,7 +150,7 @@ public class MessageUpdateUtils {
     try {
       text = styledDocument.getText(0, styledDocument.getLength());
     } catch (BadLocationException e) {
-      LOGGER.error( "Cant get document text for log details view: ", e);
+      LOGGER.error("Cant get document text for log details view: ", e);
       return;
     }
     MessageColorizer messageColorizer = colorizersContainer.getElement(SearchResultColorizer.class.getName());

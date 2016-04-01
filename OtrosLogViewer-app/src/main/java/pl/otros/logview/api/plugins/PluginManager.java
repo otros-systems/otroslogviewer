@@ -16,33 +16,34 @@
 
 package pl.otros.logview.api.plugins;
 
-import pl.otros.logview.loader.BaseLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.BaseLoader;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
 public class PluginManager {
 
-    private  static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class.getName());
-    public Collection<PluginInfo> loadPlugins(File dirWithPlugins){
-        BaseLoader baseLoader = new BaseLoader();
-        File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class.getName());
 
-        Collection<PluginInfo> pluginCollection = new ArrayList<>();
-        for (File dir : dirs) {
-            pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
-            LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader.load(dir, PluginInfo.class).size(), dir.getAbsolutePath()));
-        }
+  public Collection<PluginInfo> loadPlugins(File dirWithPlugins) {
+    BaseLoader baseLoader = new BaseLoader();
+    File[] dirs = dirWithPlugins.listFiles(File::isDirectory);
 
-        return pluginCollection;
+    Collection<PluginInfo> pluginCollection = new ArrayList<>();
+    for (File dir : dirs) {
+      pluginCollection.addAll(baseLoader.load(dir, PluginInfo.class));
+      LOGGER.info(String.format("Loaded %d plugins from %s", baseLoader.load(dir, PluginInfo.class).size(), dir.getAbsolutePath()));
     }
 
-    public static void main(String[] args) {
-        new PluginManager().loadPlugins(new File("./"));
-    }
+    return pluginCollection;
+  }
+
+  public static void main(String[] args) {
+    new PluginManager().loadPlugins(new File("./"));
+  }
 }

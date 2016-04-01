@@ -16,21 +16,20 @@
 
 package pl.otros.logview.exceptionshandler;
 
+import javax.swing.*;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import javax.swing.SwingUtilities;
+public abstract class AbstractSwingUncaughtExceptionHandler implements UncaughtExceptionHandler {
 
-public abstract class AbstractSwingUncaughtExceptionHandler implements UncaughtExceptionHandler{
+  @Override
+  public final void uncaughtException(final Thread arg0, final Throwable arg1) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      uncaughtExceptionInSwingEDT(arg0, arg1);
+    } else {
+      SwingUtilities.invokeLater(() -> uncaughtExceptionInSwingEDT(arg0, arg1));
+    }
+  }
 
-	@Override
-	public final void uncaughtException(final Thread arg0, final Throwable arg1) {
-		if (SwingUtilities.isEventDispatchThread()){
-			uncaughtExceptionInSwingEDT(arg0, arg1);
-		} else {
-			SwingUtilities.invokeLater(() -> uncaughtExceptionInSwingEDT(arg0, arg1));
-		}
-	}
-	
-	protected abstract void uncaughtExceptionInSwingEDT(Thread arg0, Throwable arg1);
+  protected abstract void uncaughtExceptionInSwingEDT(Thread arg0, Throwable arg1);
 
 }

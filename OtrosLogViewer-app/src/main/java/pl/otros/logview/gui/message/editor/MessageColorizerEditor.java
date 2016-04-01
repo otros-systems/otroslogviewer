@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.StatusObserver;
-import pl.otros.logview.gui.message.MessageFragmentStyle;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 
@@ -123,11 +123,11 @@ public class MessageColorizerEditor extends JPanel {
     try {
       PropertyPatternMessageColorizer propertyPatternMessageColorize = createMessageColorizer();
       if (propertyPatternMessageColorize.colorizingNeeded(text)) {
-				Collection<MessageFragmentStyle> colorize = propertyPatternMessageColorize.colorize(text);
-				for (MessageFragmentStyle mfs : colorize) {
-					textPane.getStyledDocument().setCharacterAttributes(mfs.getOffset(),mfs.getLength(),mfs.getStyle(),mfs.isReplace());
-				}
-			}
+        Collection<MessageFragmentStyle> colorize = propertyPatternMessageColorize.colorize(text);
+        for (MessageFragmentStyle mfs : colorize) {
+          textPane.getStyledDocument().setCharacterAttributes(mfs.getOffset(), mfs.getLength(), mfs.getStyle(), mfs.isReplace());
+        }
+      }
     } catch (Exception e) {
       LOGGER.error(String.format("Can't init PropertyPatternMessageColorizer:%s", e.getMessage()));
       statusObserver.updateStatus(String.format("Error: %s", e.getMessage()), StatusObserver.LEVEL_ERROR);

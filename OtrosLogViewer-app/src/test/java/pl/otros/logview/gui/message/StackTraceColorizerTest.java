@@ -18,6 +18,8 @@ package pl.otros.logview.gui.message;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
 import org.apache.commons.io.IOUtils;
+import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+
 import javax.swing.text.BadLocationException;
 import java.io.IOException;
 import java.util.Collection;

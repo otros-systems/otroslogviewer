@@ -2,9 +2,9 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.HashMap;
 

@@ -17,38 +17,38 @@
 package pl.otros.logview.api.plugins;
 
 public class PluginInfoBuilder {
-    private String name;
-    private String description;
-    private String pluginableId;
-    private int apiVersion;
-    private Class<? extends Plugin> pluginClass;
+  private String name;
+  private String description;
+  private String pluginableId;
+  private int apiVersion;
+  private Class<? extends Plugin> pluginClass;
 
-    public PluginInfoBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public PluginInfoBuilder setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public PluginInfoBuilder setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public PluginInfoBuilder setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public PluginInfoBuilder setPluginableId(String pluginableId) {
-        this.pluginableId = pluginableId;
-        return this;
-    }
+  public PluginInfoBuilder setPluginableId(String pluginableId) {
+    this.pluginableId = pluginableId;
+    return this;
+  }
 
-    public PluginInfoBuilder setApiVersion(int apiVersion) {
-        this.apiVersion = apiVersion;
-        return this;
-    }
+  public PluginInfoBuilder setApiVersion(int apiVersion) {
+    this.apiVersion = apiVersion;
+    return this;
+  }
 
-    public PluginInfoBuilder setPluginClass(Class<? extends Plugin> pluginClass) {
-        this.pluginClass = pluginClass;
-        return this;
-    }
+  public PluginInfoBuilder setPluginClass(Class<? extends Plugin> pluginClass) {
+    this.pluginClass = pluginClass;
+    return this;
+  }
 
-    public PluginInfo createPluginInfo() {
-        return new PluginInfo(name, description, pluginableId, apiVersion, pluginClass);
-    }
+  public PluginInfo createPluginInfo() {
+    return new PluginInfo(name, description, pluginableId, apiVersion, pluginClass);
+  }
 }

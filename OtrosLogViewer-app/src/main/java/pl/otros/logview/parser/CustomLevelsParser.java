@@ -9,14 +9,14 @@ import java.util.StringTokenizer;
 
 public class CustomLevelsParser {
 
-  private final  Map<String, Level> customLevelDefinitionMap;
+  private final Map<String, Level> customLevelDefinitionMap;
 
   public CustomLevelsParser(String customLevelDefinitions) {
     customLevelDefinitionMap = updateCustomLevelDefinitionMap(customLevelDefinitions);
   }
 
-  public Optional<Level> parse(String levelString){
-    if (customLevelDefinitionMap.containsKey(levelString)){
+  public Optional<Level> parse(String levelString) {
+    if (customLevelDefinitionMap.containsKey(levelString)) {
       return Optional.of(customLevelDefinitionMap.get(levelString));
     } else {
       return Optional.empty();

@@ -26,23 +26,24 @@ import java.io.InputStream;
 /**
  * An {@link EntityResolver} specifically designed to return <code>java 1.4's logging dtd, logger.dtd</code> which is embedded within the log4j jar file. Based
  * on EntityResolver.
- * 
- * @since 1.3
- * 
+ *
  * @author Paul Austin
  * @author Scott Deboy (sdeboy@apache.org)
+ * @since 1.3
  */
 public final class UtilLoggingEntityResolver implements EntityResolver {
 
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   public InputSource resolveEntity(final String publicId, final String systemId) {
     if (systemId.endsWith("logger.dtd")) {
       Class clazz = getClass();
       InputStream in = clazz.getResourceAsStream("/pl/otros/logview/importer/log4jxml/logger.dtd");
       if (in == null) {
         LoggerFactory.getLogger(UtilLoggingEntityResolver.class).error(
-            "Could not find [logger.dtd]. Used [" + clazz.getClassLoader() + "] class loader in the search.");
+          "Could not find [logger.dtd]. Used [" + clazz.getClassLoader() + "] class loader in the search.");
         return null;
       } else {
         return new InputSource(in);

@@ -6,15 +6,20 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.gui.*;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.gui.LogPatternParserEditor;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.LogParser;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.gui.LogViewPanel;
 import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporterUsingParser;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.LogParser;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.pluginable.AllPluginables;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;
@@ -26,7 +31,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
-public abstract class LogPatternParserEditorBase extends JPanel {
+public abstract class LogPatternParserEditorBase extends JPanel implements LogPatternParserEditor {
   private static final Logger LOGGER = LoggerFactory.getLogger(Log4jPatternParserEditor.class.getName());
   protected final OtrosApplication otrosApplication;
   protected final String logPatternText;
@@ -127,7 +132,7 @@ public abstract class LogPatternParserEditorBase extends JPanel {
     propertyEditor = new JEditorPane();
 
     logFileContent = new JTextArea();
-    logViewPanel = new LogViewPanel(new LogDataTableModel(), TableColumns.ALL_WITHOUT_LOG_SOURCE,otrosApplication);
+    logViewPanel = new LogViewPanel(new LogDataTableModel(), TableColumns.ALL_WITHOUT_LOG_SOURCE, otrosApplication);
     JPanel panelEditorActions = new JPanel(new BorderLayout(5, 5));
     JToolBar actionsToolBar = new JToolBar("Actions");
     actionsToolBar.setFloatable(false);
@@ -186,18 +191,18 @@ public abstract class LogPatternParserEditorBase extends JPanel {
         selectLogFileAndLoad();
       } catch (IOException e1) {
         LOGGER.error("Error loading file " + e1.getMessage());
-        LOGGER.error("Error loading file: " + e1.getMessage(),e1);
+        LOGGER.error("Error loading file: " + e1.getMessage(), e1);
       }
     });
     testParser.addActionListener(e -> {
       try {
         testParser();
-      } catch (InitializationException e1){
-        LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
-        JOptionPane.showMessageDialog(LogPatternParserEditorBase.this,"Can't initialize Log parser: " + e1.getMessage(),"Log parser error",
-            JOptionPane.ERROR_MESSAGE);
+      } catch (InitializationException e1) {
+        LOGGER.error("Error during parser test: " + e1.getMessage(), e1);
+        JOptionPane.showMessageDialog(LogPatternParserEditorBase.this, "Can't initialize Log parser: " + e1.getMessage(), "Log parser error",
+          JOptionPane.ERROR_MESSAGE);
       } catch (Exception e1) {
-        LOGGER.error("Error during parser test: " + e1.getMessage(),e1);
+        LOGGER.error("Error during parser test: " + e1.getMessage(), e1);
       }
     });
 
@@ -226,8 +231,8 @@ public abstract class LogPatternParserEditorBase extends JPanel {
         selectedFile = new File(selectedFile.getAbsolutePath() + ".pattern");
       }
       if (selectedFile.exists()
-          && JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(this, "Do you want to overwrite file " + selectedFile.getName() + "?", "Save parser",
-              JOptionPane.YES_NO_OPTION)) {
+        && JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(this, "Do you want to overwrite file " + selectedFile.getName() + "?", "Save parser",
+        JOptionPane.YES_NO_OPTION)) {
         return;
       }
       String text = propertyEditor.getText();
@@ -235,9 +240,9 @@ public abstract class LogPatternParserEditorBase extends JPanel {
       try {
         output = new FileOutputStream(selectedFile);
         IOUtils.write(text, output);
-				LogImporterUsingParser log4jImporter = craeteLogImporter(text);
-				otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
-			} catch (Exception e) {
+        LogImporterUsingParser log4jImporter = craeteLogImporter(text);
+        otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
+      } catch (Exception e) {
         LOGGER.error("Can't save parser: " + e.getMessage());
         JOptionPane.showMessageDialog(this, "Can't save parser: " + e.getMessage(), "Error saving parser", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
@@ -251,10 +256,10 @@ public abstract class LogPatternParserEditorBase extends JPanel {
     Properties p = new Properties();
     p.load(new ByteArrayInputStream(text.getBytes()));
     LogParser parser = createLogParser(p);
-		LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(parser);
-		logImporterUsingParser.init(p);
-		return logImporterUsingParser;
-	}
+    LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(parser);
+    logImporterUsingParser.init(p);
+    return logImporterUsingParser;
+  }
 
   public void selectLogFileAndLoad() throws IOException {
     if (otrosVfsBrowserDialog == null) {
@@ -278,8 +283,8 @@ public abstract class LogPatternParserEditorBase extends JPanel {
   }
 
   public LogViewPanel getLogViewPanel() {
-		return logViewPanel;
-	}
+    return logViewPanel;
+  }
 
   protected void testParser() throws IOException, InitializationException {
     Properties p = new Properties();
@@ -302,7 +307,7 @@ public abstract class LogPatternParserEditorBase extends JPanel {
 
   protected abstract LogParser createLogParser(Properties p) throws InitializationException;
 
-  public void setLogPattern(String logPattern){
+  public void setLogPattern(String logPattern) {
     propertyEditor.setText(logPattern);
   }
 

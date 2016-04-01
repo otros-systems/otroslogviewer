@@ -19,8 +19,8 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
 import pl.otros.logview.accept.query.org.apache.log4j.spi.LoggingEventFieldResolver;
+import pl.otros.logview.api.model.LogData;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,7 +29,7 @@ import java.util.*;
 
 /**
  * A Rule class implementing equality evaluation for timestamps.
- * 
+ *
  * @author Scott Deboy (sdeboy@apache.org)
  * @author Krzysztof Otrebski
  */
@@ -53,36 +53,36 @@ public class TimestampEqualsRule extends AbstractRule {
    * Date format.
    */
   private static final SimpleDateFormat[] DATE_FORMATS = {//
-  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
-      new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
-      new SimpleDateFormat("yyyy-MM-dd HH"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),//
-      new SimpleDateFormat("yyyy-MM-dd'T'HH"),//
-      new SimpleDateFormat("yyyy-MM-dd"),//
+    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),//
+    new SimpleDateFormat("yyyy-MM-dd HH:mm"),//
+    new SimpleDateFormat("yyyy-MM-dd HH"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),//
+    new SimpleDateFormat("yyyy-MM-dd'T'HH"),//
+    new SimpleDateFormat("yyyy-MM-dd"),//
 
   };
 
   private static final long[] DATE_DURATIONS = {//
-  SECOND,//
-      MINUTE,//
-      HOUR,//
-      SECOND,//
-      MINUTE,//
-      HOUR,//
-      DAY,//
+    SECOND,//
+    MINUTE,//
+    HOUR,//
+    SECOND,//
+    MINUTE,//
+    HOUR,//
+    DAY,//
   };
   /**
    * Time format.
    */
   private static final SimpleDateFormat[] TIME_FORMATS = {//
-  new SimpleDateFormat("HH:mm:ss"),//
-      new SimpleDateFormat("HH:mm"), //
+    new SimpleDateFormat("HH:mm:ss"),//
+    new SimpleDateFormat("HH:mm"), //
   };
 
   private static final long[] TIME_DURATIONS = {//
-  SECOND,//
-      MINUTE,//
+    SECOND,//
+    MINUTE,//
   };
 
   /**
@@ -93,9 +93,8 @@ public class TimestampEqualsRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param value
-   *          string representation of date.
+   *
+   * @param value string representation of date.
    */
   private TimestampEqualsRule(final String value) {
     super();
@@ -145,9 +144,8 @@ public class TimestampEqualsRule extends AbstractRule {
 
   /**
    * Create new instance.
-   * 
-   * @param value
-   *          string representation of date.
+   *
+   * @param value string representation of date.
    * @return new instance
    */
   public static Rule getRule(final String value) {
@@ -157,7 +155,7 @@ public class TimestampEqualsRule extends AbstractRule {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public boolean evaluate(final LogData event, Map matches) {
     String eventTimeStampString = RESOLVER.getValue(LoggingEventFieldResolver.TIMESTAMP_FIELD, event).toString();
     long eventTimeStamp = Long.parseLong(eventTimeStampString) / 1000 * 1000;
@@ -175,13 +173,10 @@ public class TimestampEqualsRule extends AbstractRule {
 
   /**
    * Deserialize the state of the object.
-   * 
-   * @param in
-   *          object input stream
-   * @throws IOException
-   *           if IO error during deserialization
-   * @throws ClassNotFoundException
-   *           if class not found during deserialization
+   *
+   * @param in object input stream
+   * @throws IOException            if IO error during deserialization
+   * @throws ClassNotFoundException if class not found during deserialization
    */
   private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
     timeStamp = in.readLong();
@@ -190,11 +185,9 @@ public class TimestampEqualsRule extends AbstractRule {
 
   /**
    * Serialize the state of the object.
-   * 
-   * @param out
-   *          object output stream
-   * @throws IOException
-   *           if IO error during serialization
+   *
+   * @param out object output stream
+   * @throws IOException if IO error during serialization
    */
   private void writeObject(final java.io.ObjectOutputStream out) throws IOException {
     out.writeLong(timeStamp);

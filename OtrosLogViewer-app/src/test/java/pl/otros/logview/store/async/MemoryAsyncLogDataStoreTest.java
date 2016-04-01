@@ -6,12 +6,12 @@ import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataBuilder;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
-import pl.otros.logview.store.LogDataStore;
-import pl.otros.logview.store.MemoryLogDataStore;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataBuilder;
+import pl.otros.logview.api.model.MarkerColors;
+import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.model.LogDataStore;
+import pl.otros.logview.api.store.MemoryLogDataStore;
 
 import java.lang.reflect.Proxy;
 import java.util.Date;

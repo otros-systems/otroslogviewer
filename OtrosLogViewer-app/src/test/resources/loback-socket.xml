@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- ==================================================================== -->
+<!-- Sample SocketAppender configuration.                                 -->
+<!-- ==================================================================== -->
+
+<configuration debug="true">
+
+    <appender name="SERVER" class="ch.qos.logback.classic.net.SocketAppender">
+        <remoteHost>localhost</remoteHost>
+        <port>5000</port>
+        <reconnectionDelay>10000</reconnectionDelay>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>sending-test.log</file>
+        <append>false</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] %logger - %msg%n</pattern>
+        </layout>
+    </appender>
+
+
+
+    <root level="debug">
+        <appender-ref ref="SERVER" />
+        <appender-ref ref="FILE" />
+
+    </root>
+
+</configuration>

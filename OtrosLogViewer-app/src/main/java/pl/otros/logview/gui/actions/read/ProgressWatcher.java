@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,9 +16,9 @@
 package pl.otros.logview.gui.actions.read;
 
 import org.apache.commons.vfs2.FileObject;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.io.ObservableInputStreamImpl;
 import pl.otros.logview.gui.LogImportStats;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.io.ObservableInputStreamImpl;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class ProgressWatcher implements Runnable {
           long maxInKb = max / 1024;
           importStats.updateStats(System.currentTimeMillis(), currentInKb, maxInKb);
           String message = "Loading " + fileName.getName().getBaseName() + " ... " + npf.format(percent) + "[" + nbf.format(currentInKb) + "kb of "
-              + nbf.format(maxInKb) + "kb]";
+            + nbf.format(maxInKb) + "kb]";
           updateProgress(message, (int) current, 0, (int) max);
 
         }

@@ -19,28 +19,28 @@ package pl.otros.logview.pluginsimpl;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.plugins.PluginContext;
-import pl.otros.logview.gui.ConfKeys;
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.LogViewPanelWrapper;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.gui.actions.read.ReadingStopperForRemove;
-import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.ParsingContext;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -71,15 +71,15 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     }
 
     TableColumns[] visibleColumns = {TableColumns.ID,//
-        TableColumns.TIME,//
-        TableColumns.LEVEL,//
-        TableColumns.MESSAGE,//
-        TableColumns.CLASS,//
-        TableColumns.METHOD,//
-        TableColumns.THREAD,//
-        TableColumns.MARK,//
-        TableColumns.NOTE,//
-        TableColumns.LOG_SOURCE
+      TableColumns.TIME,//
+      TableColumns.LEVEL,//
+      TableColumns.MESSAGE,//
+      TableColumns.CLASS,//
+      TableColumns.METHOD,//
+      TableColumns.THREAD,//
+      TableColumns.MARK,//
+      TableColumns.NOTE,//
+      TableColumns.LOG_SOURCE
 
     };
 
@@ -105,7 +105,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
 
     Runnable r = () -> {
       ParsingContext parsingContext = new ParsingContext(loadingInfo.getFriendlyUrl(), loadingInfo.getFileObject().getName()
-          .getBaseName());
+        .getBaseName());
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl()));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(logDataCollector));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
@@ -143,9 +143,9 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     String baseName = loadingInfo.getFileObject().getName().getBaseName();
     ParsingContext parsingContext = new ParsingContext(friendlyURI, baseName);
     logViewPanelWrapper.addHierarchyListener(
-        new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(),
-            logDataCollector,
-            new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
+      new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(),
+        logDataCollector,
+        new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
   }
 
   private LogImporter getLogImporter(Collection<LogImporter> elements) {
@@ -155,7 +155,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     } catch (InitializationException e1) {
       LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
       JOptionPane.showMessageDialog(null, "Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage(), "Open error",
-          JOptionPane.ERROR_MESSAGE);
+        JOptionPane.ERROR_MESSAGE);
     }
     return importer;
   }

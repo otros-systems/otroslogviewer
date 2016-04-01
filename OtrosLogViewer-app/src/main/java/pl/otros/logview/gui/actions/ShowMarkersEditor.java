@@ -15,30 +15,31 @@
  */
 package pl.otros.logview.gui.actions;
 
-import pl.otros.logview.gui.Icons;
-import pl.otros.logview.gui.OtrosApplication;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.gui.markers.editor.MarkersEditor;
 
 import java.awt.event.ActionEvent;
 
 public class ShowMarkersEditor extends OtrosAction {
 
-	private MarkersEditor markersEditor;
+  private MarkersEditor markersEditor;
 
-	public ShowMarkersEditor(OtrosApplication otrosApplication) {
-		super(otrosApplication);
-		putValue(NAME, "Show markers editor");
-		putValue(SHORT_DESCRIPTION, "Show markers editor. You can edit or create new marker.");
-		putValue(SMALL_ICON, Icons.MARKER);
+  public ShowMarkersEditor(OtrosApplication otrosApplication) {
+    super(otrosApplication);
+    putValue(NAME, "Show markers editor");
+    putValue(SHORT_DESCRIPTION, "Show markers editor. You can edit or create new marker.");
+    putValue(SMALL_ICON, Icons.MARKER);
 
-	}
+  }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (markersEditor == null) {
-			markersEditor = new MarkersEditor();
-		}
-    getOtrosApplication().addClosableTab("Markers editor","Markers editor", Icons.MARKER,markersEditor,true);
-	}
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (markersEditor == null) {
+      markersEditor = new MarkersEditor();
+    }
+    getOtrosApplication().addClosableTab("Markers editor", "Markers editor", Icons.MARKER, markersEditor, true);
+  }
 
 }

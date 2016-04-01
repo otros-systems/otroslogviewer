@@ -26,28 +26,23 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.table.ColumnControlButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataCollector;
-import pl.otros.logview.MarkerColors;
-import pl.otros.logview.Note;
 import pl.otros.logview.accept.*;
+import pl.otros.logview.api.*;
+import pl.otros.logview.api.gui.*;
+import pl.otros.logview.api.gui.NoteEvent.EventType;
+import pl.otros.logview.api.model.*;
+import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
 import pl.otros.logview.gui.config.LogTableFormatConfigView;
-import pl.otros.logview.gui.markers.AutomaticMarker;
-import pl.otros.logview.gui.message.MessageColorizer;
-import pl.otros.logview.gui.message.MessageFormatter;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
-import pl.otros.logview.gui.note.NoteEvent;
-import pl.otros.logview.gui.note.NoteEvent.EventType;
-import pl.otros.logview.gui.note.NoteObserver;
 import pl.otros.logview.gui.renderers.*;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
-import pl.otros.logview.gui.table.TableColumns;
 import pl.otros.logview.gui.util.JumpToCodeSelectionListener;
-import pl.otros.logview.pluginable.*;
+import pl.otros.logview.pluginable.PluginableElementNameComparator;
+import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.swing.table.ColumnLayout;
@@ -67,7 +62,7 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 
-public class LogViewPanel extends JPanel implements LogDataCollector {
+public class LogViewPanel extends LogViewPanelI {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanel.class.getName());
   private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
@@ -371,19 +366,23 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     table.getColumns(true).get(column.getColumn()).setPreferredWidth(width);
   }
 
+  @Override
   public JTextPane getLogDetailTextArea() {
     return logDetailTextArea;
   }
 
+  @Override
   public void add(LogData[] autoResizeSubsequent) {
     dataTableModel.add(autoResizeSubsequent);
 
   }
 
+  @Override
   public void add(LogData logData) {
     dataTableModel.add(logData);
   }
 
+  @Override
   public LogData[] getLogData() {
     return dataTableModel.getLogData();
   }
@@ -536,6 +535,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     return menu;
   }
 
+  @Override
   public int[] getSelectedRowsInModel() {
     int[] selectedRows = table.getSelectedRows();
     for (int index = 0; index < selectedRows.length; index++) {
@@ -601,6 +601,7 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
 
   }
 
+  @Override
   public void updateMarkerMenu(Collection<AutomaticMarker> markers) {
     HashMap<String, JMenu> marksGroups = new HashMap<>();
     HashMap<String, JMenu> unmarksGroups = new HashMap<>();
@@ -716,14 +717,17 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     }
   }
 
+  @Override
   public JXTable getTable() {
     return table;
   }
 
+  @Override
   public LogDataTableModel getDataTableModel() {
     return dataTableModel;
   }
 
+  @Override
   public JPanel getLogsMarkersPanel() {
     return logsMarkersPanel;
   }
@@ -733,26 +737,32 @@ public class LogViewPanel extends JPanel implements LogDataCollector {
     return dataTableModel.clear();
   }
 
+  @Override
   public LogData getDisplayedLogData() {
     return displayedLogData;
   }
 
+  @Override
   public void setDisplayedLogData(LogData displayedLogData) {
     this.displayedLogData = displayedLogData;
   }
 
+  @Override
   public OtrosJTextWithRulerScrollPane<JTextPane> getLogDetailWithRulerScrollPane() {
     return logDetailWithRulerScrollPane;
   }
 
+  @Override
   public PluginableElementsContainer<MessageColorizer> getSelectedMessageColorizersContainer() {
     return selectedMessageColorizersContainer;
   }
 
+  @Override
   public PluginableElementsContainer<MessageFormatter> getSelectedMessageFormattersContainer() {
     return selectedMessageFormattersContainer;
   }
 
+  @Override
   public JToolBar getMessageDetailToolbar() {
     return messageDetailToolbar;
   }

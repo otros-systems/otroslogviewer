@@ -2,12 +2,12 @@ package pl.otros.logview.parser.json;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pl.otros.logview.LogData;
-import pl.otros.logview.LogDataCollector;
-import pl.otros.logview.importer.InitializationException;
-import pl.otros.logview.importer.LogImporterUsingParser;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.store.MemoryLogDataStore;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.store.MemoryLogDataStore;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;

@@ -21,17 +21,18 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
-import pl.otros.logview.Stoppable;
-import pl.otros.logview.gui.Icons;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.Stoppable;
+import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogViewPanelWrapper;
+import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.LoadingInfo;
+import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.gui.LogImportStats;
-import pl.otros.logview.gui.LogViewPanelWrapper;
-import pl.otros.logview.gui.OtrosApplication;
-import pl.otros.logview.gui.table.TableColumns;
-import pl.otros.logview.importer.LogImporter;
-import pl.otros.logview.io.LoadingInfo;
-import pl.otros.logview.io.Utils;
-import pl.otros.logview.parser.ParsingContext;
-import pl.otros.logview.parser.TableColumnNameSelfDescribable;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -75,21 +76,21 @@ public class TailLogActionListener extends OtrosAction {
     } catch (Exception e2) {
       LOGGER.error("Cannot open tailing input stream for " + file.getName().getFriendlyURI() + ", " + e2.getMessage());
       JOptionPane.showMessageDialog(null, "Cannot open tailing input stream for: " + file.getName().getFriendlyURI() + ", " + e2.getMessage(), "Error",
-          JOptionPane.ERROR_MESSAGE);
+        JOptionPane.ERROR_MESSAGE);
       return;
     }
 
     TableColumns[] tableColumnsToUse = determineTableColumnsToUse(loadingInfo, importer);
 
     final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), loadingInfo.getObserableInputStreamImpl(),
-        tableColumnsToUse, getOtrosApplication());
+      tableColumnsToUse, getOtrosApplication());
     panel.goToLiveMode();
 
     String tabName = Utils.getFileObjectShortName(file);
     getOtrosApplication().addClosableTab(tabName, loadingInfo.getFriendlyUrl(), Icons.ARROW_REPEAT, panel, true);
 
     BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy = new BufferingLogDataCollectorProxy(panel.getDataTableModel(), 2000,
-        panel.getConfiguration());
+      panel.getConfiguration());
     openFileObjectInTailMode(panel, loadingInfo, bufferingLogDataCollectorProxy);
     SwingUtilities.invokeLater(panel::switchToContentView);
   }
@@ -105,7 +106,7 @@ public class TailLogActionListener extends OtrosAction {
 
   public void openFileObjectInTailMode(final LogViewPanelWrapper panel, final LoadingInfo loadingInfo, final BufferingLogDataCollectorProxy logDataCollector) {
     ParsingContext parsingContext = new ParsingContext(loadingInfo.getFileObject().getName().getFriendlyURI(), loadingInfo.getFileObject().getName()
-        .getBaseName());
+      .getBaseName());
     openFileObjectInTailMode(panel, loadingInfo, logDataCollector, parsingContext);
 
   }
@@ -118,7 +119,7 @@ public class TailLogActionListener extends OtrosAction {
         LogImportStats importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
         panel.getStatsTable().setModel(importStats);
         panel.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
-            new ParsingContextStopperForClosingTab(parsingContext)));
+          new ParsingContextStopperForClosingTab(parsingContext)));
         importer.initParsingContext(parsingContext);
         try {
           loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
