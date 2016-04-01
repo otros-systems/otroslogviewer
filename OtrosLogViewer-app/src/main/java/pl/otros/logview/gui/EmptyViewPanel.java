@@ -160,7 +160,7 @@ public class EmptyViewPanel extends JPanel {
     }
 
     bagConstraints.gridy = startY;
-    JLabel tailLabel = new JLabel("Tail log [from begging of file]", Icons.ARROW_REPEAT, SwingConstants.CENTER);
+    JLabel tailLabel = new JLabel("Tail log [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.CENTER);
     this.add(tailLabel, bagConstraints);
     bagConstraints.gridy++;
     for (LogImporter logImporter : logImportersList) {

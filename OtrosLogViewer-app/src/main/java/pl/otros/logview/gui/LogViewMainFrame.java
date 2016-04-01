@@ -679,7 +679,7 @@ public class LogViewMainFrame extends JFrame {
       fileMenu.add(openLog);
     }
     fileMenu.add(new JSeparator());
-    JLabel labelTailLog = new JLabel("Tail log [from begging of file]", Icons.ARROW_REPEAT, SwingConstants.LEFT);
+    JLabel labelTailLog = new JLabel("Tail log [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.LEFT);
     labelTailLog.setFont(menuGroupFont);
     fileMenu.add(labelTailLog);
     for (LogImporter logImporter : importers) {
