@@ -89,7 +89,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -266,7 +265,7 @@ public class LogViewMainFrame extends JFrame {
     OtrosSplash.setMessage("Loading configuration");
     final XMLConfiguration c = getConfiguration("config.xml");
     if (!c.containsKey(ConfKeys.UUID)) {
-      c.setProperty(ConfKeys.UUID, UUID.randomUUID().toString());
+      c.setProperty(ConfKeys.UUID, java.util.UUID.randomUUID().toString());
     }
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
