@@ -17,6 +17,7 @@
 package pl.otros.logview.api.io;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.RandomAccessContent;
@@ -69,7 +70,7 @@ public class Utils {
   }
 
   public static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
-    boolean gziped = false;
+    boolean gziped;
     try {
       ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
       GZIPInputStream gzipInputStream = new GZIPInputStream(bin);
@@ -100,7 +101,8 @@ public class Utils {
     loadingInfo.setFileObject(fileObject);
     loadingInfo.setFriendlyUrl(fileObject.getName().getFriendlyURI());
 
-    InputStream httpInputStream = fileObject.getContent().getInputStream();
+    final FileContent content = fileObject.getContent();
+    InputStream httpInputStream = content.getInputStream();
     byte[] buff = Utils.loadProbe(httpInputStream, 10000);
 
     loadingInfo.setGziped(checkIfIsGzipped(buff, buff.length));
@@ -121,7 +123,9 @@ public class Utils {
     loadingInfo.setObserableInputStreamImpl(observableInputStreamImpl);
 
     loadingInfo.setTailing(tailing);
-
+    if (fileObject.getType().hasContent()){
+      loadingInfo.setLastFileSize(content.getSize());
+    }
     return loadingInfo;
 
   }
@@ -219,7 +223,7 @@ public class Utils {
   /**
    * Get short name for URL
    *
-   * @param fileObject
+   * @param  fileObject File object
    * @return scheme://hostWithoutDomain/fileBaseName
    */
   public static String getFileObjectShortName(FileObject fileObject) {

@@ -35,4 +35,14 @@ public class LoadStatistic {
     public Date getDate() {
         return date;
     }
+
+    @Override
+    public String toString() {
+        return "LoadStatistic{" +
+          "source=" + source +
+          ", position=" + position +
+          ", total=" + total +
+          ", date=" + date +
+          '}';
+    }
 }

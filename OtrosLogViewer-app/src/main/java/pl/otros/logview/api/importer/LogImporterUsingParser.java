@@ -50,11 +50,11 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
   @Override
   public void importLogs(InputStream in, final LogDataCollector dataCollector, ParsingContext parsingContext) {
     LOGGER.trace("Log import started ");
-    String line = null;
-    LogData logData = null;
+    String line;
+    LogData logData;
     String charset = parser.getParserDescription().getCharset();
 
-    BufferedReader logReader = null;
+    BufferedReader logReader;
     if (charset == null) {
       logReader = new BufferedReader(new InputStreamReader(in));
     } else {
@@ -68,6 +68,11 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
 
     }
     while (true) {
+      synchronized (parsingContext){
+        if (!parsingContext.isParsingInProgress()){
+          break;
+        }
+      }
       try {
         line = logReader.readLine();
         if (line == null) {
@@ -100,10 +105,16 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
       }
     }
 
+    parseBuffer(dataCollector, parsingContext);
+
+    LOGGER.trace("Log import finished!");
+  }
+
+  private void parseBuffer(LogDataCollector dataCollector, ParsingContext parsingContext) {
     try {
       if (parser instanceof MultiLineLogParser) {
         MultiLineLogParser multiLineLogParser = (MultiLineLogParser) parser;
-        logData = multiLineLogParser.parseBuffer(parsingContext);
+        LogData logData = multiLineLogParser.parseBuffer(parsingContext);
         if (logData != null) {
           logData.setId(parsingContext.getGeneratedIdAndIncrease());
           logData.setLogSource(parsingContext.getLogSource());
@@ -116,8 +127,6 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
     } catch (Exception e) {
       LOGGER.info("Cannot parser rest of buffer, probably stopped importing");
     }
-
-    LOGGER.trace("Log import finished!");
   }
 
   @Override

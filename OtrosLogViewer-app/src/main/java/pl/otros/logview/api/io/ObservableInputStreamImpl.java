@@ -57,7 +57,9 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
     if (stop)
       return -1;
     int read = src.read(b, off, len);
-    current += read;
+    if (read>0){
+      current += read;
+    }
     return read;
   }
 
@@ -65,7 +67,9 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
     if (stop)
       return -1;
     int read = src.read(b);
-    current += read;
+    if (read>0){
+      current += read;
+    }
     return read;
   }
 
