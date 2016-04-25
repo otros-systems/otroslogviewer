@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 /**
  * Responsible for global drag-and-drop operations.
- *
+ * <p>
  * Currently supports dropping possibly multiple log files that are then opened by autodetection.
  *
  * @author murat
@@ -236,10 +236,10 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   public List<String> getFileUris(TransferSupport support) {
-    BufferedReader reader = null;
     List<String> files = new ArrayList<>();
-    try {
-      reader = new BufferedReader(DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()));
+    try (BufferedReader reader =
+           new BufferedReader(
+             DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()))) {
       String uri;
       while ((uri = reader.readLine()) != null) {
         files.add(uri);
@@ -248,8 +248,6 @@ public class DragAndDropFilesHandler extends TransferHandler {
       throw new RuntimeException("The dropped data is not supported. The unsupported DataFlavors are " + StringUtils.join(support.getDataFlavors(), ","), e);
     } catch (IOException e) {
       throw new RuntimeException("Cannot read the dropped data.", e);
-    } finally {
-      IOUtils.closeQuietly(reader);
     }
     return files;
   }

@@ -37,10 +37,8 @@ public class BaseLoader {
    * Load classes (interface implementation) from directory.
    *
    * @param <T>
-   * @param dir
-   *          dir with classes, zip or jar's
-   * @param type
-   *          interface to load
+   * @param dir  dir with classes, zip or jar's
+   * @param type interface to load
    * @return
    */
   public <T> Collection<T> load(File dir, Class<T> type) {
@@ -105,7 +103,7 @@ public class BaseLoader {
       classes = getClassesFromJar(f);
     }
     URL url = f.toURI().toURL();
-    ClassLoader cl = new URLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+    ClassLoader cl = new URLClassLoader(new URL[]{ url }, this.getClass().getClassLoader());
     for (String klazz : classes) {
       try {
         Class<?> c = cl.loadClass(klazz);
@@ -145,9 +143,7 @@ public class BaseLoader {
 
   public List<String> getClassesFromJar(File jarFile) throws IOException {
     ArrayList<String> list = new ArrayList<>();
-    JarInputStream jarInputStream = null;
-    try {
-      jarInputStream = new JarInputStream(new FileInputStream(jarFile));
+    try (JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile))) {
       JarEntry jarEntry;
       while (true) {
         jarEntry = jarInputStream.getNextJarEntry();
@@ -161,8 +157,6 @@ public class BaseLoader {
       }
     } catch (IOException e) {
       throw e;
-    } finally {
-      IOUtils.closeQuietly(jarInputStream);
     }
 
     return list;

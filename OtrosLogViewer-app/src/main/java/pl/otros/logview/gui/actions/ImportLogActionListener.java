@@ -99,8 +99,7 @@ public class ImportLogActionListener extends OtrosAction {
           dataTableModel.add(collector.getLogData());
           SwingUtilities.invokeLater(panel::switchToContentView);
           watcher.updateFinish("Loaded");
-          //Utils.closeQuietly(openFileObject.getFileObject());
-          Utils.closeQuietly2(openFileObject);
+          Utils.closeQuietly(openFileObject.getFileObject());
         };
         Thread t = new Thread(r);
         t.start();

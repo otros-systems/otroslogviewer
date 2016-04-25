@@ -63,9 +63,7 @@ public class Log4jSerilizedLogImporter extends AbstractPluginableElement impleme
 
   @Override
   public void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext) {
-    ObjectInputStream oin;
-    try {
-      oin = new ObjectInputStream(new BufferedInputStream(in));
+    try (ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(in))) {
       LoggingEvent le;
       while ((le = (LoggingEvent) oin.readObject()) != null) {
         LogData translateLog4j = Log4jUtil.translateLog4j(le);

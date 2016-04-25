@@ -72,38 +72,36 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
       LOGGER.debug(String.format("Have log importer detected (%s), will use it", logImporter.getName()));
       logImporter.importLogs(in, dataCollector, parsingContext);
     } else {
-      ByteArrayOutputStream byteArrayOutputStream = null;
-      SequenceInputStream sequenceInputStream = null;
       try {
         byte[] buff = new byte[16 * 1024];
         int read = 0;
         while ((read = in.read(buff)) > 0) {
+          try (ByteArrayOutputStream byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER)) {
 
-          byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER);
-          int totalRead = byteArrayOutputStream.size();
-          totalRead += read;
-          if (totalRead < detectTryMinimum) {
-            LOGGER.debug(String.format("To small amount of data to detect log importer [%db]", totalRead));
-            byteArrayOutputStream.write(buff, 0, read);
-          } else if (totalRead > detectTryMaximum) {
-            // stop parsing, protect of loading unlimited data
-            parsingContext.setParsingInProgress(false);
-            LOGGER.warn("Reached maximum size of log importer detection buffer, Will not load more data");
-          } else {
-            // try to detect log
-
-            byteArrayOutputStream.write(buff, 0, read);
-            LOGGER.debug("Trying to detect log importer");
-            LogImporter detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
-            if (detectLogImporter != null) {
-              LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
-              detectLogImporter.initParsingContext(parsingContext);
-              customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
-              byte[] buf = byteArrayOutputStream.toByteArray();
-              sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in);
-
-              detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
-              return;
+            int totalRead = byteArrayOutputStream.size();
+            totalRead += read;
+            if (totalRead < detectTryMinimum) {
+              LOGGER.debug(String.format("To small amount of data to detect log importer [%db]", totalRead));
+              byteArrayOutputStream.write(buff, 0, read);
+            } else if (totalRead > detectTryMaximum) {
+              // stop parsing, protect of loading unlimited data
+              parsingContext.setParsingInProgress(false);
+              LOGGER.warn("Reached maximum size of log importer detection buffer, Will not load more data");
+            } else {
+              // try to detect log
+              byteArrayOutputStream.write(buff, 0, read);
+              LOGGER.debug("Trying to detect log importer");
+              LogImporter detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
+              if (detectLogImporter != null) {
+                LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
+                detectLogImporter.initParsingContext(parsingContext);
+                customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
+                byte[] buf = byteArrayOutputStream.toByteArray();
+                try (SequenceInputStream sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in)) {
+                  detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
+                  return;
+                }
+              }
             }
           }
 
@@ -112,8 +110,6 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
         e.printStackTrace();
         LOGGER.warn("IOException reading log file " + parsingContext.getLogSource());
       } finally {
-        IOUtils.closeQuietly(byteArrayOutputStream);
-        IOUtils.closeQuietly(sequenceInputStream);
         IOUtils.closeQuietly(in);
       }
 

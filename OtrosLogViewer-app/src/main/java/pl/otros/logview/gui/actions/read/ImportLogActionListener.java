@@ -43,7 +43,6 @@ public abstract class ImportLogActionListener extends OtrosAction {
     JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser);
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), title);
-    Utils.closeQuietly(chooser.getSelectedFile());
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       LOGGER.debug("User cancel opening log");
       return;

@@ -29,14 +29,10 @@ public class SerializePersisService implements PersistService {
   @Override
   public void persist(String key, Object o) throws Exception {
     final File file = new File(dir, key + ".ser");
-    ObjectOutputStream outputStream = null;
-    try {
-      outputStream = new ObjectOutputStream(new FileOutputStream(file, false));
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false))) {
       outputStream.writeObject(o);
     } catch (IOException e) {
       throw e;
-    } finally {
-      IOUtils.closeQuietly(outputStream);
     }
   }
 
@@ -46,9 +42,8 @@ public class SerializePersisService implements PersistService {
     if (!file.exists()) {
       return defaultValue;
     }
-    ObjectInputStream in = null;
-    try {
-      in = new ObjectInputStream(new FileInputStream(file));
+
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
       final Object o = in.readObject();
       if (o == null || !Objects.equals(o.getClass().getName(), defaultValue.getClass().getName())) {
         LOGGER.warn("Read object is null or class different than default value: {}", o);
@@ -58,8 +53,6 @@ public class SerializePersisService implements PersistService {
     } catch (IOException | ClassNotFoundException e) {
       LOGGER.warn("Can't read value for " + key, e);
       return defaultValue;
-    } finally {
-      IOUtils.closeQuietly(in);
     }
   }
 }

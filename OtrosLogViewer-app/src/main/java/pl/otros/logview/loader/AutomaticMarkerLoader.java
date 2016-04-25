@@ -96,17 +96,13 @@ public class AutomaticMarkerLoader {
 
   private static AutomaticMarker loadRegexMarkerFromProperties(File file) throws Exception {
     Properties p = new Properties();
-    FileInputStream is = null;
     RegexMarker marker = null;
-    try {
-      is = new FileInputStream(file);
+    try (FileInputStream is = new FileInputStream(file)) {
       p.load(is);
       marker = new RegexMarker(p);
       marker.setFileName(file.getName());
     } catch (Exception e) {
       throw e;
-    } finally {
-      IOUtils.closeQuietly(is);
     }
 
     return marker;
@@ -114,19 +110,14 @@ public class AutomaticMarkerLoader {
 
   private static AutomaticMarker loadStringMarkerFromProperties(File file) throws Exception {
     Properties p = new Properties();
-    FileInputStream is = null;
     StringMarker marker = null;
-    try {
-      is = new FileInputStream(file);
+    try (FileInputStream is = new FileInputStream(file)) {
       p.load(is);
       marker = new StringMarker(p);
       marker.setFileName(file.getName());
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      IOUtils.closeQuietly(is);
     }
-
     return marker;
   }
 
@@ -149,16 +140,12 @@ public class AutomaticMarkerLoader {
     File[] files = dir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".marker"));
     if (files != null) {
       for (File file : files) {
-        FileInputStream fin = null;
-        try {
+        try (FileInputStream fin = new FileInputStream(file)) {
           Properties p = new Properties();
-          fin = new FileInputStream(file);
           p.load(fin);
           markers.add(loadPropertyBasedMarker(p));
         } catch (Exception e) {
           LOGGER.error("Cannot initialize RegexMarker from file " + file.getName(), e);
-        } finally {
-          IOUtils.closeQuietly(fin);
         }
       }
     }

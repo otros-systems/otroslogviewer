@@ -63,7 +63,6 @@ public class TailLogActionListener extends OtrosAction {
     initFileChooser(chooser);
 
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), "Tail " + importer.getName() + " log");
-    Utils.closeQuietly(chooser.getSelectedFile());
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       return;
     }
@@ -147,8 +146,7 @@ public class TailLogActionListener extends OtrosAction {
         parsingContext.setParsingInProgress(false);
         LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
         getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-        //Utils.closeQuietly(loadingInfo.getFileObject());
-        Utils.closeQuietly2(loadingInfo);
+        Utils.closeQuietly(loadingInfo.getFileObject());
       };
       Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
       t.setDaemon(true);

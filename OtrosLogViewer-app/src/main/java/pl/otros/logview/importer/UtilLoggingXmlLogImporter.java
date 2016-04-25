@@ -95,10 +95,8 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   public void importLogs(InputStream in, LogDataCollector collector, ParsingContext parsingContext) {
 
     StringBuilder sb = new StringBuilder();
-    try {
-      LineNumberReader bin = new LineNumberReader(new InputStreamReader(in, ENCODING));
+    try (LineNumberReader bin = new LineNumberReader(new InputStreamReader(in, ENCODING))) {
       String line;
-
       while ((line = bin.readLine()) != null) {
         sb.append(line).append("\n");
         if (bin.getLineNumber() % 30 == 0) {
@@ -106,11 +104,9 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
           sb.setLength(0);
         }
       }
-
     } catch (UnsupportedEncodingException e) {
       LOGGER.error("Cant load codepage " + e.getMessage());
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } finally {
       decodeEvents(sb.toString(), collector, parsingContext);
@@ -122,8 +118,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   /**
    * Converts the LoggingEvent data in XML string format into an actual XML Document class instance.
    *
-   * @param data
-   *          XML fragment
+   * @param data XML fragment
    * @return dom document
    */
   private Document parse(final String data, DocumentBuilder docBuilder) {
@@ -168,8 +163,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   /**
    * Decodes a String representing a number of events into a Vector of LoggingEvents.
    *
-   * @param document
-   *          to decode events from
+   * @param document to decode events from
    * @return Vector of LoggingEvents
    */
   public void decodeEvents(final String document, LogDataCollector collector, ParsingContext parsingContext) {
@@ -217,8 +211,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   /**
    * Given a Document, converts the XML into a Vector of LoggingEvents.
    *
-   * @param document
-   *          XML document
+   * @param document XML document
    * @return Vector of LoggingEvents
    */
   private void decodeEvents(final Document document, LogDataCollector collector, ParsingContext parsingContext) {
@@ -360,8 +353,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   /**
    * Get contents of CDATASection.
    *
-   * @param n
-   *          CDATASection
+   * @param n CDATASection
    * @return text content of all text or CDATA children of node.
    */
   private String getCData(final Node n) {

@@ -132,8 +132,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       parsingContext.setParsingInProgress(false);
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
       pluginContext.getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-      //Utils.closeQuietly(loadingInfo.getFileObject());
-      Utils.closeQuietly2(loadingInfo);
+      Utils.closeQuietly(loadingInfo.getFileObject());
     };
     Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
     t.setDaemon(true);

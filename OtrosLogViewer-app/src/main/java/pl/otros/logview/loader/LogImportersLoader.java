@@ -122,11 +122,9 @@ public class LogImportersLoader {
     if (listFiles != null) {
       StringBuilder exceptionMessages = new StringBuilder();
       for (File file : listFiles) {
-        FileInputStream is = null;
-        try {
+        try (FileInputStream is = new FileInputStream(file)) {
           Properties p = new Properties();
           Log4jPatternMultilineLogParser parser = new Log4jPatternMultilineLogParser();
-          is = new FileInputStream(file);
           p.load(is);
           parser.getParserDescription().setFile(file.getAbsolutePath());
           if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, "").equals("log4j")) {
@@ -152,8 +150,6 @@ public class LogImportersLoader {
           if (exceptionMessages.length() > 0) exceptionMessages.append("\n");
           exceptionMessages.append("Can't load property file based logger [")
             .append(file.getName()).append(": ").append(e.getMessage());
-        } finally {
-          IOUtils.closeQuietly(is);
         }
       }
       if (exceptionMessages.length() > 0)

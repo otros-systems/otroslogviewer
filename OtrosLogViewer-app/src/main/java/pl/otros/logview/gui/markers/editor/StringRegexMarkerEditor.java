@@ -84,7 +84,7 @@ public class StringRegexMarkerEditor extends JPanel {
     JButton newButton = new JButton("New");
     newButton.addActionListener(new NewMarkerActionListener());
 
-    type = new JComboBox<>(new String[]{"String matcher", "Regex matcher"});
+    type = new JComboBox<>(new String[]{ "String matcher", "Regex matcher" });
 
     type.addActionListener(testAfterChangeActionListener);
     type.addActionListener(saveEnableListener);
@@ -306,9 +306,8 @@ public class StringRegexMarkerEditor extends JPanel {
       }
       file.setText(chooser.getSelectedFile().getAbsolutePath());
       Properties p = new Properties();
-      FileInputStream fin = null;
-      try {
-        fin = new FileInputStream(chooser.getSelectedFile());
+
+      try (FileInputStream fin = new FileInputStream(chooser.getSelectedFile())) {
         p.load(fin);
         if (file.getText().endsWith("stringMarker")) {
           type.setSelectedIndex(0);
@@ -325,10 +324,7 @@ public class StringRegexMarkerEditor extends JPanel {
         condition.setText(p.getProperty(RegexMarker.CONDITION, ""));
         colors.getModel().setSelectedItem(MarkerColors.fromString(p.getProperty(PropertyFileAbstractMarker.COLOR, "")));
       } catch (Exception e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
-      } finally {
-        IOUtils.closeQuietly(fin);
       }
     }
   }
