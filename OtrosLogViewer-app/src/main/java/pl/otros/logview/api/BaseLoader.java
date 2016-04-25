@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,17 +145,24 @@ public class BaseLoader {
 
   public List<String> getClassesFromJar(File jarFile) throws IOException {
     ArrayList<String> list = new ArrayList<>();
-    JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile));
-    JarEntry jarEntry;
-    while (true) {
-      jarEntry = jarInputStream.getNextJarEntry();
-      if (null == jarEntry) {
-        break;//
+    JarInputStream jarInputStream = null;
+    try {
+      jarInputStream = new JarInputStream(new FileInputStream(jarFile));
+      JarEntry jarEntry;
+      while (true) {
+        jarEntry = jarInputStream.getNextJarEntry();
+        if (null == jarEntry) {
+          break;//
+        }
+        String s = jarEntry.getName();
+        if (s.endsWith(".class")) {
+          list.add(s.replace('/', '.').substring(0, s.length() - 6));
+        }
       }
-      String s = jarEntry.getName();
-      if (s.endsWith(".class")) {
-        list.add(s.replace('/', '.').substring(0, s.length() - 6));
-      }
+    } catch (IOException e) {
+      throw e;
+    } finally {
+      IOUtils.closeQuietly(jarInputStream);
     }
 
     return list;

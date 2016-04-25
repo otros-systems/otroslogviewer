@@ -267,6 +267,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
       otrosVfsBrowserDialog.setMultiSelectionEnabled(false);
     }
     JOtrosVfsBrowserDialog.ReturnValue returnValue = otrosVfsBrowserDialog.showOpenDialog(this, "Select file");
+    Utils.closeQuietly(otrosVfsBrowserDialog.getSelectedFile());
     if (returnValue.equals(JOtrosVfsBrowserDialog.ReturnValue.Approve)) {
       loadLogContent(otrosVfsBrowserDialog.getSelectedFile());
     }
@@ -278,6 +279,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
       logFileContent.setText(new String(loadProbe));
       logFileContent.setCaretPosition(0);
     } finally {
+      fileObject.getContent().close();
       Utils.closeQuietly(fileObject);
     }
   }
@@ -297,6 +299,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
     ByteArrayInputStream in = new ByteArrayInputStream(logFileContent.getText().getBytes());
     logImporterUsingParser.initParsingContext(parsingContext);
     logImporterUsingParser.importLogs(in, logViewPanel.getDataTableModel(), parsingContext);
+    IOUtils.closeQuietly(in);
     int loaded = logViewPanel.getDataTableModel().getRowCount();
     if (loaded > 0) {
       otrosApplication.getStatusObserver().updateStatus(String.format("Parsed %d events.", loaded));

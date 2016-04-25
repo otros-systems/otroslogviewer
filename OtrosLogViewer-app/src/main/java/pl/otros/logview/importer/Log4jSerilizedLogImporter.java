@@ -16,6 +16,7 @@
 
 package pl.otros.logview.importer;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.spi.LoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,8 @@ public class Log4jSerilizedLogImporter extends AbstractPluginableElement impleme
       LOGGER.warn(String.format("IOException when reading log4j serialized event: %s", e.getMessage()));
     } catch (ClassNotFoundException e) {
       LOGGER.warn(String.format("ClassNotFoundException when reading log4j serialized event %s", e.getMessage()));
+    } finally {
+      IOUtils.closeQuietly(in);
     }
   }
 

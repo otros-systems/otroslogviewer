@@ -209,9 +209,46 @@ public class Utils {
       try {
         LOGGER.info(String.format("Closing file %s", friendlyURI));
         fileObject.close();
+        fileObject.getFileSystem().getFileSystemManager().
+                closeFileSystem(fileObject.getFileSystem());
         LOGGER.info(String.format("File %s closed", friendlyURI));
       } catch (FileSystemException ignore) {
         LOGGER.info(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
+      }
+    }
+  }
+
+  public static void closeQuietly2(LoadingInfo fileObject) {
+    if (fileObject != null) {
+      if(fileObject.getFileObject() != null) {
+        String friendlyURI = fileObject.getFileObject().getName().getFriendlyURI();
+        try {
+          LOGGER.info(String.format("Closing file %s", friendlyURI));
+          if (fileObject.getObserableInputStreamImpl() != null) {
+            try {
+              fileObject.getObserableInputStreamImpl().close();
+            } catch (IOException e1) {
+              e1.printStackTrace();
+            }
+          }
+          if (fileObject.getContentInputStream() != null) {
+            try {
+              fileObject.getContentInputStream().close();
+            } catch (IOException e1) {
+              e1.printStackTrace();
+            }
+          }
+          fileObject.getFileObject().close();
+          fileObject.setObserableInputStreamImpl(null);
+          fileObject.setContentInputStream(null);
+          LOGGER.info("Log file really closed now");
+          fileObject.getFileObject().getFileSystem().getFileSystemManager().
+                  closeFileSystem(fileObject.getFileObject().getFileSystem());
+          LOGGER.info(String.format("File %s closed for real!!!", friendlyURI));
+          System.gc();
+        } catch (FileSystemException ignore) {
+          LOGGER.info(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
+        }
       }
     }
   }

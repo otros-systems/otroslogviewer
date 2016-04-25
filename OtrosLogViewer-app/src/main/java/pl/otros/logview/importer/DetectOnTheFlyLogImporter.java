@@ -16,6 +16,7 @@
 
 package pl.otros.logview.importer;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -71,12 +72,14 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
       LOGGER.debug(String.format("Have log importer detected (%s), will use it", logImporter.getName()));
       logImporter.importLogs(in, dataCollector, parsingContext);
     } else {
+      ByteArrayOutputStream byteArrayOutputStream = null;
+      SequenceInputStream sequenceInputStream = null;
       try {
         byte[] buff = new byte[16 * 1024];
         int read = 0;
         while ((read = in.read(buff)) > 0) {
 
-          ByteArrayOutputStream byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER);
+          byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER);
           int totalRead = byteArrayOutputStream.size();
           totalRead += read;
           if (totalRead < detectTryMinimum) {
@@ -97,7 +100,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
               detectLogImporter.initParsingContext(parsingContext);
               customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
               byte[] buf = byteArrayOutputStream.toByteArray();
-              SequenceInputStream sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in);
+              sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in);
 
               detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
               return;
@@ -108,6 +111,10 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
       } catch (IOException e) {
         e.printStackTrace();
         LOGGER.warn("IOException reading log file " + parsingContext.getLogSource());
+      } finally {
+        IOUtils.closeQuietly(byteArrayOutputStream);
+        IOUtils.closeQuietly(sequenceInputStream);
+        IOUtils.closeQuietly(in);
       }
 
     }

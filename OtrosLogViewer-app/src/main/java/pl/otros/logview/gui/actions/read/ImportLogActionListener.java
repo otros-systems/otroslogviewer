@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -42,6 +43,7 @@ public abstract class ImportLogActionListener extends OtrosAction {
     JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser);
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), title);
+    Utils.closeQuietly(chooser.getSelectedFile());
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       LOGGER.debug("User cancel opening log");
       return;

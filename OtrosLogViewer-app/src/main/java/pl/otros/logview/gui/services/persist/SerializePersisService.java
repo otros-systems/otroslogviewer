@@ -1,5 +1,6 @@
 package pl.otros.logview.gui.services.persist;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.pluginable.AllPluginables;
@@ -28,9 +29,15 @@ public class SerializePersisService implements PersistService {
   @Override
   public void persist(String key, Object o) throws Exception {
     final File file = new File(dir, key + ".ser");
-    final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false));
-    outputStream.writeObject(o);
-    outputStream.close();
+    ObjectOutputStream outputStream = null;
+    try {
+      outputStream = new ObjectOutputStream(new FileOutputStream(file, false));
+      outputStream.writeObject(o);
+    } catch (IOException e) {
+      throw e;
+    } finally {
+      IOUtils.closeQuietly(outputStream);
+    }
   }
 
   @Override
@@ -39,7 +46,7 @@ public class SerializePersisService implements PersistService {
     if (!file.exists()) {
       return defaultValue;
     }
-    ObjectInputStream in;
+    ObjectInputStream in = null;
     try {
       in = new ObjectInputStream(new FileInputStream(file));
       final Object o = in.readObject();
@@ -51,6 +58,8 @@ public class SerializePersisService implements PersistService {
     } catch (IOException | ClassNotFoundException e) {
       LOGGER.warn("Can't read value for " + key, e);
       return defaultValue;
+    } finally {
+      IOUtils.closeQuietly(in);
     }
   }
 }

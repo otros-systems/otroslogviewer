@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.read;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -235,7 +236,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   public List<String> getFileUris(TransferSupport support) {
-    BufferedReader reader;
+    BufferedReader reader = null;
     List<String> files = new ArrayList<>();
     try {
       reader = new BufferedReader(DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()));
@@ -247,6 +248,8 @@ public class DragAndDropFilesHandler extends TransferHandler {
       throw new RuntimeException("The dropped data is not supported. The unsupported DataFlavors are " + StringUtils.join(support.getDataFlavors(), ","), e);
     } catch (IOException e) {
       throw new RuntimeException("Cannot read the dropped data.", e);
+    } finally {
+      IOUtils.closeQuietly(reader);
     }
     return files;
   }

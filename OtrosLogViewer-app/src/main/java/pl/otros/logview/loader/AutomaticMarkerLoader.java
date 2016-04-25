@@ -16,6 +16,7 @@
 package pl.otros.logview.loader;
 
 import com.google.common.base.Splitter;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.BaseLoader;
@@ -95,17 +96,37 @@ public class AutomaticMarkerLoader {
 
   private static AutomaticMarker loadRegexMarkerFromProperties(File file) throws Exception {
     Properties p = new Properties();
-    p.load(new FileInputStream(file));
-    RegexMarker marker = new RegexMarker(p);
-    marker.setFileName(file.getName());
+    FileInputStream is = null;
+    RegexMarker marker = null;
+    try {
+      is = new FileInputStream(file);
+      p.load(is);
+      marker = new RegexMarker(p);
+      marker.setFileName(file.getName());
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      IOUtils.closeQuietly(is);
+    }
+
     return marker;
   }
 
   private static AutomaticMarker loadStringMarkerFromProperties(File file) throws Exception {
     Properties p = new Properties();
-    p.load(new FileInputStream(file));
-    StringMarker marker = new StringMarker(p);
-    marker.setFileName(file.getName());
+    FileInputStream is = null;
+    StringMarker marker = null;
+    try {
+      is = new FileInputStream(file);
+      p.load(is);
+      marker = new StringMarker(p);
+      marker.setFileName(file.getName());
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      IOUtils.closeQuietly(is);
+    }
+
     return marker;
   }
 
@@ -128,14 +149,16 @@ public class AutomaticMarkerLoader {
     File[] files = dir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".marker"));
     if (files != null) {
       for (File file : files) {
+        FileInputStream fin = null;
         try {
           Properties p = new Properties();
-          FileInputStream fin = new FileInputStream(file);
+          fin = new FileInputStream(file);
           p.load(fin);
           markers.add(loadPropertyBasedMarker(p));
-          fin.close();
         } catch (Exception e) {
           LOGGER.error("Cannot initialize RegexMarker from file " + file.getName(), e);
+        } finally {
+          IOUtils.closeQuietly(fin);
         }
       }
     }

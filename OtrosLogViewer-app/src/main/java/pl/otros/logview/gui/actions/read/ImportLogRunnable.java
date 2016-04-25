@@ -68,6 +68,7 @@ public final class ImportLogRunnable implements Runnable {
       panel.switchToContentView();
     });
     watcher.updateFinish("Loaded");
-    Utils.closeQuietly(openFileObject.getFileObject());
+    //Utils.closeQuietly(openFileObject.getFileObject());
+    Utils.closeQuietly2(openFileObject);
   }
 }

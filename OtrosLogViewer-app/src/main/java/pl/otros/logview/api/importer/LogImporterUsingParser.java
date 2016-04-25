@@ -15,6 +15,7 @@
  */
 package pl.otros.logview.api.importer;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -115,6 +116,8 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
       }
     } catch (Exception e) {
       LOGGER.info("Cannot parser rest of buffer, probably stopped importing");
+    } finally {
+      IOUtils.closeQuietly(logReader);
     }
 
     LOGGER.trace("Log import finished!");

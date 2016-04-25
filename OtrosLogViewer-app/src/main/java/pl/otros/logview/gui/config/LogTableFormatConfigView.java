@@ -242,6 +242,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus(String.format("Column layouts have been imported from %s", file.getName().getFriendlyURI()));
     } finally {
+      file.getContent().close();
       Utils.closeQuietly(file);
     }
   }
@@ -462,6 +463,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         final FileObject selectedFile = dialog.getSelectedFile();
         try {
           importFromFile(selectedFile);
+          Utils.closeQuietly(dialog.getSelectedFile());
         } catch (ConfigurationException e) {
           LOGGER.error("Can't import column layout from file", e);
           showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",

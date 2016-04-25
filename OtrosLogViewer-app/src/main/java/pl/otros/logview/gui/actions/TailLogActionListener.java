@@ -16,8 +16,10 @@
 
 package pl.otros.logview.gui.actions;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
@@ -41,6 +43,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +63,7 @@ public class TailLogActionListener extends OtrosAction {
     initFileChooser(chooser);
 
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), "Tail " + importer.getName() + " log");
+    Utils.closeQuietly(chooser.getSelectedFile());
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       return;
     }
@@ -143,7 +147,8 @@ public class TailLogActionListener extends OtrosAction {
         parsingContext.setParsingInProgress(false);
         LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
         getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-        Utils.closeQuietly(loadingInfo.getFileObject());
+        //Utils.closeQuietly(loadingInfo.getFileObject());
+        Utils.closeQuietly2(loadingInfo);
       };
       Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
       t.setDaemon(true);

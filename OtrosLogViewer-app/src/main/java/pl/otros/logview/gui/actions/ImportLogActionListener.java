@@ -15,6 +15,7 @@
  */
 package pl.otros.logview.gui.actions;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +99,8 @@ public class ImportLogActionListener extends OtrosAction {
           dataTableModel.add(collector.getLogData());
           SwingUtilities.invokeLater(panel::switchToContentView);
           watcher.updateFinish("Loaded");
-          Utils.closeQuietly(openFileObject.getFileObject());
+          //Utils.closeQuietly(openFileObject.getFileObject());
+          Utils.closeQuietly2(openFileObject);
         };
         Thread t = new Thread(r);
         t.start();

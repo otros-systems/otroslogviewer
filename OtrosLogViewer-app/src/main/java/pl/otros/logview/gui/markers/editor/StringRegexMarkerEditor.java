@@ -306,7 +306,7 @@ public class StringRegexMarkerEditor extends JPanel {
       }
       file.setText(chooser.getSelectedFile().getAbsolutePath());
       Properties p = new Properties();
-      FileInputStream fin;
+      FileInputStream fin = null;
       try {
         fin = new FileInputStream(chooser.getSelectedFile());
         p.load(fin);
@@ -327,6 +327,8 @@ public class StringRegexMarkerEditor extends JPanel {
       } catch (Exception e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
+      } finally {
+        IOUtils.closeQuietly(fin);
       }
     }
   }
