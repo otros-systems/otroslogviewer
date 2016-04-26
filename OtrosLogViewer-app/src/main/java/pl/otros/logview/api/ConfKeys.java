@@ -44,6 +44,7 @@ public class ConfKeys {
   public static final String HTTP_PROXY_USER = "http.proxy.user";
   public static final String MESSAGE_FORMATTER_MAX_SIZE = "gui.formatter.general.messageFormatMaximumSize";
   public static final String MESSAGE_FORMATTER_CHUNKS_ORDER = "gui.formatter.general.chunksOrder";
+  public static final String MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK = "gui.formatter.general.monospaceFontInMessageChunk";
   public static final String JUMP_TO_CODE_AUTO_JUMP_ENABLED = "services.jumpToCode.autoJump.enabled";
   public static final String JUMP_TO_CODE_ENABLED = "services.jumpToCode.enabled";
   public static final String JUMP_TO_CODE_HOST = "services.jumpToCode.host";

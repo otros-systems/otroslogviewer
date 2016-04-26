@@ -55,6 +55,7 @@ public class LogDataFormatter {
   private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
   private final DateFormat dateFormat;
   private Style mainStyle = null;
+  private Style messageMonospacedStyle = null;
   private Style classMethodStyle = null;
   private Style boldArialStyle = null;
   private Style propertyNameStyle = null;
@@ -94,9 +95,14 @@ public class LogDataFormatter {
     mainStyle = sc.addStyle("MainStyle", defaultStyle);
     StyleConstants.setForeground(mainStyle, Color.BLACK);
 
+    messageMonospacedStyle =  sc.addStyle("messageMonospaced", null);
+    StyleConstants.setFontFamily(messageMonospacedStyle, "monospaced");
+    StyleConstants.setForeground(messageMonospacedStyle, Color.BLACK);
+
     classMethodStyle = sc.addStyle("classMethod", null);
     StyleConstants.setFontFamily(classMethodStyle, "monospaced");
     StyleConstants.setForeground(classMethodStyle, Color.BLUE);
+
     boldArialStyle = sc.addStyle("note", mainStyle);
     StyleConstants.setFontFamily(boldArialStyle, "arial");
     StyleConstants.setBold(boldArialStyle, true);
@@ -173,6 +179,8 @@ public class LogDataFormatter {
   }
 
   private void addMessageChunk() {
+    Boolean useMonospaceFont = otrosApplication.getConfiguration().getBoolean(ConfKeys.MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK,
+      false);
     String s1 = "Message: ";
     chunks.add(new TextChunkWithStyle(s1, boldArialStyle));
     s1 = ld.getMessage();
@@ -190,7 +198,11 @@ public class LogDataFormatter {
       s1 = messageUtils.formatMessageWithTimeLimit(s1, messageFormatter, 5);
       s1 = StringUtils.remove(s1, '\r');
     }
-    chunks.add(new TextChunkWithStyle(s1, mainStyle));
+    if(useMonospaceFont){
+      chunks.add(new TextChunkWithStyle(s1, messageMonospacedStyle));
+    }else {
+      chunks.add(new TextChunkWithStyle(s1, mainStyle));
+    }
 
 
     Collection<MessageColorizer> colorizers = colorizersContainer.getElements();
@@ -202,7 +214,8 @@ public class LogDataFormatter {
       messageFragmentStyles.addAll(messageUtils.colorizeMessageWithTimeLimit(s1, charsBeforeMessage, messageColorizer, 5));
     }
 
-    chunks.addAll(messageFragmentStyles.stream().map(messageFragmentStyle -> new TextChunkWithStyle(null, messageFragmentStyle)).collect(Collectors.toList()));
+    chunks.addAll(messageFragmentStyles.stream().map(
+      messageFragmentStyle -> new TextChunkWithStyle(null, messageFragmentStyle)).collect(Collectors.toList()));
 
   }
 
@@ -231,8 +244,7 @@ public class LogDataFormatter {
     LOGGER.trace("Start do in background");
     if (otrosApplication.getConfiguration() != null) {
       //try to get chunks order and set default if not in config
-      String chunksOrder = null;
-      chunksOrder = otrosApplication.getConfiguration().getString(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER,
+      String chunksOrder = otrosApplication.getConfiguration().getString(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER,
         "date;class;method;level;thread;file;NDC;logger;properties;message;marked;note");
       String[] chunkOrderArr = chunksOrder.split(";");
       for (String currentChunkOrder : chunkOrderArr) {

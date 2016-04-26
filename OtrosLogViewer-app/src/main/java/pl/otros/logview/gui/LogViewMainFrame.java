@@ -357,6 +357,11 @@ public class LogViewMainFrame extends JFrame {
       userConfiguration.setProperty(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER,
         "date;class;method;level;thread;file;NDC;logger;properties;message;marked;note");
     }
+    //default setting to use monospace in message chunk or not
+    if (!userConfiguration.containsKey(ConfKeys.MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK)) {
+      userConfiguration.setProperty(ConfKeys.MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK,
+        false);
+    }
     userConfiguration.setAutoSave(true);
     return userConfiguration;
   }
