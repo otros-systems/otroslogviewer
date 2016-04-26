@@ -19,6 +19,8 @@ package pl.otros.logview.gui.message.update;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.ConfKeys;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.model.Note;
@@ -26,6 +28,7 @@ import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.gui.LogViewMainFrame;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
@@ -67,14 +70,16 @@ public class LogDataFormatter {
   private final CancelStatus cancelStatus;
 
   private final MessageUpdateUtils messageUtils;
+  private OtrosApplication otrosApplication;
 
-
-  public LogDataFormatter(LogData logData, //
+  public LogDataFormatter(OtrosApplication otrosApplication,
+                          LogData logData, //
                           DateFormat dateFormat,//
                           MessageUpdateUtils messageUtils,//
                           PluginableElementsContainer<MessageColorizer> colorizersContainer,//
                           PluginableElementsContainer<MessageFormatter> formattersContainer,//
                           CancelStatus cancelStatus, int maximumMessageSize) {
+    this.otrosApplication = otrosApplication;
     this.ld = logData;
     this.dateFormat = dateFormat;
     this.messageUtils = messageUtils;
@@ -105,17 +110,23 @@ public class LogDataFormatter {
 
   }
 
-  public java.util.List<TextChunkWithStyle> format() throws Exception {
-
-    LOGGER.trace("Start do in background");
-
+  private TextChunkWithStyle getDateChunk() {
     String s1 = "Date:    " + dateFormat.format(ld.getDate()) + NEW_LINE;
-    chunks.add(new TextChunkWithStyle(s1, mainStyle));
-    s1 = "Class:   " + ld.getClazz() + NEW_LINE;
-    chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
-    s1 = "Method:  " + ld.getMethod() + NEW_LINE;
-    chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
-    s1 = "Level:   ";
+    return new TextChunkWithStyle(s1, mainStyle);
+  }
+
+  private TextChunkWithStyle getClassChunk() {
+    String s1 = "Class:   " + ld.getClazz() + NEW_LINE;
+    return new TextChunkWithStyle(s1, classMethodStyle);
+  }
+
+  private TextChunkWithStyle getMethodChunk() {
+    String s1 = "Method:  " + ld.getMethod() + NEW_LINE;
+    return new TextChunkWithStyle(s1, classMethodStyle);
+  }
+
+  private void addLevelChunk() {
+    String s1 = "Level:   ";
     chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
     Icon levelIcon = LevelRenderer.getIconByLevel(ld.getLevel());
     if (levelIcon != null) {
@@ -123,9 +134,10 @@ public class LogDataFormatter {
     }
     s1 = " " + ld.getLevel().getName() + NEW_LINE;
     chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
+  }
 
-    chunks.add(new TextChunkWithStyle("Thread: " + ld.getThread() + NEW_LINE, classMethodStyle));
-
+  private void addFileChunk() {
+    String s1 = null;
     if (StringUtils.isNotBlank(ld.getFile())) {
       s1 = "File: " + ld.getFile();
       if (StringUtils.isNotBlank(ld.getLine())) {
@@ -133,15 +145,21 @@ public class LogDataFormatter {
       }
       chunks.add(new TextChunkWithStyle(s1 + NEW_LINE, mainStyle));
     }
+  }
 
+  private void addNDCChunk() {
     if (StringUtils.isNotBlank(ld.getNDC())) {
       chunks.add(new TextChunkWithStyle("NDC: " + ld.getNDC() + NEW_LINE, mainStyle));
     }
+  }
 
+  private void addLoggerNameChunk() {
     if (StringUtils.isNotBlank(ld.getLoggerName())) {
       chunks.add(new TextChunkWithStyle("Logger name: " + ld.getLoggerName() + NEW_LINE, mainStyle));
     }
+  }
 
+  private void addPropertiesChunk() {
     Map<String, String> properties = ld.getProperties();
     if (properties != null && properties.size() > 0) {
       chunks.add(new TextChunkWithStyle("Properties:\n", boldArialStyle));
@@ -152,9 +170,10 @@ public class LogDataFormatter {
         chunks.add(new TextChunkWithStyle(properties.get(key) + "\n", propertyValueStyle));
       }
     }
+  }
 
-
-    s1 = "Message: ";
+  private void addMessageChunk() {
+    String s1 = "Message: ";
     chunks.add(new TextChunkWithStyle(s1, boldArialStyle));
     s1 = ld.getMessage();
     if (s1.length() > maximumMessageSize) {
@@ -166,7 +185,7 @@ public class LogDataFormatter {
     int charsBeforeMessage = countCharsBeforeMessage(chunks);
     for (MessageFormatter messageFormatter : formatters) {
       if (cancelStatus.isCancelled()) {
-        return chunks;
+        return;
       }
       s1 = messageUtils.formatMessageWithTimeLimit(s1, messageFormatter, 5);
       s1 = StringUtils.remove(s1, '\r');
@@ -185,6 +204,9 @@ public class LogDataFormatter {
 
     chunks.addAll(messageFragmentStyles.stream().map(messageFragmentStyle -> new TextChunkWithStyle(null, messageFragmentStyle)).collect(Collectors.toList()));
 
+  }
+
+  private void addMarkedChunk() {
     chunks.add(new TextChunkWithStyle("\nMarked: ", boldArialStyle));
     if (ld.isMarked()) {
       MarkerColors markerColors = ld.getMarkerColors();
@@ -192,13 +214,81 @@ public class LogDataFormatter {
     } else {
       chunks.add(new TextChunkWithStyle("false\n", boldArialStyle));
     }
+  }
 
+  private void addNoteChunk() {
+    String s1 = null;
     Note note = ld.getNote();
     if (note != null && note.getNote() != null && note.getNote().length() > 0) {
       s1 = "Note: " + note.getNote();
       chunks.add(new TextChunkWithStyle(s1, boldArialStyle));
     }
 
+  }
+
+  public java.util.List<TextChunkWithStyle> format() throws Exception {
+
+    LOGGER.trace("Start do in background");
+    if (otrosApplication.getConfiguration() != null) {
+      //try to get chunks order and set default if not in config
+      String chunksOrder = null;
+      chunksOrder = otrosApplication.getConfiguration().getString(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER,
+        "date;class;method;level;thread;file;NDC;logger;properties;message;marked;note");
+      String[] chunkOrderArr = chunksOrder.split(";");
+      for (String currentChunkOrder : chunkOrderArr) {
+        if (currentChunkOrder.contains("date")) {
+          //1 date and time
+          chunks.add(getDateChunk());
+        }
+        if (currentChunkOrder.contains("class")) {
+          //2 class name
+          chunks.add(getClassChunk());
+        }
+        if (currentChunkOrder.contains("method")) {
+          //3 method name
+          chunks.add(getMethodChunk());
+        }
+        if (currentChunkOrder.contains("level")) {
+          //4 logger level
+          addLevelChunk();
+        }
+        if (currentChunkOrder.contains("thread")) {
+          //5 thread name
+          chunks.add(new TextChunkWithStyle("Thread: " + ld.getThread() + NEW_LINE, classMethodStyle));
+        }
+        if (currentChunkOrder.contains("file")) {
+          //6 file
+          addFileChunk();
+        }
+        if (currentChunkOrder.contains("NDC")) {
+          //7 NDC
+          addNDCChunk();
+        }
+        if (currentChunkOrder.contains("logger")) {
+          //8 logger name
+          addLoggerNameChunk();
+        }
+        if (currentChunkOrder.contains("properties")) {
+          //9 properties
+          addPropertiesChunk();
+        }
+        if (currentChunkOrder.contains("message")) {
+          //10 message
+          addMessageChunk();
+          if (cancelStatus.isCancelled()) {
+            return chunks;
+          }
+        }
+        if (currentChunkOrder.contains("marked")) {
+          //11 marked
+          addMarkedChunk();
+        }
+        if (currentChunkOrder.contains("note")) {
+          //12 note
+          addNoteChunk();
+        }
+      }
+    }
     return chunks;
   }
 

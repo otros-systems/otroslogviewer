@@ -352,6 +352,11 @@ public class LogViewMainFrame extends JFrame {
         userConfiguration.setProperty(key, commonConfiguration.getProperty(key));
       }
     }
+    //set default chunks order if not found in common or user config
+    if (!userConfiguration.containsKey(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER)) {
+      userConfiguration.setProperty(ConfKeys.MESSAGE_FORMATTER_CHUNKS_ORDER,
+        "date;class;method;level;thread;file;NDC;logger;properties;message;marked;note");
+    }
     userConfiguration.setAutoSave(true);
     return userConfiguration;
   }
@@ -440,7 +445,7 @@ public class LogViewMainFrame extends JFrame {
 
   private void initToolbar() {
     toolBar = new JToolBar();
-    final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
+    final JComboBox searchMode = new JComboBox(new String[]{ "String contains search: ", "Regex search: ", "Query search: " });
     searchField = new JTextField();
 
     PersistedSuggestionSource searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS), otrosApplication.getServices().getPersistService());
