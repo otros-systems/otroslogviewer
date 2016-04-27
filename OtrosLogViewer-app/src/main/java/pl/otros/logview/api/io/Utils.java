@@ -149,7 +149,7 @@ public class Utils {
       RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
       randomAccessContent.seek(lastFileSize);
       loadingInfo.setLastFileSize(currentSize);
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream());
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(),lastFileSize);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
@@ -159,7 +159,7 @@ public class Utils {
     } else if (currentSize < lastFileSize) {
       IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
       InputStream inputStream = loadingInfo.getFileObject().getContent().getInputStream();
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream);
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream,0);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));

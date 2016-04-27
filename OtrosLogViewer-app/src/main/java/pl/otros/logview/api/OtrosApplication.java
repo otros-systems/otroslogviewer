@@ -18,6 +18,7 @@ package pl.otros.logview.api;
 import org.apache.commons.configuration.DataConfiguration;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.api.gui.*;
+import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.MenuActionProvider;
@@ -49,12 +50,13 @@ public class OtrosApplication {
   private AppProperties appProperties;
   private final List<MenuActionProvider> menuActionProviders;
   private PersistService persistService;
+  private LogLoader logLoader;
 
 
   private Services services;
 
   public OtrosApplication() {
-    menuActionProviders = new ArrayList<MenuActionProvider>();
+    menuActionProviders = new ArrayList<>();
     appProperties = new AppProperties();
   }
 
@@ -192,6 +194,14 @@ public class OtrosApplication {
     this.services = services;
   }
 
+  public LogLoader getLogLoader() {
+    return logLoader;
+  }
+
+  public void setLogLoader(LogLoader logLoader) {
+    this.logLoader = logLoader;
+  }
+
   public void addLogViewPanelMenuActionProvider(MenuActionProvider menuActionProviders) {
     this.menuActionProviders.add(menuActionProviders);
   }
@@ -202,7 +212,7 @@ public class OtrosApplication {
    * @return
    */
   public List<MenuActionProvider> getLogViewPanelMenuActionProvider() {
-    return new ArrayList<MenuActionProvider>(menuActionProviders);
+    return new ArrayList<>(menuActionProviders);
   }
 
   public PersistService getPersistService() {

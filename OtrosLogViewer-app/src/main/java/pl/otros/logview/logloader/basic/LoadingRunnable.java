@@ -34,6 +34,7 @@ public class LoadingRunnable implements Runnable {
   private LogImporter importer;
   private long currentRead = 0;
   private long lastFileSize = 0;
+  private Optional<ObservableInputStreamImpl> obserableInputStreamImpl = Optional.empty();
 
   private enum SleepAction {Sleep, Break, Import}
 
@@ -123,6 +124,7 @@ public class LoadingRunnable implements Runnable {
       while (parsingContext.isParsingInProgress()) {
         try {
           SleepAction action;
+          obserableInputStreamImpl = Optional.of(loadingInfo.getObserableInputStreamImpl());
           synchronized (this) {
             if (stop) {
               action = SleepAction.Break;
@@ -131,8 +133,8 @@ public class LoadingRunnable implements Runnable {
             } else {
               action = SleepAction.Import;
             }
-            currentRead = loadingInfo.getObserableInputStreamImpl().getCurrentRead();
-            lastFileSize = loadingInfo.getLastFileSize();
+            obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
+            lastFileSize = loadingInfo.getFileObject().getContent().getSize();
           }
           if (SleepAction.Sleep == action) {
             Thread.sleep(sleepTime);
@@ -146,12 +148,12 @@ public class LoadingRunnable implements Runnable {
             }
           }
 
-          synchronized (this) {
-            currentRead = loadingInfo.getObserableInputStreamImpl().getCurrentRead();
-            lastFileSize = loadingInfo.getLastFileSize();
-          }
           Thread.sleep(sleepTime);
           Utils.reloadFileObject(loadingInfo);
+          synchronized (this) {
+            obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
+            lastFileSize = loadingInfo.getFileObject().getContent().getSize();
+          }
 
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
@@ -169,7 +171,8 @@ public class LoadingRunnable implements Runnable {
 
 
   public synchronized LoadStatistic getLoadStatistic() {
-    return new LoadStatistic(source, currentRead, lastFileSize);
+    final Long position = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
+    return new LoadStatistic(source, position, lastFileSize);
   }
 
 

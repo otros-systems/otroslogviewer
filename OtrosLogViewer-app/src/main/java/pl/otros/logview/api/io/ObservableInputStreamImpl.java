@@ -23,12 +23,17 @@ import java.io.InputStream;
 public class ObservableInputStreamImpl extends InputStream implements ObservableStream, Stoppable {
 
   private final InputStream src;
-  private long current = 0;
+  private long current;
   private volatile boolean stop = false;
 
   public ObservableInputStreamImpl(InputStream src) {
+    this(src, 0);
+  }
+
+  public ObservableInputStreamImpl(final InputStream src, final long current) {
     super();
     this.src = src;
+    this.current = current;
   }
 
   @Override
@@ -57,7 +62,7 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
     if (stop)
       return -1;
     int read = src.read(b, off, len);
-    if (read>0){
+    if (read > 0) {
       current += read;
     }
     return read;
@@ -67,7 +72,7 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
     if (stop)
       return -1;
     int read = src.read(b);
-    if (read>0){
+    if (read > 0) {
       current += read;
     }
     return read;
@@ -78,7 +83,9 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
   }
 
   public long skip(long n) throws IOException {
-    return src.skip(n);
+    final long skip = src.skip(n);
+//    current += skip;
+    return skip;
   }
 
   /*

@@ -46,8 +46,6 @@ import pl.otros.logview.gui.actions.JumpToMarkedAction.Direction;
 import pl.otros.logview.gui.actions.globalhotkeys.FocusComponentOnHotKey;
 import pl.otros.logview.gui.actions.globalhotkeys.KeyboardTabSwitcher;
 import pl.otros.logview.gui.actions.read.DragAndDropFilesHandler;
-import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterActionListener;
-import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
 import pl.otros.logview.gui.actions.search.*;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 import pl.otros.logview.gui.editor.json.JsonPatternParserEditor;
@@ -67,6 +65,7 @@ import pl.otros.logview.ide.IdeAvailabilityCheck;
 import pl.otros.logview.ide.IdeIntegrationConfigAction;
 import pl.otros.logview.loader.IconsLoader;
 import pl.otros.logview.loader.LvDynamicLoader;
+import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
 import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
@@ -170,6 +169,7 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setStatusObserver(observer);
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration()));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
+    otrosApplication.setLogLoader(new BasicLogLoader());
     SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
     ToolTipManager.sharedInstance().setDismissDelay(5000);
 
@@ -640,11 +640,6 @@ public class LogViewMainFrame extends JFrame {
     Font menuGroupFont = labelOpenLog.getFont().deriveFont(13f).deriveFont(Font.BOLD);
     labelOpenLog.setFont(menuGroupFont);
     fileMenu.add(labelOpenLog);
-    JMenuItem openAutoDetectLog = new JMenuItem("Open log with autodetect type");
-    openAutoDetectLog.addActionListener(new ImportLogWithAutoDetectedImporterActionListener(otrosApplication));
-    openAutoDetectLog.setMnemonic(KeyEvent.VK_O);
-    openAutoDetectLog.setIcon(Icons.WIZARD);
-    fileMenu.add(openAutoDetectLog);
     JMenuItem tailAutoDetectLog = new JMenuItem("Tail log with autodetect type");
     tailAutoDetectLog.addActionListener(new TailLogWithAutoDetectActionListener(otrosApplication));
     tailAutoDetectLog.setMnemonic(KeyEvent.VK_T);
@@ -660,24 +655,8 @@ public class LogViewMainFrame extends JFrame {
     JMenuItem saveLogsInvest = new JMenuItem(new SaveLogInvestigationAction(otrosApplication));
     enableDisableComponetsForTabs.addComponet(saveLogsInvest);
     fileMenu.add(saveLogsInvest);
-    fileMenu.add(new JSeparator());
     LogImporter[] importers = new LogImporter[0];
     importers = logImportersContainer.getElements().toArray(importers);
-    for (LogImporter logImporter : importers) {
-      JMenuItem openLog = new JMenuItem("Open " + logImporter.getName() + " log");
-      openLog.addActionListener(new ImportLogWithGivenImporterActionListener(otrosApplication, logImporter));
-      if (logImporter.getKeyStrokeAccelelator() != null) {
-        openLog.setAccelerator(KeyStroke.getKeyStroke(logImporter.getKeyStrokeAccelelator()));
-      }
-      if (logImporter.getMnemonic() > 0) {
-        openLog.setMnemonic(logImporter.getMnemonic());
-      }
-      Icon icon = logImporter.getIcon();
-      if (icon != null) {
-        openLog.setIcon(icon);
-      }
-      fileMenu.add(openLog);
-    }
     fileMenu.add(new JSeparator());
     JLabel labelTailLog = new JLabel("Tail log [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.LEFT);
     labelTailLog.setFont(menuGroupFont);

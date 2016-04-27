@@ -25,7 +25,6 @@ import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataStore;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.gui.LogImportStats;
 
 import javax.swing.*;
 
@@ -49,12 +48,6 @@ public final class ImportLogRunnable implements Runnable {
     ParsingContext parsingContext = new ParsingContext(file.getName().getFriendlyURI(), file.getName().getBaseName());
     final LogDataTableModel dataTableModel = panel.getDataTableModel();
     final LogDataStore logDataStore = dataTableModel.getLogDataStore();
-    LogImportStats importStats = new LogImportStats(file.getName().getFriendlyURI());
-    panel.getStatsTable().setModel(importStats);
-    ProgressWatcher watcher = new ProgressWatcher(openFileObject.getObserableInputStreamImpl(), panel, file, importStats);
-    Thread t = new Thread(watcher, "Log loader: " + file.getName().toString());
-    t.setDaemon(true);
-    t.start();
     panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObserableInputStreamImpl()));
     importer.initParsingContext(parsingContext);
     try {
@@ -67,7 +60,6 @@ public final class ImportLogRunnable implements Runnable {
       dataTableModel.fireTableDataChanged();
       panel.switchToContentView();
     });
-    watcher.updateFinish("Loaded");
     Utils.closeQuietly(openFileObject.getFileObject());
   }
 }

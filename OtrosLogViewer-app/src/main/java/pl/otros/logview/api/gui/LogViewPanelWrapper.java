@@ -23,16 +23,23 @@ import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.loading.LoadStatistic;
+import pl.otros.logview.api.loading.LoadingDetails;
+import pl.otros.logview.api.loading.LogLoader;
+import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.gui.LogViewPanel;
 import pl.otros.logview.gui.TailingModeMarkersPanel;
 import pl.otros.logview.gui.actions.ClearLogTableAction;
+import pl.otros.vfs.browser.table.FileSize;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import java.awt.*;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LogViewPanelWrapper extends JPanel {
 
@@ -40,20 +47,19 @@ public class LogViewPanelWrapper extends JPanel {
 
   private String name;
   private LogDataTableModel dataTableModel = new LogDataTableModel();
-  private LogViewPanelI logViewPanel;
+  private final LogViewPanelI logViewPanel;
   private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_LOADING = "card layout loading";
   private static final String CARD_LAYOUT_CONTENT = "card layout content";
   private final JProgressBar loadingProgressBar;
-  private final JTable statsTable;
   private JCheckBox follow;
   private JCheckBox playTailing;
   private DataConfiguration configuration;
   private final OtrosApplication otrosApplication;
-
-  public enum Mode {
-    Static, Live
-  }
+  private Optional<Runnable> onClose = Optional.empty();
+  private final LogLoader logLoader;
+  private Optional<Timer> timer = Optional.empty();
+  private JProgressBar progressBar;
 
 
   public LogViewPanelWrapper(String name, Stoppable stoppable, TableColumns[] visibleColumns, OtrosApplication otrosApplication) {
@@ -75,14 +81,10 @@ public class LogViewPanelWrapper extends JPanel {
     this.name = name;
     this.configuration = configuration;
     this.otrosApplication = otrosApplication;
-    this.addHierarchyListener(new HierarchyListener() {
-
-      @Override
-      public void hierarchyChanged(HierarchyEvent e) {
-        if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
-          LOGGER.info("Log view panel is removed from view. Clearing data table for GC");
-          dataTableModel.clear();
-        }
+    logLoader = otrosApplication.getLogLoader();
+    this.addHierarchyListener(e -> {
+      if (e.getChangeFlags() == 1 && e.getChanged().getParent() == null) {
+        closing();
       }
     });
     final TableColumns[] columns = (visibleColumns == null) ? TableColumns.ALL_WITHOUT_LOG_SOURCE : visibleColumns;
@@ -95,7 +97,6 @@ public class LogViewPanelWrapper extends JPanel {
     logViewPanel = new LogViewPanel(dataTableModel, columns, otrosApplication);
 
     cardLayout = new CardLayout();
-    JPanel panelLoading = new JPanel(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
     c.insets = new Insets(10, 10, 10, 10);
     c.anchor = GridBagConstraints.PAGE_START;
@@ -107,21 +108,16 @@ public class LogViewPanelWrapper extends JPanel {
     c.weightx = 10;
     c.weighty = 1;
 
-    JLabel label = new JLabel("Loading file " + name);
-    panelLoading.add(label, c);
     c.gridy++;
     c.weighty = 3;
     loadingProgressBar = new JProgressBar();
     loadingProgressBar.setIndeterminate(false);
     loadingProgressBar.setStringPainted(true);
     loadingProgressBar.setString("Connecting...");
-    panelLoading.add(loadingProgressBar, c);
-    statsTable = new JTable();
 
     c.gridy++;
     c.weighty = 1;
     c.weightx = 2;
-    panelLoading.add(statsTable, c);
     c.gridy++;
     c.weightx = 1;
     JButton stopButton = new JButton("Stop, you have imported already enough!");
@@ -131,18 +127,20 @@ public class LogViewPanelWrapper extends JPanel {
         stoppable1.stop();
       }
     });
-    panelLoading.add(stopButton, c);
 
     setLayout(cardLayout);
-    add(panelLoading, CARD_LAYOUT_LOADING);
     add(logViewPanel, CARD_LAYOUT_CONTENT);
     cardLayout.show(this, CARD_LAYOUT_LOADING);
 
   }
 
-  public JTable getStatsTable() {
-    return statsTable;
+  private void closing() {
+    LOGGER.info("Log view panel is removed from view. Clearing data table for GC and running onClose action");
+    dataTableModel.clear();
+    onClose.ifPresent(Runnable::run);
+    timer.ifPresent(Timer::stop);
   }
+
 
   public String getName() {
     return name;
@@ -162,10 +160,6 @@ public class LogViewPanelWrapper extends JPanel {
 
   public LogViewPanelI getLogViewPanel() {
     return logViewPanel;
-  }
-
-  public void setLogViewPanel(LogViewPanelI logViewPanel) {
-    this.logViewPanel = logViewPanel;
   }
 
   @Override
@@ -195,12 +189,14 @@ public class LogViewPanelWrapper extends JPanel {
     JToolBar jToolBar = new JToolBar();
     createFollowCheckBox();
     createPauseCheckBox();
+    createReadingProgressBar();
 
     jToolBar.add(playTailing);
     jToolBar.add(follow);
     JButton clear = new JButton(new ClearLogTableAction(otrosApplication));
     clear.setBorderPainted(false);
     jToolBar.add(clear);
+    jToolBar.add(progressBar);
 
     logViewPanel.add(jToolBar, BorderLayout.NORTH);
     logViewPanel.getLogsMarkersPanel().setLayout(new BorderLayout());
@@ -208,7 +204,7 @@ public class LogViewPanelWrapper extends JPanel {
     logViewPanel.getLogsMarkersPanel().add(markersPanel);
 
     switchToContentView();
-    addRowScroller();
+    addRowAutoScroll();
   }
 
   private void createPauseCheckBox() {
@@ -218,7 +214,13 @@ public class LogViewPanelWrapper extends JPanel {
     playTailing.addActionListener(e -> {
       boolean play1 = playTailing.isSelected();
       playTailing.setIcon(play1 ? Icons.TAILING_LIVE : Icons.TAILING_PAUSE);
-      configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, play1);
+      final LoadingDetails loadingDetails = logLoader.getLoadingDetails(dataTableModel);
+      final Stream<LogLoadingSession> stream = loadingDetails.getLogLoadingSessions().stream();
+      if (play1) {
+        stream.forEach(logLoader::resume);
+      } else {
+        stream.forEach(logLoader::pause);
+      }
     });
   }
 
@@ -234,7 +236,36 @@ public class LogViewPanelWrapper extends JPanel {
 
   }
 
-  private void addRowScroller() {
+  private void createReadingProgressBar() {
+    progressBar = new JProgressBar(0, 100);
+    progressBar.setStringPainted(true);
+    progressBar.setString("Processed ? of ? [?%]");
+    final Timer t = new Timer(300, e -> {
+      LOGGER.trace("Updating reading progress");
+      final LoadingDetails loadingDetails = logLoader.getLoadingDetails(dataTableModel);
+      final List<LogLoadingSession> logLoadingSessions = loadingDetails.getLogLoadingSessions();
+      final List<LoadStatistic> statistics = logLoadingSessions
+        .stream()
+        .map(logLoader::getLoadStatistic)
+        .collect(Collectors.toList());
+      final Long position = statistics.stream().collect(Collectors.summingLong(LoadStatistic::getPosition));
+      final Long total = statistics.stream().collect(Collectors.summingLong(LoadStatistic::getTotal));
+      final float percent = (100f)*((float)position / total);
+      progressBar.setValue((int) percent);
+      final String msg = String.format("Processed %s of %s [%.2f%%]",
+        FileSize.convertToStringRepresentation(position),
+        FileSize.convertToStringRepresentation(total),
+        percent);
+      LOGGER.trace("Updating progress bar with message {}", msg);
+      progressBar.setString(msg);
+    });
+    t.setRepeats(true);
+    t.setInitialDelay(1000);
+    t.start();
+    timer = Optional.of(t);
+  }
+
+  private void addRowAutoScroll() {
     dataTableModel.addTableModelListener(e -> {
       if (follow.isSelected() && e.getType() == TableModelEvent.INSERT) {
         final Runnable r = () -> {
@@ -266,7 +297,13 @@ public class LogViewPanelWrapper extends JPanel {
     });
   }
 
+  public void onClose(Runnable r) {
+    onClose = Optional.of(r);
+  }
+
   public void setConfiguration(DataConfiguration configuration) {
     this.configuration = configuration;
   }
+
+
 }

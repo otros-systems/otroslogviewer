@@ -17,10 +17,8 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.TableColumns;
@@ -30,9 +28,11 @@ import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.loading.LogLoader;
+import pl.otros.logview.api.loading.LogLoadingSession;
+import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
-import pl.otros.logview.gui.LogImportStats;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -44,6 +44,7 @@ import java.awt.event.HierarchyListener;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TailLogActionListener extends OtrosAction {
 
@@ -89,9 +90,17 @@ public class TailLogActionListener extends OtrosAction {
     String tabName = Utils.getFileObjectShortName(file);
     getOtrosApplication().addClosableTab(tabName, loadingInfo.getFriendlyUrl(), Icons.ARROW_REPEAT, panel, true);
 
-    BufferingLogDataCollectorProxy bufferingLogDataCollectorProxy = new BufferingLogDataCollectorProxy(panel.getDataTableModel(), 2000,
-      panel.getConfiguration());
-    openFileObjectInTailMode(panel, loadingInfo, bufferingLogDataCollectorProxy);
+    final LogLoader logLoader = getOtrosApplication().getLogLoader();
+    final VfsSource source = new VfsSource(file);
+    final LogImporter logImporter = this.importer;
+    final LogLoadingSession session = logLoader.startLoading(
+      source,
+      logImporter,
+      panel.getDataTableModel(),
+      3000,
+      Optional.of(2000L)
+    );
+    panel.onClose(()->logLoader.stop(session));
     SwingUtilities.invokeLater(panel::switchToContentView);
   }
 
@@ -104,53 +113,6 @@ public class TailLogActionListener extends OtrosAction {
     return tableColumnsToUse;
   }
 
-  public void openFileObjectInTailMode(final LogViewPanelWrapper panel, final LoadingInfo loadingInfo, final BufferingLogDataCollectorProxy logDataCollector) {
-    ParsingContext parsingContext = new ParsingContext(loadingInfo.getFileObject().getName().getFriendlyURI(), loadingInfo.getFileObject().getName()
-      .getBaseName());
-    openFileObjectInTailMode(panel, loadingInfo, logDataCollector, parsingContext);
-
-  }
-
-  public void openFileObjectInTailMode(final LogViewPanelWrapper panel, final LoadingInfo loadingInfo, final BufferingLogDataCollectorProxy logDataCollector,
-                                       final ParsingContext parsingContext) {
-    {
-
-      Runnable r = () -> {
-        LogImportStats importStats = new LogImportStats(loadingInfo.getFileObject().getName().getFriendlyURI());
-        panel.getStatsTable().setModel(importStats);
-        panel.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
-          new ParsingContextStopperForClosingTab(parsingContext)));
-        importer.initParsingContext(parsingContext);
-        try {
-          loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-        } catch (FileSystemException e1) {
-          LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
-        }
-        while (parsingContext.isParsingInProgress()) {
-          try {
-            importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-            if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
-              break;
-            }
-            Thread.sleep(1000);
-
-            Utils.reloadFileObject(loadingInfo);
-          } catch (Exception e) {
-            LOGGER.warn("Exception in tailing loop: " + e.getMessage());
-          }
-        }
-        LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
-        parsingContext.setParsingInProgress(false);
-        LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
-        getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-        Utils.closeQuietly(loadingInfo.getFileObject());
-      };
-      Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
-      t.setDaemon(true);
-      t.start();
-
-    }
-  }
 
   private void initFileChooser(JOtrosVfsBrowserDialog chooser) {
     chooser.setSelectionMode(SelectionMode.FILES_ONLY);

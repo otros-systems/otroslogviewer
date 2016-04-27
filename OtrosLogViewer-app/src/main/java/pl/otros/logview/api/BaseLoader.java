@@ -144,16 +144,17 @@ public class BaseLoader {
 
   public List<String> getClassesFromJar(File jarFile) throws IOException {
     ArrayList<String> list = new ArrayList<>();
-    JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile));
-    JarEntry jarEntry;
-    while (true) {
-      jarEntry = jarInputStream.getNextJarEntry();
-      if (null == jarEntry) {
-        break;//
-      }
-      String s = jarEntry.getName();
-      if (s.endsWith(".class")) {
-        list.add(s.replace('/', '.').substring(0, s.length() - 6));
+    try (JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile))) {
+      JarEntry jarEntry;
+      while (true) {
+        jarEntry = jarInputStream.getNextJarEntry();
+        if (null == jarEntry) {
+          break;//
+        }
+        String s = jarEntry.getName();
+        if (s.endsWith(".class")) {
+          list.add(s.replace('/', '.').substring(0, s.length() - 6));
+        }
       }
     }
 
