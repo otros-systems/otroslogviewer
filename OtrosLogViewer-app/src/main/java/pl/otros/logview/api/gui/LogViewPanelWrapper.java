@@ -240,7 +240,7 @@ public class LogViewPanelWrapper extends JPanel {
     progressBar = new JProgressBar(0, 100);
     progressBar.setStringPainted(true);
     progressBar.setString("Processed ? of ? [?%]");
-    final Timer t = new Timer(300, e -> {
+    final Timer t = new Timer(500, e -> {
       LOGGER.trace("Updating reading progress");
       final LoadingDetails loadingDetails = logLoader.getLoadingDetails(dataTableModel);
       final List<LogLoadingSession> logLoadingSessions = loadingDetails.getLogLoadingSessions();
@@ -250,7 +250,7 @@ public class LogViewPanelWrapper extends JPanel {
         .collect(Collectors.toList());
       final Long position = statistics.stream().collect(Collectors.summingLong(LoadStatistic::getPosition));
       final Long total = statistics.stream().collect(Collectors.summingLong(LoadStatistic::getTotal));
-      final float percent = (100f)*((float)position / total);
+      final float percent = (100f) * ((float) position / total);
       progressBar.setValue((int) percent);
       final String msg = String.format("Processed %s of %s [%.2f%%]",
         FileSize.convertToStringRepresentation(position),
@@ -258,6 +258,17 @@ public class LogViewPanelWrapper extends JPanel {
         percent);
       LOGGER.trace("Updating progress bar with message {}", msg);
       progressBar.setString(msg);
+
+
+      final String tooltip = "<HTML>" + statistics.stream()
+        .map(s -> String.format("Processed %s of %s [%.2f%%]  - %s",
+          FileSize.convertToStringRepresentation(s.getPosition()),
+          FileSize.convertToStringRepresentation(s.getTotal()),
+          s.getPercent(),
+          s.getSource().stringForm()))
+        .collect(Collectors.joining("<BR/>"))
+        +"</HTML>";
+      progressBar.setToolTipText(tooltip);
     });
     t.setRepeats(true);
     t.setInitialDelay(1000);

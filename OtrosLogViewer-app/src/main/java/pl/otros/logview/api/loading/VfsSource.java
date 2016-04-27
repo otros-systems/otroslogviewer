@@ -27,7 +27,7 @@ public class VfsSource extends Source {
 
   @Override
   public String stringForm() {
-    return toString();
+    return fileObject.toString();
   }
 
 
