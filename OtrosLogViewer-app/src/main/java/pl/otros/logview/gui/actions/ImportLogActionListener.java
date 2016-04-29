@@ -15,6 +15,7 @@
  */
 package pl.otros.logview.gui.actions;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

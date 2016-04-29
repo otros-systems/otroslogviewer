@@ -42,6 +42,7 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
   }
 
   public void close() throws IOException {
+    super.close();
     src.close();
   }
 

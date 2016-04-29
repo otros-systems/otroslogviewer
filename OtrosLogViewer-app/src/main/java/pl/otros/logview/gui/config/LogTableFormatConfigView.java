@@ -234,10 +234,10 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     return jOtrosVfsBrowserDialog;
   }
 
-  private void importFromFile(FileObject file) throws ConfigurationException, FileSystemException {
-    try {
+  private void importFromFile(FileObject file) throws ConfigurationException, IOException {
+    try (InputStream is = file.getContent().getInputStream()) {
       final XMLConfiguration xmlConfiguration = new XMLConfiguration();
-      xmlConfiguration.load(file.getContent().getInputStream());
+      xmlConfiguration.load(is);
       final List<ColumnLayout> columnLayouts = loadColumnLayouts(xmlConfiguration);
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus(String.format("Column layouts have been imported from %s", file.getName().getFriendlyURI()));
@@ -462,11 +462,12 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
         final FileObject selectedFile = dialog.getSelectedFile();
         try {
           importFromFile(selectedFile);
+          Utils.closeQuietly(dialog.getSelectedFile());
         } catch (ConfigurationException e) {
           LOGGER.error("Can't import column layout from file", e);
           showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
             ERROR_MESSAGE);
-        } catch (FileSystemException e) {
+        } catch (IOException e) {
           LOGGER.error("Can't import column layout from file", e);
           showMessageDialog(columnLayoutsPanel.getRootPane(), "Can't import column layout from clipboard: " + e.getMessage(), "Import error",
             ERROR_MESSAGE);

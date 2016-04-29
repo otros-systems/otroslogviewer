@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 

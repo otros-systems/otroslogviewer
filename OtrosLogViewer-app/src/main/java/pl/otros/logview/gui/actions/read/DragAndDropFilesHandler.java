@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.read;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 
 /**
  * Responsible for global drag-and-drop operations.
- *
+ * <p>
  * Currently supports dropping possibly multiple log files that are then opened by autodetection.
  *
  * @author murat
@@ -235,10 +236,10 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   public List<String> getFileUris(TransferSupport support) {
-    BufferedReader reader;
     List<String> files = new ArrayList<>();
-    try {
-      reader = new BufferedReader(DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()));
+    try (BufferedReader reader =
+           new BufferedReader(
+             DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()))) {
       String uri;
       while ((uri = reader.readLine()) != null) {
         files.add(uri);

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.loader;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.BaseLoader;
@@ -121,10 +122,10 @@ public class LogImportersLoader {
     if (listFiles != null) {
       StringBuilder exceptionMessages = new StringBuilder();
       for (File file : listFiles) {
-        try {
+        try (FileInputStream is = new FileInputStream(file)) {
           Properties p = new Properties();
           Log4jPatternMultilineLogParser parser = new Log4jPatternMultilineLogParser();
-          p.load(new FileInputStream(file));
+          p.load(is);
           parser.getParserDescription().setFile(file.getAbsolutePath());
           if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, "").equals("log4j")) {
             LogImporterUsingParser logImporter = new LogImporterUsingParser(parser);

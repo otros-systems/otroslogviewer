@@ -87,7 +87,7 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
       return b;
     };
     PlainTextAndHtml plainTextAndHtml = new PlainTextAndHtml();
-    LogDataFormatter logDataFormatter = new LogDataFormatter(logData, dateFormat, messageUpdateUtils, selectedMessageColorizersContainer, selectedMessageFormattersContainer, cancelStatus, 500 * 1000);
+    LogDataFormatter logDataFormatter = new LogDataFormatter(getOtrosApplication(), logData, dateFormat, messageUpdateUtils, selectedMessageColorizersContainer, selectedMessageFormattersContainer, cancelStatus, 500 * 1000);
     try {
       List<TextChunkWithStyle> format = logDataFormatter.format();
       StringBuilder sb = new StringBuilder();

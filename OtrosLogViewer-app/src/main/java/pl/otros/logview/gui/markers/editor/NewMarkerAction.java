@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers.editor;
 
+import org.apache.commons.io.IOUtils;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
@@ -113,10 +114,12 @@ public class NewMarkerAction extends AbstractAction {
     } else {
       file = markerFile;
     }
-    FileOutputStream fout = new FileOutputStream(file);
-    markerProperties.setProperty(PropertyFileAbstractMarker.FILE, file.getName());
-    markerProperties.store(fout, "Edited at " + new Date().toString());
-    fout.close();
+    try (FileOutputStream fout = new FileOutputStream(file)) {
+      markerProperties.setProperty(PropertyFileAbstractMarker.FILE, file.getName());
+      markerProperties.store(fout, "Edited at " + new Date().toString());
+    } catch (IOException e) {
+      throw e;
+    }
   }
 
 }

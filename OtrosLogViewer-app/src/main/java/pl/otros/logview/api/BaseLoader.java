@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +37,8 @@ public class BaseLoader {
    * Load classes (interface implementation) from directory.
    *
    * @param <T>
-   * @param dir
-   *          dir with classes, zip or jar's
-   * @param type
-   *          interface to load
+   * @param dir  dir with classes, zip or jar's
+   * @param type interface to load
    * @return
    */
   public <T> Collection<T> load(File dir, Class<T> type) {
@@ -104,7 +103,7 @@ public class BaseLoader {
       classes = getClassesFromJar(f);
     }
     URL url = f.toURI().toURL();
-    ClassLoader cl = new URLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+    ClassLoader cl = new URLClassLoader(new URL[]{ url }, this.getClass().getClassLoader());
     for (String klazz : classes) {
       try {
         Class<?> c = cl.loadClass(klazz);
@@ -144,17 +143,20 @@ public class BaseLoader {
 
   public List<String> getClassesFromJar(File jarFile) throws IOException {
     ArrayList<String> list = new ArrayList<>();
-    JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile));
-    JarEntry jarEntry;
-    while (true) {
-      jarEntry = jarInputStream.getNextJarEntry();
-      if (null == jarEntry) {
-        break;//
+    try (JarInputStream jarInputStream = new JarInputStream(new FileInputStream(jarFile))) {
+      JarEntry jarEntry;
+      while (true) {
+        jarEntry = jarInputStream.getNextJarEntry();
+        if (null == jarEntry) {
+          break;//
+        }
+        String s = jarEntry.getName();
+        if (s.endsWith(".class")) {
+          list.add(s.replace('/', '.').substring(0, s.length() - 6));
+        }
       }
-      String s = jarEntry.getName();
-      if (s.endsWith(".class")) {
-        list.add(s.replace('/', '.').substring(0, s.length() - 6));
-      }
+    } catch (IOException e) {
+      throw e;
     }
 
     return list;
