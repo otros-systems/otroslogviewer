@@ -273,8 +273,8 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
   }
 
   protected void loadLogContent(FileObject fileObject) throws IOException {
-    try {
-      byte[] loadProbe = Utils.loadProbe(fileObject.getContent().getInputStream(), 50 * 1024);
+    try (InputStream is = fileObject.getContent().getInputStream()) {
+      byte[] loadProbe = Utils.loadProbe(is, 50 * 1024);
       logFileContent.setText(new String(loadProbe));
       logFileContent.setCaretPosition(0);
     } finally {
@@ -294,9 +294,10 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
     LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(jsonLogParser);
     logViewPanel.getDataTableModel().clear();
     ParsingContext parsingContext = new ParsingContext();
-    ByteArrayInputStream in = new ByteArrayInputStream(logFileContent.getText().getBytes());
-    logImporterUsingParser.initParsingContext(parsingContext);
-    logImporterUsingParser.importLogs(in, logViewPanel.getDataTableModel(), parsingContext);
+    try (ByteArrayInputStream in = new ByteArrayInputStream(logFileContent.getText().getBytes())) {
+      logImporterUsingParser.initParsingContext(parsingContext);
+      logImporterUsingParser.importLogs(in, logViewPanel.getDataTableModel(), parsingContext);
+    }
     int loaded = logViewPanel.getDataTableModel().getRowCount();
     if (loaded > 0) {
       otrosApplication.getStatusObserver().updateStatus(String.format("Parsed %d events.", loaded));

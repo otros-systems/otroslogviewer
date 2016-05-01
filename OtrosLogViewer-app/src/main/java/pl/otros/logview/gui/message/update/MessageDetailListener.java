@@ -104,7 +104,7 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
         int rowConverted = table.convertRowIndexToModel(row);
         LogData displayedLogData = dataTableModel.getLogData(rowConverted);
         logViewPanel.setDisplayedLogData(displayedLogData);
-        messageFormatSwingWorker = new FormatMessageDialogWorker(displayedLogData, dateFormat, logViewPanel.getLogDetailWithRulerScrollPane(),
+        messageFormatSwingWorker = new FormatMessageDialogWorker(logViewPanel.getOtrosApplication(), displayedLogData, dateFormat, logViewPanel.getLogDetailWithRulerScrollPane(),
           colorizersContainer, formattersContainer, maximumMessageSize);
         if (displayedLogData.getMessage().length() > FORMAT_IN_SEPARATE_THREAD_THRESHOLD) {
           logDetailTextArea.setText("Updating log event details...");

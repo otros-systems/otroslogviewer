@@ -1,5 +1,6 @@
 package pl.otros.logview.gui.services.persist;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.pluginable.AllPluginables;
@@ -28,9 +29,11 @@ public class SerializePersisService implements PersistService {
   @Override
   public void persist(String key, Object o) throws Exception {
     final File file = new File(dir, key + ".ser");
-    final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false));
-    outputStream.writeObject(o);
-    outputStream.close();
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false))) {
+      outputStream.writeObject(o);
+    } catch (IOException e) {
+      throw e;
+    }
   }
 
   @Override
@@ -39,9 +42,8 @@ public class SerializePersisService implements PersistService {
     if (!file.exists()) {
       return defaultValue;
     }
-    ObjectInputStream in;
-    try {
-      in = new ObjectInputStream(new FileInputStream(file));
+
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
       final Object o = in.readObject();
       if (o == null || !Objects.equals(o.getClass().getName(), defaultValue.getClass().getName())) {
         LOGGER.warn("Read object is null or class different than default value: {}", o);

@@ -571,7 +571,7 @@ public class LogViewPanel extends LogViewPanelI {
     automaticUnmarkersMenu = new JMenu("Unmark rows automatically");
     automaticUnmarkersMenu.setIcon(Icons.AUTOMATIC_UNMARKERS);
     updateMarkerMenu(markersContainer.getElements());
-    return new JMenu[]{automaticMarkersMenu, automaticUnmarkersMenu};
+    return new JMenu[]{ automaticMarkersMenu, automaticUnmarkersMenu };
   }
 
   private void addMarkerToMenu(JMenu menu, AutomaticMarker automaticMarker, HashMap<String, JMenu> marksGroups, boolean mode) {
@@ -789,4 +789,7 @@ public class LogViewPanel extends LogViewPanelI {
 
   }
 
+  public OtrosApplication getOtrosApplication() {
+    return otrosApplication;
+  }
 }

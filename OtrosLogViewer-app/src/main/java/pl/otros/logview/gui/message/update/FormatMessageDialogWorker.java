@@ -18,6 +18,7 @@ package pl.otros.logview.gui.message.update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
@@ -48,13 +49,15 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
   private final MessageUpdateUtils messageUtils;
   private final int maximumMessageSize;
+  private OtrosApplication otrosApplication;
 
-
-  public FormatMessageDialogWorker(LogData logData, //
+  public FormatMessageDialogWorker(OtrosApplication otrosApplication,
+                                   LogData logData, //
                                    SimpleDateFormat dateFormat,//
                                    OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane,//
                                    PluginableElementsContainer<MessageColorizer> colorizersContainer,//
                                    PluginableElementsContainer<MessageFormatter> formattersContainer, int maximumMessageSize) {
+    this.otrosApplication = otrosApplication;
     this.ld = logData;
     this.dateFormat = dateFormat;
     this.otrosJTextWithRulerScrollPane = otrosJTextWithRulerScrollPane;
@@ -70,7 +73,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
   @Override
   protected List<TextChunkWithStyle> doInBackground() throws Exception {
     LOGGER.trace("Start do in background");
-    LogDataFormatter logDataFormatter = new LogDataFormatter(ld, dateFormat, messageUtils, colorizersContainer, formattersContainer, this, maximumMessageSize);
+    LogDataFormatter logDataFormatter = new LogDataFormatter(otrosApplication, ld, dateFormat, messageUtils, colorizersContainer, formattersContainer, this, maximumMessageSize);
     chunks.addAll(logDataFormatter.format());
     return chunks;
   }
