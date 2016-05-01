@@ -166,6 +166,8 @@ public class LoadingRunnable implements Runnable {
     } catch (Exception e) {
       e.printStackTrace();
       LOGGER.error("Error when reading log", e);
+    } finally {
+      Utils.closeQuietly(vfs.getFileObject());
     }
   }
 
