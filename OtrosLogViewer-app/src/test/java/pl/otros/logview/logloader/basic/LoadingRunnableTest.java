@@ -80,7 +80,7 @@ public class LoadingRunnableTest {
   @BeforeMethod
   public void setUp() throws IOException {
     collector = new ProxyLogDataCollector();
-    file = File.createTempFile("abcsdf", "bsdf");
+    file = File.createTempFile("LoadingRunnableTest_", ".txt");
     vfsSource = new VfsSource(VFS.getManager().toFileObject(file), 0);
     outputStream = new FileOutputStream(file, false);
 
@@ -102,7 +102,6 @@ public class LoadingRunnableTest {
     thread.start();
     Thread.sleep(300);
     Assert.assertEquals(collector.getLogData().length, 1000);
-    Assert.assertTrue(file.delete(), "File was deleted");
 
   }
 
@@ -120,12 +119,31 @@ public class LoadingRunnableTest {
 
     underTest.stop();
     Thread.sleep(100);
-    Assert.assertTrue(file.delete(), "File was deleted");
   }
 
 
-  @DataProvider(name = "testLoadingAndPauseResumelDataProvider")
-  public Object[][] testLoadingAndPauseResumelDataProvider() throws InitializationException {
+  @Test
+  public void canDeleteFileWhenStopped() throws Exception {
+    //given
+    logImporter = getJulLogParser();
+    saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
+
+    //when
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 50, Optional.empty());
+    final Thread thread = new Thread(underTest);
+    thread.setDaemon(true);
+    thread.start();
+    Thread.sleep(400);
+    outputStream.close();
+    underTest.stop();
+    Thread.sleep(100);
+
+    //then
+    Assert.assertTrue(file.delete(), "File " + vfsSource.stringForm() + " should be deleted");
+  }
+
+  @DataProvider(name = "testLoadingAndPauseResumeDataProvider")
+  public Object[][] testLoadingAndPauseResumeDataProvider() throws InitializationException {
     return new Object[][]{
       new Object[]{"Jul xml", new UtilLoggingXmlLogImporter(), this.julXmlLogLines, Range.closed(0, 25), 2, Range.closed(25, 48), 4, Range.closed(48, 70), 6},
       new Object[]{"Jul Simple", getJulLogParser(), this.julSimpleLogLines, Range.closed(0, 10), 5, Range.closed(10, 20), 10, Range.closed(20, 30), 15},
@@ -159,7 +177,7 @@ public class LoadingRunnableTest {
     return logImporterUsingParser;
   }
 
-  @Test(dataProvider = "testLoadingAndPauseResumelDataProvider")
+  @Test(dataProvider = "testLoadingAndPauseResumeDataProvider")
   public void testLoadingAndPauseResume(String name, LogImporter importer, List<String> logLines, Range<Integer> range1, int countForFirstImport, Range<Integer> range2, int countForSecondImport, Range<Integer> range3, int countForThirdImport) throws Exception {
     LOGGER.debug("Testing " + name);
     saveLines(range1, logLines, outputStream);
@@ -188,7 +206,6 @@ public class LoadingRunnableTest {
     Assert.assertEquals(collector.getLogData().length, countForThirdImport);
 
     underTest.stop();
-    Assert.assertTrue(file.delete(), "File was deleted");
   }
 
   @Test
@@ -202,8 +219,6 @@ public class LoadingRunnableTest {
     thread.start();
     Thread.sleep(300);
     Assert.assertEquals(collector.getLogData().length, 10);
-    Assert.assertTrue(file.delete(), "File was deleted");
-
   }
 
   @Test
@@ -222,7 +237,6 @@ public class LoadingRunnableTest {
     saveLines(Range.closed(1000, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
     Thread.sleep(300);
     Assert.assertEquals(collector.getLogData().length, 505);
-    Assert.assertTrue(file.delete(), "File was deleted");
   }
 
   @Test
@@ -259,7 +273,7 @@ public class LoadingRunnableTest {
   }
 
 
-  @Test(timeOut = 40000l)
+  @Test(timeOut = 4000L)
   public void readingSocket() throws Exception {
     try (final ServerSocket serverSocket = new ServerSocket(60000);
          final Socket readingSocket = new Socket("127.0.0.1", serverSocket.getLocalPort());

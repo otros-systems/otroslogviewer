@@ -17,10 +17,7 @@
 package pl.otros.logview.api.io;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.RandomAccessContent;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.util.RandomAccessMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,7 +212,7 @@ public class Utils {
         fileObject.close();
         LOGGER.info(String.format("File %s closed", friendlyURI));
       } catch (FileSystemException ignore) {
-        LOGGER.info(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
+        LOGGER.error(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
       }
     }
   }

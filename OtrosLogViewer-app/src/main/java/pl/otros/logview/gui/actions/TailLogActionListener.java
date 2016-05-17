@@ -16,10 +16,7 @@
 
 package pl.otros.logview.gui.actions;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
@@ -44,7 +41,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +100,7 @@ public class TailLogActionListener extends OtrosAction {
       3000,
       Optional.of(2000L)
     );
-    panel.onClose(()->logLoader.stop(session));
+    panel.onClose(()->logLoader.close(session));
     SwingUtilities.invokeLater(panel::switchToContentView);
   }
 

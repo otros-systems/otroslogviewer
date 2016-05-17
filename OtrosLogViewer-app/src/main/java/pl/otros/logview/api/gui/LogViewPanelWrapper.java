@@ -56,7 +56,7 @@ public class LogViewPanelWrapper extends JPanel {
   private JCheckBox playTailing;
   private DataConfiguration configuration;
   private final OtrosApplication otrosApplication;
-  private Optional<Runnable> onClose = Optional.empty();
+  private Optional<Runnable> onCloseAction = Optional.empty();
   private final LogLoader logLoader;
   private Optional<Timer> timer = Optional.empty();
   private JProgressBar progressBar;
@@ -135,9 +135,9 @@ public class LogViewPanelWrapper extends JPanel {
   }
 
   private void closing() {
-    LOGGER.info("Log view panel is removed from view. Clearing data table for GC and running onClose action");
+    LOGGER.info("Log view panel is removed from view. Clearing data table for GC and running onCloseAction action");
     dataTableModel.clear();
-    onClose.ifPresent(Runnable::run);
+    onCloseAction.ifPresent(Runnable::run);
     timer.ifPresent(Timer::stop);
   }
 
@@ -309,7 +309,7 @@ public class LogViewPanelWrapper extends JPanel {
   }
 
   public void onClose(Runnable r) {
-    onClose = Optional.of(r);
+    onCloseAction = Optional.of(r);
   }
 
   public void setConfiguration(DataConfiguration configuration) {

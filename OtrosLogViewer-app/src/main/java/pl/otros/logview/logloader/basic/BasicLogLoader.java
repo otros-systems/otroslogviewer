@@ -81,6 +81,7 @@ public class BasicLogLoader implements LogLoader {
     lrMap.computeIfPresent(logLoadingSession, (id, loadingRunnable) -> {
       LOGGER.info("Closing {} ", id);
       loadingRunnable.stop();
+
       return loadingRunnable;
     });
   }

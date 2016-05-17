@@ -154,6 +154,7 @@ public class LoadingRunnable implements Runnable {
             obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
             lastFileSize = loadingInfo.getFileObject().getContent().getSize();
           }
+          Utils.reloadFileObject(loadingInfo);
 
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
