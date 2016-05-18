@@ -21,7 +21,6 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.OtrosApplication;
@@ -32,10 +31,11 @@ import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
-import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.loading.LogLoader;
+import pl.otros.logview.api.loading.LogLoadingSession;
+import pl.otros.logview.api.loading.VfsSource;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.pluginable.AllPluginables;
-import pl.otros.logview.gui.actions.TailLogActionListener.ParsingContextStopperForClosingTab;
-import pl.otros.logview.gui.actions.TailLogActionListener.ReadingStopperForRemove;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
@@ -43,9 +43,8 @@ import pl.otros.vfs.browser.SelectionMode;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class TailMultipleFilesIntoOneView extends OtrosAction {
@@ -114,7 +113,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     BaseConfiguration configuration = new BaseConfiguration();
     configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
     configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-    BufferingLogDataCollectorProxy logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
+    LogDataCollector logDataCollector = logViewPanelWrapper.getDataTableModel();
 
     StringBuilder sb = new StringBuilder();
     sb.append("<html>Multiple files:<br>");
@@ -135,14 +134,15 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
         JOptionPane.ERROR_MESSAGE);
 
     }
-    for (LoadingInfo loadingInfo : loadingInfos) {
-      TailLogActionListener tailLogActionListener = new TailLogActionListener(getOtrosApplication(), importer);
-      tailLogActionListener.openFileObjectInTailMode(logViewPanelWrapper, loadingInfo, logDataCollector);
-      ParsingContext parsingContext = new ParsingContext(loadingInfo.getFileObject().getName().getFriendlyURI(), loadingInfo.getFileObject().getName()
-        .getBaseName());
-      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(), logDataCollector,
-        new ParsingContextStopperForClosingTab(parsingContext)));
-    }
+    final LogLoader logLoader = getOtrosApplication().getLogLoader();
+
+    final java.util.List<LogLoadingSession> collect = Arrays.asList(loadingInfos)
+      .stream()
+      .map(loadingInfo -> logLoader.startLoading(new VfsSource(loadingInfo.getFileObject()), importer, logDataCollector, 3000, Optional.of(2000L)))
+      .collect(Collectors.toList());
+
+     LOGGER.info("Have sessions: {}" , collect.stream().map(LogLoadingSession::getId).collect(Collectors.joining(", ")));
+    logViewPanelWrapper.onClose(() -> logLoader.close(logDataCollector));
 
     SwingUtilities.invokeLater(logViewPanelWrapper::switchToContentView);
   }

@@ -17,9 +17,7 @@
 package pl.otros.logview.api.io;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.RandomAccessContent;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.util.RandomAccessMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +67,7 @@ public class Utils {
   }
 
   public static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
-    boolean gziped = false;
+    boolean gziped;
     try {
       ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
       GZIPInputStream gzipInputStream = new GZIPInputStream(bin);
@@ -100,7 +98,8 @@ public class Utils {
     loadingInfo.setFileObject(fileObject);
     loadingInfo.setFriendlyUrl(fileObject.getName().getFriendlyURI());
 
-    InputStream httpInputStream = fileObject.getContent().getInputStream();
+    final FileContent content = fileObject.getContent();
+    InputStream httpInputStream = content.getInputStream();
     byte[] buff = Utils.loadProbe(httpInputStream, 10000);
 
     loadingInfo.setGziped(checkIfIsGzipped(buff, buff.length));
@@ -121,7 +120,9 @@ public class Utils {
     loadingInfo.setObserableInputStreamImpl(observableInputStreamImpl);
 
     loadingInfo.setTailing(tailing);
-
+    if (fileObject.getType().hasContent()){
+      loadingInfo.setLastFileSize(content.getSize());
+    }
     return loadingInfo;
 
   }
@@ -145,7 +146,7 @@ public class Utils {
       RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
       randomAccessContent.seek(lastFileSize);
       loadingInfo.setLastFileSize(currentSize);
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream());
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(),lastFileSize);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
@@ -155,7 +156,7 @@ public class Utils {
     } else if (currentSize < lastFileSize) {
       IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
       InputStream inputStream = loadingInfo.getFileObject().getContent().getInputStream();
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream);
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream,0);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
@@ -211,7 +212,7 @@ public class Utils {
         fileObject.close();
         LOGGER.info(String.format("File %s closed", friendlyURI));
       } catch (FileSystemException ignore) {
-        LOGGER.info(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
+        LOGGER.error(String.format("File %s is not closed: %s", friendlyURI, ignore.getMessage()));
       }
     }
   }
@@ -219,7 +220,7 @@ public class Utils {
   /**
    * Get short name for URL
    *
-   * @param fileObject
+   * @param  fileObject File object
    * @return scheme://hostWithoutDomain/fileBaseName
    */
   public static String getFileObjectShortName(FileObject fileObject) {

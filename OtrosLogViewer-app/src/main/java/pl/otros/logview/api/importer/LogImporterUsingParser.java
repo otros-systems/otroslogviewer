@@ -51,60 +51,72 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
   @Override
   public void importLogs(InputStream in, final LogDataCollector dataCollector, ParsingContext parsingContext) {
     LOGGER.trace("Log import started ");
-    String line = null;
-    LogData logData = null;
+    String line;
+    LogData logData;
     String charset = parser.getParserDescription().getCharset();
 
-    BufferedReader logReader = null;
-    try {
-      if (charset == null) {
+    BufferedReader logReader;
+    if (charset == null) {
+      logReader = new BufferedReader(new InputStreamReader(in));
+    } else {
+      try {
+        logReader = new BufferedReader(new InputStreamReader(in, charset));
+      } catch (UnsupportedEncodingException e1) {
+        LOGGER.error(String.format("Required charset [%s] is not supported: %s", charset, e1.getMessage()));
+        LOGGER.info(String.format("Using default charset: %s", Charset.defaultCharset().displayName()));
         logReader = new BufferedReader(new InputStreamReader(in));
-      } else {
-        try {
-          logReader = new BufferedReader(new InputStreamReader(in, charset));
-        } catch (UnsupportedEncodingException e1) {
-          LOGGER.error(String.format("Required charset [%s] is not supported: %s", charset, e1.getMessage()));
-          LOGGER.info(String.format("Using default charset: %s", Charset.defaultCharset().displayName()));
-          logReader = new BufferedReader(new InputStreamReader(in));
-        }
       }
 
-      while (true) {
-        try {
-          line = logReader.readLine();
-          if (line == null) {
-            break;
-          }
+    }
+    while (true) {
+      synchronized (parsingContext){
+        if (!parsingContext.isParsingInProgress()){
+          break;
+        }
+      }
+      try {
+        line = logReader.readLine();
+        if (line == null) {
+          break;
+        }
 
-          if (parser instanceof MultiLineLogParser) {
-            synchronized (parsingContext) {
-              logData = parser.parse(line, parsingContext);
-            }
-          } else {
+        if (parser instanceof MultiLineLogParser) {
+          synchronized (parsingContext) {
             logData = parser.parse(line, parsingContext);
           }
-
-          if (logData != null) {
-            logData.setId(parsingContext.getGeneratedIdAndIncrease());
-            logData.setLogSource(parsingContext.getLogSource());
-            dataCollector.add(logData);
-            parsingContext.setLastParsed(System.currentTimeMillis());
-          }
-
-        } catch (IOException e) {
-          e.printStackTrace();
-          LOGGER.error(String.format("IOException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
-          break;
-        } catch (ParseException e) {
-          LOGGER.error(String.format("ParseException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
-          e.printStackTrace();
-          break;
+        } else {
+          logData = parser.parse(line, parsingContext);
         }
-      }
 
+        if (logData != null) {
+          logData.setId(parsingContext.getGeneratedIdAndIncrease());
+          logData.setLogSource(parsingContext.getLogSource());
+          dataCollector.add(logData);
+          parsingContext.setLastParsed(System.currentTimeMillis());
+        }
+
+      } catch (IOException e) {
+        e.printStackTrace();
+        LOGGER.error(String.format("IOException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
+        break;
+      } catch (ParseException e) {
+        LOGGER.error(String.format("ParseException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
+        e.printStackTrace();
+        break;
+      }
+    }
+
+    parseBuffer(dataCollector, parsingContext);
+
+    IOUtils.closeQuietly(logReader);
+    LOGGER.trace("Log import finished!");
+  }
+
+  private void parseBuffer(LogDataCollector dataCollector, ParsingContext parsingContext) {
+    try {
       if (parser instanceof MultiLineLogParser) {
         MultiLineLogParser multiLineLogParser = (MultiLineLogParser) parser;
-        logData = multiLineLogParser.parseBuffer(parsingContext);
+        LogData logData = multiLineLogParser.parseBuffer(parsingContext);
         if (logData != null) {
           logData.setId(parsingContext.getGeneratedIdAndIncrease());
           logData.setLogSource(parsingContext.getLogSource());
@@ -116,11 +128,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
       }
     } catch (Exception e) {
       LOGGER.info("Cannot parser rest of buffer, probably stopped importing");
-    } finally {
-      IOUtils.closeQuietly(logReader);
     }
-
-    LOGGER.trace("Log import finished!");
   }
 
   @Override

@@ -5,8 +5,12 @@ import org.apache.commons.vfs2.FileObject;
 
 public class VfsSource extends Source {
 
-  private FileObject fileObject;
-  private long position;
+  private final FileObject fileObject;
+  private final long position;
+
+  public VfsSource(FileObject fileObject) {
+    this(fileObject,0);
+  }
 
   public VfsSource(FileObject fileObject, long position) {
     this.fileObject = fileObject;
@@ -23,7 +27,7 @@ public class VfsSource extends Source {
 
   @Override
   public String stringForm() {
-    return toString();
+    return fileObject.toString();
   }
 
 

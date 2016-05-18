@@ -32,6 +32,7 @@ public class LogbackUtilTest {
   @BeforeMethod
   public void beforeMethod() {
     builder = new LogDataBuilder();
+    System.setProperty("line.separator","\n");
   }
 
   @Test

@@ -289,4 +289,10 @@ public class Icons {
   @Path(path = "/img/fugue/json.png")
   public static ImageIcon JSON;
 
+  @Path(path = "/img/fugue/control-stop-square.png")
+  public static ImageIcon CONTROL_STOP;
+
+  @Path(path = "/img/fugue/control-pause.png")
+  public static ImageIcon CONTROL_PAUSE;
+
 }

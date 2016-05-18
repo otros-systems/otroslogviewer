@@ -20,13 +20,21 @@ public class LogLoadingSession {
   }
 
   @Override
+  public String toString() {
+    return "LogLoadingSession{" +
+      "id='" + id + '\'' +
+      ", source=" + source +
+      '}';
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    LogLoadingSession that = (LogLoadingSession) o;
+    LogLoadingSession session = (LogLoadingSession) o;
 
-    return !(id != null ? !id.equals(that.id) : that.id != null);
+    return id != null ? id.equals(session.id) : session.id == null;
 
   }
 

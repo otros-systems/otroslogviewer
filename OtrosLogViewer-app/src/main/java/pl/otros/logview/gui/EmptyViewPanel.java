@@ -25,8 +25,6 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.pluginable.PluginableElementEventListener;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.actions.*;
-import pl.otros.logview.gui.actions.read.ImportLogWithAutoDetectedImporterActionListener;
-import pl.otros.logview.gui.actions.read.ImportLogWithGivenImporterActionListener;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -118,11 +116,6 @@ public class EmptyViewPanel extends JPanel {
     this.add(jLabel, bagConstraints);
     bagConstraints.fill = GridBagConstraints.HORIZONTAL;
     bagConstraints.gridy++;
-    ImportLogWithAutoDetectedImporterActionListener autoDetectActionListener = new ImportLogWithAutoDetectedImporterActionListener(otrosApplication);
-    JButton jb = new JButton("Open log with type autodetection", Icons.WIZARD);
-    jb.addActionListener(autoDetectActionListener);
-    this.add(jb, bagConstraints);
-    bagConstraints.gridy++;
 
     TailLogWithAutoDetectActionListener tailLogActionListener = new TailLogWithAutoDetectActionListener(otrosApplication);
     JButton jbTailAutoDetect = new JButton("Tail log with type autodetection", Icons.ARROW_REPEAT);
@@ -145,23 +138,16 @@ public class EmptyViewPanel extends JPanel {
     bagConstraints.gridy++;
 
     int startY = bagConstraints.gridy;
-    bagConstraints.gridwidth = 1;
 
-    JLabel openLabel = new JLabel("Open log", Icons.FOLDER_OPEN, SwingConstants.CENTER);
-    this.add(openLabel, bagConstraints);
+//    JLabel openLabel = new JLabel("Open log", Icons.FOLDER_OPEN, SwingConstants.CENTER);
+//    this.add(openLabel, bagConstraints);
     bagConstraints.gridy++;
-    for (LogImporter logImporter : logImportersList) {
-      ImportLogWithGivenImporterActionListener importLogActionListener = new ImportLogWithGivenImporterActionListener(otrosApplication, logImporter);
-      JButton b = new JButton("Open " + logImporter.getName(), logImporter.getIcon());
-      b.setHorizontalAlignment(SwingConstants.LEFT);
-      b.addActionListener(importLogActionListener);
-      this.add(b, bagConstraints);
-      bagConstraints.gridy++;
-    }
-
     bagConstraints.gridy = startY;
-    JLabel tailLabel = new JLabel("Tail log [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.CENTER);
+    bagConstraints.gridwidth=2;
+    bagConstraints.gridx=0;
+    JLabel tailLabel = new JLabel("Tail log with specific log parser [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.CENTER);
     this.add(tailLabel, bagConstraints);
+    bagConstraints.gridwidth = 1;
     bagConstraints.gridy++;
     for (LogImporter logImporter : logImportersList) {
       TailLogActionListener importLogActionListener = new TailLogActionListener(otrosApplication, logImporter);
@@ -169,7 +155,12 @@ public class EmptyViewPanel extends JPanel {
       b.addActionListener(importLogActionListener);
       b.setHorizontalAlignment(SwingConstants.LEFT);
       this.add(b, bagConstraints);
-      bagConstraints.gridy++;
+      if (bagConstraints.gridx == 0){
+        bagConstraints.gridx++;
+      } else {
+        bagConstraints.gridy++;
+        bagConstraints.gridx=0;
+      }
     }
 
     JTextArea visitTf = new JTextArea(
