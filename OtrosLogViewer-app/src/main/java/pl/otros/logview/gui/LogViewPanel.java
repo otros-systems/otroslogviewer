@@ -128,7 +128,7 @@ public class LogViewPanel extends LogViewPanelI {
     JPanel leftPanel = new JPanel(new MigLayout());
     logDetailTextArea = new FullWidthJTextPane();
     logDetailTextArea.setEditable(false);
-    MouseAdapter locationInfo = new LocationClickMouseAdapter(otrosApplication, logDetailTextArea);
+    MouseAdapter locationInfo = new MessageDetailsMouseAdapter(otrosApplication, logDetailTextArea);
     logDetailTextArea.addMouseMotionListener(locationInfo);
     logDetailTextArea.addMouseListener(locationInfo);
     logDetailTextArea.setBorder(BorderFactory.createTitledBorder("Details"));
