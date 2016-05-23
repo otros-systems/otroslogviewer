@@ -24,6 +24,7 @@ import pl.otros.logview.api.parser.ParsingContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -52,7 +53,7 @@ public class SocketLogReader {
   }
 
   public void start() throws Exception {
-    serverSocket = new ServerSocket(port);
+    serverSocket = new ServerSocket(port,50,InetAddress.getByAddress(new byte[]{0,0,0,0}));
     Runnable r = () -> {
       try {
         while (true) {
