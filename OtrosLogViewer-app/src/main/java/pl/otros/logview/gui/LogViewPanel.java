@@ -82,8 +82,8 @@ public class LogViewPanel extends LogViewPanelI {
   private FocusOnThisThreadAction focusOnThisThreadAction;
   private FocusOnEventsAfter focusOnEventsAfter;
   private FocusOnEventsBefore focusOnEventsBefore;
-  private FocusOnSelectedClassesAction focusOnSelectedClassesAction;
-  private FocusOnSelectedLoggerNameAction focusOnSelectedLoggerNameAction;
+  private FocusOnSelectedClassesLikeAction focusOnSelectedClassesAction;
+  private FocusOnSelectedClassesLikeAction focusOnSelectedLoggerNameAction;
   private IgnoreSelectedEventsClasses ignoreSelectedEventsClasses;
   private ShowCallHierarchyAction showCallHierarchyAction;
   private final PluginableElementsContainer<AutomaticMarker> markersContainer;
@@ -96,7 +96,7 @@ public class LogViewPanel extends LogViewPanelI {
   private List<AcceptCondition> acceptConditionList;
   private PropertyFilter propertyFilter;
   private FilterPanel propertyFilterPanel;
-  private Collection<LogFilter> filtersList;
+  private List<LogFilter> filtersList;
   private final DataConfiguration configuration;
   private LogData displayedLogData;
 
@@ -401,8 +401,13 @@ public class LogViewPanel extends LogViewPanelI {
       } catch (Exception e) {
         LOGGER.error("Can't initialize filter: " + logFilter.getClass(), e);
       }
-
     }
+    Collections.sort(filtersList, new Comparator<LogFilter>() {
+      @Override
+      public int compare(LogFilter o1, LogFilter o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
     JLabel filtersLabel = new JLabel("Filters:");
     filtersLabel.setMinimumSize(new Dimension(200, 16));
     filtersLabel.setPreferredSize(new Dimension(200, 16));
@@ -421,11 +426,13 @@ public class LogViewPanel extends LogViewPanelI {
       } else if (filter instanceof TimeFilter) {
         focusOnEventsAfter = new FocusOnEventsAfter((TimeFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
         focusOnEventsBefore = new FocusOnEventsBefore((TimeFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
-      } else if (filter instanceof ClassFilter) {
-        focusOnSelectedClassesAction = new FocusOnSelectedClassesAction((ClassFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
-        ignoreSelectedEventsClasses = new IgnoreSelectedEventsClasses((ClassFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
-      } else if (filter instanceof LoggerNameFilter) {
-        focusOnSelectedLoggerNameAction = new FocusOnSelectedLoggerNameAction((LoggerNameFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
+      } else if (filter instanceof ClassPackageFilter) {
+        final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
+        focusOnSelectedClassesAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected classes",filterPanel.getEnableCheckBox(), otrosApplication);
+        ignoreSelectedEventsClasses = new IgnoreSelectedEventsClasses(classLikeFilter, filterPanel.getEnableCheckBox(), otrosApplication);
+      } else if (filter instanceof LoggerHierarchyFilter) {
+        final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
+        focusOnSelectedLoggerNameAction = new FocusOnSelectedClassesLikeAction(classLikeFilter,"Focus on selected loggers",filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof CallHierarchyLogFilter) {
         showCallHierarchyAction = new ShowCallHierarchyAction((CallHierarchyLogFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof PropertyFilter) {

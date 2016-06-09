@@ -30,8 +30,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.function.Function;
 
-public class ClassFilter extends AbstractLogFilter {
+public abstract class ClassLikeFilter extends AbstractLogFilter {
 
   private JTree tree;
   private DefaultMutableTreeNode rootNode;
@@ -44,13 +45,15 @@ public class ClassFilter extends AbstractLogFilter {
     IGNORE_MODE, FOCUS_MODE
   }
 
-  public ClassFilter() {
-    super("Class Filter", "Filtering events based on class/package. It supports \"ignore\" and \"focus on\" mode.");
+  public ClassLikeFilter(String name, String description) {
+    super(name, description);
   }
+
+  public abstract Function<LogData, String> extractValueFunction();
 
   @Override
   public boolean accept(LogData logData, int row) {
-    String clazz = logData.getClazz();
+    String clazz = extractValueFunction().apply(logData);
     boolean result = true;
     if (mode == Mode.IGNORE_MODE) {
       result = true;
@@ -80,9 +83,7 @@ public class ClassFilter extends AbstractLogFilter {
   @Override
   public void init(Properties properties, LogDataTableModel collector) {
     this.collector = collector;
-
     initTree();
-
   }
 
   @Override
@@ -147,15 +148,63 @@ public class ClassFilter extends AbstractLogFilter {
 
   }
 
-  private void reloadClasses() {
+  protected void reloadClasses() {
     LogData[] ld = collector.getLogData();
 
     Set<String> classesSet = new TreeSet<>();
     for (LogData aLd : ld) {
-      classesSet.add(aLd.getClazz());
+      classesSet.add(extractValueFunction().apply(aLd));
     }
 
     // prepare packages nodes
+    TreeSet<String> packages = preparePackagesNodes(classesSet);
+
+    // Create packages tree
+    createPackagesTree(packages, clazzNodeMap, rootNode);
+
+    // Create classes leafs
+    addClassesLeafs(classesSet, rootNode, clazzNodeMap);
+
+    tree.expandPath(new TreePath(rootNode));
+    tree.repaint();
+  }
+
+  protected void addClassesLeafs(Set<String> classesSet, DefaultMutableTreeNode root, HashMap<Clazz, DefaultMutableTreeNode> map) {
+    for (String string : classesSet) {
+      Clazz clazz = new Clazz(string);
+      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(clazz);
+      DefaultMutableTreeNode parentNode;
+      Clazz packetClazz = new Clazz(clazz.pack);
+      if (map.containsKey(packetClazz)) {
+        parentNode = map.get(packetClazz);
+      } else if (clazz.pack.length() == 0) {
+        parentNode = root;
+      }  else {
+        parentNode = new DefaultMutableTreeNode(packetClazz);
+        root.add(parentNode);
+        map.put(packetClazz, parentNode);
+      }
+      parentNode.add(newNode);
+      map.put(clazz, newNode);
+    }
+  }
+
+  protected void createPackagesTree(TreeSet<String> packages, HashMap<Clazz, DefaultMutableTreeNode> map, DefaultMutableTreeNode root) {
+    for (String string : packages) {
+      Clazz clazz = new Clazz(string);
+      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(clazz);
+      DefaultMutableTreeNode parentNode;
+      if (map.containsKey(new Clazz(clazz.pack))) {
+        parentNode = map.get(new Clazz(clazz.pack));
+      } else {
+        parentNode = root;
+      }
+      map.put(clazz, newNode);
+      parentNode.add(newNode);
+    }
+  }
+
+  protected TreeSet<String> preparePackagesNodes(Set<String> classesSet) {
     TreeSet<String> packages = new TreeSet<>();
     for (String string : classesSet) {
       Clazz clazz = new Clazz(string);
@@ -171,43 +220,11 @@ public class ClassFilter extends AbstractLogFilter {
         start = idx;
       }
     }
-
-    // Create packages tree
-    for (String string : packages) {
-      Clazz clazz = new Clazz(string);
-      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(clazz);
-      DefaultMutableTreeNode parentNode;
-      if (clazzNodeMap.containsKey(new Clazz(clazz.pack))) {
-        parentNode = clazzNodeMap.get(new Clazz(clazz.pack));
-      } else {
-        parentNode = rootNode;
-      }
-      clazzNodeMap.put(clazz, newNode);
-      parentNode.add(newNode);
-    }
-
-    // Create classes leafs
-    for (String string : classesSet) {
-      Clazz clazz = new Clazz(string);
-      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(clazz);
-      DefaultMutableTreeNode parentNode;
-      Clazz packetClazz = new Clazz(clazz.pack);
-      if (clazzNodeMap.containsKey(packetClazz)) {
-        parentNode = clazzNodeMap.get(packetClazz);
-      } else {
-        parentNode = new DefaultMutableTreeNode(packetClazz);
-        rootNode.add(parentNode);
-        clazzNodeMap.put(packetClazz, parentNode);
-      }
-      parentNode.add(newNode);
-      clazzNodeMap.put(clazz, newNode);
-    }
-
-    tree.expandPath(new TreePath(rootNode));
-    tree.repaint();
+    return packages;
   }
 
-  private static class Clazz implements Comparable<Clazz> {
+
+  static class Clazz implements Comparable<Clazz> {
 
     private final String pack;
     private final String clazz;
@@ -285,7 +302,7 @@ public class ClassFilter extends AbstractLogFilter {
         Clazz userObject = (Clazz) node.getUserObject();
         list.add(userObject.toFullString());
       }
-      ClassFilter.this.mode = mode;
+      ClassLikeFilter.this.mode = mode;
       listener.valueChanged();
     }
 

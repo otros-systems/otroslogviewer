@@ -18,25 +18,29 @@ package pl.otros.logview.gui.actions;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.filter.ClassFilter;
+import pl.otros.logview.filter.ClassLikeFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 
-public class FocusOnSelectedClassesAction extends FocusOnThisAbstractAction<ClassFilter> {
+public class FocusOnSelectedClassesLikeAction extends FocusOnThisAbstractAction<ClassLikeFilter> {
 
-  public FocusOnSelectedClassesAction(ClassFilter filter, JCheckBox filterEnableCheckBox, OtrosApplication otrosApplication) {
+  public FocusOnSelectedClassesLikeAction(
+    ClassLikeFilter filter,
+    String name,
+    JCheckBox filterEnableCheckBox,
+    OtrosApplication otrosApplication) {
     super(filter, filterEnableCheckBox, otrosApplication);
-    this.putValue(NAME, "Focus on selected classes");
+    this.putValue(NAME, name);
     this.putValue(SMALL_ICON, Icons.CLASS);
   }
 
   @Override
-  public void action(ActionEvent e, ClassFilter filter, LogData... selectedLogData) {
+  public void action(ActionEvent e, ClassLikeFilter filter, LogData... selectedLogData) {
     HashSet<String> classes = new HashSet<>();
     for (LogData logData : selectedLogData) {
-      classes.add(logData.getClazz());
+      classes.add(filter.extractValueFunction().apply(logData));
     }
     filter.focusOn(classes.toArray(new String[classes.size()]));
   }
