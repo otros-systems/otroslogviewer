@@ -32,13 +32,13 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.util.TreeSet;
 
-public class EmptyViewPanel extends JPanel {
+class EmptyViewPanel extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(EmptyViewPanel.class.getName());
   private final OtrosApplication otrosApplication;
   private final JAnimatedLogo jLabel;
 
-  public EmptyViewPanel(OtrosApplication otrosApplication) {
+  protected EmptyViewPanel(OtrosApplication otrosApplication) {
     super();
     this.otrosApplication = otrosApplication;
     jLabel = new JAnimatedLogo("Welcome to OtrosLogViewer", SwingConstants.LEFT);
@@ -163,6 +163,7 @@ public class EmptyViewPanel extends JPanel {
       }
     }
 
+    bagConstraints.gridy++;
     JTextArea visitTf = new JTextArea(
       "Have a different log format? Go to https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout\nto check how to create a log parser based on the log4j PatternLayout.");
     visitTf.setEditable(false);
