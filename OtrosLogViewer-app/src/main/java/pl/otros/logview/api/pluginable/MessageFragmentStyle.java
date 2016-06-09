@@ -84,6 +84,10 @@ public class MessageFragmentStyle {
     this.replace = replace;
   }
 
+  public MessageFragmentStyle shift(int shift){
+    return new MessageFragmentStyle(offset+shift,this.length,style,replace,searchResult);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -105,5 +109,16 @@ public class MessageFragmentStyle {
     result = 31 * result + (style != null ? style.hashCode() : 0);
     result = 31 * result + (replace ? 1 : 0);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "MessageFragmentStyle{" +
+      "offset=" + offset +
+      ", length=" + length +
+      ", style=" + style +
+      ", replace=" + replace +
+      ", searchResult=" + searchResult +
+      '}';
   }
 }
