@@ -6,7 +6,7 @@ Useful software for analysing applications logs and traces.
   * Java 6 for verions 1.3.x
 
 ## Download 
-  * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory)
+  * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dd/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
 
 ## Features
   * Loading logs from remote servers using ftp, sftp, ssh, samba and others ([supported file systems](http://commons.apache.org/vfs/filesystems.html))
