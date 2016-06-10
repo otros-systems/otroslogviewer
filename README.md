@@ -25,6 +25,7 @@ Useful software for analysing applications logs and traces.
   * Adding notes to log event
   * Saving/loading log investigation (with added marks and notes)
   * Integration with [IntelliJ IDEA](https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode) and [Eclipse](https://github.com/otros-systems/otroslogviewer/wiki/JumpToCode)
+  * Integration with stackoverflow.com
 
 
 ## Included parsers
