@@ -1,6 +1,8 @@
 # OtrosLogViewer
 Useful software for analysing applications logs and traces.
 
+![Build status](https://api.travis-ci.org/otros-systems/otroslogviewer.svg)
+
 ## Requirements
   * Java 8 since version 1.4.0
   * Java 6 for verions 1.3.x
