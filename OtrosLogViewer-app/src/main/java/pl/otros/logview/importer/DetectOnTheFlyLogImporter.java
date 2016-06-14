@@ -92,16 +92,16 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
               // try to detect log
               byteArrayOutputStream.write(buff, 0, read);
               LOGGER.debug("Trying to detect log importer");
-              Optional<LogImporter> detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
+              Optional<LogImporter> maybeLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
 
-              if (detectLogImporter.isPresent()) {
-                final LogImporter logImporter = detectLogImporter.get();
-                LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", logImporter.getName()));
-                logImporter.initParsingContext(parsingContext);
+              if (maybeLogImporter.isPresent()) {
+                final LogImporter detectLogImporter = maybeLogImporter.get();
+                LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
+                detectLogImporter.initParsingContext(parsingContext);
                 customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
                 byte[] buf = byteArrayOutputStream.toByteArray();
                 try (SequenceInputStream sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in)) {
-                  logImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
+                  detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
                   return;
                 }
               }
