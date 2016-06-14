@@ -34,6 +34,7 @@ import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogViewPanelI;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.*;
@@ -88,6 +89,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -450,7 +452,7 @@ public class LogViewMainFrame extends JFrame {
 
   private void initToolbar() {
     toolBar = new JToolBar();
-    final JComboBox searchMode = new JComboBox(new String[]{ "String contains search: ", "Regex search: ", "Query search: " });
+    final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
     searchField = new JTextField();
 
     PersistedSuggestionSource searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS), otrosApplication.getServices().getPersistService());
@@ -480,9 +482,12 @@ public class LogViewMainFrame extends JFrame {
           if (StringUtils.isBlank(selectedText)) {
             return;
           }
-          OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane = otrosApplication.getSelectedLogViewPanel().getLogDetailWithRulerScrollPane();
-          MessageUpdateUtils.highlightSearchResult(logDetailWithRulerScrollPane, otrosApplication.getAllPluginables().getMessageColorizers());
-          RulerBarHelper.scrollToFirstMarker(logDetailWithRulerScrollPane);
+          final Optional<LogViewPanelI> selectedLogViewPanel = otrosApplication.getSelectedLogViewPanel();
+          selectedLogViewPanel.ifPresent(selectedPanel -> {
+            OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane = selectedPanel.getLogDetailWithRulerScrollPane();
+            MessageUpdateUtils.highlightSearchResult(logDetailWithRulerScrollPane, otrosApplication.getAllPluginables().getMessageColorizers());
+            RulerBarHelper.scrollToFirstMarker(logDetailWithRulerScrollPane);
+          });
         } catch (BadLocationException e) {
           LOGGER.error("Can't update search highlight", e);
         }

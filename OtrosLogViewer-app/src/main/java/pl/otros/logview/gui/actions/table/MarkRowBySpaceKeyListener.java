@@ -21,6 +21,7 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Optional;
 
 public class MarkRowBySpaceKeyListener extends KeyAdapter {
 
@@ -40,19 +41,24 @@ public class MarkRowBySpaceKeyListener extends KeyAdapter {
   }
 
   private void markUnmarkRow() {
-    LogDataTableModel dataTableModel = otrosApplication.getSelectedPaneLogDataTableModel();
-    JXTable table = otrosApplication.getSelectPaneJXTable();
-    int[] selected = table.getSelectedRows();
-    if (selected.length == 0) {
-      return;
-    }
-    boolean modeMark = !dataTableModel.isMarked(selected[0]);
+    Optional<LogDataTableModel> maybeDataTableModel = otrosApplication.getSelectedPaneLogDataTableModel();
+    Optional<JXTable> maybeTable = otrosApplication.getSelectPaneJXTable();
 
-    if (modeMark) {
-      dataTableModel.markRows(otrosApplication.getSelectedMarkColors(), selected);
-    } else {
-      dataTableModel.unmarkRows(selected);
-    }
+    maybeTable.ifPresent(table -> maybeDataTableModel.ifPresent(dataTableModel -> {
+        int[] selected = table.getSelectedRows();
+        if (selected.length == 0) {
+          return;
+        }
+        boolean modeMark = !dataTableModel.isMarked(selected[0]);
+
+        if (modeMark) {
+          dataTableModel.markRows(otrosApplication.getSelectedMarkColors(), selected);
+        } else {
+          dataTableModel.unmarkRows(selected);
+        }
+      }
+    ));
+
 
   }
 

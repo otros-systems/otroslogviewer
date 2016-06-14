@@ -17,6 +17,7 @@ package pl.otros.logview.gui.actions;
 
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.gui.LogDataTableModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,7 @@ public class ClearLogTableAction extends AbstractActionWithConfirmation {
 
   @Override
   public void actionPerformedHook(ActionEvent e) {
-    getOtrosApplication().getSelectedPaneLogDataTableModel().clear();
+    getOtrosApplication().getSelectedPaneLogDataTableModel().ifPresent(LogDataTableModel::clear);
   }
 
   @Override

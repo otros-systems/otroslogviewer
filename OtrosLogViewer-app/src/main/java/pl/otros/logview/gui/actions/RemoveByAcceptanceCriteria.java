@@ -24,6 +24,7 @@ import pl.otros.logview.api.gui.OtrosAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 public class RemoveByAcceptanceCriteria extends OtrosAction {
 
@@ -57,12 +58,13 @@ public class RemoveByAcceptanceCriteria extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent arg0) {
     StatusObserver observer = getOtrosApplication().getStatusObserver();
-    LogDataTableModel dataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
-    int removeRows = dataTableModel.removeRows(acceptCondition);
-    if (observer != null) {
-      observer.updateStatus(String.format("Removed %d rows using \"%s\"", removeRows, acceptCondition.getName()));
-    }
-
+    Optional<LogDataTableModel> maybeDataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
+    maybeDataTableModel.ifPresent(dataTableModel -> {
+      int removeRows = dataTableModel.removeRows(acceptCondition);
+      if (observer != null) {
+        observer.updateStatus(String.format("Removed %d rows using \"%s\"", removeRows, acceptCondition.getName()));
+      }
+    });
   }
 
 }

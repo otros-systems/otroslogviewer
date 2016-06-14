@@ -21,6 +21,7 @@ import org.jdesktop.swingx.JXTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.filter.CallHierarchyLogFilter;
@@ -43,22 +44,25 @@ public class ShowCallHierarchyAction extends FocusOnThisAbstractAction<CallHiera
 
   @Override
   public void action(ActionEvent e, CallHierarchyLogFilter filter, LogData... selectedLogData) throws Exception {
-    JXTable jTable = getOtrosApplication().getSelectPaneJXTable();
-    int selected = jTable.getSelectedRow();
-    selected = jTable.convertRowIndexToModel(selected);
-    ArrayList<Integer> listOfEvents2 = new ArrayList<>();
-    HashSet<Integer> listEntryEvents = new HashSet<>();
+    Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
+    Optional<LogDataTableModel> dataT2ableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
+    maybeTable.ifPresent(jTable -> dataT2ableModel.ifPresent(dataTableModel -> {
+      int selected = jTable.getSelectedRow();
+      selected = jTable.convertRowIndexToModel(selected);
+      ArrayList<Integer> listOfEvents2 = new ArrayList<>();
+      HashSet<Integer> listEntryEvents = new HashSet<>();
 
-    LogDataTableModel dataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
-    try {
-      findCallHierarchyEvents(selected, dataTableModel, listEntryEvents, listOfEvents2);
-    } catch (NoSuchElementException e1) {
-      LOGGER.error("Log file do not have consistent Entry/Return in logs");
-      throw new Exception("Log file do not have consistent Entry/Return in logs", e1);
-    }
-    filter.setListId(listEntryEvents, listOfEvents2);
-    filterEnableCheckBox.setSelected(true);
-    filter.setEnable(true);
+
+      try {
+        findCallHierarchyEvents(selected, dataTableModel, listEntryEvents, listOfEvents2);
+      } catch (NoSuchElementException e1) {
+        LOGGER.error("Log file do not have consistent Entry/Return in logs");
+        getOtrosApplication().getStatusObserver().updateStatus("Log file does not have consistent Entry/Return in logs", StatusObserver.LEVEL_ERROR);
+      }
+      filter.setListId(listEntryEvents, listOfEvents2);
+      filterEnableCheckBox.setSelected(true);
+      filter.setEnable(true);
+    }));
   }
 
   protected void findCallHierarchyEvents(int selected, LogDataTableModel model, Collection<Integer> listEntryEvents, Collection<Integer> listOfEvents2) {

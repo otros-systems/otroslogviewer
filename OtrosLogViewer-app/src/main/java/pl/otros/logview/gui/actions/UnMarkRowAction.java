@@ -22,6 +22,7 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.OtrosAction;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 public class UnMarkRowAction extends OtrosAction {
 
@@ -32,17 +33,20 @@ public class UnMarkRowAction extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    JXTable table = getOtrosApplication().getSelectPaneJXTable();
-    LogDataTableModel model = getOtrosApplication().getSelectedPaneLogDataTableModel();
-    StatusObserver observer = getOtrosApplication().getStatusObserver();
-    int[] selected = table.getSelectedRows();
-    for (int i = 0; i < selected.length; i++) {
-      selected[i] = table.convertRowIndexToModel(selected[i]);
-    }
-    model.unmarkRows(selected);
-    if (observer != null) {
-      observer.updateStatus(selected.length + " rows unmarked");
-    }
+    Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
+    Optional<LogDataTableModel> maybeModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
+
+    maybeTable.ifPresent(table -> maybeModel.ifPresent(model -> {
+      StatusObserver observer = getOtrosApplication().getStatusObserver();
+      int[] selected = table.getSelectedRows();
+      for (int i = 0; i < selected.length; i++) {
+        selected[i] = table.convertRowIndexToModel(selected[i]);
+      }
+      model.unmarkRows(selected);
+      if (observer != null) {
+        observer.updateStatus(selected.length + " rows unmarked");
+      }
+    }));
   }
 
 }

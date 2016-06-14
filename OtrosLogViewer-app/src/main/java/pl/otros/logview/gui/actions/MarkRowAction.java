@@ -22,6 +22,7 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.OtrosAction;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 public class MarkRowAction extends OtrosAction {
 
@@ -31,21 +32,22 @@ public class MarkRowAction extends OtrosAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    LogDataTableModel model = getOtrosApplication().getSelectedPaneLogDataTableModel();
-    StatusObserver observer = getOtrosApplication().getStatusObserver();
-    JXTable table = getOtrosApplication().getSelectPaneJXTable();
-    if (model == null || table == null) {
-      return;
-    }
-    int[] selected = table.getSelectedRows();
-    for (int i = 0; i < selected.length; i++) {
-      selected[i] = table.convertRowIndexToModel(selected[i]);
-    }
-    model.markRows(getOtrosApplication().getSelectedMarkColors(), selected);
-    if (observer != null) {
-      observer.updateStatus(selected.length + " rows marked");
-    }
-
+    Optional<LogDataTableModel> maybeModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
+    Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
+    maybeTable.ifPresent(table -> maybeModel.ifPresent(model -> {
+      StatusObserver observer = getOtrosApplication().getStatusObserver();
+      if (model == null || table == null) {
+        return;
+      }
+      int[] selected = table.getSelectedRows();
+      for (int i = 0; i < selected.length; i++) {
+        selected[i] = table.convertRowIndexToModel(selected[i]);
+      }
+      model.markRows(getOtrosApplication().getSelectedMarkColors(), selected);
+      if (observer != null) {
+        observer.updateStatus(selected.length + " rows marked");
+      }
+    }));
   }
 
 }

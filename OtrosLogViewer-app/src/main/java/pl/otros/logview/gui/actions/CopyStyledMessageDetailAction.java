@@ -39,6 +39,7 @@ import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  */
@@ -65,18 +66,16 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     MessageUpdateUtils messageUpdateUtils = new MessageUpdateUtils();
-    LogViewPanelI selectedLogViewPanel = getOtrosApplication().getSelectedLogViewPanel();
-    if (selectedLogViewPanel == null) {
-      LOGGER.warn("Currently selected component is not LogViewPanel, will not copy");
-      return;
-    }
-    if (selectedLogViewPanel.getDisplayedLogData() == null) {
-      LOGGER.debug("Currently no LogData is displayed, nothing to copy");
-      return;
-    }
-    LogData logData = selectedLogViewPanel.getDisplayedLogData();
-    PlainTextAndHtml plainTextAndHtml = convertToHtml(messageUpdateUtils, logData);
-    ClipboardUtil.copyToClipboard(plainTextAndHtml);
+    Optional<LogViewPanelI> selectedLogViewPanel1 = getOtrosApplication().getSelectedLogViewPanel();
+    selectedLogViewPanel1.ifPresent(selectedLogViewPanel -> {
+      if (selectedLogViewPanel.getDisplayedLogData() == null) {
+        LOGGER.debug("Currently no LogData is displayed, nothing to copy");
+        return;
+      }
+      LogData logData = selectedLogViewPanel.getDisplayedLogData();
+      PlainTextAndHtml plainTextAndHtml = convertToHtml(messageUpdateUtils, logData);
+      ClipboardUtil.copyToClipboard(plainTextAndHtml);
+    });
   }
 
   private PlainTextAndHtml convertToHtml(MessageUpdateUtils messageUpdateUtils, LogData logData) {
