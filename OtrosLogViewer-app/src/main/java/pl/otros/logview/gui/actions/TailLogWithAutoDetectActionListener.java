@@ -23,6 +23,7 @@ import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class TailLogWithAutoDetectActionListener extends TailLogActionListener {
 
@@ -36,10 +37,10 @@ public class TailLogWithAutoDetectActionListener extends TailLogActionListener {
   protected TableColumns[] determineTableColumnsToUse(LoadingInfo loadingInfo, LogImporter importer) {
     Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
     byte[] inputStreamBufferedStart = loadingInfo.getInputStreamBufferedStart();
-    LogImporter detectLogImporter = Utils.detectLogImporter(logImporters, inputStreamBufferedStart);
+    Optional<LogImporter> detectLogImporter = Utils.detectLogImporter(logImporters, inputStreamBufferedStart);
     TableColumns[] determineTableColumnsToUse = super.determineTableColumnsToUse(loadingInfo, importer);
-    if (detectLogImporter != null) {
-      determineTableColumnsToUse = super.determineTableColumnsToUse(loadingInfo, detectLogImporter);
+    if (detectLogImporter.isPresent()) {
+      determineTableColumnsToUse = super.determineTableColumnsToUse(loadingInfo, detectLogImporter.get());
     }
     return determineTableColumnsToUse;
   }

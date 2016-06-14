@@ -10,10 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.AppProperties;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.gui.actions.TailLogWithAutoDetectActionListener;
 import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
-import pl.otros.logview.gui.actions.read.AutoDetectingImporterProvider;
-import pl.otros.logview.gui.actions.read.LogFileInNewTabOpener;
 import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
@@ -130,7 +129,7 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
       } else if (files.length == 1) {
         //open log as one file
         LOGGER.debug("WIll open {}", files[0]);
-        new TailLogWithAutoDetectActionListener(otrosApplication).openFileObjectInTailMode(files[0]);
+        new TailLogWithAutoDetectActionListener(otrosApplication).openFileObjectInTailMode(files[0], Utils.getFileObjectShortName(files[0]));
       }
     });
   }

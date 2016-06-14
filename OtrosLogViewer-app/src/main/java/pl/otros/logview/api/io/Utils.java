@@ -30,6 +30,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
@@ -168,7 +169,7 @@ public class Utils {
 
   }
 
-  public static LogImporter detectLogImporter(Collection<LogImporter> importers, byte[] buff) {
+  public static Optional<LogImporter> detectLogImporter(Collection<LogImporter> importers, byte[] buff) {
     return detectPossibleLogImporter(importers, buff).getLogImporter();
   }
 
@@ -193,7 +194,7 @@ public class Utils {
       int currentLogMessageImported = logCollector.getLogData().length;
       if (messageImported < currentLogMessageImported) {
         messageImported = currentLogMessageImported;
-        possibleLogImporters.setLogImporter(logImporter);
+        possibleLogImporters.setLogImporter(Optional.of(logImporter));
       }
       if (currentLogMessageImported > 0) {
         possibleLogImporters.getAvailableImporters().add(logImporter);

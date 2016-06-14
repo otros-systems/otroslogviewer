@@ -66,11 +66,11 @@ public class TailLogActionListener extends OtrosAction {
     }
     final FileObject[] files = chooser.getSelectedFiles();
     for (FileObject file : files) {
-      openFileObjectInTailMode(file);
+      openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
     }
   }
 
-  public void openFileObjectInTailMode(final FileObject file) {
+  public void openFileObjectInTailMode(final FileObject file, String tabName) {
     final LoadingInfo loadingInfo;
     try {
       loadingInfo = Utils.openFileObject(file, true);
@@ -87,7 +87,6 @@ public class TailLogActionListener extends OtrosAction {
       tableColumnsToUse, getOtrosApplication());
     panel.goToLiveMode();
 
-    String tabName = Utils.getFileObjectShortName(file);
     getOtrosApplication().addClosableTab(tabName, loadingInfo.getFriendlyUrl(), Icons.ARROW_REPEAT, panel, true);
 
     final LogLoader logLoader = getOtrosApplication().getLogLoader();

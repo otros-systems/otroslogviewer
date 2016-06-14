@@ -18,11 +18,12 @@ package pl.otros.logview.api.importer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  */
 public class PossibleLogImporters {
-  private LogImporter logImporter;
+  private Optional<LogImporter> logImporter = Optional.empty();
   private List<LogImporter> availableImporters = new ArrayList<>();
 
   public List<LogImporter> getAvailableImporters() {
@@ -33,11 +34,11 @@ public class PossibleLogImporters {
     this.availableImporters = availableImporters;
   }
 
-  public LogImporter getLogImporter() {
+  public Optional<LogImporter> getLogImporter() {
     return logImporter;
   }
 
-  public void setLogImporter(LogImporter logImporter) {
+  public void setLogImporter(Optional<LogImporter> logImporter) {
     this.logImporter = logImporter;
   }
 }

@@ -30,6 +30,7 @@ import javax.swing.*;
 import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Properties;
 
 public class DetectOnTheFlyLogImporter extends AbstractPluginableElement implements LogImporter {
@@ -91,14 +92,16 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
               // try to detect log
               byteArrayOutputStream.write(buff, 0, read);
               LOGGER.debug("Trying to detect log importer");
-              LogImporter detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
-              if (detectLogImporter != null) {
-                LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
-                detectLogImporter.initParsingContext(parsingContext);
+              Optional<LogImporter> detectLogImporter = Utils.detectLogImporter(logImporters, byteArrayOutputStream.toByteArray());
+
+              if (detectLogImporter.isPresent()) {
+                final LogImporter logImporter = detectLogImporter.get();
+                LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", logImporter.getName()));
+                logImporter.initParsingContext(parsingContext);
                 customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
                 byte[] buf = byteArrayOutputStream.toByteArray();
                 try (SequenceInputStream sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in)) {
-                  detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
+                  logImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
                   return;
                 }
               }

@@ -38,7 +38,8 @@ public class AutoDetectingImporterProvider implements LogImporterProvider {
   public LogImporter getLogImporter(LoadingInfo openFileObject) {
     try {
       LOGGER.info("Autodetecting LogImporter");
-      return Utils.detectLogImporter(importers, openFileObject.getInputStreamBufferedStart());
+      //TODO remove get
+      return Utils.detectLogImporter(importers, openFileObject.getInputStreamBufferedStart()).get();
     } catch (Exception e) {
       LOGGER.warn("LogImproter can't be detected: " + e.getMessage());
       LOGGER.warn("Could not read probe from log file " + openFileObject.getFriendlyUrl()
