@@ -714,6 +714,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
     toolsMenu.add(new OpenPreferencesAction(otrosApplication));
     toolsMenu.add(closeAll);
+    toolsMenu.add(new ParseClipboard(otrosApplication));
     JMenu pluginsMenu = new JMenu("Plugins");
     otrosApplication.setPluginsMenu(pluginsMenu);
     JMenu helpMenu = new JMenu("Help");

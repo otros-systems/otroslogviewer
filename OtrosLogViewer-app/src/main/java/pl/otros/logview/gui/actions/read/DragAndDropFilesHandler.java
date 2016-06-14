@@ -15,7 +15,6 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.read;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -24,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
@@ -269,7 +269,7 @@ public class DragAndDropFilesHandler extends TransferHandler {
     Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
     LogImporter importer = new DetectOnTheFlyLogImporter(importers);
     TailLogActionListener tailLogActionListener = new TailLogActionListener(otrosApplication, importer);
-    tailLogActionListener.openFileObjectInTailMode(file);
+    tailLogActionListener.openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
 
     // new LogFileInNewTabOpener(new AutoDetectingImporterProvider(importers), tabbedPane, observer).open(file);
   }
