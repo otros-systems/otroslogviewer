@@ -24,6 +24,7 @@ import pl.otros.logview.api.gui.OtrosAction;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ClearMarkingsAction extends OtrosAction {
 
@@ -37,26 +38,28 @@ public class ClearMarkingsAction extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent arg0) {
     long start = System.currentTimeMillis();
-    LogDataTableModel dataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
-    int rowCount = dataTableModel.getRowCount();
-    LOGGER.info(String.format("Started action of clearing marks, have %d rows to check.", rowCount));
-    ArrayList<Integer> markedRows = new ArrayList<>();
-    for (int i = 0; i < rowCount; i++) {
-      if (dataTableModel.isMarked(i)) {
-        markedRows.add(i);
+    Optional<LogDataTableModel> maybeDataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
+    maybeDataTableModel.ifPresent(dataTableModel -> {
+      int rowCount = dataTableModel.getRowCount();
+      LOGGER.info(String.format("Started action of clearing marks, have %d rows to check.", rowCount));
+      ArrayList<Integer> markedRows = new ArrayList<>();
+      for (int i = 0; i < rowCount; i++) {
+        if (dataTableModel.isMarked(i)) {
+          markedRows.add(i);
+        }
       }
-    }
-    LOGGER.info(String.format("%d rows to clear marking.", markedRows.size()));
-    int[] toUnmark = new int[markedRows.size()];
-    for (int i = 0; i < toUnmark.length; i++) {
-      toUnmark[i] = markedRows.get(i);
+      LOGGER.info(String.format("%d rows to clear marking.", markedRows.size()));
+      int[] toUnmark = new int[markedRows.size()];
+      for (int i = 0; i < toUnmark.length; i++) {
+        toUnmark[i] = markedRows.get(i);
 
-    }
-    dataTableModel.unmarkRows(toUnmark);
-    LOGGER.info(String.format("Row markings [%d] cleared in %d ms", toUnmark.length, (System.currentTimeMillis() - start)));
-    if (getOtrosApplication().getStatusObserver() != null) {
-      getOtrosApplication().getStatusObserver().updateStatus("Markings have been cleared");
-    }
+      }
+      dataTableModel.unmarkRows(toUnmark);
+      LOGGER.info(String.format("Row markings [%d] cleared in %d ms", toUnmark.length, (System.currentTimeMillis() - start)));
+      if (getOtrosApplication().getStatusObserver() != null) {
+        getOtrosApplication().getStatusObserver().updateStatus("Markings have been cleared");
+      }
+    });
   }
 
 }

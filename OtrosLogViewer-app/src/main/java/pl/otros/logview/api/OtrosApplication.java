@@ -30,6 +30,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -96,33 +97,29 @@ public class OtrosApplication {
     return jTabbedPane;
   }
 
-  public LogViewPanelI getSelectedLogViewPanel() {
+  public Optional<LogViewPanelI> getSelectedLogViewPanel() {
     int selectedIndex = jTabbedPane.getSelectedIndex();
-    Component componentAt = jTabbedPane.getComponentAt(selectedIndex);
-    if (componentAt instanceof LogViewPanelWrapper) {
-      LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
-      return logViewPanelWrapper.getLogViewPanel();
-    } else if (componentAt instanceof LogPatternParserEditor) {
-      LogPatternParserEditor patternParserEditor = (LogPatternParserEditor) componentAt;
-      return patternParserEditor.getLogViewPanel();
+    if (selectedIndex>0){
+      Component componentAt = jTabbedPane.getComponentAt(selectedIndex);
+      if (componentAt instanceof LogViewPanelWrapper) {
+        LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
+        return Optional.of(logViewPanelWrapper.getLogViewPanel());
+      } else if (componentAt instanceof LogPatternParserEditor) {
+        LogPatternParserEditor patternParserEditor = (LogPatternParserEditor) componentAt;
+        return Optional.of(patternParserEditor.getLogViewPanel());
+      }
     }
-    return null;
+    return Optional.empty();
   }
 
-  public LogDataTableModel getSelectedPaneLogDataTableModel() {
-    LogViewPanelI selectedLogViewPanel = getSelectedLogViewPanel();
-    if (selectedLogViewPanel != null) {
-      return selectedLogViewPanel.getDataTableModel();
-    }
-    return null;
+  public Optional<LogDataTableModel> getSelectedPaneLogDataTableModel() {
+    Optional<LogViewPanelI> selectedLogViewPanel = getSelectedLogViewPanel();
+    return selectedLogViewPanel.map(LogViewPanelI::getDataTableModel);
   }
 
-  public JXTable getSelectPaneJXTable() {
-    LogViewPanelI selectedLogViewPanel = getSelectedLogViewPanel();
-    if (selectedLogViewPanel != null) {
-      return selectedLogViewPanel.getTable();
-    }
-    return null;
+  public Optional<JXTable> getSelectPaneJXTable() {
+    Optional<LogViewPanelI> selectedLogViewPanel = getSelectedLogViewPanel();
+    return selectedLogViewPanel.map(LogViewPanelI::getTable);
   }
 
   public void addClosableTab(String name, String tooltip, Icon icon, JComponent component, boolean show) {

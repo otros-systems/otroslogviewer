@@ -157,7 +157,7 @@ public class LoadingRunnable implements Runnable {
           Utils.reloadFileObject(loadingInfo);
 
         } catch (Exception e) {
-          LOGGER.warn("Exception in tailing loop: " + e.getMessage());
+          LOGGER.warn("Exception in tailing loop: ", e.getMessage());
         }
       }
       LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
