@@ -33,16 +33,16 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class AdvancedParseClipboard extends OtrosAction {
+public class ParseClipboard extends OtrosAction {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AdvancedParseClipboard.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ParseClipboard.class);
   private final PersistentSuggestionSource<SearchSuggestion> suggestionSource;
   private JComboBox<LogImporter> logParserComboBox;
   private JLabel statusLabel;
   private boolean patternIsValid = true;
   private JButton importButton;
 
-  public AdvancedParseClipboard(OtrosApplication otrosApplication) {
+  public ParseClipboard(OtrosApplication otrosApplication) {
     super("Parse clipboard", Icons.CLIPBOARD_PASTE, otrosApplication);
     suggestionSource = new PersistentSuggestionSource<>(
       "clipboardProcessingPatterns",

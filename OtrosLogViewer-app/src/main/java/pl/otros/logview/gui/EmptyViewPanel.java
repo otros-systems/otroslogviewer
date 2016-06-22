@@ -133,7 +133,7 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.gridy++;
 
 
-    AdvancedParseClipboard parseClipboard = new AdvancedParseClipboard(otrosApplication);
+    ParseClipboard parseClipboard = new ParseClipboard(otrosApplication);
     JButton jb3 = new JButton(parseClipboard);
     this.add(jb3, bagConstraints);
     bagConstraints.gridy++;

@@ -242,7 +242,7 @@ public class LogViewMainFrame extends JFrame {
     final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     String parseClipboard = "parseClipboard";
     inputMapInFocusedWindow.put(KeyStroke.getKeyStroke("meta pressed V"),parseClipboard);
-    contentPane.getActionMap().put(parseClipboard,new AdvancedParseClipboard(otrosApplication));
+    contentPane.getActionMap().put(parseClipboard,new ParseClipboard(otrosApplication));
   }
 
   /**
@@ -723,7 +723,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
     toolsMenu.add(new OpenPreferencesAction(otrosApplication));
     toolsMenu.add(closeAll);
-    final AdvancedParseClipboard parseClipboard = new AdvancedParseClipboard(otrosApplication);
+    final ParseClipboard parseClipboard = new ParseClipboard(otrosApplication);
     toolsMenu.add(parseClipboard);
     JMenu pluginsMenu = new JMenu("Plugins");
     otrosApplication.setPluginsMenu(pluginsMenu);
