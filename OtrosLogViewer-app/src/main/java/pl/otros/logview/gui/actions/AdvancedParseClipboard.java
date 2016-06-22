@@ -42,7 +42,7 @@ public class AdvancedParseClipboard extends OtrosAction {
   private JLabel statusLabel;
 
   public AdvancedParseClipboard(OtrosApplication otrosApplication) {
-    super("Advanced Parse clipboard", otrosApplication);
+    super("Parse clipboard", Icons.CLIPBOARD_PASTE, otrosApplication);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class AdvancedParseClipboard extends OtrosAction {
     contentPanel.add(progressBar, "wrap, growx");
     final JTextArea textArea = new JTextArea(data);
     textArea.setEditable(true);
-    textArea.setFont(new Font(Font.MONOSPACED,textArea.getFont().getStyle(),textArea.getFont().getSize()));
+    textArea.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane contentView = new JScrollPane(textArea);
     contentView.setBorder(BorderFactory.createTitledBorder("Clipboard content"));
     contentPanel.add(contentView, "width 200:500:700, height 200:200:200, span, wrap");
@@ -92,7 +92,7 @@ public class AdvancedParseClipboard extends OtrosAction {
 
     final JTextArea textAreaProceed = new JTextArea(data);
     textAreaProceed.setEditable(false);
-    textAreaProceed.setFont(new Font(Font.MONOSPACED,textArea.getFont().getStyle(),textArea.getFont().getSize()));
+    textAreaProceed.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane processedContentView = new JScrollPane(textAreaProceed);
     processedContentView.setBorder(BorderFactory.createTitledBorder("Processed clipboard"));
     contentPanel.add(processedContentView, "width 200:500:700, height 200:200:200, span, wrap");
@@ -183,7 +183,7 @@ public class AdvancedParseClipboard extends OtrosAction {
     Arrays.asList(textArea.getActionMap().allKeys()).stream().forEach(System.out::println);
     Arrays.asList(keyStrokes).forEach(k -> System.out.println(k + " => " + textArea.getInputMap(JComponent.WHEN_FOCUSED).get(k)));
 
-    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed V"),"refresh");
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed V"), "refresh");
 
     delayedSwingInvoke.performAction();
     dialog.getContentPane().setLayout(new BorderLayout());

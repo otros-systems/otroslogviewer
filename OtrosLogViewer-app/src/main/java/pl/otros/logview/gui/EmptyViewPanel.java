@@ -132,6 +132,14 @@ class EmptyViewPanel extends JPanel {
     this.add(jb2, bagConstraints);
     bagConstraints.gridy++;
 
+
+    AdvancedParseClipboard parseClipboard = new AdvancedParseClipboard(otrosApplication);
+    JButton jb3 = new JButton(parseClipboard);
+    this.add(jb3, bagConstraints);
+    bagConstraints.gridy++;
+
+
+
     bagConstraints.insets = new Insets(15, 15, 3, 15);
     this.add(new JSeparator(SwingConstants.HORIZONTAL), bagConstraints);
     bagConstraints.insets = new Insets(2, 5, 0, 5);
