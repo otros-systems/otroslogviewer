@@ -25,10 +25,12 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
+import pl.otros.vfs.browser.util.VFSUtils;
 
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -246,5 +248,20 @@ public class Utils {
       sb.append(fileObject.getName().getScheme()).append("://").append(fileObject.getName().getBaseName());
     }
     return sb.toString();
+  }
+
+  /**
+   * Create temporary FileObject with content. Implementation will create file in temprary directory
+   * @param content
+   * @return FileObject
+   * @throws IOException
+   */
+  public static FileObject createFileObjectWithContent(String content) throws IOException {
+    final File tempFile = File.createTempFile("olv_temp", "");
+    OutputStream out = new FileOutputStream(tempFile);
+    IOUtils.write(content, out, Charset.forName("UTF-8"));
+    IOUtils.closeQuietly(out);
+    final FileObject fileObject = VFSUtils.resolveFileObject(tempFile.toURI());
+    return fileObject;
   }
 }

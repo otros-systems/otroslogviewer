@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTextField;
 import org.slf4j.Logger;
@@ -16,7 +14,6 @@ import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.util.UnixProcessing;
-import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -25,11 +22,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -48,16 +41,7 @@ public class AdvancedParseClipboard extends OtrosAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     final Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    Optional<String> maybeContent;
 
-    maybeContent = getStringFromClipboard(systemClipboard);
-    if (!maybeContent.isPresent()) {
-      //TODO add warning on dialog instead of this
-      JOptionPane.showMessageDialog(getOtrosApplication().getApplicationJFrame(), "Can't get clipboard content");
-      return;
-    }
-
-    final String data = maybeContent.get();
 
     JProgressBar progressBar = new JProgressBar(0, 1);
     progressBar.setValue(1);
@@ -68,10 +52,11 @@ public class AdvancedParseClipboard extends OtrosAction {
     dialog.setModal(true);
     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
+    //TODO content should grow 100% in contentPanel
     final JPanel contentPanel = new JPanel(new MigLayout());
     contentPanel.add(new JLabel("Detecting log format"));
     contentPanel.add(progressBar, "wrap, growx");
-    final JTextArea textArea = new JTextArea(data);
+    final JTextArea textArea = new JTextArea(10, 100);
     textArea.setEditable(true);
     textArea.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane contentView = new JScrollPane(textArea);
@@ -90,7 +75,7 @@ public class AdvancedParseClipboard extends OtrosAction {
     final JXTextField processingPattern = new JXTextField("Unix CLI style: grep INFO | cut -c10-9999");
     contentPanel.add(processingPattern, "wrap, growx");
 
-    final JTextArea textAreaProceed = new JTextArea(data);
+    final JTextArea textAreaProceed = new JTextArea("");
     textAreaProceed.setEditable(false);
     textAreaProceed.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane processedContentView = new JScrollPane(textAreaProceed);
@@ -130,8 +115,8 @@ public class AdvancedParseClipboard extends OtrosAction {
     final JButton cancelButton = new JButton("Cancel");
     cancelButton.addActionListener(x -> dialog.dispose());
 
-    final JPanel buttonsPanel = new JPanel(new MigLayout());
-    buttonsPanel.add(importButton, "");
+    final JPanel buttonsPanel = new JPanel();
+    buttonsPanel.add(importButton, "growx");
     buttonsPanel.add(cancelButton, "");
 
 
@@ -184,12 +169,15 @@ public class AdvancedParseClipboard extends OtrosAction {
     Arrays.asList(keyStrokes).forEach(k -> System.out.println(k + " => " + textArea.getInputMap(JComponent.WHEN_FOCUSED).get(k)));
 
     contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed V"), "refresh");
+    contentPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
     delayedSwingInvoke.performAction();
     dialog.getContentPane().setLayout(new BorderLayout());
     dialog.getContentPane().add(contentPanel, BorderLayout.CENTER);
     dialog.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
-    dialog.setUndecorated(true);
+    dialog.setUndecorated(false);
+    dialog.setTitle("Import logs from clipboard");
+    updateFromClipboard(systemClipboard, textArea);
     dialog.pack();
     dialog.setLocationRelativeTo(getOtrosApplication().getApplicationJFrame());
     dialog.setVisible(true);
@@ -209,7 +197,7 @@ public class AdvancedParseClipboard extends OtrosAction {
 
     final LogImporter logImporter = logParserComboBox.getItemAt(logParserComboBox.getSelectedIndex());
     new TailLogActionListener(getOtrosApplication(), logImporter)
-      .openFileObjectInTailMode(createFileObjectWithContent(data), "Clipboard " + tabTitle);
+      .openFileObjectInTailMode(Utils.createFileObjectWithContent(data), "Clipboard " + tabTitle);
 
   }
 
@@ -220,6 +208,8 @@ public class AdvancedParseClipboard extends OtrosAction {
       textArea.setCaretPosition(0);
     } else {
       textArea.setText("");
+      statusLabel.setIcon(Icons.STATUS_ERROR);
+      statusLabel.setText("Clipboard content is not text");
     }
   }
 
@@ -231,16 +221,6 @@ public class AdvancedParseClipboard extends OtrosAction {
       data = Optional.empty();
     }
     return data;
-  }
-
-  //TOOD move ot Utils
-  private FileObject createFileObjectWithContent(String data) throws IOException {
-    final File tempFile = File.createTempFile("olv_temp", "");
-    OutputStream out = new FileOutputStream(tempFile);
-    IOUtils.write(data, out, Charset.forName("UTF-8"));
-    IOUtils.closeQuietly(out);
-    final FileObject fileObject = VFSUtils.resolveFileObject(tempFile.toURI());
-    return fileObject;
   }
 
 
@@ -295,7 +275,7 @@ public class AdvancedParseClipboard extends OtrosAction {
         possibleLogImporters.getAvailableImporters().stream().forEach(logImporterCbxModel::addElement);
         possibleLogImporters.getLogImporter().ifPresent(logImporterJComboBox::setSelectedItem);
         if (possibleLogImporters.getAvailableImporters().isEmpty()) {
-          statusLabel.setText("Defined log parser can't parse these log format");
+          statusLabel.setText("Defined log parser can't parse input");
           statusLabel.setIcon(Icons.STATUS_UNKNOWN);
         } else {
           statusLabel.setText("Can parse log from clipboard");
@@ -309,11 +289,6 @@ public class AdvancedParseClipboard extends OtrosAction {
     //TODO Move to Utils?
     private Callable<PossibleLogImporters> possibleLogImportersCallable(final String data) {
       return () -> {
-        final File file = File.createTempFile("olv_clipboard", "");
-        OutputStream out = new FileOutputStream(file);
-        IOUtils.write(data, out, Charset.forName("UTF-8"));
-        IOUtils.closeQuietly(out);
-        file.delete();
         final Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
         final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, data.getBytes());
         return possibleLogImporters;
