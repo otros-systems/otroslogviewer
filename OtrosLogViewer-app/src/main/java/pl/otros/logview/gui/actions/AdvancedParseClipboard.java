@@ -1,5 +1,6 @@
 package pl.otros.logview.gui.actions;
 
+import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTextField;
@@ -11,9 +12,13 @@ import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
 import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.gui.suggestion.SearchSuggestion;
+import pl.otros.logview.gui.suggestion.SearchSuggestionRenderer;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
+import pl.otros.logview.gui.util.PersistentSuggestionSource;
 import pl.otros.logview.util.UnixProcessing;
+import pl.otros.swing.suggest.SuggestDecorator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -31,11 +36,21 @@ import java.util.concurrent.Callable;
 public class AdvancedParseClipboard extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvancedParseClipboard.class);
+  private final PersistentSuggestionSource<SearchSuggestion> suggestionSource;
   private JComboBox<LogImporter> logParserComboBox;
   private JLabel statusLabel;
+  private boolean patternIsValid = true;
+  private JButton importButton;
 
   public AdvancedParseClipboard(OtrosApplication otrosApplication) {
     super("Parse clipboard", Icons.CLIPBOARD_PASTE, otrosApplication);
+    suggestionSource = new PersistentSuggestionSource<>(
+      "clipboardProcessingPatterns",
+      getOtrosApplication().getServices().getPersistService(),
+      (s, suggestionQuery) -> s.getFullContent().contains(suggestionQuery.getValue()),
+      SearchSuggestion::getFullContent,
+      s -> new SearchSuggestion(s, s)
+    );
   }
 
   @Override
@@ -53,7 +68,9 @@ public class AdvancedParseClipboard extends OtrosAction {
     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
     //TODO content should grow 100% in contentPanel
-    final JPanel contentPanel = new JPanel(new MigLayout());
+    final JPanel contentPanel = new JPanel(new MigLayout(
+      new LC().fill().width("100%")
+    ));
     contentPanel.add(new JLabel("Detecting log format"));
     contentPanel.add(progressBar, "wrap, growx");
     final JTextArea textArea = new JTextArea(10, 100);
@@ -61,7 +78,7 @@ public class AdvancedParseClipboard extends OtrosAction {
     textArea.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane contentView = new JScrollPane(textArea);
     contentView.setBorder(BorderFactory.createTitledBorder("Clipboard content"));
-    contentPanel.add(contentView, "width 200:500:700, height 200:200:200, span, wrap");
+    contentPanel.add(contentView, "wmin 500, hmin 200, span, wrap");
     final AbstractAction refreshAction = new AbstractAction("Paste clipboard") {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -75,12 +92,18 @@ public class AdvancedParseClipboard extends OtrosAction {
     final JXTextField processingPattern = new JXTextField("Unix CLI style: grep INFO | cut -c10-9999");
     contentPanel.add(processingPattern, "wrap, growx");
 
+    SuggestDecorator.decorate(
+      processingPattern,
+      suggestionSource,
+      new SearchSuggestionRenderer(),
+      s->processingPattern.setText(s.getValue().getFullContent()));
+
     final JTextArea textAreaProceed = new JTextArea("");
     textAreaProceed.setEditable(false);
     textAreaProceed.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
     final JScrollPane processedContentView = new JScrollPane(textAreaProceed);
     processedContentView.setBorder(BorderFactory.createTitledBorder("Processed clipboard"));
-    contentPanel.add(processedContentView, "width 200:500:700, height 200:200:200, span, wrap");
+    contentPanel.add(processedContentView, "wmin 500, hmin 200, span, wrap");
 
     contentPanel.add(new JLabel("Select log parser"));
     final DefaultComboBoxModel<LogImporter> logImporterCbxModel = new DefaultComboBoxModel<>();
@@ -102,13 +125,22 @@ public class AdvancedParseClipboard extends OtrosAction {
     contentPanel.add(statusLabel, "wrap, growx, span");
 
 
-    final JButton importButton = new JButton("Import");
+    importButton = new JButton("Import");
     importButton.addActionListener(x -> {
       try {
-        loadLogFileAsContent(processText(textArea.getText(), processingPattern.getText()));
+        final String processingPatternText = processingPattern.getText();
+        loadLogFileAsContent(processText(textArea.getText(), processingPatternText));
         dialog.dispose();
+        suggestionSource.add(new SearchSuggestion(processingPatternText,processingPatternText));
+        try {
+          getOtrosApplication().getServices().getPersistService().persist("grep history", "list of ...");
+        } catch (Exception e1) {
+          LOGGER.error("Can't save suggestions for processing logs from clipboard");
+        }
       } catch (IOException e1) {
-        JOptionPane.showMessageDialog(dialog, "Can't open log");//TODO different warring
+        statusLabel.setIcon(Icons.STATUS_ERROR);
+        statusLabel.setText("Can't import logs: " + e1.getMessage());
+        LOGGER.error("Can't import logs",e1);
       }
     });
 
@@ -139,12 +171,15 @@ public class AdvancedParseClipboard extends OtrosAction {
           parsingWorker.execute();
           statusLabel.setText("Processing command is OK");
           statusLabel.setIcon(Icons.STATUS_OK);
-
+          patternIsValid = true;
         } catch (Exception e) {
           e.printStackTrace();
           processingPattern.setBackground(Color.RED);
           statusLabel.setText("Wrong processing command");
           statusLabel.setIcon(Icons.STATUS_ERROR);
+          patternIsValid = false;
+        } finally {
+          updateImportButtonState();
         }
       }
     };
@@ -169,7 +204,6 @@ public class AdvancedParseClipboard extends OtrosAction {
     Arrays.asList(keyStrokes).forEach(k -> System.out.println(k + " => " + textArea.getInputMap(JComponent.WHEN_FOCUSED).get(k)));
 
     contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed V"), "refresh");
-    contentPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
     delayedSwingInvoke.performAction();
     dialog.getContentPane().setLayout(new BorderLayout());
@@ -232,7 +266,7 @@ public class AdvancedParseClipboard extends OtrosAction {
     private JComboBox<LogImporter> logImporterJComboBox;
     private DefaultComboBoxModel<LogImporter> logImporterCbxModel;
 
-    public ParsingWorker(JTextArea textArea, JProgressBar progressBar, JButton importButton, JComboBox<LogImporter> logImporterJComboBox, DefaultComboBoxModel<LogImporter> logImporterCbxModel) {
+    ParsingWorker(JTextArea textArea, JProgressBar progressBar, JButton importButton, JComboBox<LogImporter> logImporterJComboBox, DefaultComboBoxModel<LogImporter> logImporterCbxModel) {
       this.textArea = textArea;
       this.progressBar = progressBar;
       this.importButton = importButton;
@@ -268,7 +302,8 @@ public class AdvancedParseClipboard extends OtrosAction {
       }
       try {
         final PossibleLogImporters possibleLogImporters = get();
-        importButton.setEnabled(possibleLogImporters.getLogImporter().isPresent());
+
+        updateImportButtonState();
         logImporterJComboBox.setEnabled(possibleLogImporters.getLogImporter().isPresent());
 
         logImporterCbxModel.removeAllElements();
@@ -290,10 +325,13 @@ public class AdvancedParseClipboard extends OtrosAction {
     private Callable<PossibleLogImporters> possibleLogImportersCallable(final String data) {
       return () -> {
         final Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
-        final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, data.getBytes());
-        return possibleLogImporters;
+        return Utils.detectPossibleLogImporter(logImporters, data.getBytes());
       };
     }
+  }
+
+  private void updateImportButtonState() {
+    importButton.setEnabled(logParserComboBox.getItemCount() > 0 && patternIsValid);
   }
 
 }

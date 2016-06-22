@@ -22,7 +22,6 @@ import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.MenuActionProvider;
-import pl.otros.logview.api.services.PersistService;
 import pl.otros.logview.api.services.Services;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
@@ -50,10 +49,7 @@ public class OtrosApplication {
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private AppProperties appProperties;
   private final List<MenuActionProvider> menuActionProviders;
-  private PersistService persistService;
   private LogLoader logLoader;
-
-
   private Services services;
 
   public OtrosApplication() {
@@ -212,12 +208,5 @@ public class OtrosApplication {
     return new ArrayList<>(menuActionProviders);
   }
 
-  public PersistService getPersistService() {
-    return persistService;
-  }
-
-  public void setPersistService(PersistService persistService) {
-    this.persistService = persistService;
-  }
 }
 

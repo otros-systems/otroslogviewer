@@ -67,6 +67,7 @@ project(':Common-libs') {
         compile 'commons-httpclient:commons-httpclient:3.1'
         compile 'commons-io:commons-io:2.+'
         compile 'commons-lang:commons-lang:2.+'
+        compile 'org.apache.commons:commons-csv:1.4'
         compile 'commons-logging:commons-logging:1.1.1'
         compile 'jcifs:jcifs:1.+'
         compile 'log4j:log4j:1.+'
