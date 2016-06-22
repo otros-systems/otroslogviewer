@@ -13,6 +13,7 @@ Useful software for analysing applications logs and traces.
 ## Features
   * Loading logs from remote servers using ftp, sftp, ssh, samba and others ([supported file systems](http://commons.apache.org/vfs/filesystems.html))
   * Tailing logs from local disk and sftp
+  * Parsing logs from clipboard
   * Decompressing "gziped" logs on the fly
   * Parsing custom log patterns
   * Log events searching using regular expression
