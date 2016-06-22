@@ -203,6 +203,7 @@ public class LogViewMainFrame extends JFrame {
     cp.add(cardLayoutPanel, BorderLayout.CENTER);
     cp.add(statusPanel, BorderLayout.SOUTH);
     initGlobalHotKeys();
+    initInputMap();
     initPosition();
     if (configuration.getBoolean(ConfKeys.LOAD_EXPERIMENTAL_FEATURES, false)) {
       initExperimental();
@@ -234,6 +235,14 @@ public class LogViewMainFrame extends JFrame {
       new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
       25, 25, TimeUnit.SECONDS);
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
+  }
+
+  private void initInputMap() {
+    final JComponent contentPane = (JComponent) this.getContentPane();
+    final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    String parseClipboard = "parseClipboard";
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke("meta pressed V"),parseClipboard);
+    contentPane.getActionMap().put(parseClipboard,new AdvancedParseClipboard(otrosApplication));
   }
 
   /**
@@ -714,7 +723,8 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
     toolsMenu.add(new OpenPreferencesAction(otrosApplication));
     toolsMenu.add(closeAll);
-    toolsMenu.add(new ParseClipboard(otrosApplication));
+    final AdvancedParseClipboard parseClipboard = new AdvancedParseClipboard(otrosApplication);
+    toolsMenu.add(parseClipboard);
     JMenu pluginsMenu = new JMenu("Plugins");
     otrosApplication.setPluginsMenu(pluginsMenu);
     JMenu helpMenu = new JMenu("Help");
