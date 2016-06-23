@@ -67,7 +67,6 @@ public class ParseClipboard extends OtrosAction {
     dialog.setModal(true);
     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
-    //TODO content should grow 100% in contentPanel
     final JPanel contentPanel = new JPanel(new MigLayout(
       new LC().fill().width("100%")
     ));
