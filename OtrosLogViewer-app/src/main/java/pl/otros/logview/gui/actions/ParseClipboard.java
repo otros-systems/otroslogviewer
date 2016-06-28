@@ -23,6 +23,7 @@ import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.gui.util.PersistentSuggestionSource;
 import pl.otros.logview.util.UnixProcessing;
+import pl.otros.swing.functional.LambdaAction;
 import pl.otros.swing.functional.StringListCellRenderer;
 import pl.otros.swing.suggest.SuggestDecorator;
 
@@ -33,6 +34,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,6 +50,8 @@ public class ParseClipboard extends OtrosAction {
   private boolean patternIsValid = true;
   private JButton importButton;
   private JComboBox<TabWithName> viewCombobox;
+  private LambdaAction importAction;
+  private final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
   public ParseClipboard(OtrosApplication otrosApplication) {
     super("Parse clipboard", Icons.CLIPBOARD_PASTE, otrosApplication);
@@ -130,36 +134,40 @@ public class ParseClipboard extends OtrosAction {
 
     final JLabel labelView = new JLabel("View");
     labelView.setDisplayedMnemonic('V');
-    viewCombobox = new JComboBox<>(getTabsWithName(getOtrosApplication().getJTabbedPane()).toArray(new TabWithName[0]));
+    final TabWithName[] tabWithNames = getTabsWithName(getOtrosApplication().getJTabbedPane()).toArray(new TabWithName[0]);
+    viewCombobox = new JComboBox<>(tabWithNames);
+    Arrays.asList(tabWithNames).stream()
+      .filter(t -> t.isSelected())
+      .findFirst()
+      .ifPresent(t -> viewCombobox.setSelectedItem(t));
+
     labelView.setLabelFor(viewCombobox);
     viewCombobox.setRenderer(new StringListCellRenderer<>(tabWithName -> tabWithName.getTitle()));
 
-
     statusLabel = new JLabel(" ");
-
-
-    importButton = new JButton("Import");
-    importButton.addActionListener(x -> {
-      try {
-        final String processingPatternText = processingPattern.getText();
-        final TabWithName target = viewCombobox.getItemAt(viewCombobox.getSelectedIndex());
-        loadLogFileAsContent(processText(textArea.getText(), processingPatternText),target);
-        dialog.dispose();
-        if (StringUtils.isNotBlank(processingPatternText)){
-          suggestionSource.add(new SearchSuggestion(processingPatternText.trim(),processingPatternText.trim()));
-        }
+    importAction = new LambdaAction("Import" ,
+      x -> {
         try {
-          getOtrosApplication().getServices().getPersistService().persist("grep history", "list of ...");
-        } catch (Exception e1) {
-          LOGGER.error("Can't save suggestions for processing logs from clipboard");
+          final String processingPatternText = processingPattern.getText();
+          final TabWithName target = viewCombobox.getItemAt(viewCombobox.getSelectedIndex());
+          loadLogFileAsContent(processText(textArea.getText(), processingPatternText), target);
+          dialog.dispose();
+          if (StringUtils.isNotBlank(processingPatternText)) {
+            suggestionSource.add(new SearchSuggestion(processingPatternText.trim(), processingPatternText.trim()));
+          }
+          try {
+            getOtrosApplication().getServices().getPersistService().persist("grep history", "list of ...");
+          } catch (Exception e1) {
+            LOGGER.error("Can't save suggestions for processing logs from clipboard");
+          }
+        } catch (IOException e1) {
+          statusLabel.setIcon(Icons.STATUS_ERROR);
+          statusLabel.setText("Can't import logs: " + e1.getMessage());
+          LOGGER.error("Can't import logs", e1);
         }
-      } catch (IOException e1) {
-        statusLabel.setIcon(Icons.STATUS_ERROR);
-        statusLabel.setText("Can't import logs: " + e1.getMessage());
-        LOGGER.error("Can't import logs",e1);
       }
-    });
-
+    );
+    importButton = new JButton(importAction);
     final JButton cancelButton = new JButton("Cancel");
     cancelButton.addActionListener(x -> dialog.dispose());
 
@@ -218,8 +226,12 @@ public class ParseClipboard extends OtrosAction {
 
 
     contentPanel.getActionMap().put("refresh", refreshAction);
-    //pressed PASTE => paste-from-clipboard
-    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed PASTE"), "refresh");
+    contentPanel.getActionMap().put("cancel", new LambdaAction(x->dialog.dispose()));
+    contentPanel.getActionMap().put("import", importAction);
+
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, mask), "refresh");
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0), "cancel");
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,mask), "import");
 
 
     contentPanel.add(contentView, "wmin 500, hmin 200, span, wrap");
@@ -252,13 +264,14 @@ public class ParseClipboard extends OtrosAction {
 
   private List<TabWithName> getTabsWithName(JTabbedPane jTabbedPane) {
     final ArrayList<TabWithName> tabs = new ArrayList<>();
-    tabs.add(0,new TabWithName("New view",Optional.empty()));
+    tabs.add(0,new TabWithName("New view",Optional.empty(), false));
+    final int selectedIndex = jTabbedPane.getSelectedIndex();
     for (int i=0; i< jTabbedPane.getTabCount(); i++){
       final JComponent tabComponentAt = (JComponent) jTabbedPane.getComponentAt(i);
       if (tabComponentAt instanceof LogViewPanelWrapper){
         final LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) tabComponentAt;
         final LogViewPanelI collector = logViewPanelWrapper.getLogViewPanel();
-        tabs.add(new TabWithName(jTabbedPane.getTitleAt(i),Optional.of(collector)));
+        tabs.add(new TabWithName(jTabbedPane.getTitleAt(i),Optional.of(collector), i==selectedIndex));
       }
     }
     return tabs;
@@ -383,17 +396,19 @@ public class ParseClipboard extends OtrosAction {
     final int itemCount = logParserComboBox.getItemCount();
     final boolean patternIsValid = this.patternIsValid;
     LOGGER.debug("Detected log parsers count " + itemCount + ", patter is valid: " + patternIsValid);
-    importButton.setEnabled(itemCount > 0 && patternIsValid);
+    importAction.setEnabled(itemCount > 0 && patternIsValid);
   }
 
 }
 final class TabWithName {
-  private String title;
-  private Optional<LogViewPanelI> logDataCollector;
+  private final String title;
+  private final Optional<LogViewPanelI> logDataCollector;
+  private final boolean selected;
 
-  public TabWithName(String title, Optional<LogViewPanelI> logDataCollector) {
+  public TabWithName(String title, Optional<LogViewPanelI> logDataCollector, boolean selected) {
     this.title = title;
     this.logDataCollector = logDataCollector;
+    this.selected = selected;
   }
 
   public String getTitle() {
@@ -402,5 +417,9 @@ final class TabWithName {
 
   public Optional<LogViewPanelI> getLogDataCollector() {
     return logDataCollector;
+  }
+
+  public boolean isSelected() {
+    return selected;
   }
 }
