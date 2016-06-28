@@ -6,8 +6,8 @@
 # Line with json have to start with '{'
 
 type=json
-name=Kibana
-description=Logstash
+name=Logstash
+description=Logstash json format
 
 level=level
 message=message
