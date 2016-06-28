@@ -241,7 +241,7 @@ public class LogViewMainFrame extends JFrame {
     final JComponent contentPane = (JComponent) this.getContentPane();
     final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     String parseClipboard = "parseClipboard";
-    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke("meta pressed V"),parseClipboard);
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke("pressed PASTE"),parseClipboard);
     contentPane.getActionMap().put(parseClipboard,new ParseClipboard(otrosApplication));
   }
 
