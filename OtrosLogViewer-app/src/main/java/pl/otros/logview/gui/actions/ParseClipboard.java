@@ -49,7 +49,6 @@ public class ParseClipboard extends OtrosAction {
   private JLabel statusLabel;
   private boolean patternIsValid = true;
   private JButton importButton;
-  private JComboBox<TabWithName> viewCombobox;
   private LambdaAction importAction;
   private final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
@@ -135,14 +134,14 @@ public class ParseClipboard extends OtrosAction {
     final JLabel labelView = new JLabel("View");
     labelView.setDisplayedMnemonic('V');
     final TabWithName[] tabWithNames = getTabsWithName(getOtrosApplication().getJTabbedPane()).toArray(new TabWithName[0]);
-    viewCombobox = new JComboBox<>(tabWithNames);
+    JComboBox<TabWithName> viewCombobox = new JComboBox<>(tabWithNames);
     Arrays.asList(tabWithNames).stream()
-      .filter(t -> t.isSelected())
+      .filter(TabWithName::isSelected)
       .findFirst()
-      .ifPresent(t -> viewCombobox.setSelectedItem(t));
+      .ifPresent(viewCombobox::setSelectedItem);
 
     labelView.setLabelFor(viewCombobox);
-    viewCombobox.setRenderer(new StringListCellRenderer<>(tabWithName -> tabWithName.getTitle()));
+    viewCombobox.setRenderer(new StringListCellRenderer<>(TabWithName::getTitle));
 
     statusLabel = new JLabel(" ");
     importAction = new LambdaAction("Import" ,
@@ -405,7 +404,7 @@ final class TabWithName {
   private final Optional<LogViewPanelI> logDataCollector;
   private final boolean selected;
 
-  public TabWithName(String title, Optional<LogViewPanelI> logDataCollector, boolean selected) {
+  protected TabWithName(String title, Optional<LogViewPanelI> logDataCollector, boolean selected) {
     this.title = title;
     this.logDataCollector = logDataCollector;
     this.selected = selected;

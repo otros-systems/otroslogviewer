@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class StringListCellRenderer<E> implements ListCellRenderer<E> {
 
-  final Function<E,String> mapping;
+  private final Function<E,String> mapping;
   private final DefaultListCellRenderer defaultListCellRenderer;
 
   public StringListCellRenderer(Function<E, String> mapping) {
