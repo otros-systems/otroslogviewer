@@ -241,7 +241,12 @@ public class LogViewMainFrame extends JFrame {
     final JComponent contentPane = (JComponent) this.getContentPane();
     final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     String parseClipboard = "parseClipboard";
-    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke("meta pressed V"),parseClipboard);
+    final JTextArea jTextArea = new JTextArea();
+    final KeyStroke[] keyStrokes = jTextArea.getInputMap().allKeys();
+    Arrays.asList(keyStrokes).forEach(ks -> System.out.println("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " +jTextArea.getInputMap().get(ks)));
+
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),parseClipboard);
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_MASK),parseClipboard);
     contentPane.getActionMap().put(parseClipboard,new ParseClipboard(otrosApplication));
   }
 

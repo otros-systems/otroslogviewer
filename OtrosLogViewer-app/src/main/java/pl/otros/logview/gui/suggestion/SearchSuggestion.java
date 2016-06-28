@@ -39,4 +39,25 @@ public class SearchSuggestion {
       ", highlightRange=" + highlightRange +
       '}';
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    SearchSuggestion that = (SearchSuggestion) o;
+
+    if (toDisplay != null ? !toDisplay.equals(that.toDisplay) : that.toDisplay != null) return false;
+    if (fullContent != null ? !fullContent.equals(that.fullContent) : that.fullContent != null) return false;
+    return highlightRange != null ? highlightRange.equals(that.highlightRange) : that.highlightRange == null;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = toDisplay != null ? toDisplay.hashCode() : 0;
+    result = 31 * result + (fullContent != null ? fullContent.hashCode() : 0);
+    result = 31 * result + (highlightRange != null ? highlightRange.hashCode() : 0);
+    return result;
+  }
 }

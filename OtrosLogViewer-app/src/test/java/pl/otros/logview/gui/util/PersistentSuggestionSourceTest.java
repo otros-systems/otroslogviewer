@@ -51,7 +51,7 @@ public class PersistentSuggestionSourceTest {
     final List<Integer> suggestions = suggestionSource.getSuggestions(new SuggestionQuery("11", 0));
 
     //than
-    verify(persistService,times(1)).persist("key", "1111\r\n1112\r\n3232\r\n1134\r\n5454\r\n");
+    verify(persistService,times(1)).persist("key", "1134\r\n5454\r\n1111\r\n1112\r\n3232\r\n");
   }
 
 }

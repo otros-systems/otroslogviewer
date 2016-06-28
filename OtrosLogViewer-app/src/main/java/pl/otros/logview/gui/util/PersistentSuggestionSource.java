@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -55,10 +52,14 @@ public class PersistentSuggestionSource<T> implements SuggestionSource {
 
   @SafeVarargs
   public final void add(T... values) {
-    final List<T> values1 = loadValues();
-    values1.addAll(Arrays.asList(values));
+    final List<T> loadedValues = loadValues();
+    final List<T> toAdd = Arrays.asList(values);
+    loadedValues.removeAll(toAdd);
+    List<T> result = new ArrayList<T>(toAdd);
+    result.addAll(loadedValues);
+    LinkedHashSet<T> r = new LinkedHashSet<T>(result);
 
-    final List<String> collect = values1.stream()
+    final List<String> collect = r.stream()
       .map(serializer)
       .map(StringEscapeUtils::escapeCsv)
       .collect(toList());
