@@ -1,0 +1,59 @@
+#check wiki on https://github.com/otros-systems/otroslogviewer/wiki/Parsing-logs-in-JSON-format
+#
+# Assumptions: file contain log events formatted as json.
+# Json objects for log event have to separated by new line.
+# Json object can be multi-line (pretty print)
+# Line with json have to start with '{'
+
+type=json
+name=Logstash
+description=Logstash json format
+
+level=level
+message=message
+date=@timestamp
+dateFormat=yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ
+thread=thread
+file=location.file
+class=location.class
+method=location.method
+line=location.line
+logger=logger
+ndc=ndc
+note=note
+markerColor=markerColor
+mdcKeys=appId,user,hostname
+
+#  Specify the description (used as tooltip) by adding the 'description' property.
+#  Specify the json mapping specifying log property and json 'xpath'. For example
+#  if you have following log event in json:
+#      {
+#        "jsonLevel": "INFO",
+#        "timestamp": "2015-02-11T12:33:03.090+0200",
+#        "appId": "MySuperApp",
+#        "env": {
+#          "user": "root",
+#          "hostname": "myhost.com"
+#        },
+#        "msg":"Ups, exception!"
+#      }
+#   You will use mapping:
+#   level = jsonLevel
+#   date = timestamp
+#   dateFormat=yyyy-MM-dd'T'HH\:mm\:ss.SSSZZZZ
+#   mdcKeys=appId,env.user,hostname.hostname
+#
+#  Date format:
+#  Specify the date format by adding the property 'dateFormat', using patterns
+#  from java.text.SimpleDateFormat. If your date is just millis from 01.01.1970
+#  represented as long, type 'timestamp' as dateFormat.
+#
+#  Fields represented as MDC
+#  Some fields from json like hostname, user can be parsed to log event as MDC.
+#  You have to define property 'mdcKeys' and list json 'xpaths' separated by ','
+#
+#  Custom levels
+#  For custom level mapping, add the property 'customLevels' providing values in
+#  the format CustomLevel1=Log4jLevel,CustomLevel2=Log4jLevel. For example:
+#  customLevels=myInfo=INFO,MyWarn=WARN
+#
