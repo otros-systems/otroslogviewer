@@ -112,11 +112,19 @@ project(':OtrosSwing') {
     version = sharedVersion
 }
 
+project(':OtrosLogViewer-api') {
+    dependencies {
+        compile project(':Common-libs')
+    }
+    version = sharedVersion
+}
+
 project(':OtrosLogViewer-app') {
     def today = new Date().format("yyyy-MM-dd");
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosSwing')
+        compile project(':OtrosLogViewer-api')
         testCompile 'com.github.tomakehurst:wiremock:1.58'
     }
     version = sharedVersion
