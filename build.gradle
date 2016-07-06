@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
+plugins {
+    id "com.github.maiflai.scalatest" version "0.12"
 }
 
 project.ext.set('sharedVersion', "1.4.3-SNAPSHOT-${new Date().format("yyyyMMdd-HHmmss")}")
@@ -160,19 +155,9 @@ project(':OtrosLogViewer-app') {
 }
 
 project(':ScalaFormatter'){
-//    apply plugin: "com.github.maiflai.scalatest"
+    apply plugin: "com.github.maiflai.scalatest"
     apply plugin: 'scala'
 
-    task compileTestScalaA << {
-        println 'task compileTestScala !!!'
-    }
-    compileTestScala.doFirst {
-        println("compileTestScala.doFirst")
-        def a = new File( 'ScalaFormatter/build/resources/main' ).mkdirs()
-        println("compileTestScala.doFirst created")
-        println(a)
-        println(new File( 'ScalaFormatter/build/resources/main' ).getAbsolutePath())
-    }
 
     dependencies {
         compile project(':Common-libs')
