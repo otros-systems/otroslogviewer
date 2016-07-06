@@ -127,6 +127,7 @@ public class LogViewPanel extends LogViewPanelI {
     logsMarkersPanel = new JPanel();
     JPanel leftPanel = new JPanel(new MigLayout());
     logDetailTextArea = new FullWidthJTextPane();
+    logDetailTextArea.setFont(new Font("Courier New", 0, logDetailTextArea.getFont().getSize()));
     logDetailTextArea.setEditable(false);
     MouseAdapter locationInfo = new MessageDetailsMouseAdapter(otrosApplication, logDetailTextArea);
     logDetailTextArea.addMouseMotionListener(locationInfo);
@@ -428,11 +429,11 @@ public class LogViewPanel extends LogViewPanelI {
         focusOnEventsBefore = new FocusOnEventsBefore((TimeFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof ClassPackageFilter) {
         final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
-        focusOnSelectedClassesAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected classes",filterPanel.getEnableCheckBox(), otrosApplication);
+        focusOnSelectedClassesAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected classes", filterPanel.getEnableCheckBox(), otrosApplication);
         ignoreSelectedEventsClasses = new IgnoreSelectedEventsClasses(classLikeFilter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof LoggerHierarchyFilter) {
         final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
-        focusOnSelectedLoggerNameAction = new FocusOnSelectedClassesLikeAction(classLikeFilter,"Focus on selected loggers",filterPanel.getEnableCheckBox(), otrosApplication);
+        focusOnSelectedLoggerNameAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected loggers", filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof CallHierarchyLogFilter) {
         showCallHierarchyAction = new ShowCallHierarchyAction((CallHierarchyLogFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof PropertyFilter) {
@@ -578,7 +579,7 @@ public class LogViewPanel extends LogViewPanelI {
     automaticUnmarkersMenu = new JMenu("Unmark rows automatically");
     automaticUnmarkersMenu.setIcon(Icons.AUTOMATIC_UNMARKERS);
     updateMarkerMenu(markersContainer.getElements());
-    return new JMenu[]{ automaticMarkersMenu, automaticUnmarkersMenu };
+    return new JMenu[]{automaticMarkersMenu, automaticUnmarkersMenu};
   }
 
   private void addMarkerToMenu(JMenu menu, AutomaticMarker automaticMarker, HashMap<String, JMenu> marksGroups, boolean mode) {

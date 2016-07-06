@@ -11,7 +11,7 @@ class CaseClassFormatter  extends MessageFormatter {
 
   override def getApiVersion: Int = MessageFormatter.MESSAGE_FORMATTER_VERSION_1
 
-  override def formattingNeeded(message: String): Boolean = true
+  override def formattingNeeded(message: String): Boolean = Formatter.isFormattingNeeded(message)
 
-  override def format(message: String): String = s"Case class: $message"
+  override def format(message: String): String = Formatter.format(message)
 }

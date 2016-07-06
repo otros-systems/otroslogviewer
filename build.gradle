@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
 
 project.ext.set('sharedVersion', "1.4.3-SNAPSHOT-${new Date().format("yyyyMMdd-HHmmss")}")
 
@@ -22,8 +29,6 @@ subprojects {
     apply plugin: 'eclipse'
 //    apply plugin: 'idea'
     apply plugin: "jacoco"
-    apply plugin: 'scala'
-
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -155,10 +160,33 @@ project(':OtrosLogViewer-app') {
 }
 
 project(':ScalaFormatter'){
+//    apply plugin: "com.github.maiflai.scalatest"
+    apply plugin: 'scala'
+
+    task compileTestScalaA << {
+        println 'task compileTestScala !!!'
+    }
+    compileTestScala.doFirst {
+        println("compileTestScala.doFirst")
+        def a = new File( 'ScalaFormatter/build/resources/main' ).mkdirs()
+        println("compileTestScala.doFirst created")
+        println(a)
+        println(new File( 'ScalaFormatter/build/resources/main' ).getAbsolutePath())
+    }
+
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosLogViewer-api')
+        testCompile "org.scalatest:scalatest_2.11:2.2.2"
+        testRuntime 'org.pegdown:pegdown:1.1.0'
+        testCompile 'junit:junit:4.12'
     }
+
+//    task spec(dependsOn: ['testClasses'], type: JavaExec) {
+//        main = 'org.scalatest.tools.Runner'
+//        args = ['-R', 'build/classes/test', '-o']
+//        classpath = sourceSets.test.runtimeClasspath
+//    }
 
 }
 
