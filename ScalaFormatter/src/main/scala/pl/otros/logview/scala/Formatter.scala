@@ -17,7 +17,7 @@ object Formatter {
         (acc, fragment) =>
           val notCaseClass = s.substring(acc.lastEnd + 1, fragment.startPosition - 1)
           val caseClass = s.substring(fragment.startPosition, fragment.lastPosition + 1)
-          val caseClassFormatted = new AdvancedTreePrinter().printTree(caseClass)
+          val caseClassFormatted = new SimpleTreePrinter().printTree(caseClass)
           Accumulator(caseClassFormatted :: notCaseClass :: acc.strings, fragment.lastPosition)
       }
       val start: Int = fragments.lastOption.map(_.lastPosition + 1).getOrElse(0)

@@ -48,7 +48,7 @@ object Detector {
       fragments
         .map(f => s.substring(f.startPosition, f.lastPosition + 1))
         .map(f => TreeParser.parseTree(f))
-        .map(f => new AdvancedTreePrinter().printTree(f))
+        .map(f => new SimpleTreePrinter().printTree(f))
         .foreach(f => println(f))
     }
     parseAndPrint(event1)
