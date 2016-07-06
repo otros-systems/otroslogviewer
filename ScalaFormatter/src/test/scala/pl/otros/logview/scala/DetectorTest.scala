@@ -7,32 +7,32 @@ import org.scalatest.{Matchers, WordSpecLike}
 @RunWith(classOf[JUnitRunner])
 class DetectorTest extends WordSpecLike with Matchers {
 
+  def extractFragment(s:String)(f:Fragment): String = s.substring(f.startPosition,f.lastPosition)
+
   "Detector" should {
     "detect simple case class" in {
       val s: String = "MyClass(a)"
       val find: List[Fragment] = Detector.find(s)
-      println(s"'${s.substring(0, s.size)}'")
-      find shouldBe List(Fragment(0, s.size))
-      find.map(f => s.substring(f.startPosition,f.lastPosition)) shouldBe List(s)
+      find.map(extractFragment(s)) shouldBe List(s)
     }
     "detect simple case class in message" in {
       val s: String = "message m MyClass(b) a b c"
       val find: List[Fragment] = Detector.find(s)
-      find.map(f => s.substring(f.startPosition,f.lastPosition)) shouldBe List("MyClass(b)")
+      find.map(extractFragment(s)) shouldBe List("MyClass(b)")
       find shouldBe List(Fragment(10,20))
     }
 
     "detect complex case class in message" in {
       val s: String = "message m MyClass(b, Some(C), G(A,B)) a b c"
       val find: List[Fragment] = Detector.find(s)
-      find.map(f => s.substring(f.startPosition,f.lastPosition)) shouldBe List("MyClass(b, Some(C), G(A,B))")
+      find.map(extractFragment(s)) shouldBe List("MyClass(b, Some(C), G(A,B))")
     }
 
     "detect simple Map in message" in {
       val map = "Map(b -> c)"
       val s: String = s"message m $map a a"
       val find: List[Fragment] = Detector.find(s)
-      find.map(f => s.substring(f.startPosition,f.lastPosition)) shouldBe List(map)
+      find.map(extractFragment(s)) shouldBe List(map)
     }
 
     "detect 2 elements in message" in {
@@ -40,7 +40,7 @@ class DetectorTest extends WordSpecLike with Matchers {
       val element2 = "Some(Bum(C, D, F))"
       val s: String = s"message m $element1 a $element2 a"
       val find: List[Fragment] = Detector.find(s)
-      find.map(f => s.substring(f.startPosition,f.lastPosition)) shouldBe List(element1, element2)
+      find.map(extractFragment(s)) shouldBe List(element1, element2)
     }
 
     "don't detect elements without '(' balance" in {
@@ -52,7 +52,7 @@ class DetectorTest extends WordSpecLike with Matchers {
     "ignore stacktrace element" in {
       val s: String = "\tat java.io.FileInputStream.<init>(FileInputStream.java)"
       val find: List[Fragment] = Detector.find(s)
-      find.map(f=>s.substring(f.startPosition,f.lastPosition)) shouldBe Nil
+      find.map(extractFragment(s)) shouldBe Nil
       find shouldBe Nil
 
     }
