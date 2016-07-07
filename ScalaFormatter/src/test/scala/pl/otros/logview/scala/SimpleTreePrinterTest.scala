@@ -11,7 +11,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
     "print empty list" in {
       val tree: Tree = ListValue(List.empty[Tree])
       val expected =""" *── List: <EMPTY>"""
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 1 element list" in {
@@ -19,8 +19,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
       val expected =
         """ *┬─ List (1):
           |  └○── A""".stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 3 element list" in {
@@ -31,15 +30,13 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
           |  ├○── B
           |  └○── C"""
           .stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print empty set" in {
       val tree: Tree = SetValue(List.empty[Tree])
       val expected =""" *── Set: <EMPTY>"""
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 1 element Set" in {
@@ -47,8 +44,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
       val expected =
         """ *┬─ Set (1):
           |  └□── A""".stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 3 element Set" in {
@@ -59,15 +55,13 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
           |  ├□── B
           |  └□── C"""
           .stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print empty Map" in {
       val tree: Tree = MapValue(Map.empty)
       val expected =""" *── Map: <EMPTY>"""
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 1 element Map" in {
@@ -76,8 +70,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
         """ *┬─ Map (1):
           |  └▷── A
           |       └→── 1""".stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print 3 element Map" in {
@@ -94,8 +87,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
           |  │    └→── 2
           |  └▷── C
           |       └→── 3""".stripMargin
-      
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print nested object" in {
@@ -108,7 +100,6 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
               SimpleValue("C"),
               SimpleValue("D")
             ))))
-
       val expected =
         """
           | *┬─ Name:
@@ -118,8 +109,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
           |    ├─── C
           |    └─── D
         """.stripMargin
-
-      test(tree,expected)
+      test(tree, expected)
     }
 
     "print nested object with list, set and map" in {
@@ -133,20 +123,18 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
               SimpleValue("D")
             )
           ),
-            MapValue(Map(
-              SimpleValue("mk1") -> SimpleValue("mv1"),
-              SimpleValue("mk2") -> SimpleValue("mv2"),
-              SimpleValue("mk3") -> SimpleValue("mv3")
-            ))
-          ,SetValue(List(
+          MapValue(Map(
+            SimpleValue("mk1") -> SimpleValue("mv1"),
+            SimpleValue("mk2") -> SimpleValue("mv2"),
+            SimpleValue("mk3") -> SimpleValue("mv3")
+          ))
+          , SetValue(List(
             SimpleValue("s1"),
             SimpleValue("s2"),
             SimpleValue("s3")
           ))
         )
-
       )
-
       val expected =
         """
           | *┬─ Name:
@@ -167,16 +155,33 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
           |    ├□── s2
           |    └□── s3
         """.stripMargin
-
-      test(tree,expected)
+      test(tree, expected)
     }
   }
 
-  def test(tree:Tree,expected:String) = {
+  "print empty branch" in {
+    val tree = Branch("Parent", Nil)
+    val expected =
+      """
+        | *── Parent: <EMPTY>
+      """.stripMargin
+
+    test(tree, expected)
+  }
+
+  "print branch wtih single value" in {
+    val tree = Branch("Parent", List(SimpleValue("Value")))
+    val expected =
+      """
+        | *── Parent: Value
+      """.stripMargin
+
+    test(tree, expected)
+  }
+
+  def test(tree: Tree, expected: String) = {
     val printed: String = new SimpleTreePrinter().printTree(tree)
     val expectedWithoutEmptyLines = expected.lines.filter(!_.trim.isEmpty).mkString("\n")
-//    println(s"'\n$expectedWithoutEmptyLines'")
-//    println(s"'\n$printed'")
     printed shouldBe expectedWithoutEmptyLines
   }
 

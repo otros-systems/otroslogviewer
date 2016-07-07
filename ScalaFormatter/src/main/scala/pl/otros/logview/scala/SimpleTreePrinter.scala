@@ -13,6 +13,7 @@ class SimpleTreePrinter extends TreePrinter {
   case object ChildOfOther extends ChildOf
 
   case object ChildOfStart extends ChildOf
+
   case object ChildOfMapKey extends ChildOf
 
   def printTree(tree: Tree): String = {
@@ -27,14 +28,19 @@ class SimpleTreePrinter extends TreePrinter {
       }
 
       val pr = if (childOf == ChildOfStart) {
-          " " + pr1
-        } else if (isTail) {
-          "└" + pr1
-        } else {
-          "├" + pr1
-        }
+        " " + pr1
+      } else if (isTail) {
+        "└" + pr1
+      } else {
+        "├" + pr1
+      }
       val append = if (isTail || tab.isEmpty) "  " else "│ "
       t match {
+
+        case Branch(name, Nil) =>
+          val p = s"$pr── "
+          s"$tab$p$name: <EMPTY>"
+
         case Branch(name, sv :: Nil) if sv.isInstanceOf[SimpleValue] =>
           val p = s"$pr── "
           s"$tab$p$name: ${sv.asInstanceOf[SimpleValue].value}"
