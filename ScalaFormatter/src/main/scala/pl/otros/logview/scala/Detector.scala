@@ -36,23 +36,4 @@ object Detector {
     }
     ac.fragments.reverse
   }
-
-  def main(args: Array[String]) {
-    val event1 = """Received  Object(Set(A, B, D, true, false), List(), Set(), List(A, B(x,v), C(Some(true)), D), Map(), Map(A(true) -> B, C -> X, v(B(C),Some(false)) -> g))"""
-
-    def parseAndPrint(s: String): Unit = {
-      val fragments = find(s)
-      println(s"Result: $fragments")
-      println(s"${fragments.map(f => s.substring(f.startPosition, f.lastPosition + 1)).mkString("Fragments:\n", "\n", "\n")}")
-
-      fragments
-        .map(f => s.substring(f.startPosition, f.lastPosition + 1))
-        .map(f => TreeParser.parseTree(f))
-        .map(f => new SimpleTreePrinter().printTree(f))
-        .foreach(f => println(f))
-    }
-    parseAndPrint(event1)
-
-  }
-
 }
