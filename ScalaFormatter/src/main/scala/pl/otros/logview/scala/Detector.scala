@@ -1,6 +1,8 @@
 package pl.otros.logview.scala
 
-case class Fragment(startPosition: Int, lastPosition: Int)
+case class Fragment(startPosition: Int, lastPosition: Int) {
+  def stringPart(s: String): String = s.substring(startPosition, lastPosition)
+}
 
 case class Acc(position: Int = 0,
                lastStart: Int = -1,

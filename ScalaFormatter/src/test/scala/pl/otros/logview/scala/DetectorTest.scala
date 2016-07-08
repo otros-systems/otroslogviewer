@@ -7,7 +7,7 @@ import org.scalatest.{Matchers, WordSpecLike}
 @RunWith(classOf[JUnitRunner])
 class DetectorTest extends WordSpecLike with Matchers {
 
-  def extractFragment(s:String)(f:Fragment): String = s.substring(f.startPosition,f.lastPosition)
+  def extractFragment(s:String)(f:Fragment): String = f.stringPart(s)
 
   "Detector" should {
     "detect simple case class" in {
@@ -49,12 +49,23 @@ class DetectorTest extends WordSpecLike with Matchers {
       find shouldBe Nil
     }
 
+    "detect complex" in {
+      val s = "processing Event(Url(http://image),User(Name(John, Doe),Email(john@doe.com)),Some(Element),List(Element1, Element2, Element3),Set(s1, s2, s3),Map(k1 -> v1, k2 -> v2))"
+      val find: List[Fragment] = Detector.find(s)
+      find.map(extractFragment(s)) shouldBe List("Event(Url(http://image),User(Name(John, Doe),Email(john@doe.com)),Some(Element),List(Element1, Element2, Element3),Set(s1, s2, s3),Map(k1 -> v1, k2 -> v2))")
+    }
+
     "ignore stacktrace element" in {
       val s: String = "\tat java.io.FileInputStream.<init>(FileInputStream.java)"
       val find: List[Fragment] = Detector.find(s)
       find.map(extractFragment(s)) shouldBe Nil
       find shouldBe Nil
+    }
 
+    "String ending with case class" in {
+      val s = "Extracted already processed: List() on UserId(Scca3b)"
+      val find: List[Fragment] = Detector.find(s)
+      find.map(extractFragment(s)) shouldBe List("List()","UserId(Scca3b)")
     }
   }
 }
