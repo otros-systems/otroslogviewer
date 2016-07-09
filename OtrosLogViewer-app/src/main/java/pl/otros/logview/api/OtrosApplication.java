@@ -95,7 +95,7 @@ public class OtrosApplication {
 
   public Optional<LogViewPanelI> getSelectedLogViewPanel() {
     int selectedIndex = jTabbedPane.getSelectedIndex();
-    if (selectedIndex>0){
+    if (selectedIndex >= 0) {
       Component componentAt = jTabbedPane.getComponentAt(selectedIndex);
       if (componentAt instanceof LogViewPanelWrapper) {
         LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) componentAt;
@@ -202,7 +202,7 @@ public class OtrosApplication {
   /**
    * Return menu action providers
    *
-   * @return
+   * @return manu action providers
    */
   public List<MenuActionProvider> getLogViewPanelMenuActionProvider() {
     return new ArrayList<>(menuActionProviders);
