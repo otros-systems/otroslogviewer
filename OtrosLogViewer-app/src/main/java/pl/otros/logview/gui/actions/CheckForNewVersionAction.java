@@ -50,13 +50,13 @@ public class CheckForNewVersionAction extends CheckForNewVersionAbstract {
   }
 
   protected void handleNewVersionIsAvailable(String current, String running) {
-    Object message = null;
+    Object message;
     JPanel panel = new JPanel(new GridLayout(2, 1));
     panel.add(new JLabel("Your version is " + running + ", current version is " + current));
     JButton button = new JButton("Open download page");
     button.addActionListener(e -> {
       try {
-        Desktop.getDesktop().browse(new URI("http://code.google.com/p/otroslogviewer/downloads/list?q=label:Featured&src=app"));
+        Desktop.getDesktop().browse(new URI("https://sourceforge.net/projects/otroslogviewer/files/"));
       } catch (Exception e1) {
         String msg = "Can't open browser with download page: " + e1.getMessage();
         LOGGER.error(msg);
