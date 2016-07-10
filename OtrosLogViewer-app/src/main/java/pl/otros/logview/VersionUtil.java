@@ -35,7 +35,7 @@ public class VersionUtil {
 
   private static final String CURRENT_VERSION_PAGE_URL = "http://otroslogviewer.appspot.com/services/currentVersion?";
   private static final Logger LOGGER = LoggerFactory.getLogger(VersionUtil.class.getName());
-  public static final String IMPLEMENTATION_VERSION = "Implementation-Version";
+  private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
   /**
    * Check latest released version.
@@ -73,7 +73,7 @@ public class VersionUtil {
     Enumeration<URL> resources = VersionUtil.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
     while (resources.hasMoreElements()) {
       URL url = resources.nextElement();
-      if (url.toString().contains("OtrosLogViewer")) {
+      if (url.toString().contains("OtrosLogViewer-app")) {
         InputStream inputStream = url.openStream();
         try {
           Manifest manifest = new Manifest(inputStream);
