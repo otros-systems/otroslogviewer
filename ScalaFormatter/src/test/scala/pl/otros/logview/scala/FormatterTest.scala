@@ -17,7 +17,7 @@ class FormatterTest extends WordSpecLike with Matchers {
 
     "format string  - case class only" in {
       val s: String = "Some(Value)"
-      val expected = "*── Some: Value"
+      val expected = " *── Some: Value"
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -25,8 +25,8 @@ class FormatterTest extends WordSpecLike with Matchers {
     "format string starting with case class" in {
       val s: String = "Some(Value) string"
       val expected =
-        """*── Some: Value
-          | string""".stripMargin
+        """ *── Some: Value
+          |string""".stripMargin
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -44,7 +44,7 @@ class FormatterTest extends WordSpecLike with Matchers {
       val expected =
         """Start
           | *── Some: Value
-          | end""".stripMargin
+          |end""".stripMargin
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -55,9 +55,30 @@ class FormatterTest extends WordSpecLike with Matchers {
           | *── Some: Value
           |middle
           | *── Some: Value2
-          | end""".stripMargin
+          |end""".stripMargin
       val f = Formatter.format(s)
       f shouldBe expected
+    }
+    "fromat complex example" in {
+      val s = "ala Some(B) second AB(C, D, G(H), Map(a -> b)) kota Map(a -> b) !"
+      val expected =
+        """ala
+          | *── Some: B
+          |second
+          | *┬─ AB:
+          |  ├─── C
+          |  ├─── D
+          |  ├─── G: H
+          |  └─┬─ Map (1):
+          |    └▷── a
+          |         └→── b
+          |kota
+          | *┬─ Map (1):
+          |  └▷── a
+          |       └→── b
+          |!""".stripMargin
+
+      Formatter.format(s) shouldBe expected
     }
   }
 }
