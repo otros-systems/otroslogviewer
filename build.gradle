@@ -17,7 +17,7 @@ plugins {
     id "com.github.maiflai.scalatest" version "0.12"
 }
 
-project.ext.set('sharedVersion', "1.4.3")
+project.ext.set('sharedVersion', "1.4.4-SNAPSHOT-${new Date().format("yyyyMMdd-HHmmss")}")
 
 subprojects {
     apply plugin: 'java'
