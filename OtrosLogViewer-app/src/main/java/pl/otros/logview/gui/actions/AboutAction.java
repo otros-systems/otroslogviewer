@@ -85,7 +85,7 @@ public class AboutAction extends OtrosAction {
     StyledDocument sd = textArea.getStyledDocument();
     sd.insertString(0, "OtrosLogViewer\n", titleStyle);
     sd.insertString(sd.getLength(), "Build: " + build + "\n", mainStyle);
-    sd.insertString(sd.getLength(), "Project web page: http://code.google.com/p/otroslogviewer/\n", mainStyle);
+    sd.insertString(sd.getLength(), "Project web page: https://github.com/otros-systems/otroslogviewer/\n", mainStyle);
     sd.insertString(sd.getLength(), "Program documentation: https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6 \n", mainStyle);
     sd.insertString(sd.getLength(), "License: Apache Commons 2.0", licenceStyle);
 
