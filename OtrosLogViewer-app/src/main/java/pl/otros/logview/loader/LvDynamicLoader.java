@@ -26,6 +26,7 @@ import pl.otros.logview.api.plugins.Plugin;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.json.JsonMessageFormatter;
 import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
+import pl.otros.logview.scala.CaseClassFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,6 +119,7 @@ public class LvDynamicLoader {
   private void loadMessageFormatter() {
     messageFormatters.add(new SoapMessageFormatter());
     messageFormatters.add(new JsonMessageFormatter());
+    messageFormatters.add(new CaseClassFormatter());
     messageFormatters.addAll(baseLoader.load(new File("./plugins/message"), MessageFormatter.class));
     messageFormatters.addAll(baseLoader.load(AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS, MessageFormatter.class));
     PluginableElementsContainer<MessageFormatter> pluginableElementsContainer = AllPluginables.getInstance().getMessageFormatters();
