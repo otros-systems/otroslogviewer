@@ -188,7 +188,7 @@ project(':OtrosAppDist') {
     version = sharedVersion
 
     def classpathList = configurations.runtime.collect { "./lib/" + it.getName() }.join('\n')
-    File f = new File("classpath.txt")
+    File f = new File(projectDir.toString() + "/classpath.txt")
     f.write(classpathList)
 
 
