@@ -135,7 +135,7 @@ public class ParseClipboard extends OtrosAction {
     labelView.setDisplayedMnemonic('V');
     final TabWithName[] tabWithNames = getTabsWithName(getOtrosApplication().getJTabbedPane()).toArray(new TabWithName[0]);
     JComboBox<TabWithName> viewCombobox = new JComboBox<>(tabWithNames);
-    Arrays.asList(tabWithNames).stream()
+    Arrays.stream(tabWithNames)
       .filter(TabWithName::isSelected)
       .findFirst()
       .ifPresent(viewCombobox::setSelectedItem);
@@ -346,7 +346,8 @@ public class ParseClipboard extends OtrosAction {
     @Override
     protected PossibleLogImporters doInBackground() throws Exception {
       publish(Boolean.TRUE);
-      String text = textArea.getText();
+      String text = StringUtils.substring(textArea.getText(),0,20000);
+      LOGGER.info("Will process " + text.length() + " chars from clipboard");
       final long start = System.currentTimeMillis();
       final PossibleLogImporters call = possibleLogImportersCallable(text).call();
       long duration = System.currentTimeMillis() - start;
@@ -367,7 +368,7 @@ public class ParseClipboard extends OtrosAction {
         final PossibleLogImporters possibleLogImporters = get();
         logImporterJComboBox.setEnabled(possibleLogImporters.getLogImporter().isPresent());
         logImporterCbxModel.removeAllElements();
-        possibleLogImporters.getAvailableImporters().stream().forEach(logImporterCbxModel::addElement);
+        possibleLogImporters.getAvailableImporters().forEach(logImporterCbxModel::addElement);
         possibleLogImporters.getLogImporter().ifPresent(logImporterJComboBox::setSelectedItem);
         if (possibleLogImporters.getAvailableImporters().isEmpty()) {
           statusLabel.setText("Defined log parser can't parse input");
