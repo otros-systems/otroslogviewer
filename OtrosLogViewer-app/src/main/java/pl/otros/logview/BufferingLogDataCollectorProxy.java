@@ -37,22 +37,22 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
     final DataConfiguration dataConfiguration = new DataConfiguration(configuration);
     proxyLogDataCollector = new ProxyLogDataCollector();
     Runnable r = () -> {
-      while (!stop) {
-        if (dataConfiguration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
-          synchronized (BufferingLogDataCollectorProxy.this) {
+      synchronized (BufferingLogDataCollectorProxy.this) {
+        while (!stop) {
+          if (dataConfiguration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
             LogData[] logData = proxyLogDataCollector.getLogData();
             if (logData.length > 0) {
               proxyLogDataCollector = new ProxyLogDataCollector();
               addToDelegateInEDT(logData);
             }
           }
+          
+          try {
+            this.wait(sleepTime);
+          } catch (InterruptedException ignore) {
+          }
         }
-
-        try {
-          Thread.sleep(sleepTime);
-        } catch (InterruptedException ignore) {
-        }
-
+        
       }
 
     };
@@ -68,6 +68,7 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
   @Override
   public synchronized void add(LogData... logDatas) {
     proxyLogDataCollector.add(logDatas);
+    this.notify();
   }
 
   @Override
