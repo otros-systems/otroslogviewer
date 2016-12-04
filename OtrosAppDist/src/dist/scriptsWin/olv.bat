@@ -61,7 +61,6 @@ if exist "%JAVA_HOME%\bin\java.exe" (
   set LOCAL_JAVA=java.exe
 )
 echo on
-%LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY% %SFTP_KEY% -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%"  -jar lib\OtrosStarter.jar %*
-
+%LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY% %SFTP_KEY% -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\OtrosStarter.jar" %*
 
 :finish
