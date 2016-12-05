@@ -37,9 +37,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Optional;
 
 public class ParseClipboard extends OtrosAction {
 
@@ -349,11 +352,13 @@ public class ParseClipboard extends OtrosAction {
       String text = StringUtils.substring(textArea.getText(),0,20000);
       LOGGER.info("Will process " + text.length() + " chars from clipboard");
       final long start = System.currentTimeMillis();
-      final PossibleLogImporters call = possibleLogImportersCallable(text).call();
-      long duration = System.currentTimeMillis() - start;
-      LOGGER.debug("Finished log format detection, it took " + duration + "ms, have found " + call.getLogImporter());
+      final Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
 
-      return call;
+      final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters,text.getBytes());
+      long duration = System.currentTimeMillis() - start;
+      LOGGER.debug("Finished log format detection, it took " + duration + "ms, have found " + possibleLogImporters.getLogImporter());
+
+      return possibleLogImporters;
     }
 
     @Override
@@ -383,13 +388,6 @@ public class ParseClipboard extends OtrosAction {
       }
     }
 
-    //TODO Move to Utils?
-    private Callable<PossibleLogImporters> possibleLogImportersCallable(final String data) {
-      return () -> {
-        final Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
-        return Utils.detectPossibleLogImporter(logImporters, data.getBytes());
-      };
-    }
   }
 
   private void updateImportButtonState() {

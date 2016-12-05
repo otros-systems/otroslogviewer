@@ -10,7 +10,6 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.gui.browser.LogParsableListener;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
@@ -26,6 +26,7 @@ import pl.otros.swing.list.MutableListModel;
 import pl.otros.swing.table.ColumnLayout;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
+import pl.otros.vfs.browser.listener.SelectionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -227,9 +234,9 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     return layouts;
   }
 
-  public JOtrosVfsBrowserDialog getjOtrosVfsBrowserDialog(OtrosApplication otrosApplication) {
+  public JOtrosVfsBrowserDialog getjOtrosVfsBrowserDialog(OtrosApplication otrosApplication, SelectionListener... selectionListeners) {
     if (jOtrosVfsBrowserDialog == null) {
-      jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(otrosApplication.getConfiguration());
+      jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(otrosApplication.getConfiguration(),selectionListeners);
     }
     return jOtrosVfsBrowserDialog;
   }
@@ -453,7 +460,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication);
+      final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
+      final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication,logParsableListener);
       dialog.setMultiSelectionEnabled(false);
       dialog.setSelectionMode(SelectionMode.FILES_ONLY);
 

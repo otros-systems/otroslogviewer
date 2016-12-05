@@ -49,6 +49,7 @@ import pl.otros.logview.gui.actions.globalhotkeys.KeyboardTabSwitcher;
 import pl.otros.logview.gui.actions.read.DragAndDropFilesHandler;
 import pl.otros.logview.gui.actions.search.*;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
+import pl.otros.logview.gui.browser.LogParsableListener;
 import pl.otros.logview.gui.editor.json.JsonPatternParserEditor;
 import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
 import pl.otros.logview.gui.message.SearchResultColorizer;
@@ -169,7 +170,8 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setConfiguration(configuration);
     otrosApplication.setjTabbedPane(logsTabbedPane);
     otrosApplication.setStatusObserver(observer);
-    otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration()));
+    final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
+    otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(),logParsableListener));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     otrosApplication.setLogLoader(new BasicLogLoader());
     SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
