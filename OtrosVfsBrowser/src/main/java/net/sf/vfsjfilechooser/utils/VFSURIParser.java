@@ -44,8 +44,8 @@ public final class VFSURIParser {
       throw new NullPointerException("file URI is null");
     }
 
-    VFSURIValidator v = new VFSURIValidator();
-    boolean valid = v.isValid(fileURI);
+    VFSURIValidator v = VFSURIValidator.validate(fileURI);
+    boolean valid = v.isValid();
     if (valid) {
       hostname = v.getHostname();
       username = v.getUser();

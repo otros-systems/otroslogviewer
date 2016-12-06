@@ -25,9 +25,14 @@ import java.util.regex.Pattern;
  * @version 0.0.4
  */
 class VFSURIValidator {
+
   private String local_uri, local_protocol, local_user, local_pass;
   private String local_hostname, local_port, local_file;
+  private boolean valid = false;
 
+  public static VFSURIValidator validate(String url) {
+    return new VFSURIValidator(url);
+    }
 
   public String getUri() {
     if ("".equals(local_uri))
@@ -77,7 +82,7 @@ class VFSURIValidator {
     return local_file;
   }
 
-  boolean isValid(String _uri) {
+  private VFSURIValidator(String _uri) {
     boolean ret = false;
     boolean ends_with_slash = false;
 
@@ -137,7 +142,8 @@ class VFSURIValidator {
       } else {
         local_file = file;
       }
-      return true;
+      valid=true;
+      return;
     }
 
     /*
@@ -266,7 +272,8 @@ class VFSURIValidator {
     }
 
     if (!ret) { //don't parse any bad inputs
-      return false;
+      valid =false;
+      return;
     }
     local_uri = _uri;
     local_protocol = protocol;
@@ -299,7 +306,7 @@ class VFSURIValidator {
     local_port = port;
     local_file = file;
 
-    return true;
+    valid = true;
   }
 
   @Override
@@ -313,5 +320,9 @@ class VFSURIValidator {
         ", local_port='" + local_port + '\'' +
         ", local_file='" + local_file + '\'' +
         '}';
+  }
+
+  public boolean isValid() {
+    return valid;
   }
 }

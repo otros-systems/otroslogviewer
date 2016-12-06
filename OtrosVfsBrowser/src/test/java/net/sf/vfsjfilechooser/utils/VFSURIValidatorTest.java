@@ -19,8 +19,8 @@ public class VFSURIValidatorTest {
                           String port,
                           String file
   ) throws Exception {
-    final VFSURIValidator v = new VFSURIValidator();
-    assertTrue(v.isValid(url), url + " should be valid");
+    final VFSURIValidator v = VFSURIValidator.validate(url);
+    assertTrue(v.isValid(), url + " should be valid");
     assertEquals(v.getProtocol(), protocol, url);
     assertEquals(v.getUser(), user, url);
     assertEquals(v.getPassword(), password, url);
@@ -32,8 +32,8 @@ public class VFSURIValidatorTest {
 
   @Test(dataProvider = "invalidData")
   public void testIsInValid(String url) throws Exception {
-    final VFSURIValidator v = new VFSURIValidator();
-    Assert.assertFalse(v.isValid(url), url + " should be invalid");
+    final VFSURIValidator v = VFSURIValidator.validate(url);
+    Assert.assertFalse(v.isValid(), url + " should be invalid");
 
   }
 
