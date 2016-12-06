@@ -42,7 +42,7 @@ public class Utils {
   private static final int GZIP_MIN_SIZE = 26;
   private static final int GZIP_CHECK_BUFFER_SIZE = 8 * 1024;
 
-  public static boolean checkIfIsGzipped(FileObject fileObject) throws IOException {
+  static boolean checkIfIsGzipped(FileObject fileObject) throws IOException {
     boolean gziped = false;
     if (fileObject.getContent().getSize() == 0) {
       LOGGER.debug("File object " + fileObject.getName() + " is empty, can't detect gzip compression");
@@ -69,7 +69,7 @@ public class Utils {
     return gziped;
   }
 
-  public static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
+  private static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
     boolean gziped;
     try {
       ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
@@ -252,16 +252,15 @@ public class Utils {
 
   /**
    * Create temporary FileObject with content. Implementation will create file in temprary directory
-   * @param content
+   * @param content File content
    * @return FileObject
-   * @throws IOException
+   * @throws IOException in case of IO problems
    */
   public static FileObject createFileObjectWithContent(String content) throws IOException {
     final File tempFile = File.createTempFile("olv_temp", "");
     OutputStream out = new FileOutputStream(tempFile);
     IOUtils.write(content, out, Charset.forName("UTF-8"));
     IOUtils.closeQuietly(out);
-    final FileObject fileObject = VFSUtils.resolveFileObject(tempFile.toURI());
-    return fileObject;
+    return VFSUtils.resolveFileObject(tempFile.toURI());
   }
 }

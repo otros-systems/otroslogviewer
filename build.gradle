@@ -116,6 +116,15 @@ project(':OtrosSwing') {
     version = sharedVersion
 }
 
+project(':OtrosVfsBrowser') {
+
+   dependencies {
+       compile project(':Common-libs')
+       compile 'com.intellij:annotations:9.0.4'
+   }
+
+}
+
 project(':OtrosLogViewer-api') {
     dependencies {
         compile project(':Common-libs')
@@ -128,6 +137,7 @@ project(':OtrosLogViewer-app') {
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosSwing')
+        compile project(':OtrosVfsBrowser')
         compile project(':OtrosLogViewer-api')
         compile project(':ScalaFormatter')
         testCompile 'com.github.tomakehurst:wiremock:1.58'
