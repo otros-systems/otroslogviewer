@@ -38,11 +38,8 @@ public final class VFSURIParser {
    *
    * @param fileURI The VFS file URI to parse
    */
-  public VFSURIParser(final String fileURI) {
-    this(fileURI, true);
-  }
 
-  public VFSURIParser(final String fileURI, boolean assignDefaultPort) {
+  public VFSURIParser(final String fileURI) {
     if (fileURI == null) {
       throw new NullPointerException("file URI is null");
     }
@@ -59,7 +56,7 @@ public final class VFSURIParser {
 
       //fix up parsing results
       protocol = Protocol.valueOf(p.toUpperCase());
-      if ((portnumber == null) && (!p.equalsIgnoreCase("file"))) {
+      if ((portnumber == null) && (!"file".equalsIgnoreCase(p))) {
         portnumber = String.valueOf(protocol.getPort());
       }
       if (path == null) {

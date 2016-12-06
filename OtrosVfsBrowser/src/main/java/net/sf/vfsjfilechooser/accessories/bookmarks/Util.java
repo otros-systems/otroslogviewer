@@ -22,7 +22,7 @@ package net.sf.vfsjfilechooser.accessories.bookmarks;
  * @version 0.0.1
  */
 final class Util {
-  public static byte[] hexByteArrayToByteArray(byte[] b) {
+  static byte[] hexByteArrayToByteArray(byte[] b) {
     int len = b.length;
     byte[] data = new byte[len / 2];
     char c1, c2;
@@ -45,7 +45,7 @@ final class Util {
     return data;
   }
 
-  public static String tohex(byte b) {
+  private static String tohex(byte b) {
     if (b == 0)
       return "0";
     else if (b == 1)
@@ -78,15 +78,12 @@ final class Util {
       return "e";
     else if (b == 15)
       return "f";
-    System.out.println("FATAL ERROR-- BIG TIME error calling tohex");
-    System.exit(10);
-    return "z"; // we should never be here
+    throw new IllegalArgumentException("we should never be here");
   }
 
   public static String byteArraytoHexString(byte[] b) {
-    StringBuffer sb = new StringBuffer();
-    for (int i = 0; i < b.length; i++) {
-      byte btemp = b[i];
+    StringBuilder sb = new StringBuilder();
+    for (byte btemp : b) {
       byte b1 = (byte) ((btemp >> 4) & 0x0f);
       sb.append(tohex(b1));
       byte b2 = (byte) (btemp & 0x0f);
