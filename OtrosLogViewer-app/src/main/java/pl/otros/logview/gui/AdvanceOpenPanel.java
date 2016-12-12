@@ -25,6 +25,7 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
+import pl.otros.swing.Progress;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.table.FileSize;
 import pl.otros.vfs.browser.table.FileSizeTableCellRenderer;
@@ -48,6 +49,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -57,13 +59,15 @@ public class AdvanceOpenPanel extends JPanel {
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvanceOpenPanel.class.getName());
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
+  private final CardLayout cardLayout;
+  private final JProgressBar loadingPorgressBar;
 
 
-  public enum OpenMode {
+  enum OpenMode {
     FROM_START, ALMOST_END
   }
 
-  public enum CanParse {
+  enum CanParse {
     YES("Yes"), NO("No"), FILE_TOO_SMALL("File too small"), NOT_TESTED("Not checked"), TESTING("Checking"), TESTING_ERROR("Testing error");
     private String msg;
 
@@ -78,15 +82,26 @@ public class AdvanceOpenPanel extends JPanel {
 
 
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
+    cardLayout = new CardLayout();
+    this.setLayout(cardLayout);
+    final JPanel loadingPanel = new JPanel(new BorderLayout(10, 10));
+    loadingPorgressBar = new JProgressBar();
+    loadingPorgressBar.setMinimum(0);
+    loadingPorgressBar.setStringPainted(true);
+    loadingPorgressBar.setString("loading ...");
+    loadingPanel.add(loadingPorgressBar, BorderLayout.CENTER);
+    final JPanel mainPanel = new JPanel(new BorderLayout());
 
-    this.setLayout(new BorderLayout());
+    this.add(mainPanel, "mainPanel");
+    this.add(loadingPanel, "loadingPanel");
     final JToolBar jToolBar = new JToolBar();
-    jToolBar.add(new AbstractAction("Add new") {
+    jToolBar.add(new AbstractAction("Add more files") {
       @Override
       public void actionPerformed(ActionEvent e) {
         final JOtrosVfsBrowserDialog browserDialog = otrosApplication.getOtrosVfsBrowserDialog();
         browserDialog.showOpenDialog(AdvanceOpenPanel.this, "Select log file");
         final FileObject[] selectedFiles = browserDialog.getSelectedFiles();
+        //TODO swing worker
         Arrays.asList(selectedFiles).forEach(f -> {
           try {
             final FileObjectToImport fileObjectToImport = new FileObjectToImport(
@@ -104,12 +119,13 @@ public class AdvanceOpenPanel extends JPanel {
 
       }
     });
-    this.add(jToolBar, BorderLayout.NORTH);
+    mainPanel.add(jToolBar, BorderLayout.NORTH);
     tableModel = new FileObjectToImportTableModel();
 
     tableModel.addTableModelListener(new TableModelListener() {
       @Override
       public void tableChanged(TableModelEvent e) {
+        loadingPorgressBar.setMaximum(tableModel.getColumnCount());
         importAction.setEnabled(tableModel.getRowCount() > 0);
       }
     });
@@ -178,11 +194,9 @@ public class AdvanceOpenPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         tableModel.delete(table.getSelectedRows());
-        System.out.println("DELEtING!");
       }
     });
 
-    this.add(new JScrollPane(table));
     importAction = new AbstractAction("Import") {
 
       final class LoadingBean {
@@ -209,74 +223,98 @@ public class AdvanceOpenPanel extends JPanel {
           TableColumns.LOG_SOURCE
 
       };
+
       @Override
       public void actionPerformed(ActionEvent e) {
-
-        //TODO use SwingWorker because of IO operations (possibly on remote file systems)
+        cardLayout.show(AdvanceOpenPanel.this, "loadingPanel");
         final int rowCount = tableModel.getRowCount();
         final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper(
             "Multiple log files " + rowCount,
             null,
             visibleColumns,
             otrosApplication);
+
         final LogLoader logLoader = otrosApplication.getLogLoader();
         LogDataCollector logDataCollector = logViewPanelWrapper.getDataTableModel();
-
-        LogImporter importer = new DetectOnTheFlyLogImporter(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
-        try {
-          importer.init(new Properties());
-        } catch (InitializationException e1) {
-          LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
-          JOptionPane.showMessageDialog(AdvanceOpenPanel.this, "Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage(), "Open error",
-              JOptionPane.ERROR_MESSAGE);
-
-        }
-
-
-        final List<FileObjectToImport> fileObjects = IntStream.range(0, rowCount).mapToObj(tableModel::getFileObjectToImport).collect(Collectors.toList());
-
-        ArrayList<LoadingBean> loadingBeans = new ArrayList<>();
-        for (final FileObjectToImport file : fileObjects) {
-          try {
-            final LoadingInfo e1 = Utils.openFileObject(file.getFileObject(), true);
-            loadingBeans.add(new LoadingBean(file,e1));
-          } catch (Exception e1) {
-            final String msg = String.format("Can't open file %s: %s", file.getFileName().getFriendlyURI(), e1.getMessage());
-            LOGGER.warn(msg);
-            JOptionPane.showConfirmDialog(AdvanceOpenPanel.this,msg,"Error opening file", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
-            loadingBeans.forEach(li -> Utils.closeQuietly(li.loadingInfo.getFileObject()));
-            return ;
-          }
-        }
-        final java.util.List<LogLoadingSession> collect = loadingBeans.stream()
-            .map(loadingInfo -> {
-              final LogLoadingSession session = logLoader.startLoading(
-                  new VfsSource(loadingInfo.loadingInfo.getFileObject()), importer, logDataCollector, 3000, Optional.of(2000L));
-              logLoader.changeFilters(session,new LevelHigherOrEqualAcceptCondition( loadingInfo.fileObjectToImport.getLevel()));
-              return session;
-            })
-            .collect(Collectors.toList());
-
         logViewPanelWrapper.goToLiveMode();
         BaseConfiguration configuration = new BaseConfiguration();
         configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
         configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
+        //TODO Show some progress bar to the user
 
-        LOGGER.info("Have sessions: {}" , collect.stream().map(LogLoadingSession::getId).collect(Collectors.joining(", ")));
 
-        logViewPanelWrapper.onClose(() -> logLoader.close(logDataCollector));
+        final SwingWorker<List<LoadingBean>, Progress> swingWorker = new SwingWorker<List<LoadingBean>, Progress>() {
 
-        String tooltip = loadingBeans.stream()
-            .map(l->l.loadingInfo)
-            .map(LoadingInfo::getFriendlyUrl)
-            .collect(Collectors.joining(",","<html>Multiple files:<br>", "</html>"));
-        otrosApplication.addClosableTab(String.format("Multiple logs [%d]", loadingBeans.size()), tooltip, Icons.ARROW_REPEAT, logViewPanelWrapper, true);
-        otrosApplication.getjTabbedPane().remove(AdvanceOpenPanel.this);
+          @Override
+          protected List<LoadingBean> doInBackground() throws Exception {
+            LogImporter importer = new DetectOnTheFlyLogImporter(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
+            try {
+              importer.init(new Properties());
+            } catch (InitializationException e1) {
+              LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
+              cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
+              throw e1;
+            }
+            final List<FileObjectToImport> fileObjects = IntStream.range(0, rowCount).mapToObj(tableModel::getFileObjectToImport).collect(Collectors.toList());
+            ArrayList<LoadingBean> loadingBeans = new ArrayList<>();
+            int progress = 0;
+            for (final FileObjectToImport file : fileObjects) {
+              try {
+                progress++;
+                publish(new Progress(progress, fileObjects.size(), "Processing " + file.getFileName().getBaseName()));
+                final LoadingInfo e1 = Utils.openFileObject(file.getFileObject(), true);
+                loadingBeans.add(new LoadingBean(file, e1));
+              } catch (Exception e1) {
+                final String msg = String.format("Can't open file %s: %s", file.getFileName().getFriendlyURI(), e1.getMessage());
+                LOGGER.warn(msg);
+                //TODO handle errors!
+//                JOptionPane.showConfirmDialog(AdvanceOpenPanel.this, msg, "Error opening file", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                loadingBeans.forEach(li -> Utils.closeQuietly(li.loadingInfo.getFileObject()));
+                cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
+                throw e1;
+              }
+            }
+            loadingBeans.forEach(loadingInfo -> {
+              final LogLoadingSession session = logLoader.startLoading(
+                  new VfsSource(loadingInfo.loadingInfo.getFileObject()), importer, logDataCollector, 3000, Optional.of(2000L));
+              logLoader.changeFilters(session, new LevelHigherOrEqualAcceptCondition(loadingInfo.fileObjectToImport.getLevel()));
+            });
+            logViewPanelWrapper.onClose(() -> logLoader.close(logDataCollector));
+            return loadingBeans;
+          }
+
+          @Override
+          protected void process(List<Progress> chunks) {
+            chunks.stream().forEachOrdered(progress -> {
+              loadingPorgressBar.setMinimum(progress.getMin());
+              loadingPorgressBar.setMaximum(progress.getMax());
+              loadingPorgressBar.setValue(progress.getValue());
+              progress.getMessage().ifPresent(loadingPorgressBar::setString);
+            });
+          }
+
+          @Override
+          protected void done() {
+            try {
+              final List<LoadingBean> loadingBeans = get();
+              String tooltip = loadingBeans.stream()
+                  .map(l -> l.loadingInfo)
+                  .map(LoadingInfo::getFriendlyUrl)
+                  .collect(Collectors.joining("</br>", "<html>Multiple files:<br>", "</html>"));
+              otrosApplication.addClosableTab(String.format("Multiple logs [%d]", loadingBeans.size()), tooltip, Icons.ARROW_REPEAT, logViewPanelWrapper, true);
+              otrosApplication.getjTabbedPane().remove(AdvanceOpenPanel.this);
+            } catch (InterruptedException | ExecutionException e1) {
+              JOptionPane.showMessageDialog(AdvanceOpenPanel.this, "Error opening logs: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        };
+
+        swingWorker.execute();
 
       }
     };
     importAction.setEnabled(false);
-    this.add(new JButton(importAction), BorderLayout.SOUTH);
+    mainPanel.add(new JButton(importAction), BorderLayout.SOUTH);
     tableModel.addTableModelListener(e -> {
       if (e.getType() == TableModelEvent.INSERT) {
         final int firstRow = e.getFirstRow();
@@ -290,7 +328,6 @@ public class AdvanceOpenPanel extends JPanel {
             protected void process(List<CanParse> chunks) {
               chunks.forEach(c -> tableModel.setCanParse(fileObjectAt.getFileObject(), c));
             }
-
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -316,6 +353,10 @@ public class AdvanceOpenPanel extends JPanel {
         }
       }
     });
+
+    final JScrollPane scrollPane = new JScrollPane(table);
+    mainPanel.add(scrollPane);
+
   }
 }
 
