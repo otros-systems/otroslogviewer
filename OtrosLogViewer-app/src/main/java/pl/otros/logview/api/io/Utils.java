@@ -89,7 +89,12 @@ public class Utils {
     if (read > 0) {
       bout.write(buff, 0, read);
     }
-    return bout.toByteArray();
+    final byte[] probe = bout.toByteArray();
+    if (checkIfIsGzipped(probe, probe.length)){
+      return ungzip(probe);
+    } else {
+      return probe;
+    }
   }
 
   public static LoadingInfo openFileObject(FileObject fileObject) throws Exception {

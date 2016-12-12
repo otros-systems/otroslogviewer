@@ -138,6 +138,9 @@ class EmptyViewPanel extends JPanel {
     this.add(jb3, bagConstraints);
     bagConstraints.gridy++;
 
+    final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
+    this.add(new JButton(advanceOpenAction),bagConstraints);
+    bagConstraints.gridy++;
 
 
     bagConstraints.insets = new Insets(15, 15, 3, 15);
