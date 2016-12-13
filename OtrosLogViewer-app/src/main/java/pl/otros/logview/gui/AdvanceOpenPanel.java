@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.RenamedLevel;
@@ -81,11 +81,19 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
 
+  //TODO handle drag and drop
+  //TODO select log parser
+  //TODO context menu with delete
+  //TODO sorting
+  //TODO view for empty table
+  //TODO preview of content
+  //TODO create log parser pattern if some logs can't be parsed
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
     cardLayout = new CardLayout();
     this.setLayout(cardLayout);
-    final JPanel loadingPanel = new JPanel(new BorderLayout(10, 10));
+    final JPanel loadingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
     loadingPorgressBar = new JProgressBar();
+    loadingPorgressBar.setSize(400,20);
     loadingPorgressBar.setMinimum(0);
     loadingPorgressBar.setStringPainted(true);
     loadingPorgressBar.setString("loading ...");
@@ -95,30 +103,52 @@ public class AdvanceOpenPanel extends JPanel {
     this.add(mainPanel, "mainPanel");
     this.add(loadingPanel, "loadingPanel");
     final JToolBar jToolBar = new JToolBar();
-    jToolBar.add(new AbstractAction("Add more files") {
+    jToolBar.add(new JButton(new AbstractAction("Add more files", Icons.ADD) {
       @Override
       public void actionPerformed(ActionEvent e) {
         final JOtrosVfsBrowserDialog browserDialog = otrosApplication.getOtrosVfsBrowserDialog();
         browserDialog.showOpenDialog(AdvanceOpenPanel.this, "Select log file");
         final FileObject[] selectedFiles = browserDialog.getSelectedFiles();
-        //TODO swing worker
-        Arrays.asList(selectedFiles).forEach(f -> {
-          try {
-            final FileObjectToImport fileObjectToImport = new FileObjectToImport(
-                f,
-                f.getName(),
-                new FileSize(f.getContent().getSize()),
-                Level.FINEST,
-                OpenMode.ALMOST_END,
-                CanParse.NOT_TESTED);
-            tableModel.add(fileObjectToImport);
-          } catch (FileSystemException e1) {
-            e1.printStackTrace();
-          }
-        });
+        showLoadingPanel();
+        new SwingWorker<Void, FileObjectToImport>() {
 
+          @Override
+          protected Void doInBackground() throws Exception {
+            try {
+              for (FileObject f : selectedFiles) {
+                if (f.getType() == FileType.FOLDER) {
+                  continue;
+                }
+                final FileObjectToImport fileObjectToImport = new FileObjectToImport(
+                    f,
+                    f.getName(),
+                    new FileSize(f.getContent().getSize()),
+                    Level.FINEST,
+                    OpenMode.ALMOST_END,
+                    CanParse.NOT_TESTED);
+                //TODO remove it later
+                Thread.sleep(400);
+                publish(fileObjectToImport);
+              }
+              return null;
+            } catch (Exception e) {
+              return null;
+            }
+          }
+
+          @Override
+          protected void process(List<FileObjectToImport> chunks) {
+            chunks.stream().filter(f->!tableModel.contains(f.getFileObject())).forEach(tableModel::add);
+            chunks.stream().forEachOrdered(f -> loadingPorgressBar.setString("Reading " + f.getFileName().getBaseName()));
+          }
+
+          @Override
+          protected void done() {
+            showMainPanel();
+          }
+        }.execute();
       }
-    });
+    }));
     mainPanel.add(jToolBar, BorderLayout.NORTH);
     tableModel = new FileObjectToImportTableModel();
 
@@ -148,6 +178,32 @@ public class AdvanceOpenPanel extends JPanel {
 
     table.setDefaultRenderer(FileSize.class, new FileSizeTableCellRenderer());
     table.setDefaultRenderer(Level.class, new LevelRenderer(LevelRenderer.Mode.IconsAndText));
+
+    table.setDefaultRenderer(PossibleLogImporters.class, new DefaultTableCellRenderer(){
+      @Override
+      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        if (value instanceof PossibleLogImporters) {
+          PossibleLogImporters poss = (PossibleLogImporters) value;
+          final String text = poss.getLogImporter().map(LogImporter::getName).orElse("N/A");
+          component.setText(text);
+        }
+        return component;
+      }
+    });
+
+    table.setDefaultEditor(PossibleLogImporters.class, new DefaultCellEditor(new JComboBox()){
+      @Override
+      public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        final JComboBox cbx = (JComboBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+        final PossibleLogImporters importers = (PossibleLogImporters) value;
+        cbx.removeAllItems();
+        importers.getAvailableImporters().forEach(cbx::addItem);
+        importers.getLogImporter().ifPresent(cbx::setSelectedItem);
+        return cbx;
+      }
+    });
+
     Level[] levels = {
         RenamedLevel.FINEST_TRACE,
         RenamedLevel.FINER,
@@ -201,7 +257,7 @@ public class AdvanceOpenPanel extends JPanel {
 
       final class LoadingBean {
 
-        public LoadingBean(FileObjectToImport fileObjectToImport, LoadingInfo loadingInfo) {
+        LoadingBean(FileObjectToImport fileObjectToImport, LoadingInfo loadingInfo) {
           this.fileObjectToImport = fileObjectToImport;
           this.loadingInfo = loadingInfo;
         }
@@ -221,12 +277,11 @@ public class AdvanceOpenPanel extends JPanel {
           TableColumns.MARK,//
           TableColumns.NOTE,//
           TableColumns.LOG_SOURCE
-
       };
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        cardLayout.show(AdvanceOpenPanel.this, "loadingPanel");
+        showLoadingPanel();
         final int rowCount = tableModel.getRowCount();
         final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper(
             "Multiple log files " + rowCount,
@@ -240,8 +295,6 @@ public class AdvanceOpenPanel extends JPanel {
         BaseConfiguration configuration = new BaseConfiguration();
         configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
         configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-        //TODO Show some progress bar to the user
-
 
         final SwingWorker<List<LoadingBean>, Progress> swingWorker = new SwingWorker<List<LoadingBean>, Progress>() {
 
@@ -252,7 +305,7 @@ public class AdvanceOpenPanel extends JPanel {
               importer.init(new Properties());
             } catch (InitializationException e1) {
               LOGGER.error("Cant initialize DetectOnTheFlyLogImporter: " + e1.getMessage());
-              cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
+              showMainPanel();
               throw e1;
             }
             final List<FileObjectToImport> fileObjects = IntStream.range(0, rowCount).mapToObj(tableModel::getFileObjectToImport).collect(Collectors.toList());
@@ -261,6 +314,9 @@ public class AdvanceOpenPanel extends JPanel {
             for (final FileObjectToImport file : fileObjects) {
               try {
                 progress++;
+                if (file.getCanParse() != CanParse.FILE_TOO_SMALL && file.getCanParse() != CanParse.YES){
+                  continue;
+                }
                 publish(new Progress(progress, fileObjects.size(), "Processing " + file.getFileName().getBaseName()));
                 final LoadingInfo e1 = Utils.openFileObject(file.getFileObject(), true);
                 loadingBeans.add(new LoadingBean(file, e1));
@@ -270,7 +326,7 @@ public class AdvanceOpenPanel extends JPanel {
                 //TODO handle errors!
 //                JOptionPane.showConfirmDialog(AdvanceOpenPanel.this, msg, "Error opening file", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                 loadingBeans.forEach(li -> Utils.closeQuietly(li.loadingInfo.getFileObject()));
-                cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
+                showMainPanel();
                 throw e1;
               }
             }
@@ -285,7 +341,7 @@ public class AdvanceOpenPanel extends JPanel {
 
           @Override
           protected void process(List<Progress> chunks) {
-            chunks.stream().forEachOrdered(progress -> {
+            chunks.forEach(progress -> {
               loadingPorgressBar.setMinimum(progress.getMin());
               loadingPorgressBar.setMaximum(progress.getMax());
               loadingPorgressBar.setValue(progress.getValue());
@@ -308,13 +364,14 @@ public class AdvanceOpenPanel extends JPanel {
             }
           }
         };
-
         swingWorker.execute();
-
       }
     };
     importAction.setEnabled(false);
-    mainPanel.add(new JButton(importAction), BorderLayout.SOUTH);
+    final JButton importButton = new JButton(importAction);
+    final Font font = importButton.getFont();
+    importButton.setFont(font.deriveFont(font.getSize()*2f));
+    mainPanel.add(importButton, BorderLayout.SOUTH);
     tableModel.addTableModelListener(e -> {
       if (e.getType() == TableModelEvent.INSERT) {
         final int firstRow = e.getFirstRow();
@@ -322,30 +379,48 @@ public class AdvanceOpenPanel extends JPanel {
         for (int i = firstRow; i < lastRow; i++) {
           final FileObjectToImport fileObjectAt = tableModel.getFileObjectToImport(i);
           LOGGER.info("Added " + fileObjectAt + " to table");
-          final SwingWorker<Void, CanParse> swingWorker = new SwingWorker<Void, CanParse>() {
+          class AddingDetail {
+            public AddingDetail(CanParse canParse, PossibleLogImporters possibleLogImporters, ContentProbe contentProbe) {
+              this.canParse = canParse;
+              this.possibleLogImporters = possibleLogImporters;
+              this.contentProbe = contentProbe;
+            }
+
+            CanParse canParse;
+            PossibleLogImporters possibleLogImporters;
+            ContentProbe contentProbe;
+          }
+          final SwingWorker<Void, AddingDetail> swingWorker = new SwingWorker<Void, AddingDetail>() {
 
             @Override
-            protected void process(List<CanParse> chunks) {
-              chunks.forEach(c -> tableModel.setCanParse(fileObjectAt.getFileObject(), c));
+            protected void process(List<AddingDetail> chunks) {
+              chunks.forEach(c -> {
+                final FileObject fileObject = fileObjectAt.getFileObject();
+                tableModel.setCanParse(fileObject, c.canParse);
+                tableModel.setContent(fileObject, c.contentProbe);
+                tableModel.setPossibleLogImporters(fileObject, c.possibleLogImporters);
+              });
             }
 
             @Override
             protected Void doInBackground() throws Exception {
-              publish(CanParse.TESTING);
               final Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+              CanParse canParse = CanParse.NO;
+              byte[] bytes = new byte[0];
+              PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
+              publish(new AddingDetail(CanParse.TESTING,possibleLogImporters,new ContentProbe(bytes)));
               try (InputStream in = fileObjectAt.getFileObject().getContent().getInputStream()) {
-                final byte[] bytes = Utils.loadProbe(in, 4000);
-                final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
+                bytes = Utils.loadProbe(in, 4000);
+                possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
                 if (possibleLogImporters.getLogImporter().isPresent()) {
-                  publish(CanParse.YES);
+                  canParse = CanParse.YES;
                 } else if (bytes.length == 0) {
-                  publish(CanParse.FILE_TOO_SMALL);
-                } else {
-                  publish(CanParse.NO);
+                  canParse = CanParse.FILE_TOO_SMALL;
                 }
               } catch (IOException e) {
-                publish(CanParse.TESTING_ERROR);
+                canParse = CanParse.TESTING_ERROR;
               }
+              publish(new AddingDetail(canParse,possibleLogImporters,new ContentProbe(bytes)));
               return null;
             }
           };
@@ -358,6 +433,14 @@ public class AdvanceOpenPanel extends JPanel {
     mainPanel.add(scrollPane);
 
   }
+
+  private void showLoadingPanel() {
+    cardLayout.show(AdvanceOpenPanel.this, "loadingPanel");
+  }
+
+  private void showMainPanel() {
+    cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
+  }
 }
 
 class FileObjectToImportTableModel extends AbstractTableModel {
@@ -367,7 +450,9 @@ class FileObjectToImportTableModel extends AbstractTableModel {
   public static final int COLUMN_LEVEL = 2;
   public static final int COLUMN_OPEN_MODE = 3;
   public static final int COLUMN_CAN_PARSE = 4;
-  public static final String[] columnNames = new String[]{"Name", "Size", "Level threshold", "Open mode", "Can parse"};
+  public static final int COLUMN_POSSIBLE_IMPORTER = 5;
+  public static final int COLUMN_CONTENT = 6;
+  public static final String[] columnNames = new String[]{"Name", "Size", "Level threshold", "Open mode", "Can parse", "Log importer","Content"};
 
   private java.util.List<FileObjectToImport> data = new ArrayList<>();
   private final HashMap<Integer, Class> columnClasses;
@@ -380,9 +465,12 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     columnClasses.put(COLUMN_LEVEL, Level.class);
     columnClasses.put(COLUMN_OPEN_MODE, AdvanceOpenPanel.OpenMode.class);
     columnClasses.put(COLUMN_CAN_PARSE, AdvanceOpenPanel.CanParse.class);
+    columnClasses.put(COLUMN_POSSIBLE_IMPORTER, PossibleLogImporters.class);
+    columnClasses.put(COLUMN_CONTENT, ContentProbe.class);
     editableColumns = new HashSet<>();
     editableColumns.add(COLUMN_OPEN_MODE);
     editableColumns.add(COLUMN_LEVEL);
+    editableColumns.add(COLUMN_POSSIBLE_IMPORTER);
   }
 
   public void add(FileObjectToImport fileObjectToImport) {
@@ -424,6 +512,10 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       return fileObjectToImport.getLevel();
     } else if (columnIndex == COLUMN_CAN_PARSE) {
       return fileObjectToImport.getCanParse();
+    } else if (columnIndex == COLUMN_POSSIBLE_IMPORTER) {
+      return fileObjectToImport.getPossibleLogImporters();
+    } else if (columnIndex == COLUMN_CONTENT) {
+      return fileObjectToImport.getContent();
     }
     return "";
   }
@@ -435,8 +527,10 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       fileObjectToImport.setOpenMode((AdvanceOpenPanel.OpenMode) aValue);
     } else if (columnIndex == COLUMN_LEVEL) {
       fileObjectToImport.setLevel((Level) aValue);
-    } else if (columnIndex == COLUMN_CAN_PARSE) {
-      fileObjectToImport.getCanParse();
+    } else if (columnIndex == COLUMN_POSSIBLE_IMPORTER) {
+      LogImporter logImporter = (LogImporter) aValue;
+      final PossibleLogImporters possibleLogImporters = fileObjectToImport.getPossibleLogImporters();
+      possibleLogImporters.setLogImporter(Optional.of(logImporter));
     }
     fireTableCellUpdated(rowIndex, columnIndex);
   }
@@ -469,15 +563,53 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       }
     }
   }
+
+  public void setContent(FileObject fileObject, ContentProbe contentProbe) {
+    for (int i = 0; i < data.size(); i++) {
+      FileObjectToImport f = data.get(i);
+      if (f.getFileObject().equals(fileObject)) {
+        f.setContent(contentProbe);
+        fireTableCellUpdated(i, COLUMN_CONTENT);
+      }
+    }
+  }
+  public void setPossibleLogImporters(FileObject fileObject, PossibleLogImporters possibleLogImporters){
+    for (int i = 0; i < data.size(); i++) {
+      FileObjectToImport f = data.get(i);
+      if (f.getFileObject().equals(fileObject)) {
+        f.setPossibleLogImporters(possibleLogImporters);
+        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+      }
+    }
+
+  }
+
+  public boolean contains(FileObject fileObject){
+    return data.stream().anyMatch(f->f.getFileObject().equals(fileObject));
+  }
+}
+
+class ContentProbe {
+  private final byte[] bytes;
+
+  public ContentProbe(byte[] bytes) {
+    this.bytes = bytes;
+  }
+
+  public byte[] getBytes() {
+    return bytes;
+  }
 }
 
 class FileObjectToImport {
-  private FileObject fileObject;
-  private FileName fileName;
-  private FileSize fileSize;
+  private final FileObject fileObject;
+  private final FileName fileName;
+  private final FileSize fileSize;
   private Level level;
   private AdvanceOpenPanel.OpenMode openMode;
   private AdvanceOpenPanel.CanParse canParse;
+  private ContentProbe content;
+  private PossibleLogImporters possibleLogImporters;
 
   public FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, AdvanceOpenPanel.OpenMode openMode, AdvanceOpenPanel
       .CanParse canParse) {
@@ -487,6 +619,22 @@ class FileObjectToImport {
     this.level = level;
     this.openMode = openMode;
     this.canParse = canParse;
+  }
+
+  public PossibleLogImporters getPossibleLogImporters() {
+    return possibleLogImporters;
+  }
+
+  public void setPossibleLogImporters(PossibleLogImporters possibleLogImporters) {
+    this.possibleLogImporters = possibleLogImporters;
+  }
+
+  public ContentProbe getContent() {
+    return content;
+  }
+
+  public void setContent(ContentProbe content) {
+    this.content = content;
   }
 
   public FileObject getFileObject() {
