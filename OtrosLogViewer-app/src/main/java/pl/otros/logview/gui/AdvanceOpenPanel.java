@@ -24,6 +24,7 @@ import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.gui.renderers.LevelRenderer;
+import pl.otros.logview.gui.renderers.LogImporterRenderer;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.swing.Progress;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
@@ -82,12 +83,13 @@ public class AdvanceOpenPanel extends JPanel {
 
 
   //TODO handle drag and drop
-  //TODO select log parser
   //TODO context menu with delete
   //TODO sorting
   //TODO view for empty table
   //TODO preview of content
   //TODO create log parser pattern if some logs can't be parsed
+  //TODO save state
+  // select log parser
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
     cardLayout = new CardLayout();
     this.setLayout(cardLayout);
@@ -139,7 +141,7 @@ public class AdvanceOpenPanel extends JPanel {
           @Override
           protected void process(List<FileObjectToImport> chunks) {
             chunks.stream().filter(f->!tableModel.contains(f.getFileObject())).forEach(tableModel::add);
-            chunks.stream().forEachOrdered(f -> loadingPorgressBar.setString("Reading " + f.getFileName().getBaseName()));
+            chunks.forEach(f -> loadingPorgressBar.setString("Reading " + f.getFileName().getBaseName()));
           }
 
           @Override
@@ -192,7 +194,10 @@ public class AdvanceOpenPanel extends JPanel {
       }
     });
 
-    table.setDefaultEditor(PossibleLogImporters.class, new DefaultCellEditor(new JComboBox()){
+
+    final JComboBox comboBox = new JComboBox();
+    comboBox.setRenderer(new LogImporterRenderer());
+    table.setDefaultEditor(PossibleLogImporters.class, new DefaultCellEditor(comboBox){
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         final JComboBox cbx = (JComboBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
@@ -252,6 +257,10 @@ public class AdvanceOpenPanel extends JPanel {
         tableModel.delete(table.getSelectedRows());
       }
     });
+    table.getColumn("Size").setMaxWidth(60);
+    table.getColumn("Level threshold").setMaxWidth(120);
+    table.getColumn("Open mode").setMaxWidth(120);
+
 
     importAction = new AbstractAction("Import") {
 
