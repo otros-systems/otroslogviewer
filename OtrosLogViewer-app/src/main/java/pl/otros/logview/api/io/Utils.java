@@ -17,8 +17,12 @@
 package pl.otros.logview.api.io;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.*;
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.RandomAccessContent;
 import org.apache.commons.vfs2.util.RandomAccessMode;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.importer.LogImporter;
@@ -27,13 +31,24 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.vfs.browser.util.VFSUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.SequenceInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import java.util.zip.GZIPInputStream;
 
 public class Utils {
@@ -128,7 +143,7 @@ public class Utils {
     loadingInfo.setObserableInputStreamImpl(observableInputStreamImpl);
 
     loadingInfo.setTailing(tailing);
-    if (fileObject.getType().hasContent()){
+    if (fileObject.getType().hasContent()) {
       loadingInfo.setLastFileSize(content.getSize());
     }
     return loadingInfo;
@@ -154,7 +169,7 @@ public class Utils {
       RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
       randomAccessContent.seek(lastFileSize);
       loadingInfo.setLastFileSize(currentSize);
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(),lastFileSize);
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
@@ -164,7 +179,7 @@ public class Utils {
     } else if (currentSize < lastFileSize) {
       IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
       InputStream inputStream = loadingInfo.getFileObject().getContent().getInputStream();
-      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream,0);
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(inputStream, 0);
       loadingInfo.setObserableInputStreamImpl(observableStream);
       if (loadingInfo.isGziped()) {
         loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
@@ -228,7 +243,7 @@ public class Utils {
   /**
    * Get short name for URL
    *
-   * @param  fileObject File object
+   * @param fileObject File object
    * @return scheme://hostWithoutDomain/fileBaseName
    */
   public static String getFileObjectShortName(FileObject fileObject) {
@@ -257,6 +272,7 @@ public class Utils {
 
   /**
    * Create temporary FileObject with content. Implementation will create file in temprary directory
+   *
    * @param content File content
    * @return FileObject
    * @throws IOException in case of IO problems
@@ -267,5 +283,52 @@ public class Utils {
     IOUtils.write(content, out, Charset.forName("UTF-8"));
     IOUtils.closeQuietly(out);
     return VFSUtils.resolveFileObject(tempFile.toURI());
+  }
+
+  public static List<Long> detectLogEventStart(String content, LogImporter logImporter) {
+    final byte[] bytes = content.getBytes();
+
+    final List<Long> startedAtNewLine = findLogEventStarts(logImporter, bytes, findNewLines(bytes));
+    if (startedAtNewLine.size() > 0) {
+      return startedAtNewLine;
+    }
+    final int length = content.length();
+    final List<Long> allPositions = LongStream.range(0, length).boxed().collect(Collectors.toList());
+    return findLogEventStarts(logImporter, bytes, allPositions);
+  }
+
+  @NotNull
+  private static ArrayList<Long> findNewLines(byte[] bytes) {
+    ArrayList<Long> newLines = new ArrayList<>();
+    byte newLine = 0x0A;
+    for (int i = 0; i < bytes.length; i++) {
+      if (newLine == bytes[i]) {
+        newLines.add((long) i + 1);
+      }
+    }
+    return newLines;
+  }
+
+  private static List<Long> findLogEventStarts(LogImporter logImporter, byte[] bytes, List<Long> positions) {
+    return positions.stream()
+        .map(pos -> {
+          final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes, pos.intValue(), bytes.length - pos.intValue());
+          final int parsedCount = getParsedCount(logImporter, byteArrayInputStream);
+          if (parsedCount > 0) {
+            return pos ;
+          } else {
+            return -1L;
+          }
+        })
+        .filter(i -> i > 0)
+        .collect(Collectors.toList());
+  }
+
+  private static int getParsedCount(LogImporter logImporter, ByteArrayInputStream byteArrayInputStream) {
+    final ProxyLogDataCollector collector = new ProxyLogDataCollector();
+    final ParsingContext context = new ParsingContext("");
+    logImporter.initParsingContext(context);
+    logImporter.importLogs(byteArrayInputStream, collector, context);
+    return collector.getLogData().length;
   }
 }
