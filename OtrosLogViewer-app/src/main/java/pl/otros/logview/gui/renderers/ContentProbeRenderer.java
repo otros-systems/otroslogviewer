@@ -20,7 +20,6 @@ public class ContentProbeRenderer extends DefaultTableCellRenderer {
       ((JLabel) component).setText(s);
       final String[] split = StringUtils.split(s, '\n');
       String tooltip = Arrays.stream(split).collect(Collectors.joining("<br>","<html>Content:<br>","</html>"));
-      System.out.println("ContentProbeRenderer.getTableCellRendererComponent toolitp " + tooltip);
       ((JLabel) component).setToolTipText(tooltip);
     }
     return component;
