@@ -17,12 +17,14 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
+import pl.otros.logview.api.io.ContentProbe;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.gui.renderers.ContentProbeRenderer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.LogImporterRenderer;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
@@ -61,7 +63,10 @@ public class AdvanceOpenPanel extends JPanel {
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
   private final CardLayout cardLayout;
-  private final JProgressBar loadingPorgressBar;
+  private final JProgressBar loadingProgressBar;
+
+  private final AbstractAction deleteSelectedAction;
+  private final AbstractAction addMoreFilesAction;
 
 
   enum OpenMode {
@@ -86,26 +91,27 @@ public class AdvanceOpenPanel extends JPanel {
   //TODO context menu with delete
   //TODO sorting
   //TODO view for empty table
-  //TODO preview of content
+  //TODO Open file from beggining/end
   //TODO create log parser pattern if some logs can't be parsed
   //TODO save state
+  //preview of content
   // select log parser
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
     cardLayout = new CardLayout();
     this.setLayout(cardLayout);
     final JPanel loadingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-    loadingPorgressBar = new JProgressBar();
-    loadingPorgressBar.setSize(400,20);
-    loadingPorgressBar.setMinimum(0);
-    loadingPorgressBar.setStringPainted(true);
-    loadingPorgressBar.setString("loading ...");
-    loadingPanel.add(loadingPorgressBar, BorderLayout.CENTER);
+    loadingProgressBar = new JProgressBar();
+    loadingProgressBar.setSize(400,20);
+    loadingProgressBar.setMinimum(0);
+    loadingProgressBar.setStringPainted(true);
+    loadingProgressBar.setString("loading ...");
+    loadingPanel.add(loadingProgressBar, BorderLayout.CENTER);
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
     this.add(mainPanel, "mainPanel");
     this.add(loadingPanel, "loadingPanel");
     final JToolBar jToolBar = new JToolBar();
-    jToolBar.add(new JButton(new AbstractAction("Add more files", Icons.ADD) {
+    addMoreFilesAction = new AbstractAction("Add more files", Icons.ADD) {
       @Override
       public void actionPerformed(ActionEvent e) {
         final JOtrosVfsBrowserDialog browserDialog = otrosApplication.getOtrosVfsBrowserDialog();
@@ -140,8 +146,8 @@ public class AdvanceOpenPanel extends JPanel {
 
           @Override
           protected void process(List<FileObjectToImport> chunks) {
-            chunks.stream().filter(f->!tableModel.contains(f.getFileObject())).forEach(tableModel::add);
-            chunks.forEach(f -> loadingPorgressBar.setString("Reading " + f.getFileName().getBaseName()));
+            chunks.stream().filter(f -> !tableModel.contains(f.getFileObject())).forEach(tableModel::add);
+            chunks.forEach(f -> loadingProgressBar.setString("Reading " + f.getFileName().getBaseName()));
           }
 
           @Override
@@ -150,14 +156,15 @@ public class AdvanceOpenPanel extends JPanel {
           }
         }.execute();
       }
-    }));
+    };
+    jToolBar.add(new JButton(addMoreFilesAction));
     mainPanel.add(jToolBar, BorderLayout.NORTH);
     tableModel = new FileObjectToImportTableModel();
 
     tableModel.addTableModelListener(new TableModelListener() {
       @Override
       public void tableChanged(TableModelEvent e) {
-        loadingPorgressBar.setMaximum(tableModel.getColumnCount());
+        loadingProgressBar.setMaximum(tableModel.getColumnCount());
         importAction.setEnabled(tableModel.getRowCount() > 0);
       }
     });
@@ -193,7 +200,7 @@ public class AdvanceOpenPanel extends JPanel {
         return component;
       }
     });
-
+    table.setDefaultRenderer(ContentProbe.class,new ContentProbeRenderer());
 
     final JComboBox comboBox = new JComboBox();
     comboBox.setRenderer(new LogImporterRenderer());
@@ -251,15 +258,17 @@ public class AdvanceOpenPanel extends JPanel {
     });
     table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "DELETE");
     table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "DELETE");
-    table.getActionMap().put("DELETE", new AbstractAction() {
+    deleteSelectedAction = new AbstractAction("Delete selected",Icons.DELETE) {
       @Override
       public void actionPerformed(ActionEvent e) {
         tableModel.delete(table.getSelectedRows());
       }
-    });
+    };
+    table.getActionMap().put("DELETE", deleteSelectedAction);
     table.getColumn("Size").setMaxWidth(60);
     table.getColumn("Level threshold").setMaxWidth(120);
     table.getColumn("Open mode").setMaxWidth(120);
+    initContextMenu(table);
 
 
     importAction = new AbstractAction("Import") {
@@ -351,10 +360,10 @@ public class AdvanceOpenPanel extends JPanel {
           @Override
           protected void process(List<Progress> chunks) {
             chunks.forEach(progress -> {
-              loadingPorgressBar.setMinimum(progress.getMin());
-              loadingPorgressBar.setMaximum(progress.getMax());
-              loadingPorgressBar.setValue(progress.getValue());
-              progress.getMessage().ifPresent(loadingPorgressBar::setString);
+              loadingProgressBar.setMinimum(progress.getMin());
+              loadingProgressBar.setMaximum(progress.getMax());
+              loadingProgressBar.setValue(progress.getValue());
+              progress.getMessage().ifPresent(loadingProgressBar::setString);
             });
           }
 
@@ -365,7 +374,7 @@ public class AdvanceOpenPanel extends JPanel {
               String tooltip = loadingBeans.stream()
                   .map(l -> l.loadingInfo)
                   .map(LoadingInfo::getFriendlyUrl)
-                  .collect(Collectors.joining("</br>", "<html>Multiple files:<br>", "</html>"));
+                  .collect(Collectors.joining("<br>", "<html>Multiple files:<br>", "</html>"));
               otrosApplication.addClosableTab(String.format("Multiple logs [%d]", loadingBeans.size()), tooltip, Icons.ARROW_REPEAT, logViewPanelWrapper, true);
               otrosApplication.getjTabbedPane().remove(AdvanceOpenPanel.this);
             } catch (InterruptedException | ExecutionException e1) {
@@ -441,6 +450,13 @@ public class AdvanceOpenPanel extends JPanel {
     final JScrollPane scrollPane = new JScrollPane(table);
     mainPanel.add(scrollPane);
 
+  }
+
+  private void initContextMenu(JTable table) {
+    JPopupMenu popupMenu = new JPopupMenu("Options");
+    popupMenu.add(addMoreFilesAction);
+    popupMenu.add(deleteSelectedAction);
+    table.addMouseListener(new PopupListener(popupMenu));
   }
 
   private void showLoadingPanel() {
@@ -595,18 +611,6 @@ class FileObjectToImportTableModel extends AbstractTableModel {
 
   public boolean contains(FileObject fileObject){
     return data.stream().anyMatch(f->f.getFileObject().equals(fileObject));
-  }
-}
-
-class ContentProbe {
-  private final byte[] bytes;
-
-  public ContentProbe(byte[] bytes) {
-    this.bytes = bytes;
-  }
-
-  public byte[] getBytes() {
-    return bytes;
   }
 }
 

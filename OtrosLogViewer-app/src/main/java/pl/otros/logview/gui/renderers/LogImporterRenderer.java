@@ -4,6 +4,7 @@ import pl.otros.logview.api.importer.LogImporter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Optional;
 
 public class LogImporterRenderer implements ListCellRenderer<LogImporter> {
 
@@ -14,8 +15,9 @@ public class LogImporterRenderer implements ListCellRenderer<LogImporter> {
     final Component component = defaultListCellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     if (component instanceof JLabel) {
       JLabel jLabel = (JLabel) component;
-      jLabel.setText(value.getName());
-      jLabel.setIcon(value.getIcon());
+      final Optional<LogImporter> optional = Optional.ofNullable(value);
+      jLabel.setText(optional.map(LogImporter::getName).orElse("?"));
+      jLabel.setIcon(optional.map(LogImporter::getIcon).orElse(null));
     }
     return component;
   }
