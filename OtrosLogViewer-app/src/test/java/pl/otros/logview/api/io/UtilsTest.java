@@ -119,6 +119,15 @@ public class UtilsTest {
         checkIfIsGzipped);
   }
 
+  @Test
+  public void testLoadProbeAtEndGzipped() throws Exception {
+    FileObject resolveFile = resolveFileObject("/jul_log.txt.gz");
+    final byte[] bytes = Utils.loadProbeAtEnd(resolveFile.getContent().getInputStream(), 200, 200);
+    final String s = new String(bytes);
+    AssertJUnit.assertTrue(bytes.length>0);
+    AssertJUnit.assertTrue(s.endsWith("SCHWERWIEGEND: Message in locales de_DE"));
+  }
+
   private FileObject resolveFileObject(String resources)
       throws FileSystemException {
     URL resource = this.getClass().getResource(resources);
@@ -351,7 +360,7 @@ public class UtilsTest {
 
     //when
 
-    final List<Long> positions = Utils.detectLogEventStart(logFile, logImporter);
+    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
 
     //then
     Assert.assertEquals(positions, expected);
@@ -365,7 +374,7 @@ public class UtilsTest {
     final List<Long> expected = Arrays.asList(31L, 75L, 141L, 213L, 280L, 330L, 380L, 425L, 431L, 481L, 531L, 581L, 631L, 681L);
 
     //when
-    final List<Long> positions = Utils.detectLogEventStart(logFile, logImporter);
+    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
 
     //then
     Assert.assertEquals(positions, expected);

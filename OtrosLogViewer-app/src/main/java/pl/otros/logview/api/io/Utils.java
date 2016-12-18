@@ -104,8 +104,31 @@ public class Utils {
     if (read > 0) {
       bout.write(buff, 0, read);
     }
+
+    return bout.toByteArray();
+  }
+
+  public static byte[] loadProbe(InputStream in, int buffSize,boolean tryToUngzip) throws IOException {
+    final byte[] probe = loadProbe(in, buffSize);
+        if (checkIfIsGzipped(probe, probe.length)) {
+      return ungzip(probe);
+    } else {
+      return probe;
+    }
+  }
+
+
+  public static byte[] loadProbeAtEnd(InputStream in, long size, int buffSize) throws IOException {
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    byte[] buff = new byte[buffSize];
+    final long skip = in.skip(Math.max(size - buffSize, 0));
+    LOGGER.debug("Skipped " + skip + "bytes");
+    int read = in.read(buff);
+    if (read > 0) {
+      bout.write(buff, 0, read);
+    }
     final byte[] probe = bout.toByteArray();
-    if (checkIfIsGzipped(probe, probe.length)){
+    if (checkIfIsGzipped(probe, probe.length)) {
       return ungzip(probe);
     } else {
       return probe;
@@ -157,6 +180,23 @@ public class Utils {
     byte[] ungzipped = new byte[read];
     System.arraycopy(ungzippedRead, 0, ungzipped, 0, read);
     return ungzipped;
+  }
+
+  public static void reloadFileObject(LoadingInfo loadingInfo, long position) throws IOException {
+    loadingInfo.getFileObject().refresh();
+    long lastFileSize = loadingInfo.getLastFileSize();
+    long currentSize = loadingInfo.getFileObject().getContent().getSize();
+    IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
+    RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
+    randomAccessContent.seek(position);
+    loadingInfo.setLastFileSize(currentSize);
+    ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
+    loadingInfo.setObserableInputStreamImpl(observableStream);
+    if (loadingInfo.isGziped()) {
+      loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
+    } else {
+      loadingInfo.setContentInputStream(observableStream);
+    }
   }
 
   public static void reloadFileObject(LoadingInfo loadingInfo) throws IOException {
@@ -285,16 +325,15 @@ public class Utils {
     return VFSUtils.resolveFileObject(tempFile.toURI());
   }
 
-  public static List<Long> detectLogEventStart(String content, LogImporter logImporter) {
-    final byte[] bytes = content.getBytes();
+  public static List<Long> detectLogEventStart(byte[] content, LogImporter logImporter) {
 
-    final List<Long> startedAtNewLine = findLogEventStarts(logImporter, bytes, findNewLines(bytes));
+    final List<Long> startedAtNewLine = findLogEventStarts(logImporter, content, findNewLines(content));
     if (startedAtNewLine.size() > 0) {
       return startedAtNewLine;
     }
-    final int length = content.length();
+    final int length = content.length;
     final List<Long> allPositions = LongStream.range(0, length).boxed().collect(Collectors.toList());
-    return findLogEventStarts(logImporter, bytes, allPositions);
+    return findLogEventStarts(logImporter, content, allPositions);
   }
 
   @NotNull
@@ -315,7 +354,7 @@ public class Utils {
           final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes, pos.intValue(), bytes.length - pos.intValue());
           final int parsedCount = getParsedCount(logImporter, byteArrayInputStream);
           if (parsedCount > 0) {
-            return pos ;
+            return pos;
           } else {
             return -1L;
           }

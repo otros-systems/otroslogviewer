@@ -94,6 +94,8 @@ public class Icons {
   @Path(path = "/img/fugue/arrow-join.png")
   public static ImageIcon ARROW_JOIN;
 
+  @Path(path = "/img/fugue24/arrow-join.png")
+  public static ImageIcon ARROW_JOIN_24;
 
   @Path(path = "/img/fugue/broom.png")
   public static ImageIcon CLEAR;

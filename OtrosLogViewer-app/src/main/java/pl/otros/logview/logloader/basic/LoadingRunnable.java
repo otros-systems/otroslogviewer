@@ -115,6 +115,7 @@ public class LoadingRunnable implements Runnable {
         loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
+      Utils.reloadFileObject(loadingInfo,vfs.getPosition());
       try {
         loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
       } catch (FileSystemException e1) {
