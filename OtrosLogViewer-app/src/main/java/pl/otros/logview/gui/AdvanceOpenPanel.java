@@ -300,7 +300,7 @@ public class AdvanceOpenPanel extends JPanel {
           final FileObjectToImport fileObjectAt = tableModel.getFileObjectToImport(i);
           LOGGER.info("Added " + fileObjectAt + " to table");
           class AddingDetail {
-            public AddingDetail(CanParse canParse, PossibleLogImporters possibleLogImporters, ContentProbe contentProbe) {
+            AddingDetail(CanParse canParse, PossibleLogImporters possibleLogImporters, ContentProbe contentProbe) {
               this.canParse = canParse;
               this.possibleLogImporters = possibleLogImporters;
               this.contentProbe = contentProbe;
@@ -393,7 +393,7 @@ public class AdvanceOpenPanel extends JPanel {
 
     private final FileObject[] selectedFiles;
 
-    public AddFilesSwingWorker(FileObject[] selectedFiles) {
+    AddFilesSwingWorker(FileObject[] selectedFiles) {
       this.selectedFiles = selectedFiles;
     }
 
@@ -439,7 +439,7 @@ public class AdvanceOpenPanel extends JPanel {
     private final LogLoader logLoader;
     private final OtrosApplication otrosApplication;
 
-    public ImportSwingWorker(LogViewPanelWrapper logViewPanelWrapper, LogLoader logLoader, OtrosApplication otrosApplication) {
+    ImportSwingWorker(LogViewPanelWrapper logViewPanelWrapper, LogLoader logLoader, OtrosApplication otrosApplication) {
       this.logViewPanelWrapper = logViewPanelWrapper;
       this.logLoader = logLoader;
       this.otrosApplication = otrosApplication;
@@ -524,20 +524,20 @@ public class AdvanceOpenPanel extends JPanel {
 
 class FileObjectToImportTableModel extends AbstractTableModel {
 
-  public static final int COLUMN_NAME = 0;
-  public static final int COLUMN_SIZE = 1;
-  public static final int COLUMN_LEVEL = 2;
-  public static final int COLUMN_OPEN_MODE = 3;
-  public static final int COLUMN_CAN_PARSE = 4;
-  public static final int COLUMN_POSSIBLE_IMPORTER = 5;
-  public static final int COLUMN_CONTENT = 6;
-  public static final String[] columnNames = new String[]{"Name", "Size", "Level threshold", "Open mode", "Can parse", "Log importer", "Content"};
+  private static final int COLUMN_NAME = 0;
+  private static final int COLUMN_SIZE = 1;
+  private static final int COLUMN_LEVEL = 2;
+  private static final int COLUMN_OPEN_MODE = 3;
+  private static final int COLUMN_CAN_PARSE = 4;
+  private static final int COLUMN_POSSIBLE_IMPORTER = 5;
+  private static final int COLUMN_CONTENT = 6;
+  private static final String[] columnNames = new String[]{"Name", "Size", "Level threshold", "Open mode", "Can parse", "Log importer", "Content"};
 
   private java.util.List<FileObjectToImport> data = new ArrayList<>();
   private final HashMap<Integer, Class> columnClasses;
   private final HashSet<Integer> editableColumns;
 
-  public FileObjectToImportTableModel() {
+  FileObjectToImportTableModel() {
     columnClasses = new HashMap<>();
     columnClasses.put(COLUMN_NAME, FileName.class);
     columnClasses.put(COLUMN_SIZE, FileSize.class);
@@ -561,7 +561,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     fireTableRowsInserted(data.size() - 1, data.size());
   }
 
-  public void delete(int... rows) {
+  void delete(int... rows) {
     Arrays.sort(rows);
     final List<Integer> rowsList = Ints.asList(rows);
     Collections.reverse(rowsList);
@@ -628,7 +628,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     return editableColumns.contains(columnIndex);
   }
 
-  public FileObjectToImport getFileObjectToImport(int rowIndex) {
+  FileObjectToImport getFileObjectToImport(int rowIndex) {
     return data.get(rowIndex);
   }
 
@@ -637,7 +637,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     return columnClasses.get(columnIndex);
   }
 
-  public void setCanParse(FileObject fileObject, AdvanceOpenPanel.CanParse canParse) {
+  void setCanParse(FileObject fileObject, AdvanceOpenPanel.CanParse canParse) {
     for (int i = 0; i < data.size(); i++) {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
@@ -647,7 +647,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     }
   }
 
-  public void setContent(FileObject fileObject, ContentProbe contentProbe) {
+  void setContent(FileObject fileObject, ContentProbe contentProbe) {
     for (int i = 0; i < data.size(); i++) {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
@@ -657,7 +657,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     }
   }
 
-  public void setPossibleLogImporters(FileObject fileObject, PossibleLogImporters possibleLogImporters) {
+  void setPossibleLogImporters(FileObject fileObject, PossibleLogImporters possibleLogImporters) {
     for (int i = 0; i < data.size(); i++) {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
@@ -667,7 +667,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     }
   }
 
-  public void setOpenMode(FileObject fileObject, AdvanceOpenPanel.OpenMode openMode) {
+  void setOpenMode(FileObject fileObject, AdvanceOpenPanel.OpenMode openMode) {
     for (int i = 0; i < data.size(); i++) {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
@@ -703,7 +703,7 @@ class FileObjectToImport {
   private ContentProbe content;
   private PossibleLogImporters possibleLogImporters;
 
-  public FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, AdvanceOpenPanel.OpenMode openMode, AdvanceOpenPanel
+  FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, AdvanceOpenPanel.OpenMode openMode, AdvanceOpenPanel
       .CanParse canParse) {
     this.fileObject = fileObject;
     this.fileName = fileName;
@@ -713,11 +713,11 @@ class FileObjectToImport {
     this.canParse = canParse;
   }
 
-  public PossibleLogImporters getPossibleLogImporters() {
+  PossibleLogImporters getPossibleLogImporters() {
     return possibleLogImporters;
   }
 
-  public void setPossibleLogImporters(PossibleLogImporters possibleLogImporters) {
+  void setPossibleLogImporters(PossibleLogImporters possibleLogImporters) {
     this.possibleLogImporters = possibleLogImporters;
   }
 
@@ -729,15 +729,15 @@ class FileObjectToImport {
     this.content = content;
   }
 
-  public FileObject getFileObject() {
+  FileObject getFileObject() {
     return fileObject;
   }
 
-  public FileName getFileName() {
+  FileName getFileName() {
     return fileName;
   }
 
-  public FileSize getFileSize() {
+  FileSize getFileSize() {
     return fileSize;
   }
 
@@ -745,7 +745,7 @@ class FileObjectToImport {
     return level;
   }
 
-  public AdvanceOpenPanel.OpenMode getOpenMode() {
+  AdvanceOpenPanel.OpenMode getOpenMode() {
     return openMode;
   }
 
@@ -753,15 +753,15 @@ class FileObjectToImport {
     this.level = level;
   }
 
-  public void setOpenMode(AdvanceOpenPanel.OpenMode openMode) {
+  void setOpenMode(AdvanceOpenPanel.OpenMode openMode) {
     this.openMode = openMode;
   }
 
-  public AdvanceOpenPanel.CanParse getCanParse() {
+  AdvanceOpenPanel.CanParse getCanParse() {
     return canParse;
   }
 
-  public void setCanParse(AdvanceOpenPanel.CanParse canParse) {
+  void setCanParse(AdvanceOpenPanel.CanParse canParse) {
     this.canParse = canParse;
   }
 }
