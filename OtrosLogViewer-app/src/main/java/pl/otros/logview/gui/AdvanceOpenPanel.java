@@ -73,6 +73,8 @@ public class AdvanceOpenPanel extends JPanel {
 
   private final AbstractAction deleteSelectedAction;
   private final AbstractAction addMoreFilesAction;
+  private final AbstractAction switchAllToFromEnd;
+  private final AbstractAction switchAllToFromBegging;
 
 
   enum OpenMode implements Named {
@@ -226,6 +228,24 @@ public class AdvanceOpenPanel extends JPanel {
       }
     };
     deleteSelectedAction.setEnabled(false);
+    switchAllToFromBegging = new AbstractAction("Open selected from begging") {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        IntStream.range(0,tableModel.getRowCount())
+            .filter(table::isRowSelected)
+            .forEach( i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(),OpenMode.FROM_START));
+      }
+    };
+    switchAllToFromEnd = new AbstractAction("Open selected from end") {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        IntStream.range(0,tableModel.getRowCount())
+            .filter(table::isRowSelected)
+            .forEach( i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(),OpenMode.FROM_END));
+      }
+    };
+
+
     table.getActionMap().put("DELETE", deleteSelectedAction);
     table.getColumn("Size").setMaxWidth(100);
     table.getColumn("Level threshold").setMaxWidth(120);
@@ -343,6 +363,8 @@ public class AdvanceOpenPanel extends JPanel {
     JPopupMenu popupMenu = new JPopupMenu("Options");
     popupMenu.add(addMoreFilesAction);
     popupMenu.add(deleteSelectedAction);
+    popupMenu.add(switchAllToFromBegging);
+    popupMenu.add(switchAllToFromEnd);
     table.addMouseListener(new PopupListener(popupMenu));
   }
 
@@ -643,7 +665,16 @@ class FileObjectToImportTableModel extends AbstractTableModel {
         fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
       }
     }
+  }
 
+  public void setOpenMode(FileObject fileObject, AdvanceOpenPanel.OpenMode openMode) {
+    for (int i = 0; i < data.size(); i++) {
+      FileObjectToImport f = data.get(i);
+      if (f.getFileObject().equals(fileObject)) {
+        f.setOpenMode(openMode);
+        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+      }
+    }
   }
 
   public boolean contains(FileObject fileObject) {
