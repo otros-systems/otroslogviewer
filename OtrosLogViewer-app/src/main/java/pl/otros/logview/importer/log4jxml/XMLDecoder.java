@@ -167,23 +167,25 @@ public class XMLDecoder {
   }
 
   private String escapeNestedCData(String log4jEvents) {
+    String escapedLog4jEvents = log4jEvents;
+    
     for (String tag : new String[] {"log4j:message", "log4j:NDC", "log4j:throwable"}) {
       String startTag = "<" + tag + "><![CDATA[";
-      int startIndex = log4jEvents.indexOf(startTag, 0);
+      int startIndex = escapedLog4jEvents.indexOf(startTag, 0);
       
       while(startIndex > -1) {
         startIndex = startIndex + startTag.length();
-        int endIndex = log4jEvents.indexOf("]]></" + tag + ">", startIndex);
+        int endIndex = escapedLog4jEvents.indexOf("]]></" + tag + ">", startIndex);
         
-        String before = log4jEvents.substring(0, startIndex);
-        String content = log4jEvents.substring(startIndex, endIndex).replace("]]>", "]]>]]&gt;<![CDATA[");
-        String after = log4jEvents.substring(endIndex);
-        log4jEvents = before + content + after;
+        String before = escapedLog4jEvents.substring(0, startIndex);
+        String content = escapedLog4jEvents.substring(startIndex, endIndex).replace("]]>", "]]>]]&gt;<![CDATA[");
+        String after = escapedLog4jEvents.substring(endIndex);
+        escapedLog4jEvents = before + content + after;
         
-        startIndex = log4jEvents.indexOf(startTag, startIndex);
+        startIndex = escapedLog4jEvents.indexOf(startTag, startIndex);
       }
     }
-    return log4jEvents;
+    return escapedLog4jEvents;
   }
   
   /**

@@ -15,7 +15,7 @@ public class XMLDecoderTest {
   private static final String CONTENT_WITH_CDATA = " >>PREFIX<< <![CDATA[ >>CONTENT<< ]]> >>SUFFIX<< ";
 
   @Test
-  private void testNestedCData() {
+  public void testNestedCData() {
     XMLDecoder xmlDecoder = new XMLDecoder();
     String log4jEvent = EVENT_START;
     for (String tag : new String[] { "log4j:message", "log4j:NDC", "log4j:throwable" }) {
@@ -27,9 +27,9 @@ public class XMLDecoderTest {
 
     assertEquals(events.size(), 2);
     for (LoggingEvent event : events) {
-      Assert.assertEquals(event.getMessage(), CONTENT_WITH_CDATA);
-      Assert.assertEquals(event.getNDC(), CONTENT_WITH_CDATA);
-      Assert.assertEquals(event.getThrowableStrRep()[0], CONTENT_WITH_CDATA);
+      assertEquals(event.getMessage(), CONTENT_WITH_CDATA);
+      assertEquals(event.getNDC(), CONTENT_WITH_CDATA);
+      assertEquals(event.getThrowableStrRep()[0], CONTENT_WITH_CDATA);
     }
   }
 }
