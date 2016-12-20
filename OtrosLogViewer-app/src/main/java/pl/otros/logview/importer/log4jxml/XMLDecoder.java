@@ -27,6 +27,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -78,7 +80,7 @@ public class XMLDecoder {
   /**
    * Partial event.
    */
-  private String partialEvent;
+  private String partialEvent = "";
   /**
    * Owner.
    */
@@ -132,31 +134,60 @@ public class XMLDecoder {
     if (docBuilder == null || data == null) {
       return null;
     }
-    Document document = null;
 
+    String buf = null;
     try {
       // we change the system ID to a valid URI so that Crimson won't
       // complain. Indeed, "log4j.dtd" alone is not a valid URI which
       // causes Crimson to barf. The Log4jEntityResolver only cares
       // about the "log4j.dtd" ending.
-      // buf.setLength(0);
-
-      /**
-       * resetting the length of the StringBuffer is dangerous, particularly on some JDK 1.4 impls, there's a known Bug that causes a memory leak
-       */
-      String buf = BEGINPART +
-        data +
-        ENDPART;
-
-      InputSource inputSource = new InputSource(new StringReader(buf));
-      document = docBuilder.parse(inputSource);
-    } catch (Exception e) {
-      e.printStackTrace();
+      buf = BEGINPART + data + ENDPART;
+      return parseString(buf);
     }
-
-    return document;
+    catch (SAXParseException e) {
+      // log4j writes messages between CDATA markers. If the message itself also contains a CData marker (for example in a SOAP Fault) it gets nested.
+      // This is fixed in log4j itself (see bug 9514 and 37560), but we need to deal with logfiles created with older versions.
+      try {
+        buf = escapeNestedCData(buf);
+        return parseString(buf);
+      } catch (SAXParseException e1) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
+  private Document parseString(String xmlString) throws SAXParseException {
+    try {
+      return docBuilder.parse(new InputSource(new StringReader(xmlString)));
+    } catch (SAXParseException e) {
+      throw e;
+    } catch (SAXException | IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private String escapeNestedCData(String log4jEvents) {
+    String escapedLog4jEvents = log4jEvents;
+    
+    for (String tag : new String[] {"log4j:message", "log4j:NDC", "log4j:throwable"}) {
+      String startTag = "<" + tag + "><![CDATA[";
+      int startIndex = escapedLog4jEvents.indexOf(startTag, 0);
+      
+      while(startIndex > -1) {
+        startIndex = startIndex + startTag.length();
+        int endIndex = escapedLog4jEvents.indexOf("]]></" + tag + ">", startIndex);
+        
+        String before = escapedLog4jEvents.substring(0, startIndex);
+        String content = escapedLog4jEvents.substring(startIndex, endIndex).replace("]]>", "]]>]]&gt;<![CDATA[");
+        String after = escapedLog4jEvents.substring(endIndex);
+        escapedLog4jEvents = before + content + after;
+        
+        startIndex = escapedLog4jEvents.indexOf(startTag, startIndex);
+      }
+    }
+    return escapedLog4jEvents;
+  }
+  
   /**
    * Decodes a File into a Vector of LoggingEvents.
    *
@@ -206,13 +237,13 @@ public class XMLDecoder {
    * @param document to decode events from
    * @return Vector of LoggingEvents
    */
-  public Vector decodeEvents(final String document) {
+  public Vector<LoggingEvent> decodeEvents(final String document) {
     if (document != null) {
       if (document.trim().equals("")) {
         return null;
       }
       String newDoc = null;
-      String newPartialEvent = null;
+      String newPartialEvent;
       // separate the string into the last portion ending with
       // </log4j:event> (which will be processed) and the
       // partial event which will be combined and
@@ -230,6 +261,7 @@ public class XMLDecoder {
         newPartialEvent = document.substring(document.lastIndexOf(RECORD_END) + RECORD_END.length());
       } else {
         newDoc = document;
+        newPartialEvent = "";
       }
       if (partialEvent != null) {
         newDoc = partialEvent + newDoc;
@@ -258,10 +290,10 @@ public class XMLDecoder {
       return null;
     }
 
-    Vector events = decodeEvents(document);
+    Vector<LoggingEvent> events = decodeEvents(document);
 
     if (events.size() > 0) {
-      return (LoggingEvent) events.firstElement();
+      return events.firstElement();
     }
 
     return null;
@@ -273,8 +305,8 @@ public class XMLDecoder {
    * @param document XML document
    * @return Vector of LoggingEvents
    */
-  private Vector decodeEvents(final Document document) {
-    Vector events = new Vector();
+  private Vector<LoggingEvent> decodeEvents(final Document document) {
+    Vector<LoggingEvent> events = new Vector<>();
 
     Logger logger;
     long timeStamp;
