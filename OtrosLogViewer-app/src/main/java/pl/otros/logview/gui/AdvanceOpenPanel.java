@@ -1,6 +1,7 @@
 package pl.otros.logview.gui;
 
 import com.google.common.primitives.Ints;
+import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -65,6 +66,8 @@ import java.util.stream.IntStream;
 public class AdvanceOpenPanel extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvanceOpenPanel.class.getName());
+  public static final String CARD_TABLE = "table";
+  public static final String CARD_EMPTY_VIEW = "emptyView";
 
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
@@ -357,18 +360,18 @@ public class AdvanceOpenPanel extends JPanel {
 
     final JScrollPane scrollPane = new JScrollPane(table);
 
-    JPanel emptyView = new JPanel(new FlowLayout(FlowLayout.CENTER));//TODO use mig layout to center
+    JPanel emptyView = new JPanel(new MigLayout("debug, fill", "[center]", "[center]"));
     emptyView.add(new JButton(addMoreFilesAction));
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
-    tablePanel.add(scrollPane, "table");
-    tablePanel.add(emptyView, "emptyView");
-    cardLayoutTablePanel.show(tablePanel, "emptyView");
+    tablePanel.add(scrollPane, CARD_TABLE);
+    tablePanel.add(emptyView, CARD_EMPTY_VIEW);
+    cardLayoutTablePanel.show(tablePanel, CARD_EMPTY_VIEW);
     tableModel.addTableModelListener(e -> {
       if (tableModel.getRowCount() == 0) {
-        cardLayoutTablePanel.show(tablePanel, "emptyView");
+        cardLayoutTablePanel.show(tablePanel, CARD_EMPTY_VIEW);
       } else {
-        cardLayoutTablePanel.show(tablePanel, "table");
+        cardLayoutTablePanel.show(tablePanel, CARD_TABLE);
       }
     });
 
