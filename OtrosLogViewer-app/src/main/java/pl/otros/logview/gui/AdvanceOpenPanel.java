@@ -80,14 +80,17 @@ public class AdvanceOpenPanel extends JPanel {
   enum OpenMode implements Named {
     FROM_START("From begging"), FROM_END("From end");
     private String name;
-    OpenMode(String name){this.name = name;}
+
+    OpenMode(String name) {
+      this.name = name;
+    }
 
     public String getName() {
       return name;
     }
   }
 
-  enum CanParse implements Named{
+  enum CanParse implements Named {
     YES("Yes"), NO("No"), FILE_TOO_SMALL("File too small"), NOT_TESTED("Not checked"), TESTING("Checking"), TESTING_ERROR("Testing error");
     private String name;
 
@@ -101,8 +104,10 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
 
-  //TODO sorting
   //TODO view for empty table
+  //TODO sorting
+  //TODO columns widths
+  //TODO tail from last xxxx KB
   //TODO create log parser pattern if some logs can't be parsed
   //TODO save state
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
@@ -110,11 +115,12 @@ public class AdvanceOpenPanel extends JPanel {
     this.setLayout(cardLayout);
     final JPanel loadingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
     loadingProgressBar = new JProgressBar();
-    loadingProgressBar.setSize(600, 20);
-    loadingProgressBar.setMinimumSize(new Dimension(600, 20));
+    loadingProgressBar.setMinimumSize(new Dimension(800, 30));
+    loadingProgressBar.setPreferredSize(new Dimension(800, 30));
+    loadingProgressBar.setSize(800, 30);
     loadingProgressBar.setMinimum(0);
     loadingProgressBar.setStringPainted(true);
-    loadingProgressBar.setString("loading ...");
+    loadingProgressBar.setString("loading ................");
     loadingPanel.add(loadingProgressBar, BorderLayout.CENTER);
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -231,17 +237,17 @@ public class AdvanceOpenPanel extends JPanel {
     switchAllToFromBegging = new AbstractAction("Open selected from begging") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        IntStream.range(0,tableModel.getRowCount())
+        IntStream.range(0, tableModel.getRowCount())
             .filter(table::isRowSelected)
-            .forEach( i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(),OpenMode.FROM_START));
+            .forEach(i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(), OpenMode.FROM_START));
       }
     };
     switchAllToFromEnd = new AbstractAction("Open selected from end") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        IntStream.range(0,tableModel.getRowCount())
+        IntStream.range(0, tableModel.getRowCount())
             .filter(table::isRowSelected)
-            .forEach( i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(),OpenMode.FROM_END));
+            .forEach(i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(), OpenMode.FROM_END));
       }
     };
 
@@ -254,7 +260,7 @@ public class AdvanceOpenPanel extends JPanel {
     table.getColumn("Log importer").setMaxWidth(140);
     table.getColumn("Can parse").setMaxWidth(120);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-    table.getSelectionModel().addListSelectionListener((e) -> deleteSelectedAction.setEnabled(table.getSelectedRowCount()>0));
+    table.getSelectionModel().addListSelectionListener((e) -> deleteSelectedAction.setEnabled(table.getSelectedRowCount() > 0));
     initContextMenu(table);
     initToolbar(jToolBar);
 
@@ -330,7 +336,7 @@ public class AdvanceOpenPanel extends JPanel {
               PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
               publish(new AddingDetail(CanParse.TESTING, possibleLogImporters, new ContentProbe(bytes)));
               try (InputStream in = fileObjectAt.getFileObject().getContent().getInputStream()) {
-                bytes = Utils.loadProbe(in, 4000,true);
+                bytes = Utils.loadProbe(in, 4000, true);
                 possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
                 if (possibleLogImporters.getLogImporter().isPresent()) {
                   canParse = CanParse.YES;
@@ -350,7 +356,23 @@ public class AdvanceOpenPanel extends JPanel {
     });
 
     final JScrollPane scrollPane = new JScrollPane(table);
-    mainPanel.add(scrollPane);
+
+    JPanel emptyView = new JPanel(new FlowLayout(FlowLayout.CENTER));//TODO use mig layout to center
+    emptyView.add(new JButton(addMoreFilesAction));
+    final CardLayout cardLayoutTablePanel = new CardLayout();
+    final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
+    tablePanel.add(scrollPane, "table");
+    tablePanel.add(emptyView, "emptyView");
+    cardLayoutTablePanel.show(tablePanel, "emptyView");
+    tableModel.addTableModelListener(e -> {
+      if (tableModel.getRowCount() == 0) {
+        cardLayoutTablePanel.show(tablePanel, "emptyView");
+      } else {
+        cardLayoutTablePanel.show(tablePanel, "table");
+      }
+    });
+
+    mainPanel.add(tablePanel, BorderLayout.CENTER);
 
   }
 
@@ -376,16 +398,16 @@ public class AdvanceOpenPanel extends JPanel {
     cardLayout.show(AdvanceOpenPanel.this, "mainPanel");
   }
 
-  private TableColumns[] mergeColumns(List<Optional<LogImporter>> logImporters){
+  private TableColumns[] mergeColumns(List<Optional<LogImporter>> logImporters) {
     Set<TableColumns> s = logImporters.stream()
         .filter(Optional::isPresent)
         .map(Optional::get)
         .filter(l -> !(l instanceof DetectOnTheFlyLogImporter))
         .filter(l -> l instanceof TableColumnNameSelfDescribable)
-        .map( l -> (TableColumnNameSelfDescribable)l)
-        .flatMap( l -> Arrays.stream(l.getTableColumnsToUse()))
+        .map(l -> (TableColumnNameSelfDescribable) l)
+        .flatMap(l -> Arrays.stream(l.getTableColumnsToUse()))
         .collect(Collectors.toSet());
-        return s.toArray(new TableColumns[0]);
+    return s.toArray(new TableColumns[0]);
   }
 
 
@@ -411,7 +433,7 @@ public class AdvanceOpenPanel extends JPanel {
               Level.FINEST,
               OpenMode.FROM_END,
               CanParse.NOT_TESTED);
-//          Thread.sleep(100);
+          Thread.sleep(100);
           publish(fileObjectToImport);
         }
         return null;
@@ -483,7 +505,7 @@ public class AdvanceOpenPanel extends JPanel {
         final LogLoadingSession session = logLoader.startLoading(
             new VfsSource(
                 l.loadingInfo.getFileObject(),
-                l.fileObjectToImport.getOpenMode().equals(OpenMode.FROM_END)?l.loadingInfo.getLastFileSize():0
+                l.fileObjectToImport.getOpenMode().equals(OpenMode.FROM_END) ? l.loadingInfo.getLastFileSize() : 0
             ),
             l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
             logDataCollector,
@@ -552,7 +574,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     editableColumns.add(COLUMN_POSSIBLE_IMPORTER);
   }
 
-  public List<FileObjectToImport> getData(){
+  public List<FileObjectToImport> getData() {
     return new ArrayList<>(data);
   }
 
