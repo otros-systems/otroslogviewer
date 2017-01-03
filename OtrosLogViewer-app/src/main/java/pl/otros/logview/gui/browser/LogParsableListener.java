@@ -63,7 +63,6 @@ public class LogParsableListener implements SelectionListener {
 
       @Override
       protected void done() {
-        System.out.println("Done");
         if (isCancelled()) {
           return;
         }
@@ -74,7 +73,6 @@ public class LogParsableListener implements SelectionListener {
         } catch (InterruptedException | ExecutionException e) {
           label.setText("?");
         } finally {
-          System.out.println("Switching content to OK");
           layout.show(content, OK);
         }
 

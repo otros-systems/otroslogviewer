@@ -81,7 +81,7 @@ public class AdvanceOpenPanel extends JPanel {
 
 
   enum OpenMode implements Named {
-    FROM_START("From begging"), FROM_END("From end");
+    FROM_START("From start"), FROM_END("From end");
     private String name;
 
     OpenMode(String name) {
@@ -90,6 +90,11 @@ public class AdvanceOpenPanel extends JPanel {
 
     public String getName() {
       return name;
+    }
+
+    @Override
+    public String toString() {
+      return getName();
     }
   }
 
@@ -107,8 +112,6 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
 
-  //TODO view for empty table
-  //TODO sorting
   //TODO columns widths
   //TODO tail from last xxxx KB
   //TODO create log parser pattern if some logs can't be parsed
@@ -155,6 +158,7 @@ public class AdvanceOpenPanel extends JPanel {
 
 
     JTable table = new JTable(tableModel);
+    table.setAutoCreateRowSorter(true);
     table.setDefaultRenderer(FileObject.class, new DefaultTableCellRenderer() {
       @Override
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -168,7 +172,8 @@ public class AdvanceOpenPanel extends JPanel {
     });
 
     table.setDefaultRenderer(OpenMode.class, new NamedTableRenderer());
-    table.setDefaultEditor(OpenMode.class, new DefaultCellEditor(new JComboBox(OpenMode.values())));
+    final JComboBox openModeCbx = new JComboBox(OpenMode.values());
+    table.setDefaultEditor(OpenMode.class, new DefaultCellEditor(openModeCbx));
 
     table.setDefaultRenderer(FileSize.class, new FileSizeTableCellRenderer());
     table.setDefaultRenderer(Level.class, new LevelRenderer(LevelRenderer.Mode.IconsAndText));
@@ -233,7 +238,7 @@ public class AdvanceOpenPanel extends JPanel {
     deleteSelectedAction = new AbstractAction("Delete selected", Icons.DELETE) {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tableModel.delete(table.getSelectedRows());
+        tableModel.delete(Arrays.stream(table.getSelectedRows()).map(table::convertRowIndexToModel).toArray());
       }
     };
     deleteSelectedAction.setEnabled(false);
@@ -305,7 +310,7 @@ public class AdvanceOpenPanel extends JPanel {
       if (e.getType() == TableModelEvent.INSERT) {
         final int firstRow = e.getFirstRow();
         final int lastRow = e.getLastRow();
-        for (int i = firstRow; i < lastRow; i++) {
+        for (int i = firstRow; i <= lastRow; i++) {
           final FileObjectToImport fileObjectAt = tableModel.getFileObjectToImport(i);
           LOGGER.info("Added " + fileObjectAt + " to table");
           class AddingDetail {
@@ -360,7 +365,7 @@ public class AdvanceOpenPanel extends JPanel {
 
     final JScrollPane scrollPane = new JScrollPane(table);
 
-    JPanel emptyView = new JPanel(new MigLayout("debug, fill", "[center]", "[center]"));
+    JPanel emptyView = new JPanel(new MigLayout("fill", "[center]", "[center]"));
     emptyView.add(new JButton(addMoreFilesAction));
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
@@ -436,7 +441,6 @@ public class AdvanceOpenPanel extends JPanel {
               Level.FINEST,
               OpenMode.FROM_END,
               CanParse.NOT_TESTED);
-          Thread.sleep(100);
           publish(fileObjectToImport);
         }
         return null;
@@ -583,7 +587,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
 
   public void add(FileObjectToImport fileObjectToImport) {
     data.add(fileObjectToImport);
-    fireTableRowsInserted(data.size() - 1, data.size());
+    fireTableRowsInserted(data.size() - 1, data.size()-1);
   }
 
   void delete(int... rows) {
@@ -677,7 +681,8 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setContent(contentProbe);
-        fireTableCellUpdated(i, COLUMN_CONTENT);
+//        fireTableCellUpdated(i, COLUMN_CONTENT);
+        fireTableDataChanged();
       }
     }
   }
@@ -687,7 +692,8 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setPossibleLogImporters(possibleLogImporters);
-        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+//        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+        fireTableDataChanged();
       }
     }
   }
@@ -697,7 +703,8 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setOpenMode(openMode);
-        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+//        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
+        fireTableDataChanged();
       }
     }
   }
