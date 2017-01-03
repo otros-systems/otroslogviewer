@@ -66,8 +66,8 @@ import java.util.stream.IntStream;
 public class AdvanceOpenPanel extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvanceOpenPanel.class.getName());
-  public static final String CARD_TABLE = "table";
-  public static final String CARD_EMPTY_VIEW = "emptyView";
+  private static final String CARD_TABLE = "table";
+  private static final String CARD_EMPTY_VIEW = "emptyView";
 
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
@@ -78,6 +78,7 @@ public class AdvanceOpenPanel extends JPanel {
   private final AbstractAction addMoreFilesAction;
   private final AbstractAction selectedFromStart;
   private final AbstractAction selectedFromEnd;
+  private final HashMap<OpenMode, Icon> openModeIcons;
 
 
   enum OpenMode implements Named {
@@ -117,6 +118,10 @@ public class AdvanceOpenPanel extends JPanel {
   //TODO create log parser pattern if some logs can't be parsed
   //TODO save state
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
+    openModeIcons = new HashMap<>();
+    openModeIcons.put(OpenMode.FROM_START, Icons.FROM_START);
+    openModeIcons.put(OpenMode.FROM_END, Icons.FROM_END);
+
     cardLayout = new CardLayout();
     this.setLayout(cardLayout);
     final JPanel loadingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -172,8 +177,10 @@ public class AdvanceOpenPanel extends JPanel {
       }
     });
 
-    table.setDefaultRenderer(OpenMode.class, new NamedTableRenderer());
+    final DefaultListCellRenderer openModeRenderer = new OpenModeListCellRenderer();
+    table.setDefaultRenderer(OpenMode.class, new OpenModeTableCellRenderer());
     final JComboBox openModeCbx = new JComboBox(OpenMode.values());
+    openModeCbx.setRenderer(openModeRenderer);
     table.setDefaultEditor(OpenMode.class, new DefaultCellEditor(openModeCbx));
 
     table.setDefaultRenderer(FileSize.class, new FileSizeTableCellRenderer());
@@ -558,6 +565,27 @@ public class AdvanceOpenPanel extends JPanel {
       } catch (InterruptedException | ExecutionException e1) {
         JOptionPane.showMessageDialog(AdvanceOpenPanel.this, "Error opening logs: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }
+    }
+  }
+
+  private class OpenModeListCellRenderer extends DefaultListCellRenderer {
+    @Override
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      final Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+      JLabel l = (JLabel) listCellRendererComponent;
+      l.setIcon(openModeIcons.get(value));
+      return listCellRendererComponent;
+    }
+  }
+
+  private class OpenModeTableCellRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+      final Component listCellRendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      JLabel l = (JLabel) listCellRendererComponent;
+      l.setIcon(openModeIcons.get(value));
+      return listCellRendererComponent;
     }
   }
 }
