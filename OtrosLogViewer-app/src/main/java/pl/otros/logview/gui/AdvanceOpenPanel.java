@@ -76,8 +76,8 @@ public class AdvanceOpenPanel extends JPanel {
 
   private final AbstractAction deleteSelectedAction;
   private final AbstractAction addMoreFilesAction;
-  private final AbstractAction switchAllToFromEnd;
-  private final AbstractAction switchAllToFromBegging;
+  private final AbstractAction selectedFromStart;
+  private final AbstractAction selectedFromEnd;
 
 
   enum OpenMode implements Named {
@@ -152,7 +152,8 @@ public class AdvanceOpenPanel extends JPanel {
       @Override
       public void tableChanged(TableModelEvent e) {
         loadingProgressBar.setMaximum(tableModel.getColumnCount());
-        importAction.setEnabled(tableModel.getRowCount() > 0);
+        final boolean isEmpty = tableModel.getRowCount() > 0;
+        importAction.setEnabled(isEmpty);
       }
     });
 
@@ -238,26 +239,28 @@ public class AdvanceOpenPanel extends JPanel {
     deleteSelectedAction = new AbstractAction("Delete selected", Icons.DELETE) {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tableModel.delete(Arrays.stream(table.getSelectedRows()).map(table::convertRowIndexToModel).toArray());
+        tableModel.delete(selectedRowsStream(table).toArray());
       }
     };
     deleteSelectedAction.setEnabled(false);
-    switchAllToFromBegging = new AbstractAction("Open selected from begging") {
+    selectedFromStart = new AbstractAction("Selected from start", Icons.FROM_START) {
       @Override
       public void actionPerformed(ActionEvent e) {
-        IntStream.range(0, tableModel.getRowCount())
-            .filter(table::isRowSelected)
-            .forEach(i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(), OpenMode.FROM_START));
+        selectedRowsStream(table)
+            .mapToObj(tableModel::getFileObjectToImport)
+            .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_START));
       }
     };
-    switchAllToFromEnd = new AbstractAction("Open selected from end") {
+    selectedFromStart.setEnabled(false);
+    selectedFromEnd = new AbstractAction("Selected from end", Icons.FROM_END) {
       @Override
       public void actionPerformed(ActionEvent e) {
-        IntStream.range(0, tableModel.getRowCount())
-            .filter(table::isRowSelected)
-            .forEach(i -> tableModel.setOpenMode(tableModel.getFileObjectToImport(i).getFileObject(), OpenMode.FROM_END));
+        selectedRowsStream(table)
+            .mapToObj(tableModel::getFileObjectToImport)
+            .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_END));
       }
     };
+    selectedFromEnd.setEnabled(false);
 
 
     table.getActionMap().put("DELETE", deleteSelectedAction);
@@ -269,6 +272,8 @@ public class AdvanceOpenPanel extends JPanel {
     table.getColumn("Can parse").setMaxWidth(120);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     table.getSelectionModel().addListSelectionListener((e) -> deleteSelectedAction.setEnabled(table.getSelectedRowCount() > 0));
+    table.getSelectionModel().addListSelectionListener((e) -> selectedFromStart.setEnabled(table.getSelectedRowCount() > 0));
+    table.getSelectionModel().addListSelectionListener((e) -> selectedFromEnd.setEnabled(table.getSelectedRowCount() > 0));
     initContextMenu(table);
     initToolbar(jToolBar);
 
@@ -384,29 +389,23 @@ public class AdvanceOpenPanel extends JPanel {
 
   }
 
+  private IntStream selectedRowsStream(JTable table) {
+    return Arrays.stream(table.getSelectedRows()).map(table::convertRowIndexToModel);
+  }
+
   private void initToolbar(JToolBar toolBar) {
     toolBar.add(new JButton(addMoreFilesAction));
     toolBar.add(new JButton(deleteSelectedAction));
-    toolBar.add(new JButton(new AbstractAction("All from start") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        tableModel.getData().forEach(l -> tableModel.setOpenMode(l.getFileObject(),OpenMode.FROM_START));
-      }
-    }));
-    toolBar.add(new JButton(new AbstractAction("All from end") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        tableModel.getData().forEach(l -> tableModel.setOpenMode(l.getFileObject(),OpenMode.FROM_END));
-      }
-    }));
+    toolBar.add(new JButton(selectedFromStart));
+    toolBar.add(new JButton(selectedFromEnd));
   }
 
   private void initContextMenu(JTable table) {
     JPopupMenu popupMenu = new JPopupMenu("Options");
     popupMenu.add(addMoreFilesAction);
     popupMenu.add(deleteSelectedAction);
-    popupMenu.add(switchAllToFromBegging);
-    popupMenu.add(switchAllToFromEnd);
+    popupMenu.add(selectedFromStart);
+    popupMenu.add(selectedFromEnd);
     table.addMouseListener(new PopupListener(popupMenu));
   }
 
@@ -599,7 +598,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
 
   public void add(FileObjectToImport fileObjectToImport) {
     data.add(fileObjectToImport);
-    fireTableRowsInserted(data.size() - 1, data.size()-1);
+    fireTableRowsInserted(data.size() - 1, data.size() - 1);
   }
 
   void delete(int... rows) {
@@ -704,8 +703,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setPossibleLogImporters(possibleLogImporters);
-//        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
-        fireTableDataChanged();
+        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
       }
     }
   }
@@ -715,8 +713,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setOpenMode(openMode);
-//        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
-        fireTableDataChanged();
+        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
       }
     }
   }

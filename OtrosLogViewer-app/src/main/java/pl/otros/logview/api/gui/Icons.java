@@ -297,4 +297,11 @@ public class Icons {
   @Path(path = "/img/fugue/control-pause.png")
   public static ImageIcon CONTROL_PAUSE;
 
+  @Path(path = "/img/fugue/document-hf-select.png")
+  public static ImageIcon FROM_START;
+
+  @Path(path = "/img/fugue/document-hf-select-footer.png")
+  public static ImageIcon FROM_END;
+
+
 }
