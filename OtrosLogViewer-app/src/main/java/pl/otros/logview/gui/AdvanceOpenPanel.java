@@ -692,8 +692,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
       FileObjectToImport f = data.get(i);
       if (f.getFileObject().equals(fileObject)) {
         f.setContent(contentProbe);
-//        fireTableCellUpdated(i, COLUMN_CONTENT);
-        fireTableDataChanged();
+        fireTableCellUpdated(i, COLUMN_CONTENT);
       }
     }
   }
