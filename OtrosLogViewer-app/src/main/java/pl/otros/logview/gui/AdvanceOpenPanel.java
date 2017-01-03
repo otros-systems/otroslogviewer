@@ -387,6 +387,18 @@ public class AdvanceOpenPanel extends JPanel {
   private void initToolbar(JToolBar toolBar) {
     toolBar.add(new JButton(addMoreFilesAction));
     toolBar.add(new JButton(deleteSelectedAction));
+    toolBar.add(new JButton(new AbstractAction("All from start") {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        tableModel.getData().forEach(l -> tableModel.setOpenMode(l.getFileObject(),OpenMode.FROM_START));
+      }
+    }));
+    toolBar.add(new JButton(new AbstractAction("All from end") {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        tableModel.getData().forEach(l -> tableModel.setOpenMode(l.getFileObject(),OpenMode.FROM_END));
+      }
+    }));
   }
 
   private void initContextMenu(JTable table) {
