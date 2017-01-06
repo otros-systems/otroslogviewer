@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.pluginable.PluginableElement;
 import pl.otros.logview.api.pluginable.PluginableElementEventListener;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.actions.*;
@@ -30,6 +31,7 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.TreeSet;
 
 class EmptyViewPanel extends JPanel {
@@ -93,9 +95,7 @@ class EmptyViewPanel extends JPanel {
 
   private void initGui() {
     this.removeAll();
-    TreeSet<LogImporter> logImportersList = new TreeSet<>((o1, o2) -> {
-      return o1.getName().compareTo(o2.getName());
-    });
+    TreeSet<LogImporter> logImportersList = new TreeSet<>(Comparator.comparing(PluginableElement::getName));
     logImportersList.addAll(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
     GridBagLayout bagLayout = new GridBagLayout();
     GridBagConstraints bagConstraints = new GridBagConstraints();
@@ -117,13 +117,8 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.fill = GridBagConstraints.HORIZONTAL;
     bagConstraints.gridy++;
 
-    TailLogWithAutoDetectActionListener tailLogActionListener = new TailLogWithAutoDetectActionListener(otrosApplication);
-    JButton jbTailAutoDetect = new JButton("Tail log with type autodetection", Icons.ARROW_REPEAT);
-    jbTailAutoDetect.addActionListener(tailLogActionListener);
-    this.add(jbTailAutoDetect, bagConstraints);
-    bagConstraints.gridy++;
-
-    this.add(new JButton(new TailMultipleFilesIntoOneView(otrosApplication)), bagConstraints);
+    final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
+    this.add(new JButton(advanceOpenAction),bagConstraints);
     bagConstraints.gridy++;
 
     OpenLogInvestigationAction openLogInvestigationAction = new OpenLogInvestigationAction(otrosApplication);
@@ -138,9 +133,7 @@ class EmptyViewPanel extends JPanel {
     this.add(jb3, bagConstraints);
     bagConstraints.gridy++;
 
-    final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
-    this.add(new JButton(advanceOpenAction),bagConstraints);
-    bagConstraints.gridy++;
+
 
 
     bagConstraints.insets = new Insets(15, 15, 3, 15);
