@@ -322,8 +322,7 @@ public class UtilsTest {
   }
 
   @Test
-  private void testGetObjectShortName(String scheme, String url,
-                                      String baseName, String output) {
+  public void testGetObjectShortName(String scheme, String url, String baseName, String output) {
     // given
     FileObject fileObjectMock = mock(FileObject.class);
     FileName fileNameMock = mock(FileName.class);
@@ -334,8 +333,7 @@ public class UtilsTest {
     when(fileNameMock.getBaseName()).thenReturn(baseName);
 
     // when
-    String fileObjectShortName = Utils
-        .getFileObjectShortName(fileObjectMock);
+    String fileObjectShortName = Utils.getFileObjectShortName(fileObjectMock);
 
     // then
     AssertJUnit.assertEquals(output, fileObjectShortName);

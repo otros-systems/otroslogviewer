@@ -180,7 +180,6 @@ public class Utils {
 
   public static void reloadFileObject(LoadingInfo loadingInfo, long position) throws IOException {
     loadingInfo.getFileObject().refresh();
-    long lastFileSize = loadingInfo.getLastFileSize();
     long currentSize = loadingInfo.getFileObject().getContent().getSize();
     IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
     RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
