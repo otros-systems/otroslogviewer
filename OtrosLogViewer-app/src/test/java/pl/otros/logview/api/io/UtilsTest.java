@@ -2,6 +2,7 @@ package pl.otros.logview.api.io;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -117,6 +118,17 @@ public class UtilsTest {
     boolean checkIfIsGzipped = Utils.checkIfIsGzipped(resolveFile);
     AssertJUnit.assertTrue(resolveFile.getName() + " should be compressed",
         checkIfIsGzipped);
+  }
+
+  //Can't ungzip file from middle: http://stackoverflow.com/questions/14225751/random-access-to-gzipped-files
+  @Test(enabled = false)
+  public void testLoadProbeAtEndGzipped() throws Exception {
+    FileObject resolveFile = resolveFileObject("/jul_log.txt.gz");
+    final FileContent content = resolveFile.getContent();
+    final byte[] bytes = Utils.loadProbeAtEnd(content.getInputStream(), content.getSize(), 200);
+    final String s = new String(bytes);
+    AssertJUnit.assertTrue(bytes.length > 0);
+    AssertJUnit.assertTrue("Checking message " + s, s.endsWith("SCHWERWIEGEND: Message in locales de_DE"));
   }
 
   private FileObject resolveFileObject(String resources)
@@ -310,8 +322,7 @@ public class UtilsTest {
   }
 
   @Test
-  private void testGetObjectShortName(String scheme, String url,
-                                      String baseName, String output) {
+  public void testGetObjectShortName(String scheme, String url, String baseName, String output) {
     // given
     FileObject fileObjectMock = mock(FileObject.class);
     FileName fileNameMock = mock(FileName.class);
@@ -322,8 +333,7 @@ public class UtilsTest {
     when(fileNameMock.getBaseName()).thenReturn(baseName);
 
     // when
-    String fileObjectShortName = Utils
-        .getFileObjectShortName(fileObjectMock);
+    String fileObjectShortName = Utils.getFileObjectShortName(fileObjectMock);
 
     // then
     AssertJUnit.assertEquals(output, fileObjectShortName);
@@ -351,7 +361,7 @@ public class UtilsTest {
 
     //when
 
-    final List<Long> positions = Utils.detectLogEventStart(logFile, logImporter);
+    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
 
     //then
     Assert.assertEquals(positions, expected);
@@ -365,7 +375,7 @@ public class UtilsTest {
     final List<Long> expected = Arrays.asList(31L, 75L, 141L, 213L, 280L, 330L, 380L, 425L, 431L, 481L, 531L, 581L, 631L, 681L);
 
     //when
-    final List<Long> positions = Utils.detectLogEventStart(logFile, logImporter);
+    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
 
     //then
     Assert.assertEquals(positions, expected);

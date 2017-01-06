@@ -671,12 +671,7 @@ public class LogViewMainFrame extends JFrame {
     Font menuGroupFont = labelOpenLog.getFont().deriveFont(13f).deriveFont(Font.BOLD);
     labelOpenLog.setFont(menuGroupFont);
     fileMenu.add(labelOpenLog);
-    JMenuItem tailAutoDetectLog = new JMenuItem("Tail log with autodetect type");
-    tailAutoDetectLog.addActionListener(new TailLogWithAutoDetectActionListener(otrosApplication));
-    tailAutoDetectLog.setMnemonic(KeyEvent.VK_T);
-    tailAutoDetectLog.setIcon(Icons.ARROW_REPEAT);
-    fileMenu.add(tailAutoDetectLog);
-    fileMenu.add(new TailMultipleFilesIntoOneView(otrosApplication));
+    fileMenu.add(new JMenuItem(new AdvanceOpenAction(otrosApplication)));
     fileMenu.add(new ConnectToSocketHubAppenderAction(otrosApplication));
     fileMenu.add(new JSeparator());
     JLabel labelLogInvestigation = new JLabel("Log investigation", SwingConstants.LEFT);
@@ -686,27 +681,7 @@ public class LogViewMainFrame extends JFrame {
     JMenuItem saveLogsInvest = new JMenuItem(new SaveLogInvestigationAction(otrosApplication));
     enableDisableComponetsForTabs.addComponet(saveLogsInvest);
     fileMenu.add(saveLogsInvest);
-    LogImporter[] importers = new LogImporter[0];
-    importers = logImportersContainer.getElements().toArray(importers);
     fileMenu.add(new JSeparator());
-    JLabel labelTailLog = new JLabel("Tail log [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.LEFT);
-    labelTailLog.setFont(menuGroupFont);
-    fileMenu.add(labelTailLog);
-    for (LogImporter logImporter : importers) {
-      JMenuItem openLog = new JMenuItem("Tail " + logImporter.getName() + " log");
-      openLog.addActionListener(new TailLogActionListener(otrosApplication, logImporter));
-      if (logImporter.getKeyStrokeAccelelator() != null) {
-        openLog.setAccelerator(KeyStroke.getKeyStroke(logImporter.getKeyStrokeAccelelator()));
-      }
-      if (logImporter.getMnemonic() > 0) {
-        openLog.setMnemonic(logImporter.getMnemonic());
-      }
-      Icon icon = logImporter.getIcon();
-      if (icon != null) {
-        openLog.setIcon(icon);
-      }
-      fileMenu.add(openLog);
-    }
     JMenuItem exitMenuItem = new JMenuItem("Exit", 'e');
     exitMenuItem.setIcon(Icons.TURN_OFF);
     exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("control F4"));

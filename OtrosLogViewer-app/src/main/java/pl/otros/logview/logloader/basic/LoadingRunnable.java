@@ -111,10 +111,11 @@ public class LoadingRunnable implements Runnable {
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
       ParsingContext parsingContext = new ParsingContext(
-        loadingInfo.getFileObject().getName().getFriendlyURI(),
-        loadingInfo.getFileObject().getName().getBaseName());
+          loadingInfo.getFileObject().getName().getFriendlyURI(),
+          loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
+      Utils.reloadFileObject(loadingInfo, vfs.getPosition());
       try {
         loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
       } catch (FileSystemException e1) {
