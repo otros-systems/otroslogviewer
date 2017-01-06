@@ -29,14 +29,23 @@ import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
 
 public class LoadingRunnableTest {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoadingRunnableTest.class);
+  public static final int SLEEP_TIME = 100;
 
   private final List<String> julSimpleLogLines;
   private final List<String> julXmlLogLines;
@@ -96,7 +105,7 @@ public class LoadingRunnableTest {
   public void testLoadingFullWithLogParser() throws IOException, InterruptedException {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -110,7 +119,7 @@ public class LoadingRunnableTest {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
 
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -145,16 +154,16 @@ public class LoadingRunnableTest {
   @DataProvider(name = "testLoadingAndPauseResumeDataProvider")
   public Object[][] testLoadingAndPauseResumeDataProvider() throws InitializationException {
     return new Object[][]{
-      new Object[]{"Jul xml", new UtilLoggingXmlLogImporter(), this.julXmlLogLines, Range.closed(0, 25), 2, Range.closed(25, 48), 4, Range.closed(48, 70), 6},
-      new Object[]{"Jul Simple", getJulLogParser(), this.julSimpleLogLines, Range.closed(0, 10), 5, Range.closed(10, 20), 10, Range.closed(20, 30), 15},
-      new Object[]{"lo4j xml", new Log4jXmlLogImporter(), this.log4jXmlLogLines, Range.closed(0, 8), 2, Range.closed(8, 12), 3, Range.closed(12, 23), 5},
-      new Object[]{"lo4j pattern", getLog4jPattern(), this.log4jLogLines, Range.closed(0, 3), 2, Range.closed(3, 8), 5, Range.closed(8, 12), 9},
-      new Object[]{"Json", getJsonParser(), this.jsonLogLines, Range.closed(0, 2), 2, Range.closed(2, 4), 4, Range.closed(4, 5), 5},
-      new Object[]{"autodetect-Jul xml", autoDetectLogImporter(), this.julXmlLogLines, Range.closed(0, 25), 2, Range.closed(25, 48), 4, Range.closed(48, 70), 6},
-      new Object[]{"autodetect-Jul Simple", autoDetectLogImporter(), this.julSimpleLogLines, Range.closed(0, 10), 5, Range.closed(10, 20), 10, Range.closed(20, 30), 15},
-      new Object[]{"autodetect-lo4j xml", autoDetectLogImporter(), this.log4jXmlLogLines, Range.closed(0, 8), 2, Range.closed(8, 12), 3, Range.closed(12, 23), 5},
-      new Object[]{"autodetect-lo4j pattern", autoDetectLogImporter(), this.log4jLogLines, Range.closed(0, 8), 5, Range.closed(8, 12), 9, Range.closed(12, 16), 13},
-      new Object[]{"autodetect-json", autoDetectLogImporter(), this.jsonLogLines, Range.closed(0, 2), 2, Range.closed(2, 4), 4, Range.closed(4, 5), 5},
+        new Object[]{"Jul xml", new UtilLoggingXmlLogImporter(), this.julXmlLogLines, Range.closed(0, 25), 2, Range.closed(25, 48), 4, Range.closed(48, 70), 6},
+        new Object[]{"Jul Simple", getJulLogParser(), this.julSimpleLogLines, Range.closed(0, 10), 5, Range.closed(10, 20), 10, Range.closed(20, 30), 15},
+        new Object[]{"lo4j xml", new Log4jXmlLogImporter(), this.log4jXmlLogLines, Range.closed(0, 8), 2, Range.closed(8, 12), 3, Range.closed(12, 23), 5},
+        new Object[]{"lo4j pattern", getLog4jPattern(), this.log4jLogLines, Range.closed(0, 3), 2, Range.closed(3, 8), 5, Range.closed(8, 12), 9},
+        new Object[]{"Json", getJsonParser(), this.jsonLogLines, Range.closed(0, 2), 2, Range.closed(2, 4), 4, Range.closed(4, 5), 5},
+        new Object[]{"autodetect-Jul xml", autoDetectLogImporter(), this.julXmlLogLines, Range.closed(0, 25), 2, Range.closed(25, 48), 4, Range.closed(48, 70), 6},
+        new Object[]{"autodetect-Jul Simple", autoDetectLogImporter(), this.julSimpleLogLines, Range.closed(0, 10), 5, Range.closed(10, 20), 10, Range.closed(20, 30), 15},
+        new Object[]{"autodetect-lo4j xml", autoDetectLogImporter(), this.log4jXmlLogLines, Range.closed(0, 8), 2, Range.closed(8, 12), 3, Range.closed(12, 23), 5},
+        new Object[]{"autodetect-lo4j pattern", autoDetectLogImporter(), this.log4jLogLines, Range.closed(0, 8), 5, Range.closed(8, 12), 9, Range.closed(12, 16), 13},
+        new Object[]{"autodetect-json", autoDetectLogImporter(), this.jsonLogLines, Range.closed(0, 2), 2, Range.closed(2, 4), 4, Range.closed(4, 5), 5},
     };
   }
 
@@ -258,15 +267,15 @@ public class LoadingRunnableTest {
   @Test(invocationCount = 10)
   public void testLoadStatisticAfterFullReadWithLogParser() throws Exception {
     logImporter = getJulLogParser();
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), Optional.empty());
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
 
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
-    Thread.sleep(300);
-
+    Thread.sleep(SLEEP_TIME * 3);
     final LoadStatistic loadStatistic = underTest.getLoadStatistic();
+    underTest.stop();
     LOGGER.info("Have loading statistic {}", loadStatistic);
     Assert.assertEquals(loadStatistic.getPosition(), julSimpleAvailableBytes);
     Assert.assertEquals(underTest.getLoadStatistic().getTotal(), julSimpleAvailableBytes);
@@ -293,7 +302,7 @@ public class LoadingRunnableTest {
 
       underTest.stop();
 
-      Assert.assertEquals(collector.getLogData().length,999); //last line is not read
+      Assert.assertEquals(collector.getLogData().length, 999); //last line is not read
       final LoadStatistic loadStatistic = underTest.getLoadStatistic();
       LOGGER.info("Have loading statistic {}", loadStatistic);
       Assert.assertEquals(loadStatistic.getPosition(), 0);
