@@ -118,21 +118,17 @@ public class Utils {
   }
 
 
-  public static byte[] loadProbeAtEnd(InputStream in, long size, int buffSize) throws IOException {
+  public static byte[] loadProbeAtEnd(InputStream in, long availableInIS, int buffSize) throws IOException {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     byte[] buff = new byte[buffSize];
-    final long skip = in.skip(Math.max(size - buffSize, 0));
+    final long skip = in.skip(Math.max(availableInIS - buffSize, 0));
     LOGGER.debug("Skipped " + skip + "bytes");
     int read = in.read(buff);
     if (read > 0) {
       bout.write(buff, 0, read);
     }
-    final byte[] probe = bout.toByteArray();
-    if (checkIfIsGzipped(probe, probe.length)) {
-      return ungzip(probe);
-    } else {
-      return probe;
-    }
+    //Can't ugzip file from middle: http://stackoverflow.com/questions/14225751/random-access-to-gzipped-files
+    return bout.toByteArray();
   }
 
   public static LoadingInfo openFileObject(FileObject fileObject) throws Exception {

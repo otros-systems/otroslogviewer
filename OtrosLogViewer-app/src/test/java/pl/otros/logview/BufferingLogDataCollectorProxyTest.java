@@ -45,7 +45,7 @@ public class BufferingLogDataCollectorProxyTest {
     });
   }
 
-  @Test
+  @Test(invocationCount = 10)
   public void testAddLogDataArray() throws InterruptedException {
     LogData data1 = new LogData();
     data1.setId(1);
@@ -55,7 +55,7 @@ public class BufferingLogDataCollectorProxyTest {
     bufferingLogDataCollectorProxy.add(toAdd);
 
     AssertJUnit.assertArrayEquals(toAdd, bufferingLogDataCollectorProxy.getLogData());
-    Thread.sleep(2 * sleepTime);
+    Thread.sleep(3 * sleepTime);
     AssertJUnit.assertArrayEquals(toAdd, delegate.getLogData());
 
   }

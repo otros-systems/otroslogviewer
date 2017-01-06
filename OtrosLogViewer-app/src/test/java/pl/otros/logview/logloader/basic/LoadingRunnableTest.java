@@ -255,7 +255,7 @@ public class LoadingRunnableTest {
     Assert.assertEquals(underTest.getLoadStatistic().getTotal(), 0);
   }
 
-  @Test
+  @Test(invocationCount = 10)
   public void testLoadStatisticAfterFullReadWithLogParser() throws Exception {
     logImporter = getJulLogParser();
     underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty());
