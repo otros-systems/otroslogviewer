@@ -141,6 +141,7 @@ project(':OtrosLogViewer-app') {
         compile project(':OtrosLogViewer-api')
         compile project(':ScalaFormatter')
         testCompile 'com.github.tomakehurst:wiremock:1.58'
+        testCompile 'org.awaitility:awaitility:2.0.0'
     }
     version = sharedVersion
 

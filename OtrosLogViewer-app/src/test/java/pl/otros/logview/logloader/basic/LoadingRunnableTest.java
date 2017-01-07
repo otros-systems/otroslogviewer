@@ -29,6 +29,11 @@ import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
+import static org.awaitility.Awaitility.*;
+import static org.awaitility.Duration.*   ;
+import static java.util.concurrent.TimeUnit.*;
+import static org.hamcrest.Matchers.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -273,12 +278,10 @@ public class LoadingRunnableTest {
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
-    Thread.sleep(SLEEP_TIME * 3);
-    final LoadStatistic loadStatistic = underTest.getLoadStatistic();
+
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getPosition() == julSimpleAvailableBytes);
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getTotal() == julSimpleAvailableBytes);
     underTest.stop();
-    LOGGER.info("Have loading statistic {}", loadStatistic);
-    Assert.assertEquals(loadStatistic.getPosition(), julSimpleAvailableBytes);
-    Assert.assertEquals(underTest.getLoadStatistic().getTotal(), julSimpleAvailableBytes);
   }
 
 
