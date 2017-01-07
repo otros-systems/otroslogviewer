@@ -5,7 +5,6 @@ import static org.testng.Assert.assertEquals;
 import java.util.Vector;
 
 import org.apache.log4j.spi.LoggingEvent;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class XMLDecoderTest {
@@ -18,7 +17,7 @@ public class XMLDecoderTest {
   public void testNestedCData() {
     XMLDecoder xmlDecoder = new XMLDecoder();
     String log4jEvent = EVENT_START;
-    for (String tag : new String[] { "log4j:message", "log4j:NDC", "log4j:throwable" }) {
+    for (String tag : new String[] { "log4j:message", "log4j:NDC", "log4j:MDC", "log4j:throwable" }) {
       log4jEvent = log4jEvent + String.format("<%1$s><![CDATA[%2$s]]></%1$s>", tag, CONTENT_WITH_CDATA);
     }
     log4jEvent = log4jEvent + EVENT_LOCATION + EVENT_END;
@@ -29,6 +28,7 @@ public class XMLDecoderTest {
     for (LoggingEvent event : events) {
       assertEquals(event.getMessage(), CONTENT_WITH_CDATA);
       assertEquals(event.getNDC(), CONTENT_WITH_CDATA);
+      assertEquals(event.getProperties().get(CONTENT_WITH_CDATA), "");
       assertEquals(event.getThrowableStrRep()[0], CONTENT_WITH_CDATA);
     }
   }
