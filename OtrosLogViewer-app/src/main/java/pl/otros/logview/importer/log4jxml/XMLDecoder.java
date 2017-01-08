@@ -17,6 +17,26 @@
 
 package pl.otros.logview.importer.log4jxml;
 
+import java.awt.Component;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.ProgressMonitorInputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LocationInfo;
@@ -24,23 +44,12 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 import org.apache.log4j.xml.Log4jEntityResolver;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.*;
 
 /**
  * Decodes Logging Events in XML formated into elements that are used by Chainsaw.
@@ -68,6 +77,9 @@ public class XMLDecoder {
    * Record end.
    */
   private static final String RECORD_END = "</log4j:event>";
+
+  
+  private static final Pattern KEY_OR_EOL_PATTERN = Pattern.compile("(\\s\\w+=|$)");
 
   /**
    * Document builder.
@@ -169,7 +181,7 @@ public class XMLDecoder {
   private String escapeNestedCData(String log4jEvents) {
     String escapedLog4jEvents = log4jEvents;
     
-    for (String tag : new String[] {"log4j:message", "log4j:NDC", "log4j:throwable"}) {
+    for (String tag : new String[] {"log4j:message", "log4j:NDC", "log4j:MDC", "log4j:throwable"}) {
       String startTag = "<" + tag + "><![CDATA[";
       int startIndex = escapedLog4jEvents.indexOf(startTag, 0);
       
@@ -353,18 +365,10 @@ public class XMLDecoder {
         // still support receiving of MDC and convert to properties
         if (tagName.equalsIgnoreCase("log4j:MDC")) {
           properties = new Hashtable();
-          NodeList propertyList = list.item(y).getChildNodes();
-          int propertyLength = propertyList.getLength();
-
-          for (int i = 0; i < propertyLength; i++) {
-            String propertyTag = propertyList.item(i).getNodeName();
-
-            if (propertyTag.equalsIgnoreCase("log4j:data")) {
-              Node property = propertyList.item(i);
-              String name = property.getAttributes().getNamedItem("name").getNodeValue();
-              String value = property.getAttributes().getNamedItem("value").getNodeValue();
-              properties.put(name, value);
-            }
+          if (((Element) list.item(y)).getElementsByTagName("log4j:data").getLength() > 0) {
+            decodePropertyChildNodes(properties, list.item(y));
+          } else {
+            decodePropertyString(properties, getCData(list.item(y)));
           }
         }
 
@@ -383,19 +387,7 @@ public class XMLDecoder {
           if (properties == null) {
             properties = new Hashtable();
           }
-          NodeList propertyList = list.item(y).getChildNodes();
-          int propertyLength = propertyList.getLength();
-
-          for (int i = 0; i < propertyLength; i++) {
-            String propertyTag = propertyList.item(i).getNodeName();
-
-            if (propertyTag.equalsIgnoreCase("log4j:data")) {
-              Node property = propertyList.item(i);
-              String name = property.getAttributes().getNamedItem("name").getNodeValue();
-              String value = property.getAttributes().getNamedItem("value").getNodeValue();
-              properties.put(name, value);
-            }
-          }
+          decodePropertyChildNodes(properties, list.item(y));
         }
 
         /**
@@ -452,6 +444,41 @@ public class XMLDecoder {
     }
 
     return events;
+  }
+
+  private void decodePropertyChildNodes(Hashtable<String, String> properties, Node mdcNode) {
+    NodeList propertyList = mdcNode.getChildNodes();
+    int propertyLength = propertyList.getLength();
+
+    for (int i = 0; i < propertyLength; i++) {
+      String propertyTag = propertyList.item(i).getNodeName();
+
+      if (propertyTag.equalsIgnoreCase("log4j:data")) {
+        Node property = propertyList.item(i);
+        String name = property.getAttributes().getNamedItem("name").getNodeValue();
+        String value = property.getAttributes().getNamedItem("value").getNodeValue();
+        properties.put(name, value);
+      }
+    }
+  }
+
+  private void decodePropertyString(Map<String, String> properties, String mdcString) {
+    Matcher matcher = KEY_OR_EOL_PATTERN.matcher(mdcString);
+    int startOfKey = 0;
+    while (matcher.find()) {
+      int endOfValue = matcher.start();
+      int seperator = mdcString.indexOf('=', startOfKey);
+      if (seperator != -1) {
+        String key = mdcString.substring(startOfKey, seperator);
+        String value = mdcString.substring(seperator + 1, endOfValue);
+        properties.put(key, value);
+      } else {
+        // handle corrupted key-value pair
+        String key = mdcString.substring(startOfKey, endOfValue);
+        properties.put(key, "");
+      }
+      startOfKey = endOfValue + 1; // skip the space
+    }
   }
 
   /**

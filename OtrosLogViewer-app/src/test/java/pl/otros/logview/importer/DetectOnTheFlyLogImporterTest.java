@@ -101,7 +101,7 @@ public void initialize() throws InitializationException, IOException {
 
   @Test
   public void testImportLog4jXml() throws IOException, InitializationException {
-    testImport("log4jXml.log", 6);
+    testImport("log4j/log4j_default.xml", 6);
   }
 
   @Test
