@@ -4,12 +4,17 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.services.Deserializer;
 import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.api.services.Serializer;
 
-import java.io.*;
-import java.util.Objects;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 
-//TODO temporary persist util, use jackson instead
 public class SerializePersisService implements PersistService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SerializePersisService.class.getName());
@@ -22,38 +27,37 @@ public class SerializePersisService implements PersistService {
   public SerializePersisService(File dir) {
     this.dir = dir;
     if (!dir.exists()) {
-      dir.mkdirs();
+      final boolean mkdirs = dir.mkdirs();
+      LOGGER.debug("Dirs {} created: {}", dir, mkdirs);
     }
   }
 
   @Override
-  public void persist(String key, Object o) throws Exception {
-    final File file = new File(dir, key + ".ser");
-    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, false))) {
-      outputStream.writeObject(o);
+  public <T> void persist(String key, T value, Serializer<T, String> serializer) throws Exception {
+    final File file = new File(dir, key + ".value");
+    try (Writer writer = new FileWriter(file, false)) {
+      writer.write(serializer.serialize(value));
+      LOGGER.debug("Successfully persisted value for {} in {}", key, file.getAbsolutePath());
     } catch (IOException e) {
+      LOGGER.warn("Can't persist value in file " + file.getAbsolutePath(), e);
       throw e;
     }
   }
 
   @Override
-  public <T> T load(String key, T defaultValue) {
-    final File file = new File(dir, key + ".ser");
+  public <T> T load(String key, T defaultValue, Deserializer<T, String> deserializer) {
+    final File file = new File(dir, key + ".value");
     if (!file.exists()) {
       return defaultValue;
     }
-
-    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-      final Object o = in.readObject();
-      if (o == null || !Objects.equals(o.getClass().getName(), defaultValue.getClass().getName())) {
-        LOGGER.warn("Read object is null or class different than default value: {}", o);
-        return defaultValue;
-      }
-      return (T) o;
-    } catch (IOException | ClassNotFoundException e) {
+    try (Reader in = (new FileReader(file))) {
+      final String string = IOUtils.toString(in);
+      return deserializer.deserialize(string).orElse(defaultValue);
+    } catch (IOException e) {
       LOGGER.warn("Can't read value for " + key, e);
       return defaultValue;
     }
   }
+
 }
 
