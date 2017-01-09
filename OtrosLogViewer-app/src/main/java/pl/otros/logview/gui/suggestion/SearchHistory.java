@@ -2,9 +2,7 @@ package pl.otros.logview.gui.suggestion;
 
 import pl.otros.logview.gui.actions.search.SearchAction;
 
-import java.io.Serializable;
-
-public class SearchHistory implements Serializable {
+public class SearchHistory {
   private SearchAction.SearchMode searchMode;
   private String query;
 
