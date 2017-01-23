@@ -42,6 +42,7 @@ import pl.otros.logview.gui.session.OpenMode;
 import pl.otros.logview.gui.session.Session;
 import pl.otros.logview.gui.session.SessionDeserializer;
 import pl.otros.logview.gui.session.SessionSerializer;
+import pl.otros.logview.gui.session.SessionUtil;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.swing.Progress;
@@ -74,6 +75,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -279,7 +281,7 @@ public class AdvanceOpenPanel extends JPanel {
             @Override
             protected void documentChanged(DocumentEvent e) {
               final boolean present = sessionNames.stream().anyMatch(s -> s.equals(textField.getText()));
-              if (present){
+              if (present) {
                 overwriteLabel.setText("You will overwrite session");
                 overwriteLabel.setIcon(Icons.LEVEL_WARNING);
               } else {
@@ -331,14 +333,14 @@ public class AdvanceOpenPanel extends JPanel {
           final JButton cancelButton = new JButton(cancelAction);
 
           final InputMap inputMap = contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-          inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),"close");
+          inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
           contentPanel.getActionMap().put("close", cancelAction);
 
-          contentPanel.add(label,"wrap, span, width 250:250:250");
-          contentPanel.add(textField,"wrap, growx, span");
-          contentPanel.add(overwriteLabel,"wrap, growx, span");
+          contentPanel.add(label, "wrap, span, width 250:250:250");
+          contentPanel.add(textField, "wrap, growx, span");
+          contentPanel.add(overwriteLabel, "wrap, growx, span");
           contentPanel.add(saveButton, "center, pushx");
-          contentPanel.add(cancelButton,"center, pushx, wrap");
+          contentPanel.add(cancelButton, "center, pushx, wrap");
           dialog.setContentPane(contentPanel);
           dialog.pack();
           GuiUtils.centerOnScreen(dialog);
@@ -349,14 +351,13 @@ public class AdvanceOpenPanel extends JPanel {
           JOptionPane.showMessageDialog(
               AdvanceOpenPanel.this,
               "Can't open saved sessions: " + e1.getMessage(),
-              "Error",JOptionPane.ERROR_MESSAGE);
+              "Error", JOptionPane.ERROR_MESSAGE);
         }
       }
     };
-    loadSession = new AbstractAction("Load session //TODO", Icons.FOLDER_OPEN) {
+    loadSession = new AbstractAction("Load session", Icons.FOLDER_OPEN) {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println("AdvanceOpenPanel.actionPerformed to implement");
         final PersistService persistService = otrosApplication.getServices().getPersistService();
         final List<Session> sessions = persistService.load("sessions", Collections.emptyList(), new SessionDeserializer());
         if (sessions.isEmpty()) {
@@ -365,60 +366,132 @@ public class AdvanceOpenPanel extends JPanel {
         }
         final Map<String, Session> sessionMap = sessions.stream().collect(Collectors.toMap(Session::getName, Function.identity(), (s1, s2) -> s1));
         final List<String> sessionNames = sessionMap.keySet().stream().sorted().collect(Collectors.toList());
-        //TODO files preview
-        String chosenSession = (String) JOptionPane.showInputDialog(AdvanceOpenPanel.this,
-            "Which session you want to load",
-            "Choose session",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            sessionNames.toArray(),
-            sessionNames.get(0));
-        if (chosenSession == null) {
-          return;
-        }
-        tableModel.clear();
-        new SwingWorker<List<FileToOpen>, FileObjectToImport>(){
+        JComboBox<String> sessionCbx = new JComboBox<>(new Vector<>(sessionNames));
+        final int biggestSession = sessionMap
+            .values()
+            .stream()
+            .map(SessionUtil::toStringGroupedByServer)
+            .mapToInt(s->s.split("\n").length)
+            .max().orElse(1);
+        final int longestName = sessionMap
+            .values()
+            .stream()
+            .flatMap(s -> s.getFilesToOpen().stream())
+            .mapToInt(f -> f.getUri().length())
+            .max()
+            .orElse(20);
+        final JTextArea jTextArea = new JTextArea(biggestSession + 1, longestName);
+        jTextArea.setEditable(false);
+        jTextArea.setBorder(BorderFactory.createTitledBorder("Files in session"));
+
+        sessionCbx.addActionListener((ActionEvent e13) -> {
+          final String sessionName = (String) sessionCbx.getSelectedItem();
+          final Session session = sessionMap.get(sessionName);
+          String text = SessionUtil.toStringGroupedByServer(session);
+          jTextArea.setText(text);
+        });
+        sessionCbx.setSelectedIndex(0);
+        final JLabel selectSessionLabel = new JLabel("Select session name:");
+        selectSessionLabel.setDisplayedMnemonic('S');
+        selectSessionLabel.setLabelFor(sessionCbx);
+
+        JDialog dialog = new JDialog(otrosApplication.getApplicationJFrame(), true);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        final JPanel contentPane = new JPanel(new MigLayout());
+
+        contentPane.add(selectSessionLabel);
+        contentPane.add(jTextArea, "wrap, span 1 2");
+        contentPane.add(sessionCbx,"wrap, aligny top");
+        Action loadAction = new AbstractAction("Load") {
           @Override
-          protected List<FileToOpen> doInBackground() throws Exception {
-            List<FileToOpen> failed = new ArrayList<>();
-            for (FileToOpen f : sessionMap.get(chosenSession).getFilesToOpen()) {
-              try {
-                final FileObject fileObject = VFSUtils.resolveFileObject(f.getUri());
-                final FileName name = fileObject.getName();
-                final FileSize fileSize = new FileSize(0);
-                final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED);
-                publish(toImport);
-              } catch (FileSystemException e1) {
-                LOGGER.error("Can't load file to session: ", e1);
-                failed.add(f);
+          public void actionPerformed(ActionEvent e) {
+            dialog.setVisible(false);
+            dialog.dispose();
+            showLoadingPanel();
+            String chosenSession = (String) sessionCbx.getSelectedItem();
+            tableModel.clear();
+            new SwingWorker<SessionLoadResult, Progress>() {
+              @Override
+              protected SessionLoadResult doInBackground() throws Exception {
+                List<FileToOpen> failed = new ArrayList<>();
+                List<FileObjectToImport> successFullyLoaded = new ArrayList<>();
+                for (FileToOpen f : sessionMap.get(chosenSession).getFilesToOpen()) {
+                  try {
+                    final FileObject fileObject = VFSUtils.resolveFileObject(f.getUri());
+                    final FileName name = fileObject.getName();
+                    final FileSize fileSize = new FileSize(0);
+                    final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED);
+                    successFullyLoaded.add(toImport);
+                  } catch (FileSystemException e1) {
+                    LOGGER.error("Can't load file to session: ", e1);
+                    failed.add(f);
+                  }
+                }
+                return new SessionLoadResult(chosenSession, failed, successFullyLoaded);
               }
-            }
-            return failed;
-          }
 
-          @Override
-          protected void process(List<FileObjectToImport> chunks) {
-            chunks.forEach(tableModel::add);
-          }
-
-          @Override
-          protected void done() {
-            try {
-              final List<FileToOpen> fileToOpens = get();
-              if (fileToOpens.size()>0){
-                final String msg = fileToOpens.stream()
-                    .map(FileToOpen::getUri)
-                    .collect(Collectors.joining("\n", "Failed to open files:\n", ""));
-                JOptionPane.showMessageDialog(AdvanceOpenPanel.this,new JTextArea(msg),"Error",JOptionPane.ERROR_MESSAGE);
-              } else {
-                otrosApplication.getStatusObserver().updateStatus("Session loaded");
+              @Override
+              protected void process(List<Progress> chunks) {
+                chunks.forEach(progress -> {
+                  loadingProgressBar.setMinimum(progress.getMin());
+                  loadingProgressBar.setMaximum(progress.getMax());
+                  loadingProgressBar.setValue(progress.getValue());
+                  progress.getMessage().ifPresent(loadingProgressBar::setString);
+                });
               }
 
-            } catch (InterruptedException | ExecutionException e1) {
-              e1.printStackTrace();
-            }
+              @Override
+              protected void done() {
+                try {
+                  final SessionLoadResult sessionLoadResult = get();
+                  final List<FileToOpen> fileToOpens = sessionLoadResult.getFailedToOpen();
+                  if (fileToOpens.size() > 0) {
+                    final String msg = fileToOpens.stream()
+                        .map(FileToOpen::getUri)
+                        .collect(Collectors.joining("\n", "Failed to open files:\n", ""));
+                    JOptionPane.showMessageDialog(AdvanceOpenPanel.this, new JTextArea(msg), "Error", JOptionPane.ERROR_MESSAGE);
+                  } else {
+                    otrosApplication.getStatusObserver().updateStatus("Session \"" + sessionLoadResult.getName() + "\" loaded");
+                  }
+                  final List<FileObjectToImport> successfullyOpened = sessionLoadResult.getSuccessfullyOpened();
+                  tableModel.add(successfullyOpened);
+                } catch (InterruptedException | ExecutionException e1) {
+                  e1.printStackTrace();
+                } finally {
+                  showMainPanel();
+                }
+              }
+            }.execute();
           }
-        }.execute();
+        };
+        final AbstractAction cancelLoadAction = new AbstractAction("Cancel") {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            dialog.setVisible(false);
+            dialog.dispose();
+          }
+        };
+
+        final JButton loadButton = new JButton(loadAction);
+        loadButton.setMnemonic('L');
+        loadButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"open");
+
+        final JButton cancelButton = new JButton(cancelLoadAction);
+        cancelButton.setMnemonic('C');
+
+        contentPane.getActionMap().put("close", cancelLoadAction);
+        contentPane.getActionMap().put("open", loadAction);
+        final InputMap inputMap = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
+
+        contentPane.add(loadButton);
+        contentPane.add(cancelButton);
+        dialog.setContentPane(contentPane);
+        dialog.pack();
+        GuiUtils.centerOnScreen(dialog);
+        dialog.setVisible(true);
+        comboBox.requestFocusInWindow();
+
 
       }
     };
@@ -468,6 +541,7 @@ public class AdvanceOpenPanel extends JPanel {
     importAction.setEnabled(false);
 
     final JButton importButton = new JButton(importAction);
+    importButton.setMnemonic('I');
     final Font font = importButton.getFont();
     importButton.setFont(font.deriveFont(font.getSize() * 2f));
     mainPanel.add(importButton, BorderLayout.SOUTH);
@@ -530,8 +604,11 @@ public class AdvanceOpenPanel extends JPanel {
 
     final JScrollPane scrollPane = new JScrollPane(table);
 
-    JPanel emptyView = new JPanel(new MigLayout("fill", "[center]", "[center]"));
-    emptyView.add(new JButton(addMoreFilesAction));
+    JPanel emptyView = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
+    emptyView.add(new JLabel(""),"wrap, pushy");
+    emptyView.add(new JButton(addMoreFilesAction),"wrap");
+    emptyView.add(new JButton(loadSession),"wrap");
+    emptyView.add(new JLabel(""),"wrap, pushy");
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
     tablePanel.add(scrollPane, CARD_TABLE);
@@ -554,12 +631,24 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
   private void initToolbar(JToolBar toolBar) {
-    toolBar.add(new JButton(addMoreFilesAction));
-    toolBar.add(new JButton(deleteSelectedAction));
-    toolBar.add(new JButton(selectedFromStart));
-    toolBar.add(new JButton(selectedFromEnd));
-    toolBar.add(new JButton(saveSession));
-    toolBar.add(new JButton(loadSession));
+    final JButton addButton = new JButton(addMoreFilesAction);
+    addButton.setMnemonic('A');
+    toolBar.add(addButton);
+    final JButton deleteButton = new JButton(deleteSelectedAction);
+    deleteButton.setMnemonic('D');
+    toolBar.add(deleteButton);
+    final JButton fromStartButton = new JButton(selectedFromStart);
+    fromStartButton.setMnemonic('t');
+    toolBar.add(fromStartButton);
+    final JButton fromEndButton = new JButton(selectedFromEnd);
+    fromEndButton.setMnemonic('E');
+    toolBar.add(fromEndButton);
+    final JButton saveSession = new JButton(this.saveSession);
+    saveSession.setMnemonic('S');
+    toolBar.add(saveSession);
+    final JButton loadSession = new JButton(this.loadSession);
+    loadSession.setMnemonic('L');
+    toolBar.add(loadSession);
   }
 
   private void initContextMenu(JTable table) {

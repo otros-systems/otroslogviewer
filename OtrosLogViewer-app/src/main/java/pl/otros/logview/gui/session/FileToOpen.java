@@ -1,5 +1,7 @@
 package pl.otros.logview.gui.session;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -52,6 +54,16 @@ public class FileToOpen {
     result = 31 * result + (level != null ? level.hashCode() : 0);
     result = 31 * result + (logImporter != null ? logImporter.hashCode() : 0);
     return result;
+  }
+
+  public String host(){
+    try {
+      final URI uri = new URI(this.uri);
+      final String host = uri.getHost();
+      return Optional.ofNullable(host).orElse("local file");
+    } catch (URISyntaxException e) {
+      return "local file";
+    }
   }
 
   @Override

@@ -12,6 +12,7 @@ import pl.otros.vfs.browser.table.FileSize;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +52,12 @@ class FileObjectToImportTableModel extends AbstractTableModel {
 
   public List<FileObjectToImport> getData() {
     return new ArrayList<>(data);
+  }
+
+  public void add(Collection<FileObjectToImport> fileObjectToImport) {
+    final int size = data.size();
+    data.addAll(fileObjectToImport);
+    fireTableRowsInserted(size, data.size() - 1);
   }
 
   public void add(FileObjectToImport fileObjectToImport) {
