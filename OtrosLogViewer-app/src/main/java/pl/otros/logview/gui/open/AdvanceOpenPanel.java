@@ -311,12 +311,13 @@ public class AdvanceOpenPanel extends JPanel {
                         f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
                 .collect(Collectors.toList());
             final Session session = new Session(sessionName, files);
-            sessions.add(session);
             dialog.setVisible(false);
             dialog.dispose();
             otrosApplication.getStatusObserver().updateStatus("Session saved as " + sessionName, StatusObserver.LEVEL_NORMAL);
             try {
-              persistService.persist("sessions", sessions, new SessionSerializer());
+              List<Session> toSave = new ArrayList(sessions);
+              toSave.add(session);
+              persistService.persist("sessions", toSave, new SessionSerializer());
             } catch (Exception e1) {
               e1.printStackTrace();
             }
