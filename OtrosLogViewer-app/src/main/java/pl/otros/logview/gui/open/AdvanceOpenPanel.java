@@ -12,11 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.RenamedLevel;
 import pl.otros.logview.accept.LevelHigherOrEqualAcceptCondition;
-import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.StatusObserver;
-import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.*;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
@@ -37,12 +33,7 @@ import pl.otros.logview.gui.renderers.ContentProbeRenderer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.LogImporterRenderer;
 import pl.otros.logview.gui.renderers.PossibleLogImportersRenderer;
-import pl.otros.logview.gui.session.FileToOpen;
-import pl.otros.logview.gui.session.OpenMode;
-import pl.otros.logview.gui.session.Session;
-import pl.otros.logview.gui.session.SessionDeserializer;
-import pl.otros.logview.gui.session.SessionSerializer;
-import pl.otros.logview.gui.session.SessionUtil;
+import pl.otros.logview.gui.session.*;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.swing.Progress;
@@ -61,21 +52,11 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -89,6 +70,7 @@ public class AdvanceOpenPanel extends JPanel {
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvanceOpenPanel.class.getName());
   private static final String CARD_TABLE = "table";
   private static final String CARD_EMPTY_VIEW = "emptyView";
+  public static final String SESSIONS = "sessions";
 
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
@@ -263,7 +245,7 @@ public class AdvanceOpenPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         final PersistService persistService = otrosApplication.getServices().getPersistService();
         try {
-          final List<Session> sessions = persistService.load("sessions", Collections.emptyList(), new SessionDeserializer());
+          final List<Session> sessions = persistService.load(SESSIONS, Collections.emptyList(), new SessionDeserializer());
           final Map<String, Session> sessionMap = sessions.stream().collect(Collectors.toMap(Session::getName, Function.identity(), (s1, s2) -> s1));
           final List<String> sessionNames = sessionMap.keySet().stream().sorted().collect(Collectors.toList());
 
@@ -299,30 +281,36 @@ public class AdvanceOpenPanel extends JPanel {
               true);
 
 
-          final JButton saveButton = new JButton("Save");
-          final ActionListener saveAction = e12 -> {
-            System.out.println("AdvanceOpenPanel.actionPerformed save");
-            String sessionName = textField.getText();
-            final List<FileObjectToImport> data = tableModel.getData();
-            List<FileToOpen> files = data.stream()
-                .map(f ->
-                    new FileToOpen(f.getFileName().getURI(),
-                        f.getOpenMode(), f.getLevel(),
-                        f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
-                .collect(Collectors.toList());
-            final Session session = new Session(sessionName, files);
-            dialog.setVisible(false);
-            dialog.dispose();
-            otrosApplication.getStatusObserver().updateStatus("Session saved as " + sessionName, StatusObserver.LEVEL_NORMAL);
-            try {
-              List<Session> toSave = new ArrayList(sessions);
-              toSave.add(session);
-              persistService.persist("sessions", toSave, new SessionSerializer());
-            } catch (Exception e1) {
-              e1.printStackTrace();
+
+          final AbstractAction saveAction = new AbstractAction("Save") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              String sessionName = textField.getText();
+              final List<FileObjectToImport> data = tableModel.getData();
+              List<FileToOpen> files = data.stream()
+                      .map(f ->
+                              new FileToOpen(f.getFileName().getURI(),
+                                      f.getOpenMode(), f.getLevel(),
+                                      f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
+                      .collect(Collectors.toList());
+              final Session session = new Session(sessionName, files);
+              dialog.setVisible(false);
+              dialog.dispose();
+              otrosApplication.getStatusObserver().updateStatus("Session saved as " + sessionName, StatusObserver.LEVEL_NORMAL);
+              try {
+                final List<Session> withoutDuplicate = sessions.stream().filter(s -> !s.getName().equals(sessionName)).collect(Collectors.toList());
+                ArrayList<Session> toSave = new ArrayList<Session>(withoutDuplicate);
+                toSave.add(session);
+                persistService.persist("sessions", toSave, new SessionSerializer());
+              } catch (Exception e1) {
+                e1.printStackTrace();
+              }
             }
+
           };
+
           textField.addActionListener(saveAction);
+          final JButton saveButton = new JButton(saveAction);
           saveButton.addActionListener(saveAction);
 
           final AbstractAction cancelAction = new AbstractAction("Cancel") {
@@ -553,26 +541,16 @@ public class AdvanceOpenPanel extends JPanel {
         for (int i = firstRow; i <= lastRow; i++) {
           final FileObjectToImport fileObjectAt = tableModel.getFileObjectToImport(i);
           LOGGER.info("Added " + fileObjectAt + " to table");
-          class AddingDetail {
-            AddingDetail(CanParse canParse, PossibleLogImporters possibleLogImporters, ContentProbe contentProbe) {
-              this.canParse = canParse;
-              this.possibleLogImporters = possibleLogImporters;
-              this.contentProbe = contentProbe;
-            }
 
-            CanParse canParse;
-            PossibleLogImporters possibleLogImporters;
-            ContentProbe contentProbe;
-          }
           final SwingWorker<Void, AddingDetail> swingWorker = new SwingWorker<Void, AddingDetail>() {
 
             @Override
             protected void process(List<AddingDetail> chunks) {
               chunks.forEach(c -> {
                 final FileObject fileObject = fileObjectAt.getFileObject();
-                tableModel.setCanParse(fileObject, c.canParse);
-                tableModel.setContent(fileObject, c.contentProbe);
-                tableModel.setPossibleLogImporters(fileObject, c.possibleLogImporters);
+                tableModel.setCanParse(fileObject, c.getCanParse());
+                tableModel.setContent(fileObject, c.getContentProbe());
+                tableModel.setPossibleLogImporters(fileObject, c.getPossibleLogImporters());
               });
             }
 

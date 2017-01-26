@@ -25,14 +25,24 @@ public class MutableListModel<T> extends AbstractListModel {
     return list.get(index);
   }
 
+  public void clear(){
+    final int size = list.size();
+    list.clear();
+    if (size > 0){
+      fireIntervalRemoved(this,0, size-1);
+    }
+  }
+
   public void add(T element) {
     list.add(element);
     fireIntervalAdded(this, list.size() - 1, list.size() - 1);
   }
   public void addAll(Collection<T> elements) {
-    final int size = list.size()-1;
+    final int size = list.size();
     list.addAll(elements);
-    fireIntervalAdded(this, size, list.size()-1);
+    fireIntervalAdded(this, size, list.size() - 1);
+
+
   }
 
   public void remove(int index) {

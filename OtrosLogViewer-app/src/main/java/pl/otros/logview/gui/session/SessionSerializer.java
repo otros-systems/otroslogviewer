@@ -6,8 +6,10 @@ import org.apache.sling.commons.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -17,7 +19,8 @@ public class SessionSerializer implements pl.otros.logview.api.services.Serializ
 
   @Override
   public String serialize(List<Session> sessions) {
-    List<JSONObject> objects = sessions.stream().map(s -> {
+    Collection<Session> withoutDuplicates = sessions.stream().collect(Collectors.toMap(Session::getName, Function.identity())).values();
+    List<JSONObject> objects = withoutDuplicates.stream().map(s -> {
       final HashMap<String, Object> map = new HashMap<>();
       map.put("name", s.getName());
       final List<JSONObject> files = s.getFilesToOpen().stream().map(f -> {
