@@ -389,7 +389,7 @@ public class AdvanceOpenPanel extends JPanel {
         final JPanel contentPane = new JPanel(new MigLayout());
 
         contentPane.add(selectSessionLabel);
-        contentPane.add(jTextArea, "wrap, span 1 2");
+        contentPane.add(new JScrollPane(jTextArea), "wrap, span 1 2");
         contentPane.add(sessionCbx,"wrap, aligny top");
         Action loadAction = new AbstractAction("Load") {
           @Override
@@ -408,7 +408,7 @@ public class AdvanceOpenPanel extends JPanel {
                   try {
                     final FileObject fileObject = VFSUtils.resolveFileObject(f.getUri());
                     final FileName name = fileObject.getName();
-                    final FileSize fileSize = new FileSize(0);
+                    final FileSize fileSize = new FileSize(fileObject.getContent().getSize());
                     final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED);
                     successFullyLoaded.add(toImport);
                   } catch (FileSystemException e1) {
@@ -680,7 +680,7 @@ public class AdvanceOpenPanel extends JPanel {
               f.getName(),
               new FileSize(f.getContent().getSize()),
               Level.FINEST,
-              OpenMode.FROM_END,
+              OpenMode.FROM_START,
               CanParse.NOT_TESTED);
           publish(fileObjectToImport);
         }
