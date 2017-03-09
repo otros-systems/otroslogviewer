@@ -32,6 +32,7 @@ subprojects {
         testCompile 'org.testng:testng:6.8.8'
         testCompile 'org.mockito:mockito-core:1.9.0'
         testCompile 'org.assertj:assertj-core:3.6.1'
+        testCompile 'uk.co.datumedge:hamcrest-json:0.2'
     }
     repositories {
         mavenCentral()
