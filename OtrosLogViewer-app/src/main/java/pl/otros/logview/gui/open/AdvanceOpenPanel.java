@@ -1,19 +1,18 @@
-package pl.otros.logview.gui;
+package pl.otros.logview.gui.open;
 
-import com.google.common.primitives.Ints;
+import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
+import org.jdesktop.swingx.JXTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.RenamedLevel;
 import pl.otros.logview.accept.LevelHigherOrEqualAcceptCondition;
-import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.*;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
@@ -26,48 +25,52 @@ import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
+import pl.otros.logview.api.pluginable.PluginableElement;
+import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.gui.GuiUtils;
+import pl.otros.logview.gui.PopupListener;
 import pl.otros.logview.gui.renderers.ContentProbeRenderer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 import pl.otros.logview.gui.renderers.LogImporterRenderer;
 import pl.otros.logview.gui.renderers.PossibleLogImportersRenderer;
+import pl.otros.logview.gui.session.*;
+import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
-import pl.otros.swing.Named;
 import pl.otros.swing.Progress;
 import pl.otros.swing.renderer.NamedTableRenderer;
+import pl.otros.swing.suggest.SuggestDecorator;
+import pl.otros.swing.suggest.SuggestionSource;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.table.FileSize;
 import pl.otros.vfs.browser.table.FileSizeTableCellRenderer;
+import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 public class AdvanceOpenPanel extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AdvanceOpenPanel.class.getName());
   private static final String CARD_TABLE = "table";
   private static final String CARD_EMPTY_VIEW = "emptyView";
+  public static final String SESSIONS = "sessions";
 
   private final FileObjectToImportTableModel tableModel;
   private final AbstractAction importAction;
@@ -79,45 +82,14 @@ public class AdvanceOpenPanel extends JPanel {
   private final AbstractAction selectedFromStart;
   private final AbstractAction selectedFromEnd;
   private final HashMap<OpenMode, Icon> openModeIcons;
-
-
-  enum OpenMode implements Named {
-    FROM_START("From start"), FROM_END("From end");
-    private String name;
-
-    OpenMode(String name) {
-      this.name = name;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    @Override
-    public String toString() {
-      return getName();
-    }
-  }
-
-  enum CanParse implements Named {
-    YES("Yes"), NO("No"), FILE_TOO_SMALL("File too small"), NOT_TESTED("Not checked"), TESTING("Checking"), TESTING_ERROR("Testing error");
-    private String name;
-
-    CanParse(String name) {
-      this.name = name;
-    }
-
-    public String getName() {
-      return name;
-    }
-  }
-
+  private final AbstractAction saveSession;
+  private final AbstractAction loadSession;
 
   //TODO columns widths
   //TODO tail from last xxxx KB
   //TODO create log parser pattern if some logs can't be parsed
-  //TODO save state
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
+
     openModeIcons = new HashMap<>();
     openModeIcons.put(OpenMode.FROM_START, Icons.FROM_START);
     openModeIcons.put(OpenMode.FROM_END, Icons.FROM_END);
@@ -178,7 +150,7 @@ public class AdvanceOpenPanel extends JPanel {
     });
 
     final DefaultListCellRenderer openModeRenderer = new OpenModeListCellRenderer();
-    table.setDefaultRenderer(OpenMode.class, new OpenModeTableCellRenderer());
+    table.setDefaultRenderer(OpenMode.class, new OpenModeTableCellRenderer(this));
     final JComboBox openModeCbx = new JComboBox(OpenMode.values());
     openModeCbx.setRenderer(openModeRenderer);
     table.setDefaultEditor(OpenMode.class, new DefaultCellEditor(openModeCbx));
@@ -268,7 +240,250 @@ public class AdvanceOpenPanel extends JPanel {
       }
     };
     selectedFromEnd.setEnabled(false);
+    saveSession = new AbstractAction("Save session", Icons.DISK) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        final PersistService persistService = otrosApplication.getServices().getPersistService();
+        try {
+          final List<Session> sessions = persistService.load(SESSIONS, Collections.emptyList(), new SessionDeserializer());
+          final Map<String, Session> sessionMap = sessions.stream().collect(Collectors.toMap(Session::getName, Function.identity(), (s1, s2) -> s1));
+          final List<String> sessionNames = sessionMap.keySet().stream().sorted().collect(Collectors.toList());
 
+          final JDialog dialog = new JDialog(otrosApplication.getApplicationJFrame());
+          dialog.setModal(true);
+          dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+          final JPanel contentPanel = new JPanel(new MigLayout(new LC().fill().width("100%")));
+          final JLabel label = new JLabel("Enter session name:");
+          final JXTextField textField = new JXTextField("session name");
+          textField.setColumns(40);
+          label.setDisplayedMnemonic('n');
+          label.setLabelFor(textField);
+          final JLabel overwriteLabel = new JLabel(" ");
+          textField.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+            @Override
+            protected void documentChanged(DocumentEvent e) {
+              final boolean present = sessionNames.stream().anyMatch(s -> s.equals(textField.getText()));
+              if (present) {
+                overwriteLabel.setText("You will overwrite session");
+                overwriteLabel.setIcon(Icons.LEVEL_WARNING);
+              } else {
+                overwriteLabel.setText(" ");
+                overwriteLabel.setIcon(null);
+              }
+            }
+          });
+
+          final SuggestionSource<String> suggestionSource = query -> sessionNames.stream().filter(s -> s.contains(query.getValue())).collect(Collectors.toList());
+          SuggestDecorator.decorate(textField,
+              suggestionSource,
+              JLabel::new,
+              value -> textField.setText(value.getValue()),
+              true);
+
+
+
+          final AbstractAction saveAction = new AbstractAction("Save") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              String sessionName = textField.getText();
+              final List<FileObjectToImport> data = tableModel.getData();
+              List<FileToOpen> files = data.stream()
+                      .map(f ->
+                              new FileToOpen(f.getFileName().getURI(),
+                                      f.getOpenMode(), f.getLevel(),
+                                      f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
+                      .collect(Collectors.toList());
+              final Session session = new Session(sessionName, files);
+              dialog.setVisible(false);
+              dialog.dispose();
+              otrosApplication.getStatusObserver().updateStatus("Session saved as " + sessionName, StatusObserver.LEVEL_NORMAL);
+              try {
+                final List<Session> withoutDuplicate = sessions.stream().filter(s -> !s.getName().equals(sessionName)).collect(Collectors.toList());
+                ArrayList<Session> toSave = new ArrayList<Session>(withoutDuplicate);
+                toSave.add(session);
+                persistService.persist("sessions", toSave, new SessionSerializer());
+              } catch (Exception e1) {
+                e1.printStackTrace();
+              }
+            }
+
+          };
+
+          textField.addActionListener(saveAction);
+          final JButton saveButton = new JButton(saveAction);
+          saveButton.addActionListener(saveAction);
+
+          final AbstractAction cancelAction = new AbstractAction("Cancel") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              dialog.setVisible(false);
+            }
+          };
+          final JButton cancelButton = new JButton(cancelAction);
+
+          final InputMap inputMap = contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+          inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
+          contentPanel.getActionMap().put("close", cancelAction);
+
+          contentPanel.add(label, "wrap, span, width 250:250:250");
+          contentPanel.add(textField, "wrap, growx, span");
+          contentPanel.add(overwriteLabel, "wrap, growx, span");
+          contentPanel.add(saveButton, "center, pushx");
+          contentPanel.add(cancelButton, "center, pushx, wrap");
+          dialog.setContentPane(contentPanel);
+          dialog.pack();
+          GuiUtils.centerOnScreen(dialog);
+          dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+          dialog.setVisible(true);
+        } catch (Exception e1) {
+          LOGGER.error("Can't load sessions from persist service", e1);
+          JOptionPane.showMessageDialog(
+              AdvanceOpenPanel.this,
+              "Can't open saved sessions: " + e1.getMessage(),
+              "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    };
+    loadSession = new AbstractAction("Load session", Icons.FOLDER_OPEN) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        final PersistService persistService = otrosApplication.getServices().getPersistService();
+        final List<Session> sessions = persistService.load("sessions", Collections.emptyList(), new SessionDeserializer());
+        if (sessions.isEmpty()) {
+          JOptionPane.showMessageDialog(AdvanceOpenPanel.this, "There is no saved session");
+          return;
+        }
+        final Map<String, Session> sessionMap = sessions.stream().collect(Collectors.toMap(Session::getName, Function.identity(), (s1, s2) -> s1));
+        final List<String> sessionNames = sessionMap.keySet().stream().sorted().collect(Collectors.toList());
+        JComboBox<String> sessionCbx = new JComboBox<>(new Vector<>(sessionNames));
+        final int biggestSession = sessionMap
+            .values()
+            .stream()
+            .map(SessionUtil::toStringGroupedByServer)
+            .mapToInt(s->s.split("\n").length)
+            .max().orElse(1);
+        final int longestName = sessionMap
+            .values()
+            .stream()
+            .flatMap(s -> s.getFilesToOpen().stream())
+            .mapToInt(f -> f.getUri().length())
+            .max()
+            .orElse(20);
+        final JTextArea jTextArea = new JTextArea(biggestSession + 1, longestName);
+        jTextArea.setEditable(false);
+        jTextArea.setBorder(BorderFactory.createTitledBorder("Files in session"));
+
+        sessionCbx.addActionListener((ActionEvent e13) -> {
+          final String sessionName = (String) sessionCbx.getSelectedItem();
+          final Session session = sessionMap.get(sessionName);
+          String text = SessionUtil.toStringGroupedByServer(session);
+          jTextArea.setText(text);
+        });
+        sessionCbx.setSelectedIndex(0);
+        final JLabel selectSessionLabel = new JLabel("Select session name:");
+        selectSessionLabel.setDisplayedMnemonic('S');
+        selectSessionLabel.setLabelFor(sessionCbx);
+
+        JDialog dialog = new JDialog(otrosApplication.getApplicationJFrame(), true);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        final JPanel contentPane = new JPanel(new MigLayout());
+
+        contentPane.add(selectSessionLabel);
+        contentPane.add(new JScrollPane(jTextArea), "wrap, span 1 2");
+        contentPane.add(sessionCbx,"wrap, aligny top");
+        Action loadAction = new AbstractAction("Load") {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            dialog.setVisible(false);
+            dialog.dispose();
+            showLoadingPanel();
+            String chosenSession = (String) sessionCbx.getSelectedItem();
+            tableModel.clear();
+            new SwingWorker<SessionLoadResult, Progress>() {
+              @Override
+              protected SessionLoadResult doInBackground() throws Exception {
+                List<FileToOpen> failed = new ArrayList<>();
+                List<FileObjectToImport> successFullyLoaded = new ArrayList<>();
+                for (FileToOpen f : sessionMap.get(chosenSession).getFilesToOpen()) {
+                  try {
+                    final FileObject fileObject = VFSUtils.resolveFileObject(f.getUri());
+                    final FileName name = fileObject.getName();
+                    final FileSize fileSize = new FileSize(fileObject.getContent().getSize());
+                    final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED);
+                    successFullyLoaded.add(toImport);
+                  } catch (FileSystemException e1) {
+                    LOGGER.error("Can't load file to session: ", e1);
+                    failed.add(f);
+                  }
+                }
+                return new SessionLoadResult(chosenSession, failed, successFullyLoaded);
+              }
+
+              @Override
+              protected void process(List<Progress> chunks) {
+                chunks.forEach(progress -> {
+                  loadingProgressBar.setMinimum(progress.getMin());
+                  loadingProgressBar.setMaximum(progress.getMax());
+                  loadingProgressBar.setValue(progress.getValue());
+                  progress.getMessage().ifPresent(loadingProgressBar::setString);
+                });
+              }
+
+              @Override
+              protected void done() {
+                try {
+                  final SessionLoadResult sessionLoadResult = get();
+                  final List<FileToOpen> fileToOpens = sessionLoadResult.getFailedToOpen();
+                  if (fileToOpens.size() > 0) {
+                    final String msg = fileToOpens.stream()
+                        .map(FileToOpen::getUri)
+                        .collect(Collectors.joining("\n", "Failed to open files:\n", ""));
+                    JOptionPane.showMessageDialog(AdvanceOpenPanel.this, new JTextArea(msg), "Error", JOptionPane.ERROR_MESSAGE);
+                  } else {
+                    otrosApplication.getStatusObserver().updateStatus("Session \"" + sessionLoadResult.getName() + "\" loaded");
+                  }
+                  final List<FileObjectToImport> successfullyOpened = sessionLoadResult.getSuccessfullyOpened();
+                  tableModel.add(successfullyOpened);
+                } catch (InterruptedException | ExecutionException e1) {
+                  e1.printStackTrace();
+                } finally {
+                  showMainPanel();
+                }
+              }
+            }.execute();
+          }
+        };
+        final AbstractAction cancelLoadAction = new AbstractAction("Cancel") {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            dialog.setVisible(false);
+            dialog.dispose();
+          }
+        };
+
+        final JButton loadButton = new JButton(loadAction);
+        loadButton.setMnemonic('L');
+        loadButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"open");
+
+        final JButton cancelButton = new JButton(cancelLoadAction);
+        cancelButton.setMnemonic('C');
+
+        contentPane.getActionMap().put("close", cancelLoadAction);
+        contentPane.getActionMap().put("open", loadAction);
+        final InputMap inputMap = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
+
+        contentPane.add(loadButton);
+        contentPane.add(cancelButton);
+        dialog.setContentPane(contentPane);
+        dialog.pack();
+        GuiUtils.centerOnScreen(dialog);
+        dialog.setVisible(true);
+        comboBox.requestFocusInWindow();
+
+
+      }
+    };
 
     table.getActionMap().put("DELETE", deleteSelectedAction);
     table.getColumn("Size").setMaxWidth(100);
@@ -293,7 +508,7 @@ public class AdvanceOpenPanel extends JPanel {
         final List<Optional<LogImporter>> logImporters = tableModel.getData()
             .stream()
             .map(l -> l.getPossibleLogImporters().getLogImporter())
-            .collect(Collectors.toList());
+            .collect(toList());
 
         final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper(
             "Multiple log files " + rowCount,
@@ -315,6 +530,7 @@ public class AdvanceOpenPanel extends JPanel {
     importAction.setEnabled(false);
 
     final JButton importButton = new JButton(importAction);
+    importButton.setMnemonic('I');
     final Font font = importButton.getFont();
     importButton.setFont(font.deriveFont(font.getSize() * 2f));
     mainPanel.add(importButton, BorderLayout.SOUTH);
@@ -325,26 +541,16 @@ public class AdvanceOpenPanel extends JPanel {
         for (int i = firstRow; i <= lastRow; i++) {
           final FileObjectToImport fileObjectAt = tableModel.getFileObjectToImport(i);
           LOGGER.info("Added " + fileObjectAt + " to table");
-          class AddingDetail {
-            AddingDetail(CanParse canParse, PossibleLogImporters possibleLogImporters, ContentProbe contentProbe) {
-              this.canParse = canParse;
-              this.possibleLogImporters = possibleLogImporters;
-              this.contentProbe = contentProbe;
-            }
 
-            CanParse canParse;
-            PossibleLogImporters possibleLogImporters;
-            ContentProbe contentProbe;
-          }
           final SwingWorker<Void, AddingDetail> swingWorker = new SwingWorker<Void, AddingDetail>() {
 
             @Override
             protected void process(List<AddingDetail> chunks) {
               chunks.forEach(c -> {
                 final FileObject fileObject = fileObjectAt.getFileObject();
-                tableModel.setCanParse(fileObject, c.canParse);
-                tableModel.setContent(fileObject, c.contentProbe);
-                tableModel.setPossibleLogImporters(fileObject, c.possibleLogImporters);
+                tableModel.setCanParse(fileObject, c.getCanParse());
+                tableModel.setContent(fileObject, c.getContentProbe());
+                tableModel.setPossibleLogImporters(fileObject, c.getPossibleLogImporters());
               });
             }
 
@@ -377,8 +583,11 @@ public class AdvanceOpenPanel extends JPanel {
 
     final JScrollPane scrollPane = new JScrollPane(table);
 
-    JPanel emptyView = new JPanel(new MigLayout("fill", "[center]", "[center]"));
-    emptyView.add(new JButton(addMoreFilesAction));
+    JPanel emptyView = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
+    emptyView.add(new JLabel(""),"wrap, pushy");
+    emptyView.add(new JButton(addMoreFilesAction),"wrap");
+    emptyView.add(new JButton(loadSession),"wrap");
+    emptyView.add(new JLabel(""),"wrap, pushy");
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
     tablePanel.add(scrollPane, CARD_TABLE);
@@ -401,10 +610,24 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
   private void initToolbar(JToolBar toolBar) {
-    toolBar.add(new JButton(addMoreFilesAction));
-    toolBar.add(new JButton(deleteSelectedAction));
-    toolBar.add(new JButton(selectedFromStart));
-    toolBar.add(new JButton(selectedFromEnd));
+    final JButton addButton = new JButton(addMoreFilesAction);
+    addButton.setMnemonic('A');
+    toolBar.add(addButton);
+    final JButton deleteButton = new JButton(deleteSelectedAction);
+    deleteButton.setMnemonic('D');
+    toolBar.add(deleteButton);
+    final JButton fromStartButton = new JButton(selectedFromStart);
+    fromStartButton.setMnemonic('t');
+    toolBar.add(fromStartButton);
+    final JButton fromEndButton = new JButton(selectedFromEnd);
+    fromEndButton.setMnemonic('E');
+    toolBar.add(fromEndButton);
+    final JButton saveSession = new JButton(this.saveSession);
+    saveSession.setMnemonic('S');
+    toolBar.add(saveSession);
+    final JButton loadSession = new JButton(this.loadSession);
+    loadSession.setMnemonic('L');
+    toolBar.add(loadSession);
   }
 
   private void initContextMenu(JTable table) {
@@ -457,7 +680,7 @@ public class AdvanceOpenPanel extends JPanel {
               f.getName(),
               new FileSize(f.getContent().getSize()),
               Level.FINEST,
-              OpenMode.FROM_END,
+              OpenMode.FROM_START,
               CanParse.NOT_TESTED);
           publish(fileObjectToImport);
         }
@@ -503,8 +726,8 @@ public class AdvanceOpenPanel extends JPanel {
         showMainPanel();
         throw e1;
       }
-      final List<FileObjectToImport> fileObjects = IntStream.range(0, tableModel.getRowCount()).mapToObj(tableModel::getFileObjectToImport).collect(Collectors
-          .toList());
+      final List<FileObjectToImport> fileObjects = IntStream.range(0, tableModel.getRowCount()).mapToObj(tableModel::getFileObjectToImport).collect(
+          toList());
       ArrayList<LoadingBean> loadingBeans = new ArrayList<>();
       int progress = 0;
       for (final FileObjectToImport file : fileObjects) {
@@ -578,258 +801,21 @@ public class AdvanceOpenPanel extends JPanel {
     }
   }
 
-  private class OpenModeTableCellRenderer extends DefaultTableCellRenderer {
+  class OpenModeTableCellRenderer extends DefaultTableCellRenderer {
+
+    private AdvanceOpenPanel advanceOpenPanel;
+
+    public OpenModeTableCellRenderer(AdvanceOpenPanel advanceOpenPanel) {
+      this.advanceOpenPanel = advanceOpenPanel;
+    }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       final Component listCellRendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       JLabel l = (JLabel) listCellRendererComponent;
-      l.setIcon(openModeIcons.get(value));
+      l.setIcon(advanceOpenPanel.openModeIcons.get(value));
       return listCellRendererComponent;
     }
   }
-}
 
-class FileObjectToImportTableModel extends AbstractTableModel {
-
-  private static final int COLUMN_NAME = 0;
-  private static final int COLUMN_SIZE = 1;
-  private static final int COLUMN_LEVEL = 2;
-  private static final int COLUMN_OPEN_MODE = 3;
-  private static final int COLUMN_CAN_PARSE = 4;
-  private static final int COLUMN_POSSIBLE_IMPORTER = 5;
-  private static final int COLUMN_CONTENT = 6;
-  private static final String[] columnNames = new String[]{"Name", "Size", "Level threshold", "Open mode", "Can parse", "Log importer", "Content"};
-
-  private java.util.List<FileObjectToImport> data = new ArrayList<>();
-  private final HashMap<Integer, Class> columnClasses;
-  private final HashSet<Integer> editableColumns;
-
-  FileObjectToImportTableModel() {
-    columnClasses = new HashMap<>();
-    columnClasses.put(COLUMN_NAME, FileName.class);
-    columnClasses.put(COLUMN_SIZE, FileSize.class);
-    columnClasses.put(COLUMN_LEVEL, Level.class);
-    columnClasses.put(COLUMN_OPEN_MODE, AdvanceOpenPanel.OpenMode.class);
-    columnClasses.put(COLUMN_CAN_PARSE, AdvanceOpenPanel.CanParse.class);
-    columnClasses.put(COLUMN_POSSIBLE_IMPORTER, PossibleLogImporters.class);
-    columnClasses.put(COLUMN_CONTENT, ContentProbe.class);
-    editableColumns = new HashSet<>();
-    editableColumns.add(COLUMN_OPEN_MODE);
-    editableColumns.add(COLUMN_LEVEL);
-    editableColumns.add(COLUMN_POSSIBLE_IMPORTER);
-  }
-
-  public List<FileObjectToImport> getData() {
-    return new ArrayList<>(data);
-  }
-
-  public void add(FileObjectToImport fileObjectToImport) {
-    data.add(fileObjectToImport);
-    fireTableRowsInserted(data.size() - 1, data.size() - 1);
-  }
-
-  void delete(int... rows) {
-    Arrays.sort(rows);
-    final List<Integer> rowsList = Ints.asList(rows);
-    Collections.reverse(rowsList);
-    rowsList.forEach(row -> {
-      data.remove(row.intValue());
-      fireTableRowsDeleted(row, row);
-    });
-  }
-
-
-  @Override
-  public int getRowCount() {
-    return data.size();
-  }
-
-  @Override
-  public int getColumnCount() {
-    return columnNames.length;
-  }
-
-  @Override
-  public Object getValueAt(int rowIndex, int columnIndex) {
-    final FileObjectToImport fileObjectToImport = data.get(rowIndex);
-    if (columnIndex == COLUMN_NAME) {
-      return fileObjectToImport.getFileName();
-    } else if (columnIndex == COLUMN_SIZE) {
-      return fileObjectToImport.getFileSize();
-    } else if (columnIndex == COLUMN_OPEN_MODE) {
-      return fileObjectToImport.getOpenMode();
-    } else if (columnIndex == COLUMN_LEVEL) {
-      return fileObjectToImport.getLevel();
-    } else if (columnIndex == COLUMN_CAN_PARSE) {
-      return fileObjectToImport.getCanParse();
-    } else if (columnIndex == COLUMN_POSSIBLE_IMPORTER) {
-      return fileObjectToImport.getPossibleLogImporters();
-    } else if (columnIndex == COLUMN_CONTENT) {
-      return fileObjectToImport.getContent();
-    }
-    return "";
-  }
-
-  @Override
-  public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-    final FileObjectToImport fileObjectToImport = data.get(rowIndex);
-    if (columnIndex == COLUMN_OPEN_MODE) {
-      fileObjectToImport.setOpenMode((AdvanceOpenPanel.OpenMode) aValue);
-    } else if (columnIndex == COLUMN_LEVEL) {
-      fileObjectToImport.setLevel((Level) aValue);
-    } else if (columnIndex == COLUMN_POSSIBLE_IMPORTER) {
-      LogImporter logImporter = (LogImporter) aValue;
-      final PossibleLogImporters possibleLogImporters = fileObjectToImport.getPossibleLogImporters();
-      possibleLogImporters.setLogImporter(Optional.of(logImporter));
-    }
-    fireTableCellUpdated(rowIndex, columnIndex);
-  }
-
-  @Override
-  public String getColumnName(int column) {
-    return columnNames[column];
-  }
-
-  @Override
-  public boolean isCellEditable(int rowIndex, int columnIndex) {
-    return editableColumns.contains(columnIndex);
-  }
-
-  FileObjectToImport getFileObjectToImport(int rowIndex) {
-    return data.get(rowIndex);
-  }
-
-  @Override
-  public Class<?> getColumnClass(int columnIndex) {
-    return columnClasses.get(columnIndex);
-  }
-
-  void setCanParse(FileObject fileObject, AdvanceOpenPanel.CanParse canParse) {
-    for (int i = 0; i < data.size(); i++) {
-      FileObjectToImport f = data.get(i);
-      if (f.getFileObject().equals(fileObject)) {
-        f.setCanParse(canParse);
-        fireTableCellUpdated(i, COLUMN_CAN_PARSE);
-      }
-    }
-  }
-
-  void setContent(FileObject fileObject, ContentProbe contentProbe) {
-    for (int i = 0; i < data.size(); i++) {
-      FileObjectToImport f = data.get(i);
-      if (f.getFileObject().equals(fileObject)) {
-        f.setContent(contentProbe);
-        fireTableCellUpdated(i, COLUMN_CONTENT);
-      }
-    }
-  }
-
-  void setPossibleLogImporters(FileObject fileObject, PossibleLogImporters possibleLogImporters) {
-    for (int i = 0; i < data.size(); i++) {
-      FileObjectToImport f = data.get(i);
-      if (f.getFileObject().equals(fileObject)) {
-        f.setPossibleLogImporters(possibleLogImporters);
-        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
-      }
-    }
-  }
-
-  void setOpenMode(FileObject fileObject, AdvanceOpenPanel.OpenMode openMode) {
-    for (int i = 0; i < data.size(); i++) {
-      FileObjectToImport f = data.get(i);
-      if (f.getFileObject().equals(fileObject)) {
-        f.setOpenMode(openMode);
-        fireTableCellUpdated(i, COLUMN_POSSIBLE_IMPORTER);
-      }
-    }
-  }
-
-  public boolean contains(FileObject fileObject) {
-    return data.stream().anyMatch(f -> f.getFileObject().equals(fileObject));
-  }
-}
-
-class LoadingBean {
-
-  LoadingBean(FileObjectToImport fileObjectToImport, LoadingInfo loadingInfo) {
-    this.fileObjectToImport = fileObjectToImport;
-    this.loadingInfo = loadingInfo;
-  }
-
-  FileObjectToImport fileObjectToImport;
-  LoadingInfo loadingInfo;
-}
-
-class FileObjectToImport {
-  private final FileObject fileObject;
-  private final FileName fileName;
-  private final FileSize fileSize;
-  private Level level;
-  private AdvanceOpenPanel.OpenMode openMode;
-  private AdvanceOpenPanel.CanParse canParse;
-  private ContentProbe content;
-  private PossibleLogImporters possibleLogImporters;
-
-  FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, AdvanceOpenPanel.OpenMode openMode, AdvanceOpenPanel
-      .CanParse canParse) {
-    this.fileObject = fileObject;
-    this.fileName = fileName;
-    this.fileSize = fileSize;
-    this.level = level;
-    this.openMode = openMode;
-    this.canParse = canParse;
-  }
-
-  PossibleLogImporters getPossibleLogImporters() {
-    return possibleLogImporters;
-  }
-
-  void setPossibleLogImporters(PossibleLogImporters possibleLogImporters) {
-    this.possibleLogImporters = possibleLogImporters;
-  }
-
-  public ContentProbe getContent() {
-    return content;
-  }
-
-  public void setContent(ContentProbe content) {
-    this.content = content;
-  }
-
-  FileObject getFileObject() {
-    return fileObject;
-  }
-
-  FileName getFileName() {
-    return fileName;
-  }
-
-  FileSize getFileSize() {
-    return fileSize;
-  }
-
-  public Level getLevel() {
-    return level;
-  }
-
-  AdvanceOpenPanel.OpenMode getOpenMode() {
-    return openMode;
-  }
-
-  public void setLevel(Level level) {
-    this.level = level;
-  }
-
-  void setOpenMode(AdvanceOpenPanel.OpenMode openMode) {
-    this.openMode = openMode;
-  }
-
-  AdvanceOpenPanel.CanParse getCanParse() {
-    return canParse;
-  }
-
-  void setCanParse(AdvanceOpenPanel.CanParse canParse) {
-    this.canParse = canParse;
-  }
 }
