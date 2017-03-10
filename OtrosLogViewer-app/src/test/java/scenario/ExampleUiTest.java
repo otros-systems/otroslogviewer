@@ -25,6 +25,11 @@ public class ExampleUiTest
 
   @Test
   public void testMainScreen() throws Exception {
+    robot().settings().eventPostingDelay(20);
+    robot().settings().delayBetweenEvents(20);
+
+    robot().settings().simpleWaitForIdle(false);
+
     FrameFixture frame = findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
       protected boolean isMatching(JFrame frame) {
         return frame.getTitle().startsWith("OtrosLogViewer") && frame.isShowing();
