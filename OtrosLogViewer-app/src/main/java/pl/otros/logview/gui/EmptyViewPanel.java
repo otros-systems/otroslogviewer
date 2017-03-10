@@ -118,7 +118,9 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.gridy++;
 
     final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
-    this.add(new JButton(advanceOpenAction),bagConstraints);
+    final JButton advanceOpenButton = new JButton(advanceOpenAction);
+    advanceOpenButton.setName("open log files");
+    this.add(advanceOpenButton,bagConstraints);
     bagConstraints.gridy++;
 
     OpenLogInvestigationAction openLogInvestigationAction = new OpenLogInvestigationAction(otrosApplication);

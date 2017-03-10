@@ -231,7 +231,7 @@ public class LogViewMainFrame extends JFrame {
       new ShowErrorDialogExceptionHandler(otrosApplication),//
       new StatusObserverExceptionHandler(observer)
     );
-    Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
+//    Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
     ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
     listeningScheduledExecutorService.scheduleAtFixedRate(
       new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),

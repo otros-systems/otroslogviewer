@@ -295,6 +295,7 @@ public class VfsBrowser extends JPanel {
     JLabel pathLabel = new JLabel(Messages.getMessage("browser.location"));
     pathLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
     pathField = new JTextField(80);
+    pathField.setName("VfsBrowser.path");
     pathField.setFont(pathLabel.getFont().deriveFont(pathLabel.getFont().getSize() * 1.2f));
     pathField.setToolTipText(Messages.getMessage("nav.pathTooltip"));
     GuiUtils.addBlinkOnFocusGain(pathField);
@@ -926,6 +927,7 @@ public class VfsBrowser extends JPanel {
   public void setApproveAction(Action action) {
     actionApproveDelegate = action;
     actionApproveButton.setAction(actionApproveDelegate);
+    actionApproveButton.setName("VfsBrowser.open");
     if (action != null) {
       actionApproveButton.setText(String.format("%s [Ctrl+Enter]", actionApproveDelegate.getValue(Action.NAME)));
     }
