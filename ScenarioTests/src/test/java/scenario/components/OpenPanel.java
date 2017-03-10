@@ -5,13 +5,15 @@ import org.assertj.swing.core.Robot;
 import org.assertj.swing.data.TableCell;
 import org.assertj.swing.dependency.jsr305.Nonnull;
 import org.assertj.swing.finder.WindowFinder;
-import org.assertj.swing.fixture.*;
+import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JTableFixture;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
@@ -19,7 +21,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
 
   private FrameFixture frame;
 
-  OpenPanel(FrameFixture frameFixture, Robot robot) {
+  public OpenPanel(FrameFixture frameFixture, Robot robot) {
     super(robot);
     this.frame = frameFixture;
   }
@@ -41,7 +43,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
   }
 
   public LogViewPanel importFiles() {
-    frame.button("OpenPanel.import").click();
+    await().ignoreExceptions().until(() -> frame.button("OpenPanel.import").click());
     return new LogViewPanel(frame, robot);
   }
 
@@ -55,7 +57,6 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
     vfsBrowserDialog.textBox("VfsBrowser.filter").setText("");
     vfsBrowserDialog.textBox("VfsBrowser.path").click();
 
-
     final JTableFixture table = vfsBrowserDialog.table(new GenericTypeMatcher<JTable>(JTable.class) {
       @Override
       protected boolean isMatching(@Nonnull JTable component) {
@@ -63,9 +64,6 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
         return true;
       }
     });
-    await().atMost(5, TimeUnit.SECONDS).until(() -> table.target().isVisible());
-
-
     while (table.cell(TableCell.row(0).column(0)).value().equals("[..]")) {
       table.cell("[..]").doubleClick();
       Thread.sleep(50);
@@ -73,14 +71,13 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
     while (paths.size() > 0) {
       final String dir = paths.removeLast().getName();
       if (dir.length() > 0) {
-        await().until(() -> table.cell(dir).doubleClick());
+        await().ignoreExceptions().until(() -> table.cell(dir).doubleClick());
       }
     }
     final String name = file.getName();
     vfsBrowserDialog.textBox("VfsBrowser.filter").setText(name);
-    vfsBrowserDialog.textBox("VfsBrowser.path").click();
-    final JTableCellFixture cell = table.cell(TableCell.row(1).column(0));
-    cell.click();
+    vfsBrowserDialog.button("VfsBrowser.refresh").click();
+    await().ignoreExceptions().until(() -> table.cell(TableCell.row(1).column(0)).click());
     vfsBrowserDialog.button("VfsBrowser.open").click();
 
   }

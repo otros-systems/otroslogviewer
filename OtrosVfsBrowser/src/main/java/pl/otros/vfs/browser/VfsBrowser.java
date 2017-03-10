@@ -357,6 +357,7 @@ public class VfsBrowser extends JPanel {
 
     BaseNavigateActionRefresh refreshAction = new BaseNavigateActionRefresh(this);
     JButton refreshButton = new JButton(refreshAction);
+    refreshButton.setName("VfsBrowser.refresh");
 
     JToolBar upperPanel = new JToolBar(Messages.getMessage("nav.ToolBarName"));
     upperPanel.setRollover(true);

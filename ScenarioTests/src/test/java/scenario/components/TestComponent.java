@@ -2,8 +2,10 @@ package scenario.components;
 
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.AbstractComponentFixture;
-import org.awaitility.Awaitility;
+import org.assertj.swing.fixture.JButtonFixture;
 import org.jetbrains.annotations.NotNull;
+
+import static org.awaitility.Awaitility.await;
 
 public abstract class TestComponent<T extends AbstractComponentFixture, U extends TestComponent> {
 
@@ -17,7 +19,7 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
 
   @SuppressWarnings("unchecked")
   public final U waitFor() {
-    Awaitility.await().until(this::isVisible);
+    await().until(this::isVisible);
     return (U) this;
   }
 

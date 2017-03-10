@@ -134,7 +134,9 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
         }
         LOGGER.info(String.format("Importing from %s:%d is finished", inetAddress.getHostName(), port2));
       };
-      new Thread(r, hostPort).start();
+      final Thread thread = new Thread(r, hostPort);
+      thread.setDaemon(true);
+      thread.start();
 
     } catch (Exception e) {
       JOptionPane.showMessageDialog((Component) arg0.getSource(), "Error importing logs from " + hostPort, "Error importing logs", JOptionPane.ERROR_MESSAGE);
