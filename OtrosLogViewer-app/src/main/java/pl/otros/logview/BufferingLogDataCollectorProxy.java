@@ -1,18 +1,18 @@
-/*******************************************************************************
- * Copyright 2011 Krzysztof Otrebski
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/******************************************************************************
+ Copyright 2011 Krzysztof Otrebski
+ <p>
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ <p>
+ http://www.apache.org/licenses/LICENSE-2.0
+ <p>
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package pl.otros.logview;
 
 import org.apache.commons.configuration.Configuration;
@@ -37,22 +37,22 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
     final DataConfiguration dataConfiguration = new DataConfiguration(configuration);
     proxyLogDataCollector = new ProxyLogDataCollector();
     Runnable r = () -> {
-      synchronized (BufferingLogDataCollectorProxy.this) {
-        while (!stop) {
-          if (dataConfiguration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
+      while (!stop) {
+        if (dataConfiguration.getBoolean(ConfKeys.TAILING_PANEL_PLAY)) {
+          synchronized (BufferingLogDataCollectorProxy.this) {
             LogData[] logData = proxyLogDataCollector.getLogData();
             if (logData.length > 0) {
               proxyLogDataCollector = new ProxyLogDataCollector();
               addToDelegateInEDT(logData);
             }
           }
-          
-          try {
-            this.wait(sleepTime);
-          } catch (InterruptedException ignore) {
-          }
         }
-        
+
+        try {
+          Thread.sleep(sleepTime);
+        } catch (InterruptedException ignore) {
+        }
+
       }
 
     };
@@ -61,14 +61,13 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
     t.start();
   }
 
-  protected void addToDelegateInEDT(final LogData[] logData) {
+  private void addToDelegateInEDT(final LogData[] logData) {
     SwingUtilities.invokeLater(() -> BufferingLogDataCollectorProxy.this.delegate.add(logData));
   }
 
   @Override
   public synchronized void add(LogData... logDatas) {
     proxyLogDataCollector.add(logDatas);
-    this.notify();
   }
 
   @Override
