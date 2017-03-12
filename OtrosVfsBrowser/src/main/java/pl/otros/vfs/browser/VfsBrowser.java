@@ -592,6 +592,7 @@ public class VfsBrowser extends JPanel {
 
     final String defaultFilterText = Messages.getMessage("browser.nameFilter.defaultText");
     filterField = new JTextField("", 16);
+    filterField.setName("VfsBrowser.filter");
     filterField.setForeground(filterField.getDisabledTextColor());
     filterField.setToolTipText(Messages.getMessage("browser.nameFilter.tooltip"));
     PromptSupport.setPrompt(defaultFilterText, filterField);

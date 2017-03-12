@@ -161,6 +161,7 @@ public class LogViewMainFrame extends JFrame {
     JLabel statusLabel = new JLabel(" ");
     observer = new JLabelStatusObserver(statusLabel);
     logsTabbedPane = new JTabbedPane();
+    logsTabbedPane.setName("MainFrame.tabbedPane");
     enableDisableComponetsForTabs = new EnableDisableComponetsForTabs(logsTabbedPane);
     logsTabbedPane.addChangeListener(enableDisableComponetsForTabs);
 
@@ -225,13 +226,13 @@ public class LogViewMainFrame extends JFrame {
       new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
     }
     new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);
-    Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
+//    Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
     ListUncaughtExceptionHandlers listUncaughtExceptionHandlers = new ListUncaughtExceptionHandlers(//
       new LoggingExceptionHandler(),//
       new ShowErrorDialogExceptionHandler(otrosApplication),//
       new StatusObserverExceptionHandler(observer)
     );
-//    Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
+    Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
     ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
     listeningScheduledExecutorService.scheduleAtFixedRate(
       new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),

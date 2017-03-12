@@ -42,6 +42,7 @@ class EmptyViewPanel extends JPanel {
 
   protected EmptyViewPanel(OtrosApplication otrosApplication) {
     super();
+    this.setName("WelcomeScreen");
     this.otrosApplication = otrosApplication;
     jLabel = new JAnimatedLogo("Welcome to OtrosLogViewer", SwingConstants.LEFT);
     jLabel.setFont(jLabel.getFont().deriveFont(20f).deriveFont(Font.BOLD));

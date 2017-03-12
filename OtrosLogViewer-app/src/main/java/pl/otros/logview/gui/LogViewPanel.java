@@ -102,6 +102,7 @@ public class LogViewPanel extends LogViewPanelI {
 
   public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, final OtrosApplication otrosApplication) {
     super();
+    setName("LogViewPanel.panel");
     this.dataTableModel = dataTableModel;
     this.otrosApplication = otrosApplication;
     this.statusObserver = otrosApplication.getStatusObserver();
@@ -136,6 +137,7 @@ public class LogViewPanel extends LogViewPanelI {
     logDetailWithRulerScrollPane = RulerBarHelper.wrapTextComponent((JTextPane) logDetailTextArea);
     FontResize.addFontResizeOnScroll(logDetailWithRulerScrollPane.getjScrollPane());
     table = new JTableWith2RowHighliting(dataTableModel);
+    table.setName("LogViewPanel.log table");
 
     // Initialize default column visible before creating context menu
     table.setColumnControlVisible(true);

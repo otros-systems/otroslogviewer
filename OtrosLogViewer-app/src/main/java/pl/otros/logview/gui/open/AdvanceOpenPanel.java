@@ -89,7 +89,7 @@ public class AdvanceOpenPanel extends JPanel {
   //TODO tail from last xxxx KB
   //TODO create log parser pattern if some logs can't be parsed
   public AdvanceOpenPanel(OtrosApplication otrosApplication) {
-
+    this.setName("OpenPanel");
     openModeIcons = new HashMap<>();
     openModeIcons.put(OpenMode.FROM_START, Icons.FROM_START);
     openModeIcons.put(OpenMode.FROM_END, Icons.FROM_END);
@@ -530,6 +530,7 @@ public class AdvanceOpenPanel extends JPanel {
     importAction.setEnabled(false);
 
     final JButton importButton = new JButton(importAction);
+    importButton.setName("OpenPanel.import");
     importButton.setMnemonic('I');
     final Font font = importButton.getFont();
     importButton.setFont(font.deriveFont(font.getSize() * 2f));
@@ -583,7 +584,6 @@ public class AdvanceOpenPanel extends JPanel {
 
     final JScrollPane scrollPane = new JScrollPane(table);
     final JButton addMoreFilesButton = new JButton(addMoreFilesAction);
-    addMoreFilesButton.setName("add more files");
 
     JPanel emptyView = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
     emptyView.add(new JLabel(""),"wrap, pushy");
@@ -614,6 +614,7 @@ public class AdvanceOpenPanel extends JPanel {
   private void initToolbar(JToolBar toolBar) {
     final JButton addButton = new JButton(addMoreFilesAction);
     addButton.setMnemonic('A');
+    addButton.setName("OpenPanel.add more files");
     toolBar.add(addButton);
     final JButton deleteButton = new JButton(deleteSelectedAction);
     deleteButton.setMnemonic('D');
