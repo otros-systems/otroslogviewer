@@ -3,7 +3,7 @@ package pl.otros.logview.gui.actions;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.OtrosAction;
-import pl.otros.logview.gui.AdvanceOpenPanel;
+import pl.otros.logview.gui.open.AdvanceOpenPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

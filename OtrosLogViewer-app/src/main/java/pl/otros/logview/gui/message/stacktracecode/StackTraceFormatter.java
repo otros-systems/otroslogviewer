@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 
 public class StackTraceFormatter extends AbstractPluginableElement implements MessageFormatter {
 
-  public static final String STACK_TRACE_REGEX = "(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))";
+  private static final String STACK_TRACE_REGEX = "(\\s*at\\s+([\\w\\d\\.]*)\\.([\\w\\d\\$]+)\\.([\\d\\w<>\\$]+)\\(([\\d\\w\\.\\u0020:]+)\\))";
+  private static final Pattern STACK_TRACE_PATTERN = Pattern.compile(STACK_TRACE_REGEX);
   private final JumpToCodeService jumpToCodeService;
 
   public StackTraceFormatter(JumpToCodeService jumpToCodeService) {
     super("Stacktrace with message", "Add code fragment to stacktrace");
     this.jumpToCodeService = jumpToCodeService;
   }
-
 
   @Override
   public int getApiVersion() {
@@ -27,7 +27,7 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
 
   @Override
   public boolean formattingNeeded(String message) {
-    return Pattern.compile(STACK_TRACE_REGEX).matcher(message).find();
+    return jumpToCodeService.isIdeAvailable() && STACK_TRACE_PATTERN.matcher(message).find();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class StackTraceFormatter extends AbstractPluginableElement implements Me
     final Iterable<String> split = Splitter.on("\n").split(message);
     for (String line : split) {
       sb.append(line.replaceFirst("\\s+at", "  at"));
-      if (Pattern.compile(STACK_TRACE_REGEX).matcher(line).find()) {
+      if (STACK_TRACE_PATTERN.matcher(line).find()) {
         addCodeToLine(sb, line);
       }
       sb.append("\n");
