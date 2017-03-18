@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id "com.github.maiflai.scalatest" version "0.12"
+    id "com.github.maiflai.scalatest" version "0.15"
 }
 
 project.ext.set('sharedVersion', "1.4.7-SNAPSHOT")
