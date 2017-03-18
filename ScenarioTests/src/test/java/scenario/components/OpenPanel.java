@@ -4,16 +4,16 @@ import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.data.TableCell;
 import org.assertj.swing.dependency.jsr305.Nonnull;
+import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.*;
+import org.awaitility.Awaitility;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.LinkedList;
 
-import static org.assertj.swing.finder.WindowFinder.findDialog;
-
-public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel>{
+public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
 
   private FrameFixture frame;
 
@@ -24,17 +24,17 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel>{
 
   public OpenPanel addFile(File file) throws InterruptedException {
     me().button("OpenPanel.add more files").click();
-    findDialog(new GenericTypeMatcher<Dialog>(Dialog.class) {
+    WindowFinder.findDialog(new GenericTypeMatcher<Dialog>(Dialog.class) {
       @Override
       protected boolean isMatching(@Nonnull Dialog component) {
         System.out.println("Searching for dialog " + component.getTitle() + " / " + component.getName());
         return false;
       }
     });
-    final DialogFixture vfsBrowserDialog = findDialog("VfsBrowserDialog").using(robot);
+    final DialogFixture vfsBrowserDialog = WindowFinder.findDialog("VfsBrowserDialog").using(robot);
 
     openFile(file, vfsBrowserDialog);
-    Thread.sleep(1000);
+//    Thread.sleep(1000);
     return this;
   }
 
@@ -62,17 +62,14 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel>{
     });
     while (table.cell(TableCell.row(0).column(0)).value().equals("[..]")) {
       table.cell("[..]").doubleClick();
-      Thread.sleep(300);
+      Thread.sleep(50);
     }
     while (paths.size() > 0) {
       final String dir = paths.removeLast().getName();
       if (dir.length() > 0) {
-        Thread.sleep(300);
-        final JTableCellFixture cell = table.cell(dir);
-        cell.doubleClick();
+        Awaitility.await().until(() -> table.cell(dir).doubleClick());
       }
     }
-    Thread.sleep(300);
     final String name = file.getName();
     vfsBrowserDialog.textBox("VfsBrowser.filter").setText(name);
     vfsBrowserDialog.textBox("VfsBrowser.path").click();

@@ -1,5 +1,6 @@
 package scenario;
 
+import org.assertj.swing.launcher.ApplicationLauncher;
 import org.assertj.swing.testng.testcase.AssertJSwingTestngTestCase;
 import org.awaitility.Awaitility;
 import org.testng.annotations.Test;
@@ -9,12 +10,11 @@ import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
 import scenario.components.OpenPanel;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import static org.assertj.swing.launcher.ApplicationLauncher.application;
 
 
 /**
@@ -26,8 +26,7 @@ import static org.assertj.swing.launcher.ApplicationLauncher.application;
  * LogViewMainFrame:228 to work faster have to comment this line:
  * //    Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
  */
-public class ExampleUiTest
-  extends AssertJSwingTestngTestCase {
+public class ExampleUiTest extends AssertJSwingTestngTestCase {
 
   @Test
   public void testBasicImport() throws Exception {
@@ -39,7 +38,6 @@ public class ExampleUiTest
 
     final MainFrame mainFrame = new MainFrame(robot());
     final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
-    Thread.sleep(100);
 
     final LogViewPanel logViewPanel = openPanel.addFile(tempFile1)
       .addFile(tempFile2)
@@ -54,10 +52,6 @@ public class ExampleUiTest
     ConfirmClose.close(robot());
 
     mainFrame.welcomeScreen().waitFor();
-
-    System.out.println("Sleeping");
-    Thread.sleep(5000);
-
   }
 
 
@@ -73,11 +67,9 @@ public class ExampleUiTest
 
   @Override
   protected void onSetUp() {
-    //TODO add params to run:
-    // - without checking new version
-    // - without tooltip
-    // - without custom EventQueue
-    application(LogViewMainFrame.class).start();
+    System.setProperty("runForScenarioTest", "true");
 
+    ApplicationLauncher.application(LogViewMainFrame.class).start();
   }
+
 }

@@ -321,8 +321,7 @@ public class UtilsTest {
     testGetObjectShortName(scheme, url, baseName, output);
   }
 
-  @Test
-  public void testGetObjectShortName(String scheme, String url, String baseName, String output) {
+  private void testGetObjectShortName(String scheme, String url, String baseName, String output) {
     // given
     FileObject fileObjectMock = mock(FileObject.class);
     FileName fileNameMock = mock(FileName.class);

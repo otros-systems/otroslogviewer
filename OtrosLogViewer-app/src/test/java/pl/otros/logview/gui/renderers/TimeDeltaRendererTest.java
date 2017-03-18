@@ -38,7 +38,7 @@ public class TimeDeltaRendererTest {
 
 
   @Test(dataProvider = "data")
-  public void testFormatDelta(long deltaInMs, String expected) throws Exception {
+  public void testFormatDelta(int deltaInMs, String expected) throws Exception {
     final String delta = new TimeDeltaRenderer().formatDelta(deltaInMs);
     assertEquals(delta, expected);
   }

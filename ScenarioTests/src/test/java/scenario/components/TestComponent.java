@@ -2,9 +2,8 @@ package scenario.components;
 
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.AbstractComponentFixture;
+import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
-
-import static org.awaitility.Awaitility.await;
 
 public abstract class TestComponent<T extends AbstractComponentFixture, U extends TestComponent> {
 
@@ -16,9 +15,9 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
 
   public abstract T me();
 
-
+  @SuppressWarnings("unchecked")
   public final U waitFor() {
-    await().until(this::isVisible);
+    Awaitility.await().until(this::isVisible);
     return (U) this;
   }
 

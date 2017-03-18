@@ -101,6 +101,7 @@ public class LogViewMainFrame extends JFrame {
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class.getName());
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
+  public static final String RUN_FOR_SCENARIO_TEST = "runForScenarioTest";
   private JToolBar toolBar;
   private JLabelStatusObserver observer;
   private JTabbedPane logsTabbedPane;
@@ -172,7 +173,7 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setjTabbedPane(logsTabbedPane);
     otrosApplication.setStatusObserver(observer);
     final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
-    otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(),logParsableListener));
+    otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     otrosApplication.setLogLoader(new BasicLogLoader());
     SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
@@ -221,12 +222,15 @@ public class LogViewMainFrame extends JFrame {
           + "filter or log importers:\n"
           + modalDisplayException.getMessage(), "Initialization Error",
         JOptionPane.ERROR_MESSAGE);
-    // Check new version on start
-    if (c.getBoolean(ConfKeys.VERSION_CHECK_ON_STARTUP, true)) {
-      new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
+
+    if (!System.getProperty(RUN_FOR_SCENARIO_TEST, "false").equals("true")) {
+      new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);
+      Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
+      // Check new version on start
+      if (c.getBoolean(ConfKeys.VERSION_CHECK_ON_STARTUP, true)) {
+        new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
+      }
     }
-    new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);
-//    Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
     ListUncaughtExceptionHandlers listUncaughtExceptionHandlers = new ListUncaughtExceptionHandlers(//
       new LoggingExceptionHandler(),//
       new ShowErrorDialogExceptionHandler(otrosApplication),//
@@ -246,11 +250,11 @@ public class LogViewMainFrame extends JFrame {
     String parseClipboard = "parseClipboard";
     final JTextArea jTextArea = new JTextArea();
     final KeyStroke[] keyStrokes = jTextArea.getInputMap().allKeys();
-    Arrays.asList(keyStrokes).forEach(ks -> System.out.println("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " +jTextArea.getInputMap().get(ks)));
+    Arrays.asList(keyStrokes).forEach(ks -> System.out.println("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " + jTextArea.getInputMap().get(ks)));
 
-    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),parseClipboard);
-    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_MASK),parseClipboard);
-    contentPane.getActionMap().put(parseClipboard,new ParseClipboard(otrosApplication));
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), parseClipboard);
+    inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_MASK), parseClipboard);
+    contentPane.getActionMap().put(parseClipboard, new ParseClipboard(otrosApplication));
   }
 
   /**

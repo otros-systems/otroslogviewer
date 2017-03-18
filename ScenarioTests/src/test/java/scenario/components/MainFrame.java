@@ -2,11 +2,10 @@ package scenario.components;
 
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
+import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
 
 import javax.swing.*;
-
-import static org.assertj.swing.finder.WindowFinder.findFrame;
 
 public class MainFrame extends TestComponent<FrameFixture, MainFrame>{
 
@@ -16,7 +15,7 @@ public class MainFrame extends TestComponent<FrameFixture, MainFrame>{
 
   @Override
   public FrameFixture me() {
-    return findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
+    return WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
       protected boolean isMatching(JFrame frame1) {
         return frame1.getTitle().startsWith("OtrosLogViewer") && frame1.isShowing();
       }
