@@ -16,11 +16,11 @@
 
 package pl.otros.vfs.browser.table;
 
+import org.apache.commons.vfs2.FileName;
+import org.apache.commons.vfs2.FileType;
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.ParentFileObject;
 import pl.otros.vfs.browser.util.VFSUtils;
-import org.apache.commons.vfs2.FileName;
-import org.apache.commons.vfs2.FileType;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -51,6 +51,7 @@ public class FileNameWithTypeTableCellRenderer extends DefaultTableCellRenderer 
     FileNameWithType fileNameWithType = (FileNameWithType) value;
     FileName fileName = fileNameWithType.getFileName();
     label.setText(fileName.getBaseName());
+    label.setName("VfsBrowser.file." + fileName.getBaseName());
     label.setToolTipText(fileName.getFriendlyURI());
 
     FileType fileType = fileNameWithType.getFileType();

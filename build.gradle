@@ -31,9 +31,12 @@ subprojects {
     dependencies {
         testCompile 'org.testng:testng:6.8.8'
         testCompile 'org.mockito:mockito-core:1.9.0'
-        testCompile 'org.assertj:assertj-core:3.6.1'
+        testCompile 'org.assertj:assertj-core:3.6.2'
         testCompile 'uk.co.datumedge:hamcrest-json:0.2'
+        testCompile 'org.awaitility:awaitility:2.0.0'
+        testCompile 'org.assertj:assertj-swing-testng:3.5.0'
     }
+
     repositories {
         mavenCentral()
         maven {
@@ -90,7 +93,6 @@ project(':Common-libs') {
         compile "org.scala-lang:scala-library:2.11.8"
     }
 }
-
 
 project(':OtrosStarter') {
 
@@ -159,12 +161,10 @@ project(':OtrosLogViewer-app') {
         )
     }
 
-
     test {
         useTestNG()
         maxParallelForks = 2
     }
-
 }
 
 project(':ScalaFormatter'){
@@ -189,7 +189,6 @@ project(':ScalaFormatter'){
 }
 
 project(':OtrosAppDist') {
-    println 'starting dist'
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosStarter')
@@ -219,6 +218,18 @@ project(':OtrosAppDist') {
     }
 }
 
+project(':ScenarioTests'){
+    //gradle -PscenarioTests=true   :ScenarioTests:check
+    dependencies {
+        compile project(':OtrosLogViewer-app')
+    }
+    test {
+        useTestNG()
+        onlyIf {
+            project.hasProperty("scenarioTests")
+        }
+    }
+}
 
 def allProcessResouresTasks() {
     println "allProcessResourcesTasks"
