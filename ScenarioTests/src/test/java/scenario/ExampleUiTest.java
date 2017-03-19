@@ -10,11 +10,13 @@ import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
 import scenario.components.OpenPanel;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
 
 
 /**
@@ -29,17 +31,39 @@ import java.util.concurrent.TimeUnit;
 public class ExampleUiTest extends AssertJSwingTestngTestCase {
 
   @Test
-  public void testBasicImport() throws Exception {
+  public void testImport200kEvents() throws Exception {
 
-    final File tempFile1 = File.createTempFile("otrosTest", "");
-    final File tempFile2 = File.createTempFile("otrosTest", "");
+    final File tempFile1 = logEvents(200_000);
+
+    final MainFrame mainFrame = new MainFrame(robot());
+    final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
+
+    final LogViewPanel logViewPanel = openPanel.addFile(tempFile1)
+      .importFiles();
+
+    Awaitility.await()
+      .atMost(10, TimeUnit.SECONDS)
+      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 200_000);
+
+    mainFrame.tabBar().tab().close();
+
+    ConfirmClose.close(robot());
+
+    mainFrame.welcomeScreen().waitFor();
+  }
+
+  @Test
+  public void testImport2LogFiles() throws Exception {
+    final File tempFile1 = logEvents(2);
+    final File tempFile2 = logEvents(2);
     writeToFile(tempFile1);
     writeToFile(tempFile2);
 
     final MainFrame mainFrame = new MainFrame(robot());
     final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
 
-    final LogViewPanel logViewPanel = openPanel.addFile(tempFile1)
+    final LogViewPanel logViewPanel = openPanel
+      .addFile(tempFile1)
       .addFile(tempFile2)
       .importFiles();
 
@@ -64,6 +88,25 @@ public class ExampleUiTest extends AssertJSwingTestngTestCase {
     fileWriter.close();
   }
 
+  private File logEvents(int count) throws IOException {
+    final long l = System.currentTimeMillis();
+    final Logger logger = Logger.getLogger("a");
+    for (Handler handler : logger.getHandlers()) {
+      logger.removeHandler(handler);
+    }
+    logger.setUseParentHandlers(false);
+    final File tempFile = File.createTempFile("Otros", "");
+    tempFile.deleteOnExit();
+    System.out.println("WIll use file " + tempFile.getAbsolutePath());
+    logger.addHandler(new FileHandler(tempFile.getAbsolutePath(), false));
+    for (int i = 0; i < count; i++) {
+      logger.info("Event " + i);
+    }
+    final long length = tempFile.length();
+    System.out.println(length);
+    System.out.println(System.currentTimeMillis()-l);
+    return tempFile;
+  }
 
   @Override
   protected void onSetUp() {
@@ -72,4 +115,8 @@ public class ExampleUiTest extends AssertJSwingTestngTestCase {
     ApplicationLauncher.application(LogViewMainFrame.class).start();
   }
 
+  @Override
+  protected void onTearDown() {
+    System.out.println("tearing down");
+  }
 }
