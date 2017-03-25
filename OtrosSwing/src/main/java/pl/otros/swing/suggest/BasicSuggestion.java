@@ -1,9 +1,11 @@
 package pl.otros.swing.suggest;
 
-public class BasicSuggestion implements Comparable<BasicSuggestion>{
 
-  private final String toDisplay;
-  private final String toInsert;
+
+public class BasicSuggestion implements Comparable<BasicSuggestion> {
+
+  private String toDisplay;
+  private String toInsert;
 
   public BasicSuggestion(String toDisplay, String toInsert) {
     this.toDisplay = toDisplay;
@@ -19,14 +21,20 @@ public class BasicSuggestion implements Comparable<BasicSuggestion>{
   }
 
   @Override
+  public String toString() {
+    return "BasicSuggestion{" +
+      "toDisplay='" + toDisplay + '\'' +
+      ", toInsert='" + toInsert + '\'' +
+      '}';
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
     BasicSuggestion that = (BasicSuggestion) o;
-
-    if (toDisplay != null ? !toDisplay.equals(that.toDisplay) : that.toDisplay != null) return false;
-    return !(toInsert != null ? !toInsert.equals(that.toInsert) : that.toInsert != null);
+    return !(toDisplay != null ? !toDisplay.equals(that.toDisplay) : that.toDisplay != null) && !(toInsert != null ? !toInsert.equals(that.toInsert) : that.toInsert != null);
 
   }
 
