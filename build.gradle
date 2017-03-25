@@ -55,7 +55,6 @@ project(':Common-libs') {
 
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
-        compile 'pl.otros.swing.suggest:OtrosSuggestBox:0.7'
         compile 'com.beust:jcommander:1.29'
         compile 'com.github.insubstantial:trident:7.3'
         compile 'com.github.insubstantial:substance-swingx:7.3'
