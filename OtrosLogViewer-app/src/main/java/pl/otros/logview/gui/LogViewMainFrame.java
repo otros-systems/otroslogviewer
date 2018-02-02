@@ -122,7 +122,7 @@ public class LogViewMainFrame extends JFrame {
     this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     String title = "OtrosLogViewer";
     try {
-      title += ' ' + VersionUtil.getRunningVersion();
+      title += ' ' + new VersionUtil().getRunningVersion();
     } catch (Exception e) {
       LOGGER.warn("Can't load version of running OLV");
     }

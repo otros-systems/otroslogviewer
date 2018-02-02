@@ -40,7 +40,7 @@ public class OtrosAppERDC implements ErrorReportDataCollector {
     r.put("APPLICATION:uptime", uptimeFormatted);
 
     try {
-      r.put(VERSION, VersionUtil.getRunningVersion());
+      r.put(VERSION, new VersionUtil().getRunningVersion());
     } catch (IOException e) {
       LOGGER.warn("Cannot check running version", e);
     }
