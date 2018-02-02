@@ -150,6 +150,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   public static final String PROPERTY_DESCRIPTION = "description";
   public static final String PROPERTY_TYPE = "type";
   public static final String PROPERTY_CHARSET = "charset";
+  public static final String PROPERTY_TRIM_UNMATCHED_LINES = "trimUnmatchedLines";
 
   private final List<String> keywords = new ArrayList<>();
   // private SimpleDateFormat dateFormat;
@@ -197,6 +198,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   private Pattern regexpPattern;
   private Pattern exceptionPattern;
   private String timestampPatternText;
+  private Boolean trimUnmatchedLines;
 
   private final ParserDescription parserDescription;
 
@@ -711,7 +713,10 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
         if (parsingContext.getUnmatchedLog().length() > 0) {
           parsingContext.getUnmatchedLog().append('\n');
         }
-        parsingContext.getUnmatchedLog().append(line.trim());
+        if (trimUnmatchedLines)
+          parsingContext.getUnmatchedLog().append(line.trim());
+        else
+          parsingContext.getUnmatchedLog().append(line);
       }
     }
 
@@ -753,6 +758,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
     parserDescription.setDisplayName(properties.getProperty(PROPERTY_NAME, "?"));
     parserDescription.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, "?"));
     parserDescription.setCharset(properties.getProperty(PROPERTY_CHARSET, "UTF-8"));
+    trimUnmatchedLines = Boolean.valueOf(properties.getProperty(PROPERTY_TRIM_UNMATCHED_LINES, "true"));
     if (timestampFormat != null) {
       // dateFormat = new SimpleDateFormat(quoteTimeStampChars(timestampFormat));
       timestampPatternText = convertTimestamp();

@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.zip.GZIPOutputStream;
 
 public class LoadingRunnableTest {
 
@@ -110,6 +111,19 @@ public class LoadingRunnableTest {
   public void testLoadingFullWithLogParser() throws IOException, InterruptedException {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
+    final Thread thread = new Thread(underTest);
+    thread.setDaemon(true);
+    thread.start();
+    Thread.sleep(300);
+    Assert.assertEquals(collector.getLogData().length, 1000);
+
+  }
+
+  @Test
+  public void testLoadingFullWithLogParserGzipped() throws IOException, InterruptedException {
+    logImporter = getJulLogParser();
+    saveLinesGzipped(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
     underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
@@ -349,4 +363,9 @@ public class LoadingRunnableTest {
     outputStream.flush();
   }
 
+  private void saveLinesGzipped(Range<Integer> range, List<String> logLines, OutputStream outputStream) throws IOException {
+    try(GZIPOutputStream tmp = new GZIPOutputStream(outputStream)) {
+      saveLines(range, logLines, tmp);
+    }
+  }
 }
