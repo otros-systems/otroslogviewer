@@ -32,4 +32,9 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
       return false;
     }
   }
+
+  public void clickButton(JButtonFixture button){
+    await().until(button::isEnabled);
+    button.click();
+  }
 }
