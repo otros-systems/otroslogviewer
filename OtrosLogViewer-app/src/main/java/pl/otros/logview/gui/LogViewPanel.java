@@ -54,9 +54,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -270,6 +268,7 @@ public class LogViewPanel extends LogViewPanelI {
     messageDetailToolbar = new JToolBar("MessageDetail");
     messageDetailsPanel.add(messageDetailToolbar, BorderLayout.NORTH);
     messageDetailsPanel.add(logDetailWithRulerScrollPane);
+    messageDetailsPanel.setMinimumSize(new Dimension(300,150));
     initMessageDetailsToolbar();
 
     JTabbedPane jTabbedPane = new JTabbedPane();
@@ -287,7 +286,6 @@ public class LogViewPanel extends LogViewPanelI {
     this.setLayout(new BorderLayout());
     this.add(splitPane);
 
-    splitPaneLogsTableAndDetails.setDividerLocation(0.5d);
     splitPaneLogsTableAndDetails.setOneTouchExpandable(true);
     splitPane.setDividerLocation(leftPanel.getPreferredSize().width + 10);
 
