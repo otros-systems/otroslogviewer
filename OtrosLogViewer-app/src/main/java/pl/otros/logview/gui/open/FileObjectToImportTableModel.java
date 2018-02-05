@@ -120,7 +120,7 @@ class FileObjectToImportTableModel extends AbstractTableModel {
     } else if (columnIndex == COLUMN_POSSIBLE_IMPORTER) {
       LogImporter logImporter = (LogImporter) aValue;
       final PossibleLogImporters possibleLogImporters = fileObjectToImport.getPossibleLogImporters();
-      possibleLogImporters.setLogImporter(Optional.of(logImporter));
+      possibleLogImporters.setLogImporter(Optional.ofNullable(logImporter));
     }
     fireTableCellUpdated(rowIndex, columnIndex);
   }

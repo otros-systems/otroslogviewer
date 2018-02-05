@@ -151,7 +151,7 @@ public class AdvanceOpenPanel extends JPanel {
 
     final DefaultListCellRenderer openModeRenderer = new OpenModeListCellRenderer();
     table.setDefaultRenderer(OpenMode.class, new OpenModeTableCellRenderer(this));
-    final JComboBox openModeCbx = new JComboBox(OpenMode.values());
+    final JComboBox<OpenMode> openModeCbx = new JComboBox<>(OpenMode.values());
     openModeCbx.setRenderer(openModeRenderer);
     table.setDefaultEditor(OpenMode.class, new DefaultCellEditor(openModeCbx));
 
@@ -162,7 +162,7 @@ public class AdvanceOpenPanel extends JPanel {
     table.setDefaultRenderer(PossibleLogImporters.class, possibleLogImporterRenderer);
     table.setDefaultRenderer(ContentProbe.class, new ContentProbeRenderer());
 
-    final JComboBox comboBox = new JComboBox();
+    final JComboBox<LogImporter> comboBox = new JComboBox<>();
     comboBox.setRenderer(new LogImporterRenderer());
     table.setDefaultEditor(PossibleLogImporters.class, new DefaultCellEditor(comboBox) {
       @Override
@@ -185,7 +185,7 @@ public class AdvanceOpenPanel extends JPanel {
         RenamedLevel.WARNING_WARN,
         RenamedLevel.SEVERE_ERROR_FATAL
     };
-    table.setDefaultEditor(Level.class, new DefaultCellEditor(new JComboBox(levels)));
+    table.setDefaultEditor(Level.class, new DefaultCellEditor(new JComboBox<>(levels)));
     table.setDefaultRenderer(CanParse.class, new NamedTableRenderer() {
       @Override
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -298,8 +298,7 @@ public class AdvanceOpenPanel extends JPanel {
               dialog.dispose();
               otrosApplication.getStatusObserver().updateStatus("Session saved as " + sessionName, StatusObserver.LEVEL_NORMAL);
               try {
-                final List<Session> withoutDuplicate = sessions.stream().filter(s -> !s.getName().equals(sessionName)).collect(Collectors.toList());
-                ArrayList<Session> toSave = new ArrayList<Session>(withoutDuplicate);
+                ArrayList<Session> toSave = sessions.stream().filter(s -> !s.getName().equals(sessionName)).collect(Collectors.toCollection(ArrayList::new));
                 toSave.add(session);
                 persistService.persist("sessions", toSave, new SessionSerializer());
               } catch (Exception e1) {
@@ -401,7 +400,7 @@ public class AdvanceOpenPanel extends JPanel {
             tableModel.clear();
             new SwingWorker<SessionLoadResult, Progress>() {
               @Override
-              protected SessionLoadResult doInBackground() throws Exception {
+              protected SessionLoadResult doInBackground() {
                 List<FileToOpen> failed = new ArrayList<>();
                 List<FileObjectToImport> successFullyLoaded = new ArrayList<>();
                 for (FileToOpen f : sessionMap.get(chosenSession).getFilesToOpen()) {
@@ -556,7 +555,7 @@ public class AdvanceOpenPanel extends JPanel {
             }
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
               final Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
               CanParse canParse = CanParse.NO;
               byte[] bytes = new byte[0];
@@ -651,15 +650,15 @@ public class AdvanceOpenPanel extends JPanel {
   }
 
   private TableColumns[] mergeColumns(List<Optional<LogImporter>> logImporters) {
-    Set<TableColumns> s = logImporters.stream()
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .filter(l -> !(l instanceof DetectOnTheFlyLogImporter))
-        .filter(l -> l instanceof TableColumnNameSelfDescribable)
-        .map(l -> (TableColumnNameSelfDescribable) l)
-        .flatMap(l -> Arrays.stream(l.getTableColumnsToUse()))
-        .collect(Collectors.toSet());
-    return s.toArray(new TableColumns[0]);
+    return logImporters.stream()
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .filter(l -> !(l instanceof DetectOnTheFlyLogImporter))
+      .filter(l -> l instanceof TableColumnNameSelfDescribable)
+      .map(l -> (TableColumnNameSelfDescribable) l)
+      .flatMap(l -> Arrays.stream(l.getTableColumnsToUse()))
+      .distinct()
+      .toArray(TableColumns[]::new);
   }
 
 
@@ -672,7 +671,7 @@ public class AdvanceOpenPanel extends JPanel {
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() {
       try {
         for (FileObject f : selectedFiles) {
           if (f.getType() == FileType.FOLDER) {
