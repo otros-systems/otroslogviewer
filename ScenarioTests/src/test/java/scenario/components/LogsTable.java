@@ -4,6 +4,8 @@ import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.fixture.JTableFixture;
 
+import static org.awaitility.Awaitility.await;
+
 public class LogsTable extends TestComponent<JTableFixture, LogsTable> {
 
   private final JPanelFixture logViewPanel;
@@ -25,6 +27,13 @@ public class LogsTable extends TestComponent<JTableFixture, LogsTable> {
     } catch (Exception e) {
       return -1;
     }
+  }
+
+  public LogsTable waitForSelectedRow(int number){
+    await()
+      .ignoreExceptions()
+      .until(() -> me().requireSelectedRows(number));
+    return this;
   }
 
   @Override

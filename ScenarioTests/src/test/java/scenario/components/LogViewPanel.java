@@ -21,4 +21,5 @@ public class LogViewPanel extends TestComponent<JPanelFixture, LogViewPanel> {
   public LogsTable logsTable() {
     return new LogsTable(me(), robot);
   }
+
 }

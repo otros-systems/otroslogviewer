@@ -176,12 +176,16 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     otrosApplication.setLogLoader(new BasicLogLoader());
-    SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
+    if (!runningForTests()){
+      SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
+    }
     ToolTipManager.sharedInstance().setDismissDelay(5000);
 
     JProgressBar heapBar = new JProgressBar();
     heapBar.setPreferredSize(new Dimension(190, 15));
-    new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater").start();
+    final Thread memoryUsedUpdater = new Thread(new MemoryUsedStatsUpdater(heapBar, 1500), "MemoryUsedUpdater");
+    memoryUsedUpdater.setDaemon(true);
+    memoryUsedUpdater.start();
     JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill, push, grow][right][right]", "[]"));
     statusPanel.add(statusLabel);
     final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
@@ -223,7 +227,7 @@ public class LogViewMainFrame extends JFrame {
           + modalDisplayException.getMessage(), "Initialization Error",
         JOptionPane.ERROR_MESSAGE);
 
-    if (!System.getProperty(RUN_FOR_SCENARIO_TEST, "false").equals("true")) {
+    if (!runningForTests()) {
       new TipOfTheDay(c).showTipOfTheDayIfNotDisabled(this);
       Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
       // Check new version on start
@@ -244,13 +248,19 @@ public class LogViewMainFrame extends JFrame {
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
   }
 
+  private static boolean runningForTests() {
+    final String runForTest = System.getProperty(RUN_FOR_SCENARIO_TEST, "false");
+    final boolean b = runForTest.equals("true");
+    return b;
+  }
+
   private void initInputMap() {
     final JComponent contentPane = (JComponent) this.getContentPane();
     final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     String parseClipboard = "parseClipboard";
     final JTextArea jTextArea = new JTextArea();
     final KeyStroke[] keyStrokes = jTextArea.getInputMap().allKeys();
-    Arrays.asList(keyStrokes).forEach(ks -> System.out.println("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " + jTextArea.getInputMap().get(ks)));
+    Arrays.asList(keyStrokes).forEach(ks -> LOGGER.debug("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " + jTextArea.getInputMap().get(ks)));
 
     inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), parseClipboard);
     inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_MASK), parseClipboard);
@@ -275,12 +285,14 @@ public class LogViewMainFrame extends JFrame {
       }
       return;
     }
-    SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
-    SingleInstance singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
-      singleInstanceRequestResponseDelegate, args);
-    if (singleInstance == null) {
-      LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
-      System.exit(0);
+    if (!runningForTests()){
+      SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
+      SingleInstance singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
+        singleInstanceRequestResponseDelegate, args);
+      if (singleInstance == null) {
+        LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
+        System.exit(0);
+      }
     }
 
     LOGGER.info("Starting application");
@@ -472,10 +484,13 @@ public class LogViewMainFrame extends JFrame {
   }
 
   private void initToolbar() {
-    toolBar = new JToolBar();
-    final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
-    searchField = new JTextField();
+    toolBar = new JToolBar(){
 
+    };
+    final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
+    searchMode.setName("MainFrame.searchMode");
+    searchField = new JTextField();
+    searchField.setName("MainFrame.searchField");
     PersistedSuggestionSource searchSuggestionSource = new PersistedSuggestionSource(new SearchSuggestionSource(SearchMode.STRING_CONTAINS), otrosApplication.getServices().getPersistService());
     SuggestDecorator.decorate(
       searchField,
@@ -592,6 +607,7 @@ public class LogViewMainFrame extends JFrame {
     searchMode.setSelectedIndex(selectedSearchMode);
     final JCheckBox markFound = new JCheckBox("Mark search result");
     markFound.setMnemonic(KeyEvent.VK_M);
+    markFound.setName("MainFrame.markFound");
     searchField.addKeyListener(markAllFoundAction);
     configuration.addConfigurationListener(markAllFoundAction);
     JButton markAllFoundButton = new JButton(markAllFoundAction);
@@ -626,16 +642,18 @@ public class LogViewMainFrame extends JFrame {
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
     JButton buttonSearch = new JButton(searchActionForward);
+    buttonSearch.setName("MainFrame.searchNext");
     buttonSearch.setMnemonic(KeyEvent.VK_N);
     JButton buttonSearchPrev = new JButton(searchActionBackward);
+    buttonSearchPrev.setName("MainFrame.searchPrevious");
     buttonSearchPrev.setMnemonic(KeyEvent.VK_P);
-    enableDisableComponetsForTabs.addComponet(buttonSearch);
-    enableDisableComponetsForTabs.addComponet(buttonSearchPrev);
-    enableDisableComponetsForTabs.addComponet(searchField);
-    enableDisableComponetsForTabs.addComponet(markFound);
-    enableDisableComponetsForTabs.addComponet(markAllFoundButton);
-    enableDisableComponetsForTabs.addComponet(searchMode);
-    enableDisableComponetsForTabs.addComponet(markColor);
+    enableDisableComponetsForTabs.addComponent(buttonSearch);
+    enableDisableComponetsForTabs.addComponent(buttonSearchPrev);
+    enableDisableComponetsForTabs.addComponent(searchField);
+    enableDisableComponetsForTabs.addComponent(markFound);
+    enableDisableComponetsForTabs.addComponent(markAllFoundButton);
+    enableDisableComponetsForTabs.addComponent(searchMode);
+    enableDisableComponetsForTabs.addComponent(markColor);
     toolBar.add(searchMode);
     toolBar.add(searchField);
     toolBar.add(buttonSearch);
@@ -647,20 +665,26 @@ public class LogViewMainFrame extends JFrame {
     nextMarked.setToolTipText(nextMarked.getText());
     nextMarked.setText("");
     nextMarked.setMnemonic(KeyEvent.VK_E);
-    enableDisableComponetsForTabs.addComponet(nextMarked);
+    enableDisableComponetsForTabs.addComponent(nextMarked);
     toolBar.add(nextMarked);
     JButton prevMarked = new JButton(new JumpToMarkedAction(otrosApplication, Direction.BACKWARD));
     prevMarked.setToolTipText(prevMarked.getText());
     prevMarked.setText("");
     prevMarked.setMnemonic(KeyEvent.VK_R);
-    enableDisableComponetsForTabs.addComponet(prevMarked);
+    enableDisableComponetsForTabs.addComponent(prevMarked);
     toolBar.add(prevMarked);
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.INFO)));
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.WARNING)));
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.SEVERE)));
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.INFO)));
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.WARNING)));
-    enableDisableComponetsForTabs.addComponet(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.SEVERE)));
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.INFO)))
+      .setName("MainFrame.NextInfo");
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.WARNING)))
+      .setName("MainFrame.NextWarning");;
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.SEVERE)))
+      .setName("MainFrame.NextSevere");
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.INFO)))
+      .setName("MainFrame.PreviousInfo");
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.WARNING)))
+      .setName("MainFrame.PreviousWarning");
+    enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.SEVERE)))
+      .setName("MainFrame.PreviousSevere");
   }
 
   private void initMenu() {
@@ -684,7 +708,7 @@ public class LogViewMainFrame extends JFrame {
     fileMenu.add(labelLogInvestigation);
     fileMenu.add(new OpenLogInvestigationAction(otrosApplication));
     JMenuItem saveLogsInvest = new JMenuItem(new SaveLogInvestigationAction(otrosApplication));
-    enableDisableComponetsForTabs.addComponet(saveLogsInvest);
+    enableDisableComponetsForTabs.addComponent(saveLogsInvest);
     fileMenu.add(saveLogsInvest);
     fileMenu.add(new JSeparator());
     JMenuItem exitMenuItem = new JMenuItem("Exit", 'e');
@@ -698,7 +722,7 @@ public class LogViewMainFrame extends JFrame {
     JMenu toolsMenu = new JMenu("Tools");
     toolsMenu.setMnemonic(KeyEvent.VK_T);
     JMenuItem closeAll = new JMenuItem(new CloseAllTabsAction(otrosApplication));
-    enableDisableComponetsForTabs.addComponet(closeAll);
+    enableDisableComponetsForTabs.addComponent(closeAll);
     ArrayList<SocketLogReader> logReaders = new ArrayList<>();
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));

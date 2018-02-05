@@ -21,8 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.util.regex.PatternSyntaxException;
+import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class VfsTableModelFileNameRowFilter extends RowFilter<VfsTableModel, Integer> {
   private static final Logger LOGGER =
@@ -44,16 +45,15 @@ public class VfsTableModelFileNameRowFilter extends RowFilter<VfsTableModel, Int
   }
 
   boolean checkIfInclude(String baseName, String patternText) {
-    Pattern pattern = null;
+    Optional<Pattern> pattern = Optional.empty();
     try {
       String patternString = preparePatternString(patternText);
-      pattern = Pattern.compile(patternString);
+      pattern = Optional.of(Pattern.compile(patternString));
     } catch (PatternSyntaxException pse) {
       LOGGER.error(pse.getMessage());
       //if pattern can't be compiled we will use String contains test
     }
-    LOGGER.debug(String.format("pattern=(%s)", pattern));
-    return StringUtils.containsIgnoreCase(baseName, patternText) || (pattern == null) ? true : pattern.matcher(baseName).matches();
+    return StringUtils.containsIgnoreCase(baseName, patternText) || pattern.map(p -> p.matcher(baseName).matches()).orElse(false);
   }
 
 
