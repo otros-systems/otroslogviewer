@@ -20,6 +20,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.jdesktop.swingx.JXHyperlink;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +49,7 @@ public class ThreadFilter extends AbstractLogFilter {
         for (Object selectedValue : selectedValues) {
           selectedThread.add((String) selectedValue);
         }
-        listener.valueChanged();
+        listener.ifPresent(LogFilterValueChangeListener::valueChanged);
       }
     });
     JLabel jLabel = new JLabel("Threads:");
