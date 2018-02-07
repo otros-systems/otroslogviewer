@@ -18,10 +18,7 @@ package pl.otros.logview.api.model;
 import pl.otros.logview.api.MapCompare;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class LogData implements Serializable {
@@ -42,7 +39,7 @@ public class LogData implements Serializable {
   private String loggerName = "";
   private String message = "";
   private int id;
-  private Map<String, String> properties;
+  private Map<String, String> properties = Collections.EMPTY_MAP;
   private Note note;
   private boolean marked;
   private MarkerColors markerColors;

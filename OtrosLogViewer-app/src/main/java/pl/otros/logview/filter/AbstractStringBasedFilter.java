@@ -16,6 +16,7 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
+import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 
 import javax.swing.*;
@@ -27,11 +28,10 @@ import java.awt.event.KeyEvent;
 
 public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
 
-  protected static final int EDIT_FILTER_ACTION_DELAY = 1000;
   protected JTextField textField;
   protected String filteringText;
   protected Color editingColor = Color.YELLOW;
-  protected Color normalColor = null;
+  protected Color normalColor;
   protected JPanel gui;
   protected JLabel label;
   protected MigLayout layout;
@@ -104,7 +104,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
     setFilteringText(textField.getText());
     setIgnoreCase(caseInsensetiveCheckBox.isSelected());
     performPreFiltering();
-    listener.valueChanged();
+    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
 
   }
 
