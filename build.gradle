@@ -17,7 +17,7 @@ plugins {
     id "com.github.maiflai.scalatest" version "0.15"
 }
 
-project.ext.set('sharedVersion', "1.4.7")
+project.ext.set('sharedVersion', "1.4.8-SNAPSHOT")
 
 subprojects {
     apply plugin: 'java'
