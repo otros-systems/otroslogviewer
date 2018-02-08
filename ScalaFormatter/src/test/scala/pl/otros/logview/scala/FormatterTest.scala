@@ -26,7 +26,7 @@ class FormatterTest extends WordSpecLike with Matchers {
       val s: String = "Some(Value) string"
       val expected =
         """ *── Some: Value
-          |string""".stripMargin
+          |string""".stripMargin.replaceAll("\r", "")
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -34,7 +34,7 @@ class FormatterTest extends WordSpecLike with Matchers {
       val s: String = "String Some(Value)"
       val expected =
         """String
-          | *── Some: Value""".stripMargin
+          | *── Some: Value""".stripMargin.replaceAll("\r", "")
       val f = Formatter.format(s)
       f shouldBe expected
 
@@ -44,7 +44,7 @@ class FormatterTest extends WordSpecLike with Matchers {
       val expected =
         """Start
           | *── Some: Value
-          |end""".stripMargin
+          |end""".stripMargin.replaceAll("\r", "")
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -55,7 +55,7 @@ class FormatterTest extends WordSpecLike with Matchers {
           | *── Some: Value
           |middle
           | *── Some: Value2
-          |end""".stripMargin
+          |end""".stripMargin.replaceAll("\r", "")
       val f = Formatter.format(s)
       f shouldBe expected
     }
@@ -76,7 +76,7 @@ class FormatterTest extends WordSpecLike with Matchers {
           | *┬─ Map (1):
           |  └▷── a
           |       └→── b
-          |!""".stripMargin
+          |!""".stripMargin.replaceAll("\r", "")
 
       Formatter.format(s) shouldBe expected
     }

@@ -3,6 +3,7 @@ package pl.otros.logview.logloader.basic;
 import com.google.common.collect.Range;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.VFS;
+import org.awaitility.core.AssertionCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -70,11 +71,9 @@ public class LoadingRunnableTest {
       return data.getMessage().endsWith("99");
     }
   };
-  private final int julSimpleAvailableBytes;
 
   public LoadingRunnableTest() throws IOException {
     final InputStream julSimpleLogInputStream = LoadingRunnableTest.class.getClassLoader().getResourceAsStream("logloader/jul-simple.log");
-    julSimpleAvailableBytes = julSimpleLogInputStream.available();
     julSimpleLogLines = IOUtils.readLines(julSimpleLogInputStream);
 
     final InputStream julXmlLogInputStream = LoadingRunnableTest.class.getClassLoader().getResourceAsStream("logloader/jul-xml.log");
@@ -218,8 +217,6 @@ public class LoadingRunnableTest {
     saveLines(range3, logLines, outputStream);
     Thread.sleep(300);
     Assert.assertEquals(collector.getLogData().length, countForThirdImport);
-
-    underTest.stop();
   }
 
   @Test
@@ -274,14 +271,13 @@ public class LoadingRunnableTest {
     logImporter = getJulLogParser();
     underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), Optional.empty());
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
-
+    
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
 
-    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getPosition() == julSimpleAvailableBytes);
-    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getTotal() == julSimpleAvailableBytes);
-    underTest.stop();
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getPosition() == file.length());
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getTotal() == file.length());
   }
 
 
