@@ -39,6 +39,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
   @Override
   protected void handleError(Exception e) {
     LOGGER.warn("Error when checking new version" + e.getMessage());
+    getOtrosApplication().getStatusObserver().updateStatus("Can't check latest version", StatusObserver.LEVEL_WARNING);
 
   }
 

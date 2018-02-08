@@ -39,7 +39,7 @@ public class OtrosSplash {
 
     if (version == null) {
       try {
-        version = VersionUtil.getRunningVersion();
+        version = new VersionUtil().getRunningVersion();
       } catch (IOException e) {
         version = "?";
       }

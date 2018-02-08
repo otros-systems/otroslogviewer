@@ -182,10 +182,10 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     if (logDatas.length == 0) {
       return;
     }
-    for (LogData logData : logDatas) {
-      addLogDataToTable(logData);
-    }
-    fireTableRowsInserted(getRowCount() - logDatas.length, getRowCount() - 1);
+    int oldRowCount = getRowCount();
+    addLogDataToTable(logDatas);
+    final int rowCount = getRowCount();
+    fireTableRowsInserted(oldRowCount, rowCount - 1);
   }
 
   /*
@@ -199,7 +199,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     fireTableRowsInserted(rowToNotify, rowToNotify);
   }
 
-  private void addLogDataToTable(LogData logData) {
+  private void addLogDataToTable(LogData... logData) {
     logDataStore.add(logData);
   }
 
@@ -224,7 +224,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     return toDelete.size();
   }
 
-  protected void removeRows(int... rows) {
+  void removeRows(int... rows) {
     logDataStore.remove(rows);
 
     if (rows.length > 0) {

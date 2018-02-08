@@ -1,0 +1,15 @@
+<configuration>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>olv-test.log</file>
+        <encoder>
+            <pattern>%-5level %date{dd MMM yyyy;HH:mm:ss.SSS} [%thread] %logger %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--<appender name="GUI" class="pl.otros.logview.logging.GuiAppender"/>-->
+    <root level="debug">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="GUI" />
+    </root>
+</configuration>

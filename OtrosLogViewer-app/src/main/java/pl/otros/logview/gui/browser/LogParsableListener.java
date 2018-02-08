@@ -86,8 +86,10 @@ public class LogParsableListener implements SelectionListener {
   @Override
   public void enteredDir(FileObject fileObject) {
     worker.ifPresent(w -> w.cancel(false));
-    label.setText("");
-    label.setIcon(null);
-    layout.show(content, OK);
+    SwingUtilities.invokeLater(() -> {
+      label.setText("");
+      label.setIcon(null);
+      layout.show(content, OK);
+    });
   }
 }

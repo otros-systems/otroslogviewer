@@ -45,7 +45,7 @@ public class AboutAction extends OtrosAction {
     super(otrosApplication);
     this.putValue(SMALL_ICON, Icons.LOGO_OTROS_16);
     try {
-      build = VersionUtil.getRunningVersion();
+      build = new VersionUtil().getRunningVersion();
     } catch (IOException e) {
       LOGGER.error("Problem with checking running version: " + e.getMessage());
     }

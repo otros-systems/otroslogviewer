@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.model.LogData;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class PropertyFilter extends AbstractStringBasedFilter {
 
@@ -44,22 +45,29 @@ public class PropertyFilter extends AbstractStringBasedFilter {
     if (mode.equals(Mode.AllProperties) && StringUtils.isBlank(condition)) {
       return true;
     }
+    final Map<String, String> properties = logData.getProperties();
+
     if (mode.equals(Mode.AllProperties)) {
-      Collection<String> values = logData.getProperties().values();
+      Collection<String> values = properties.values();
       for (String string : values) {
         if (contains(string, condition, isIgnoreCase())) {
           return true;
         }
       }
     } else if (mode.equals(Mode.SinglePropertyEquals)) {
-      String propValue = logData.getProperties().get(property);
-      if (isIgnoreCase()) {
-        return StringUtils.equalsIgnoreCase(propValue, value);
+      if (value.length() == 0) {
+        return properties.containsKey(property);
       } else {
-        return StringUtils.equals(propValue, value);
+        String propValue = properties.getOrDefault(property, "");
+        if (isIgnoreCase()) {
+          return StringUtils.equalsIgnoreCase(propValue, value);
+        } else {
+          return StringUtils.equals(propValue, value);
+        }
       }
+
     } else if (mode.equals(Mode.SinglePropertyLike)) {
-      String propValue = logData.getProperties().get(property);
+      String propValue = properties.get(property);
       return contains(propValue, value, ignoreCase);
     }
     return false;
@@ -71,12 +79,14 @@ public class PropertyFilter extends AbstractStringBasedFilter {
     if (StringUtils.contains(text, "=")) {
       if (StringUtils.contains(text, "~=")) {
         mode = Mode.SinglePropertyLike;
-        property = StringUtils.split(text, "~=", 2)[0];
-        value = StringUtils.split(text, "~=", 2)[1];
+        final String[] split = StringUtils.split(text, "~=", 2);
+        property = split[0];
+        value = split.length == 2 ? split[1] : "";
       } else {
         mode = Mode.SinglePropertyEquals;
-        property = StringUtils.split(text, "=", 2)[0];
-        value = StringUtils.split(text, "=", 2)[1];
+        final String[] split = StringUtils.split(text, "=", 2);
+        property = split[0];
+        value = split.length == 2 ? split[1] : "";
       }
     } else {
       mode = Mode.AllProperties;

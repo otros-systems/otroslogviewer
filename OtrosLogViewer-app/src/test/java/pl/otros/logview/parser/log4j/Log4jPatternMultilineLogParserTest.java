@@ -156,6 +156,60 @@ public class Log4jPatternMultilineLogParserTest {
 
   }
 
+   @Test
+  public void testThreadWithSpaces() throws IOException, InitializationException {
+    Properties p = new Properties();
+    p.put("type", "log4j");
+    p.put("pattern", "TIMESTAMP|LEVEL|THREAD|CLASS|MESSAGE");
+    p.put("dateFormat", "yyyy.MM.dd HH:mm:ss.SSS");
+    Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    InputStream in = loadLog("log4j/log4j_pattern_thread_with_spaces.log");
+    LogImporterUsingParser importerUsingParser = new LogImporterUsingParser(logParser);
+    ParsingContext context = new ParsingContext();
+    importerUsingParser.init(p);
+    importerUsingParser.initParsingContext(context);
+
+    // when
+    ProxyLogDataCollector dataCollector = new ProxyLogDataCollector();
+    importerUsingParser.importLogs(in, dataCollector, context);
+
+    // then
+    LogData[] logDatas = dataCollector.getLogData();
+    assertEquals(4, logDatas.length);
+    assertEquals("T1", logDatas[0].getThread());
+    assertEquals("T2", logDatas[1].getThread());
+    assertEquals("T3", logDatas[2].getThread());
+    assertEquals("T4", logDatas[3].getThread());
+  }
+
+   @Test
+  public void testLoggerWithSpaces() throws IOException, InitializationException {
+    Properties p = new Properties();
+    p.put("type", "log4j");
+    p.put("pattern", "TIMESTAMP|LEVEL|LOGGER|MESSAGE");
+    p.put("dateFormat", "yyyy.MM.dd HH:mm:ss.SSS");
+    Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    InputStream in = loadLog("log4j/log4j_pattern_logger_with_spaces.log");
+    LogImporterUsingParser importerUsingParser = new LogImporterUsingParser(logParser);
+    ParsingContext context = new ParsingContext();
+    importerUsingParser.init(p);
+    importerUsingParser.initParsingContext(context);
+
+    // when
+    ProxyLogDataCollector dataCollector = new ProxyLogDataCollector();
+    importerUsingParser.importLogs(in, dataCollector, context);
+
+    // then
+    LogData[] logDatas = dataCollector.getLogData();
+    assertEquals(4, logDatas.length);
+    assertEquals("c1.a", logDatas[0].getLoggerName());
+    assertEquals("c1.b", logDatas[1].getLoggerName());
+    assertEquals("c1.c", logDatas[2].getLoggerName());
+    assertEquals("c1.d", logDatas[3].getLoggerName());
+  }
+
+
+
   @Test
   public void testDatePatternWithT() throws IOException, InitializationException, ParseException {
     Properties p = new Properties();

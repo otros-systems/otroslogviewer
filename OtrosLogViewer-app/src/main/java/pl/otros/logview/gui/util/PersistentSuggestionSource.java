@@ -13,7 +13,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -30,11 +34,11 @@ public class PersistentSuggestionSource<T> implements SuggestionSource {
   private Function<String, T> deserializer;
 
   public PersistentSuggestionSource(
-    String persistKey,
-    PersistService persistService,
-    BiFunction<T, SuggestionQuery, Boolean> filterFunction,
-    Function<T, String> serializer,
-    Function<String, T> deserializer) {
+      String persistKey,
+      PersistService persistService,
+      BiFunction<T, SuggestionQuery, Boolean> filterFunction,
+      Function<T, String> serializer,
+      Function<String, T> deserializer) {
 
     this.persistKey = persistKey;
     this.persistService = persistService;
@@ -46,8 +50,8 @@ public class PersistentSuggestionSource<T> implements SuggestionSource {
   @Override
   public List<T> getSuggestions(SuggestionQuery query) {
     return loadValues().stream()
-      .filter(s -> filterFunction.apply(s, query))
-      .collect(toList());
+        .filter(s -> filterFunction.apply(s, query))
+        .collect(toList());
   }
 
   @SafeVarargs
@@ -60,15 +64,15 @@ public class PersistentSuggestionSource<T> implements SuggestionSource {
     LinkedHashSet<T> r = new LinkedHashSet<T>(result);
 
     final List<String> collect = r.stream()
-      .map(serializer)
-      .map(StringEscapeUtils::escapeCsv)
-      .collect(toList());
+        .map(serializer)
+        .map(StringEscapeUtils::escapeCsv)
+        .collect(toList());
 
     try {
       final StringWriter out = new StringWriter();
       CSVFormat.DEFAULT.print(out).printRecords(collect);
       final String content = out.toString();
-      persistService.persist(persistKey, content);
+      persistService.persist(persistKey, content, (s) -> s);
     } catch (Exception e) {
       LOGGER.error("Can't store suggestions for " + persistKey, e);
     }
@@ -76,13 +80,13 @@ public class PersistentSuggestionSource<T> implements SuggestionSource {
 
   private List<T> loadValues() {
     try {
-      final String load = Optional.ofNullable(persistService.load(persistKey, "")).orElse("");
+      final String load = persistService.load(persistKey, "", Optional::of);
       Reader in = new StringReader(load);
       return new CSVParser(in, CSVFormat.DEFAULT).getRecords()
-        .stream()
-        .map(v -> v.get(0))
-        .map(deserializer)
-        .collect(toList());
+          .stream()
+          .map(v -> v.get(0))
+          .map(deserializer)
+          .collect(toList());
     } catch (IOException e) {
       LOGGER.error("Cant read suggestion from persistence for key: " + persistKey);
       return new ArrayList<>();

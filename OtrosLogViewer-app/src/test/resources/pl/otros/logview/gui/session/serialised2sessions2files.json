@@ -1,0 +1,1 @@
+[{"name":"session1","filesToOpen":[{"level":"FINEST","openMode":"FROM_END","uri":"file:///tmp/a.txt","logImporter":"logImporter"}]},{"name":"session2","filesToOpen":[{"level":"FINEST","openMode":"FROM_END","uri":"file:///tmp/a.txt","logImporter":"logImporter1"},{"level":"INFO","openMode":"FROM_START","uri":"file:///tmp/B.txt","logImporter":"logImporter2"}]}]

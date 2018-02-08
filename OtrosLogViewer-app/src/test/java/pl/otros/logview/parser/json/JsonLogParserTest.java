@@ -35,7 +35,7 @@ public class JsonLogParserTest {
     return properties;
   }
 
-  @Test(dataProvider = "dataProvider")
+  @Test(dataProvider = "testParse")
   public void testParse(String fileName, String desc, Properties properties) throws Exception {
     //Given
     final JsonLogParser jsonParser = new JsonLogParser();

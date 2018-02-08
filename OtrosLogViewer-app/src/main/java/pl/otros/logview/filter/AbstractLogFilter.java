@@ -19,13 +19,14 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.pluginable.LogFilter;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
+import java.util.Optional;
 import java.util.Properties;
 
 public abstract class AbstractLogFilter implements LogFilter {
 
   protected boolean enable;
   protected LogDataTableModel collector;
-  protected LogFilterValueChangeListener listener;
+  protected Optional<LogFilterValueChangeListener> listener = Optional.empty();
   protected String name;
   protected String description;
 
@@ -66,7 +67,7 @@ public abstract class AbstractLogFilter implements LogFilter {
 
   @Override
   public void setValueChangeListener(LogFilterValueChangeListener listener) {
-    this.listener = listener;
+    this.listener = Optional.ofNullable(listener);
   }
 
   @Override

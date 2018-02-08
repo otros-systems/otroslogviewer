@@ -50,8 +50,9 @@ public class EnableDisableComponetsForTabs implements ChangeListener {
     return result;
   }
 
-  public void addComponet(Component component) {
+  public Component addComponent(Component component) {
     componets.add(component);
+    return component;
   }
 
   public boolean removeComponent(Component component) {
