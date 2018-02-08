@@ -35,7 +35,6 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer {
     Date d = (Date) value;
     String s = "-";
     if (d != null) {
-      s = d.toString();
       DateFormat df = dateOnly;
       if (dateOnly.format(d).equals(dateOnly.format(new Date()))) {
         df = dateFormatHourOnly;
@@ -43,13 +42,10 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer {
       }
       l.setToolTipText(dateFormatFull.format(d));
       s = df.format(d);
-
     }
     l.setText(s);
     l.setHorizontalAlignment(SwingConstants.RIGHT);
-
     return l;
-
   }
 
 }

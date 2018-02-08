@@ -172,7 +172,7 @@ public class VFSURIValidatorTest {
   };
 
   private Object[][] invalidData = {
-      new Object[]{"WEBDAV: //user:pass:@machine/the_file"},      //failure tests,true},§
+      new Object[]{"WEBDAV: //user:pass:@machine/the_file"}, //failure tests,true}
       new Object[]{"SMB: //user:pass:@machine/the_file"},//failure tests,true},
       new Object[]{"SFTP: //user:pass:@machine/the_file"},//failure tests,true},
       new Object[]{"HTTPS: //user:pass:@machine/the_file"},      //failure tests,true},

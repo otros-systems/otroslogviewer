@@ -182,14 +182,16 @@ public class Utils {
     loadingInfo.getFileObject().refresh();
     long currentSize = loadingInfo.getFileObject().getContent().getSize();
     IOUtils.closeQuietly(loadingInfo.getObserableInputStreamImpl());
-    RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
-    randomAccessContent.seek(position);
     loadingInfo.setLastFileSize(currentSize);
-    ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(),0);
-    loadingInfo.setObserableInputStreamImpl(observableStream);
     if (loadingInfo.isGziped()) {
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(loadingInfo.getFileObject().getContent().getInputStream());
+      loadingInfo.setObserableInputStreamImpl(observableStream);
       loadingInfo.setContentInputStream(new GZIPInputStream(observableStream));
     } else {
+      RandomAccessContent randomAccessContent = loadingInfo.getFileObject().getContent().getRandomAccessContent(RandomAccessMode.READ);
+      randomAccessContent.seek(position);
+      ObservableInputStreamImpl observableStream = new ObservableInputStreamImpl(randomAccessContent.getInputStream(),0);
+      loadingInfo.setObserableInputStreamImpl(observableStream);
       loadingInfo.setContentInputStream(observableStream);
     }
   }
@@ -290,11 +292,13 @@ public class Utils {
       sb.append("://");
       if (!"file".equals(scheme)) {
         String host = uri.getHost();
+        if (host == null)
+          host = uri.getAuthority();
         // if host name is not IP, return only host name
-        if (!Pattern.matches("(\\d+\\.){3}\\d+", host)) {
+        if (host != null && !Pattern.matches("(\\d+\\.){3}\\d+", host)) {
           host = host.split("\\.")[0];
         }
-        sb.append(host).append('/');
+        sb.append(host == null ? "???" : host).append('/');
       }
       sb.append(fileObject.getName().getBaseName());
     } catch (URISyntaxException e) {

@@ -16,6 +16,7 @@
 package pl.otros.logview;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
@@ -24,41 +25,70 @@ import pl.otros.logview.api.OtrosApplication;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.jar.Manifest;
 
 public class VersionUtil {
 
-  private static final String CURRENT_VERSION_PAGE_URL = "http://otroslogviewer.appspot.com/services/currentVersion?";
   private static final Logger LOGGER = LoggerFactory.getLogger(VersionUtil.class.getName());
   private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
+
+  private String currentVersionPageUrl;
+
+  public VersionUtil() {
+    this("http://otroslogviewer.appspot.com/services/currentVersion");
+  }
+
+  public VersionUtil(String currentVersionPageUrl) {
+    this.currentVersionPageUrl = currentVersionPageUrl;
+  }
 
   /**
    * Check latest released version.
    *
-   * @param running  currently running version
+   * @param running currently running version
    * @return Latest released version
    * @throws IOException
    */
-  public static String getCurrentVersion(String running, Proxy proxy, OtrosApplication otrosApplication) throws IOException {
+  public Optional<String> getCurrentVersion(String running, Proxy proxy, OtrosApplication otrosApplication) throws IOException {
+    final String instanceUuid = otrosApplication.getConfiguration().getString(ConfKeys.UUID, "");
+    final String requestUrl = buildRequestUrl(running, instanceUuid);
+    LOGGER.debug("Will use URL: {}", requestUrl);
+    URL url = new URL(requestUrl);
+    String page = IOUtils.toString(url.openConnection(proxy).getInputStream());
+    LOGGER.debug("Response from version server is:\n{}", page);
+    ByteArrayInputStream bin = new ByteArrayInputStream(page.getBytes());
+    Properties p = new Properties();
+    p.load(bin);
+    final Optional<String> s = validateResponse(p.getProperty("currentVersion"));
+    LOGGER.info("Current version is: {}", s);
+    return s;
+  }
+
+  Optional<String> validateResponse(String currentVersion) {
+    if (currentVersion != null && currentVersion.matches("\\d+(.\\d+)*")) {
+      return Optional.of(currentVersion);
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  @NotNull
+  private String buildRequestUrl(String running, String instanceUuid) throws UnsupportedEncodingException {
     StringBuilder sb = new StringBuilder();
     sb.append("runningVersion=").append(running);
     sb.append("&java.version=").append(URLEncoder.encode(System.getProperty("java.version"), "ISO-8859-1"));
     sb.append("&os.name=").append(URLEncoder.encode(System.getProperty("os.name"), "ISO-8859-1"));
     sb.append("&vm.vendor=").append(URLEncoder.encode(System.getProperty("java.vm.vendor"), "ISO-8859-1"));
-    String uuid = URLEncoder.encode(otrosApplication.getConfiguration().getString(ConfKeys.UUID, ""), "ISO-8859-1");
+    String uuid = URLEncoder.encode(instanceUuid, "ISO-8859-1");
     sb.append("&uuid=").append(uuid);
-    URL url = new URL(CURRENT_VERSION_PAGE_URL + sb.toString());
-    String page = IOUtils.toString(url.openConnection(proxy).getInputStream());
-    ByteArrayInputStream bin = new ByteArrayInputStream(page.getBytes());
-    Properties p = new Properties();
-    p.load(bin);
-    return p.getProperty("currentVersion", "?");
-
+    return currentVersionPageUrl + "?" + sb.toString();
   }
 
   /**
@@ -67,7 +97,7 @@ public class VersionUtil {
    * @return currently running version
    * @throws IOException
    */
-  public static String getRunningVersion() throws IOException {
+  public String getRunningVersion() throws IOException {
     LOGGER.info("Checking running version");
     String result = "";
     Enumeration<URL> resources = VersionUtil.class.getClassLoader().getResources("META-INF/MANIFEST.MF");

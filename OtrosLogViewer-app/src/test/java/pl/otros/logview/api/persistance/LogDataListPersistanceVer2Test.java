@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -110,7 +110,7 @@ public class LogDataListPersistanceVer2Test {
 
     AssertJUnit.assertEquals(1, loadLogsList.size());
     Map<String, String> propertiesRead = loadLogsList.get(0).getProperties();
-    AssertJUnit.assertNull(propertiesRead);
+    AssertJUnit.assertEquals(0, propertiesRead.size());
   }
 
   @Test
@@ -120,7 +120,7 @@ public class LogDataListPersistanceVer2Test {
 
     AssertJUnit.assertEquals(40, loadLogsList.size());
     Map<String, String> propertiesRead = loadLogsList.get(0).getProperties();
-    AssertJUnit.assertNull(propertiesRead);
+    AssertJUnit.assertEquals(0, propertiesRead.size());
   }
 
   @Test

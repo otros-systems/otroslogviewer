@@ -89,6 +89,7 @@ public class JOtrosVfsBrowserDialog {
 
   public ReturnValue showOpenDialog(Component parent, String title) {
     JDialog dialog = createDialog(parent);
+    dialog.setName("VfsBrowserDialog");
     dialog.setTitle(title);
     if (size == null) {
       dialog.pack();

@@ -3,7 +3,9 @@ package pl.otros.logview.gui.util;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import pl.otros.logview.api.services.Deserializer;
 import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.api.services.Serializer;
 import pl.otros.swing.suggest.SuggestionQuery;
 
 import java.util.Arrays;
@@ -21,17 +23,17 @@ public class PersistentSuggestionSourceTest {
   public void before() {
     persistService = Mockito.mock(PersistService.class);
     suggestionSource = new PersistentSuggestionSource<>("key",
-      persistService,
-      (i, q) -> i.toString().contains(q.getValue()),
-      Object::toString,
-      Integer::valueOf
+        persistService,
+        (i, q) -> i.toString().contains(q.getValue()),
+        Object::toString,
+        Integer::valueOf
     );
   }
 
   @Test
   public void testGetSuggestions() throws Exception {
     //given
-    when(persistService.load("key", "")).thenReturn("1111\n1112\n3232");
+    when(persistService.load(eq("key"), eq(""), any(Deserializer.class))).thenReturn("1111\n1112\n3232");
 
     //when
     final List<Integer> suggestions = suggestionSource.getSuggestions(new SuggestionQuery("11", 0));
@@ -44,14 +46,14 @@ public class PersistentSuggestionSourceTest {
   @Test
   public void testAdd() throws Exception {
     //given
-    when(persistService.load("key", "")).thenReturn("1111\n1112\n3232");
+    when(persistService.load(eq("key"), eq(""), any(Deserializer.class))).thenReturn("1111\n1112\n3232");
 
     //when
     suggestionSource.add(1134, 5454);
     final List<Integer> suggestions = suggestionSource.getSuggestions(new SuggestionQuery("11", 0));
 
     //than
-    verify(persistService,times(1)).persist("key", "1134\r\n5454\r\n1111\r\n1112\r\n3232\r\n");
+    verify(persistService, times(1)).persist(eq("key"), eq("1134\r\n5454\r\n1111\r\n1112\r\n3232\r\n"), any(Serializer.class));
   }
 
 }

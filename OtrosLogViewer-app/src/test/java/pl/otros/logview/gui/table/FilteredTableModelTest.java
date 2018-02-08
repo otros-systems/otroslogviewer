@@ -21,7 +21,7 @@ import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.filter.AbstractLogFilter;
 import pl.otros.logview.api.gui.LogDataTableModel;
 
-import java.awt.*;
+import javax.swing.*;
 import java.util.Date;
 
 import static org.testng.AssertJUnit.assertEquals;
@@ -37,7 +37,7 @@ public class FilteredTableModelTest {
     }
 
     @Override
-    public Component getGUI() {
+    public JComponent getGUI() {
       return null;
     }
 
@@ -90,7 +90,7 @@ public class FilteredTableModelTest {
     filteredTableModel.addFilter(new AbstractLogFilter("A", "B") {
 
       @Override
-      public Component getGUI() {
+      public JComponent getGUI() {
         return null;
       }
 
@@ -119,7 +119,7 @@ public class FilteredTableModelTest {
     filteredTableModel.addFilter(new AbstractLogFilter("A", "B") {
 
       @Override
-      public Component getGUI() {
+      public JComponent getGUI() {
         return null;
       }
 

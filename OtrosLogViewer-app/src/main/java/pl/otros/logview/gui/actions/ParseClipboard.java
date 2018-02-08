@@ -157,11 +157,6 @@ public class ParseClipboard extends OtrosAction {
           if (StringUtils.isNotBlank(processingPatternText)) {
             suggestionSource.add(new SearchSuggestion(processingPatternText.trim(), processingPatternText.trim()));
           }
-          try {
-            getOtrosApplication().getServices().getPersistService().persist("grep history", "list of ...");
-          } catch (Exception e1) {
-            LOGGER.error("Can't save suggestions for processing logs from clipboard");
-          }
         } catch (IOException e1) {
           statusLabel.setIcon(Icons.STATUS_ERROR);
           statusLabel.setText("Can't import logs: " + e1.getMessage());

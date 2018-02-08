@@ -16,28 +16,27 @@
 
 package pl.otros.vfs.browser.table;
 
-import java.awt.Component;
-import java.util.Date;
-
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.util.Date;
 
 public class MixedDateTableCellRenderer extends DefaultTableCellRenderer {
 
-	private static final long DURATION_THRESHOLD = 1000l*60*60*24*60;
+  private static final long DURATION_THRESHOLD = 1000L * 60 * 60 * 24 * 60;
 
 
-	private RelativeDateTableCellRenderer relativeDateTableCellRenderer = new RelativeDateTableCellRenderer();
-	private DateTableCellRenderer dateTableCellRenderer = new DateTableCellRenderer();
+  private RelativeDateTableCellRenderer relativeDateTableCellRenderer = new RelativeDateTableCellRenderer();
+  private DateTableCellRenderer dateTableCellRenderer = new DateTableCellRenderer();
 
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		if ( value !=null && value instanceof Date && ((Date)value).getTime()>System.currentTimeMillis()-DURATION_THRESHOLD){
-			return relativeDateTableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		}
-		return dateTableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-	}
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    if (value != null && value instanceof Date && ((Date) value).getTime() > System.currentTimeMillis() - DURATION_THRESHOLD) {
+      return relativeDateTableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    } else {
+      return dateTableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    }
+  }
 
 }

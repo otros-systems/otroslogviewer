@@ -141,7 +141,9 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
 
   @Override
   public void apply() {
-    SwingUtilities.invokeLater(() -> new FontSize(otrosApplication, (Integer) model.getValue()).actionPerformed(null));
+    if (customFontSize.isSelected()){
+      SwingUtilities.invokeLater(() -> new FontSize(otrosApplication, (Integer) model.getValue()).actionPerformed(null));
+    }
   }
 
   private static class MyDefaultListCellRenderer extends DefaultListCellRenderer {

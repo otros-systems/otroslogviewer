@@ -42,6 +42,7 @@ class EmptyViewPanel extends JPanel {
 
   protected EmptyViewPanel(OtrosApplication otrosApplication) {
     super();
+    this.setName("WelcomeScreen");
     this.otrosApplication = otrosApplication;
     jLabel = new JAnimatedLogo("Welcome to OtrosLogViewer", SwingConstants.LEFT);
     jLabel.setFont(jLabel.getFont().deriveFont(20f).deriveFont(Font.BOLD));
@@ -118,7 +119,9 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.gridy++;
 
     final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
-    this.add(new JButton(advanceOpenAction),bagConstraints);
+    final JButton advanceOpenButton = new JButton(advanceOpenAction);
+    advanceOpenButton.setName("open log files");
+    this.add(advanceOpenButton,bagConstraints);
     bagConstraints.gridy++;
 
     OpenLogInvestigationAction openLogInvestigationAction = new OpenLogInvestigationAction(otrosApplication);

@@ -150,6 +150,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   public static final String PROPERTY_DESCRIPTION = "description";
   public static final String PROPERTY_TYPE = "type";
   public static final String PROPERTY_CHARSET = "charset";
+  public static final String PROPERTY_TRIM_UNMATCHED_LINES = "trimUnmatchedLines";
 
   private final List<String> keywords = new ArrayList<>();
   // private SimpleDateFormat dateFormat;
@@ -179,7 +180,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   private static final String REGEXP_DEFAULT_WILDCARD = ".*?";
   private static final String REGEXP_GREEDY_WILDCARD = ".*";
   private static final String PATTERN_WILDCARD = "*";
-  private static final String NOSPACE_GROUP = "(\\S*\\s*?)";
+  private static final String IN_SPACE_GROUP = "(\\s*?\\S*\\s*?)";
   private static final String DEFAULT_GROUP = "(" + REGEXP_DEFAULT_WILDCARD + ")";
   private static final String GREEDY_GROUP = "(" + REGEXP_GREEDY_WILDCARD + ")";
   private static final String MULTIPLE_SPACES_REGEXP = "[ ]+";
@@ -197,6 +198,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   private Pattern regexpPattern;
   private Pattern exceptionPattern;
   private String timestampPatternText;
+  private Boolean trimUnmatchedLines;
 
   private final ParserDescription parserDescription;
 
@@ -453,7 +455,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
       } else if (TIMESTAMP.equals(keyword)) {
         newPattern = singleReplace(newPattern, String.valueOf(i), "(" + timestampPatternText.replaceAll("'", "") + ")");
       } else if (LOGGER.equals(keyword) || LEVEL.equals(keyword)) {
-        newPattern = singleReplace(newPattern, String.valueOf(i), NOSPACE_GROUP);
+        newPattern = singleReplace(newPattern, String.valueOf(i), IN_SPACE_GROUP);
       } else {
         newPattern = singleReplace(newPattern, String.valueOf(i), DEFAULT_GROUP);
       }
@@ -558,7 +560,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
     String lineNumber = null;
     Hashtable properties = new Hashtable();
 
-    logger = Logger.getLogger((String) fieldMap.remove(LOGGER));
+    logger = Logger.getLogger(StringUtils.trim((String) fieldMap.remove(LOGGER)));
 
     if ((dateFormat != null) && fieldMap.containsKey(TIMESTAMP)) {
       String dateString = (String) fieldMap.remove(TIMESTAMP);
@@ -578,7 +580,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
       message = "";
     }
 
-    level = (String) fieldMap.remove(LEVEL);
+    level = StringUtils.trim((String) fieldMap.remove(LEVEL));
     Level levelImpl;
     if (level == null) {
       levelImpl = Level.DEBUG;
@@ -602,14 +604,14 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
       }
     }
 
-    threadName = (String) fieldMap.remove(THREAD);
+    threadName = StringUtils.trim((String) fieldMap.remove(THREAD));
     if (threadName == null) {
       threadName = "";
     }
 
     ndc = (String) fieldMap.remove(NDC);
 
-    className = (String) fieldMap.remove(CLASS);
+    className = StringUtils.trim((String) fieldMap.remove(CLASS));
 
     methodName = (String) fieldMap.remove(METHOD);
 
@@ -711,7 +713,10 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
         if (parsingContext.getUnmatchedLog().length() > 0) {
           parsingContext.getUnmatchedLog().append('\n');
         }
-        parsingContext.getUnmatchedLog().append(line.trim());
+        if (trimUnmatchedLines)
+          parsingContext.getUnmatchedLog().append(line.trim());
+        else
+          parsingContext.getUnmatchedLog().append(line);
       }
     }
 
@@ -753,6 +758,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
     parserDescription.setDisplayName(properties.getProperty(PROPERTY_NAME, "?"));
     parserDescription.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, "?"));
     parserDescription.setCharset(properties.getProperty(PROPERTY_CHARSET, "UTF-8"));
+    trimUnmatchedLines = Boolean.valueOf(properties.getProperty(PROPERTY_TRIM_UNMATCHED_LINES, "true"));
     if (timestampFormat != null) {
       // dateFormat = new SimpleDateFormat(quoteTimeStampChars(timestampFormat));
       timestampPatternText = convertTimestamp();

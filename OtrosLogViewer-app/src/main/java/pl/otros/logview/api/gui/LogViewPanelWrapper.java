@@ -303,7 +303,9 @@ public class LogViewPanelWrapper extends JPanel {
           }
           SwingUtilities.invokeLater(r);
         };
-        new Thread(r2).start();
+        final Thread thread = new Thread(r2);
+        thread.setDaemon(true);
+        thread.start();
       }
     });
   }

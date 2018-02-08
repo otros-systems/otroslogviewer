@@ -94,21 +94,17 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     }
   }
 
-  @Override
-  public void setValueChangeListener(LogFilterValueChangeListener listener) {
-    this.listener = listener;
-  }
 
   public void ignoreClass(String... classes) {
     Collections.addAll(ignoreList, classes);
     mode = Mode.IGNORE_MODE;
-    listener.valueChanged();
+    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
   }
 
   public void focusOn(String... classes) {
     Collections.addAll(focusList, classes);
     mode = Mode.FOCUS_MODE;
-    listener.valueChanged();
+    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
   }
 
   private void initTree() {
@@ -303,7 +299,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         list.add(userObject.toFullString());
       }
       ClassLikeFilter.this.mode = mode;
-      listener.valueChanged();
+      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
     }
 
   }
@@ -325,7 +321,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         Clazz userObject = (Clazz) node.getUserObject();
         list.remove(userObject.toFullString());
       }
-      listener.valueChanged();
+      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
     }
 
   }
@@ -344,7 +340,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
       for (HashSet<String> l : lists) {
         l.clear();
       }
-      listener.valueChanged();
+      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
       tree.repaint();
     }
 

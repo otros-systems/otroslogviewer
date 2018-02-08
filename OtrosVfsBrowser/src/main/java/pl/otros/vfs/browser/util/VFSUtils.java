@@ -23,7 +23,15 @@ import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.vfs2.*;
+import org.apache.commons.vfs2.CacheStrategy;
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileName;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.UserAuthenticationData;
 import org.apache.commons.vfs2.UserAuthenticationData.Type;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.impl.StandardFileSystemManager;
@@ -36,7 +44,14 @@ import org.slf4j.LoggerFactory;
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.LinkFileObject;
 import pl.otros.vfs.browser.TaskContext;
-import pl.otros.vfs.browser.auth.*;
+import pl.otros.vfs.browser.auth.AuthStore;
+import pl.otros.vfs.browser.auth.AuthStoreUtils;
+import pl.otros.vfs.browser.auth.MemoryAuthStore;
+import pl.otros.vfs.browser.auth.OtrosUserAuthenticator;
+import pl.otros.vfs.browser.auth.StaticPasswordProvider;
+import pl.otros.vfs.browser.auth.UserAuthenticationDataWrapper;
+import pl.otros.vfs.browser.auth.UserAuthenticationInfo;
+import pl.otros.vfs.browser.auth.UserAuthenticatorFactory;
 
 import javax.swing.*;
 import java.io.File;
@@ -47,7 +62,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
@@ -230,8 +249,8 @@ public final class VFSUtils {
    * @return the files of a folder
    */
   public static FileObject[] getFiles(FileObject folder)
-  throws FileSystemException {
-      return getChildren(folder);
+      throws FileSystemException {
+    return getChildren(folder);
   }
 
   /**
@@ -538,6 +557,8 @@ public final class VFSUtils {
 
   public static FileObject[] getChildren(FileObject fileObject) throws FileSystemException {
     FileObject[] result;
+    final FileType type = fileObject.getType();
+    LOGGER.debug("fileType is {}", type);
     if (isHttpProtocol(fileObject)) {
       result = extractHttpFileObjectChildren(fileObject);
     } else if (isLocalFileSystem(fileObject) && isArchive(fileObject)) {

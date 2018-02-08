@@ -42,7 +42,9 @@ public class TabHeader extends JPanel {
   public TabHeader(JTabbedPane pane, String name, Icon icon, String tooltip) {
     super(new FlowLayout(FlowLayout.LEFT, 3, 0));
     this.jTabbedPane = pane;
+    this.setName("Tab.header");
     iconButton = new JButton(NORMAL_ICON);
+    iconButton.setName("Tab.close");
     iconButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
@@ -57,6 +59,7 @@ public class TabHeader extends JPanel {
     iconButton.setToolTipText("Close tab");
     iconButton.addActionListener(e -> closeTab());
     label = new JLabel(name, icon, SwingConstants.LEFT);
+    label.setName("Tab.name");
     label.setToolTipText(tooltip);
     label.addMouseListener(new MouseAdapter() {
       @Override

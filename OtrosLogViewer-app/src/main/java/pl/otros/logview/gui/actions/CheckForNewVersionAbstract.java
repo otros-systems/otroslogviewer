@@ -27,16 +27,19 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.Optional;
 
 import static pl.otros.logview.api.ConfKeys.*;
 
 public abstract class CheckForNewVersionAbstract extends OtrosAction {
   private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
-  private SwingWorker<String, String> versionChecker = new SwingWorker<String, String>() {
+  private VersionUtil versionUtil = new VersionUtil();
+
+  private SwingWorker<Optional<String>, Void> versionChecker = new SwingWorker<Optional<String>, Void>() {
     @Override
-    protected String doInBackground() throws Exception {
+    protected Optional<String> doInBackground() {
       String running;
-      String current = null;
+      Optional<String> current = Optional.empty();
       final DataConfiguration c = getOtrosApplication().getConfiguration();
 
       Proxy proxy = Proxy.NO_PROXY;
@@ -46,8 +49,8 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
         proxy = new Proxy(proxyType, proxySocketAddress);
       }
       try {
-        running = VersionUtil.getRunningVersion();
-        current = VersionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
+        running = versionUtil.getRunningVersion();
+        current = versionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
       } catch (Exception e) {
         LOGGER.error("Error checking version: " + e.getMessage());
       }
@@ -57,17 +60,23 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
     @Override
     protected void done() {
       try {
-        String current = get();
-        String running = VersionUtil.getRunningVersion();
-        if (current != null && StringUtils.isNotBlank(running)) {
-          if (current.compareTo(running) > 0) {
-            handleNewVersionIsAvailable(current, running);
+        Optional<String> maybeCurrent = get();
+        String running = versionUtil.getRunningVersion();
+        maybeCurrent.ifPresent(current -> {
+          if (StringUtils.isNotBlank(running)) {
+            if (current.compareTo(running) > 0) {
+              handleNewVersionIsAvailable(current, running);
+            } else {
+              handleVersionIsUpToDate(current);
+            }
           } else {
-            handleVersionIsUpToDate(current);
+            LOGGER.warn(String.format("Current version is %s, running version is %s", current, running));
           }
-        } else {
-          LOGGER.warn(String.format("Current version is %s, running version is %s", current, running));
+        });
+        if (!maybeCurrent.isPresent()){
+          handleError(new Exception("Unable to check latest version"));
         }
+
       } catch (Exception e) {
         handleError(e);
       }

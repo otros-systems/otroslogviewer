@@ -18,6 +18,7 @@ package pl.otros.logview.filter;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.Note;
+import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +35,10 @@ public class MarkNoteFilter extends AbstractLogFilter {
   public MarkNoteFilter() {
     super(NAME, DESCRIPTION);
     noteComboBox.setBorder(BorderFactory.createTitledBorder("With note:"));
-    noteComboBox.addActionListener(e -> listener.valueChanged());
+    noteComboBox.addActionListener(e -> listener.ifPresent(LogFilterValueChangeListener::valueChanged));
 
     markComboBox.setBorder(BorderFactory.createTitledBorder("Marked:"));
-    markComboBox.addActionListener(e -> listener.valueChanged());
+    markComboBox.addActionListener(e -> listener.ifPresent(LogFilterValueChangeListener::valueChanged));
 
     gui = new JPanel(new GridLayout(2, 1));
     gui.add(noteComboBox);
