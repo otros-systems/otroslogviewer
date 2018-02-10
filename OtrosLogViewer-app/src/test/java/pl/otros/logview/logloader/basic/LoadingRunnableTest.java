@@ -3,7 +3,6 @@ package pl.otros.logview.logloader.basic;
 import com.google.common.collect.Range;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.VFS;
-import org.awaitility.core.AssertionCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -31,9 +30,7 @@ import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
 import static org.awaitility.Awaitility.*;
-import static org.awaitility.Duration.*   ;
 import static java.util.concurrent.TimeUnit.*;
-import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
