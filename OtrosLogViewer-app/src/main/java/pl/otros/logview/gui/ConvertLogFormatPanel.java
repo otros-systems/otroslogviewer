@@ -3,6 +3,8 @@ package pl.otros.logview.gui;
 import com.google.common.io.Files;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
+import org.jdesktop.swingx.JXTextArea;
+import org.jetbrains.annotations.NotNull;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.LayoutEncoderConverter;
 import pl.otros.logview.api.OtrosApplication;
@@ -18,6 +20,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.nio.charset.Charset;
@@ -32,13 +36,16 @@ public class ConvertLogFormatPanel extends JPanel {
 
   private OtrosApplication otrosApplication;
   private static final String PANEL_SELECT = "panel select";
+  private static final String PANEL_PASTE = "panel paste";
   private static final String PANEL_APPROVE = "panel approve";
+  private String backFromApproveTo = PANEL_SELECT;
   private CardLayout cardLayout;
   private final LogPatternsTableModel logPatternsTableModel = new LogPatternsTableModel(Collections.emptyList());
   private final LayoutEncoderConverter logbackLayoutEncoderConverter = new LogbackLayoutEncoderConverter();
   private AbstractAction addLoggers;
+  private JXTextArea pasteTextArea;
 
-  public ConvertLogFormatPanel(OtrosApplication otrosApplication, Function<JComponent,Void> closeFunction) {
+  public ConvertLogFormatPanel(OtrosApplication otrosApplication, Function<JComponent, Void> closeFunction) {
     this.otrosApplication = otrosApplication;
     final JFileChooser jFileChooser = new JFileChooser();
     jFileChooser.setFileFilter(new XmlPropertiesFilter());
@@ -46,39 +53,36 @@ public class ConvertLogFormatPanel extends JPanel {
     fromFile.setName("ConvertLogFormatPanel.fromFile");
     OtrosSwingUtils.fontSize2(fromFile);
     fromFile.addActionListener(e -> {
-
+      backFromApproveTo = PANEL_SELECT;
       final int i = jFileChooser.showOpenDialog(ConvertLogFormatPanel.this);
       if (i == JFileChooser.APPROVE_OPTION) {
         final File selectedFile = jFileChooser.getSelectedFile();
         try {
-          final List<String> layoutPatterns = extractLayoutPatterns(selectedFile);
-          final List<LogPatternsTableModelEntry> newData = layoutPatterns
-            .stream()
-            .map(pattern -> {
-              try {
-                final Properties properties = logbackLayoutEncoderConverter.convert(pattern);
-                return new LogPatternsTableModelEntry(pattern, properties, checkIfAlreadyExist(properties) ? new Duplicated() : new WillImport());
-              } catch (Exception exception) {
-                return new LogPatternsTableModelEntry(pattern, new Properties(), new Error(exception.getMessage()));
-              }
-            }).collect(Collectors.toList());
-          logPatternsTableModel.setData(newData);
-          addLoggers.setEnabled(newData.stream().anyMatch(p -> p.status instanceof WillImport));
-          cardLayout.show(ConvertLogFormatPanel.this, PANEL_APPROVE);
+          String content = Files.readLines(selectedFile, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
+          processLoggerConfig(content);
         } catch (IOException e1) {
           e1.printStackTrace();
         }
-
       }
     });
     final JXButton pasteButton = new JXButton("Paste logger configuration", Icons.CLIPBOARD_PASTE);
+    pasteButton.addActionListener(e -> {
+      try {
+        backFromApproveTo = PANEL_PASTE;
+        String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+        pasteTextArea.setText(data);
+      } catch (UnsupportedFlavorException | IOException e1) {
+        //Ignore exceptions
+      }
+      cardLayout.show(ConvertLogFormatPanel.this, PANEL_PASTE);
+    });
     pasteButton.setName("ConvertLogFormatPanel.paste");
     OtrosSwingUtils.fontSize2(pasteButton);
     final JPanel panelSelect = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
-    panelSelect.add(new JLabel(""),"wrap, pushy");
-    panelSelect.add(fromFile,"wrap");
-    panelSelect.add(pasteButton,"wrap");
-    panelSelect.add(new JLabel(""),"wrap, pushy");
+    panelSelect.add(new JLabel(""), "wrap, pushy");
+    panelSelect.add(fromFile, "wrap");
+    panelSelect.add(pasteButton, "wrap");
+    panelSelect.add(new JLabel(""), "wrap, pushy");
 
     JPanel panelApprove = new JPanel(new BorderLayout());
     panelApprove.add(new JLabel("Parsing result:"), BorderLayout.NORTH);
@@ -123,13 +127,56 @@ public class ConvertLogFormatPanel extends JPanel {
     addButton.setName("ConvertLogFormatPanel.addButton");
     OtrosSwingUtils.fontSize2(addButton);
 
+    final JButton approveBackButton = new JButton(Icons.ARROW_LEFT_24);
+    approveBackButton.addActionListener(e -> backFromApprove());
+
     panelApprove.add(addButton, BorderLayout.SOUTH);
+    panelApprove.add(approveBackButton, BorderLayout.WEST);
+
+    final JPanel panelPaste = new JPanel(new BorderLayout());
+    pasteTextArea = new JXTextArea("Paste logback, log4j configuration file or just layout pattern");
+    panelPaste.add(pasteTextArea);
+    final JXButton processPastedButton = new JXButton("Process");
+    OtrosSwingUtils.fontSize2(processPastedButton);
+    processPastedButton.addActionListener(e -> {
+      try {
+        processLoggerConfig(pasteTextArea.getText());
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
+    });
+    panelPaste.add(processPastedButton, BorderLayout.SOUTH);
+    final JButton pasteBackButton = new JButton(Icons.ARROW_LEFT_24);
+    pasteBackButton.addActionListener(e -> cardLayout.show(ConvertLogFormatPanel.this, PANEL_SELECT));
+    panelPaste.add(pasteBackButton, BorderLayout.WEST);
 
     cardLayout = new CardLayout();
     this.setLayout(cardLayout);
     this.add(panelSelect, PANEL_SELECT);
     this.add(panelApprove, PANEL_APPROVE);
+    this.add(panelPaste, PANEL_PASTE);
     cardLayout.show(this, PANEL_SELECT);
+  }
+
+  private void backFromApprove() {
+    cardLayout.show(this, backFromApproveTo);
+  }
+
+  private void processLoggerConfig(String content) throws IOException {
+    final List<String> layoutPatterns = extractLayoutPatterns(content);
+    final List<LogPatternsTableModelEntry> newData = layoutPatterns
+      .stream()
+      .map(pattern -> {
+        try {
+          final Properties properties = logbackLayoutEncoderConverter.convert(pattern);
+          return new LogPatternsTableModelEntry(pattern, properties, checkIfAlreadyExist(properties) ? new Duplicated() : new WillImport());
+        } catch (Exception exception) {
+          return new LogPatternsTableModelEntry(pattern, new Properties(), new Error(exception.getMessage()));
+        }
+      }).collect(Collectors.toList());
+    logPatternsTableModel.setData(newData);
+    addLoggers.setEnabled(newData.stream().anyMatch(p -> p.status instanceof WillImport));
+    cardLayout.show(ConvertLogFormatPanel.this, PANEL_APPROVE);
   }
 
   private boolean checkIfAlreadyExist(Properties candidate) {
@@ -153,29 +200,28 @@ public class ConvertLogFormatPanel extends JPanel {
       );
   }
 
-  private List<String> extractLayoutPatterns(File selectedFile) throws IOException {
-    String content = Files.readLines(selectedFile, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
-    if (selectedFile.getName().endsWith(".xml")) {
-      //TODO log4j.xml pattern
-      Pattern p = Pattern.compile("<pattern>\\s*(.*?)\\s*</pattern>", Pattern.MULTILINE);
-      final Matcher matcher = p.matcher(content);
-      List<String> r = new ArrayList<>();
-      while (matcher.find()) {
-        r.add(matcher.group(1));
-      }
-      return r;
-    } else if (selectedFile.getName().endsWith(".properties")) {
-      final Properties properties = new Properties();
-      properties.load(new StringReader(content));
-      return properties
-        .<String>keySet()
-        .stream()
-        .map(Object::toString)
-        .filter(key -> key.endsWith("ConversionPattern"))
-        .map(properties::getProperty)
-        .collect(Collectors.toList());
+  @NotNull
+  private List<String> extractLayoutPatterns(String content) throws IOException {
+    //TODO log4j.xml pattern
+    Pattern p = Pattern.compile("<pattern>\\s*(.*?)\\s*</pattern>", Pattern.MULTILINE);
+    final Matcher matcher = p.matcher(content);
+    List<String> r = new ArrayList<>();
+    while (matcher.find()) {
+      r.add(matcher.group(1));
     }
-    return Collections.emptyList();
+
+    final Properties properties = new Properties();
+    properties.load(new StringReader(content));
+    List<String> patterns = properties
+      .<String>keySet()
+      .stream()
+      .map(Object::toString)
+      .filter(key -> key.endsWith("ConversionPattern"))
+      .map(properties::getProperty)
+      .collect(Collectors.toList());
+
+    r.addAll(patterns);
+    return r;
   }
 
   private static class XmlPropertiesFilter extends FileFilter {
