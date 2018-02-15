@@ -2,7 +2,7 @@ package pl.otros.logview.logppattern
 
 import scala.util.parsing.combinator.RegexParsers
 
-class LogbackPatternConverter {
+object LogbackPatternConverter {
 
   //https://logback.qos.ch/manual/layouts.html#ClassicPatternLayout
   def convert(pattern: String): Either[String, Map[String, String]] = {

@@ -729,6 +729,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
     toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt", "Show Log4j pattern parser editor", "Show Log4j pattern parser editor.", Icons.WRENCH, () -> new Log4jPatternParserEditor(otrosApplication, "log4jDefaultPatternParser.txt")));
     toolsMenu.add(new ShowLogPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties", "Show JSON pattern parser editor", "Show JSON pattern parser editor.", Icons.JSON, () -> new JsonPatternParserEditor(otrosApplication, "jsonDefaultPatternParser.properties")));
+    toolsMenu.add(new ConvertLogbackPattern(otrosApplication));
     toolsMenu.add(new ShowMessageColorizerEditor(otrosApplication));
     toolsMenu.add(new ShowLoadedPlugins(otrosApplication));
     toolsMenu.add(new ShowOlvLogs(otrosApplication));
