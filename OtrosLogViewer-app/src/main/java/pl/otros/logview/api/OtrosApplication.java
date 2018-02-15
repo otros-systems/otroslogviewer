@@ -131,6 +131,10 @@ public class OtrosApplication {
     }
   }
 
+  public void closeTab(JComponent component){
+    jTabbedPane.remove(component);
+  }
+
   public JFrame getApplicationJFrame() {
     return applicationJFrame;
   }

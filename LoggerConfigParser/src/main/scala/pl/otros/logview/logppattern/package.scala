@@ -168,7 +168,7 @@ package object logppattern {
       }
     }
 
-    override def pattern(): String = "DATE"
+    override def pattern(): String = "TIMESTAMP"
   }
 
   case object File extends Token {
@@ -200,7 +200,7 @@ package object logppattern {
   }
 
   case object Relative extends Token {
-    override def pattern(): String = ???
+    override def pattern(): String = "RELATIVE"
   }
 
   case object Thread extends Token {

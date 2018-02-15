@@ -97,6 +97,10 @@ public class Icons {
   @Path(path = "/img/fugue24/arrow-join.png")
   public static ImageIcon ARROW_JOIN_24;
 
+  @Path(path = "/img/fugue24/plus-circle.png")
+  public static ImageIcon PLUS_24;
+
+
   @Path(path = "/img/fugue/broom.png")
   public static ImageIcon CLEAR;
 
@@ -239,6 +243,9 @@ public class Icons {
 
   @Path(path = "/img/fugue/document-copy.png")
   public static ImageIcon DOCUMENT_COPY;
+
+  @Path(path = "/img/fugue/document-code.png")
+  public static ImageIcon DOCUMENT_CODE;
 
   @Path(path = "/img/ide/eclipse-disconnected.png")
   public static ImageIcon ICE_ECLIPSE_DISCONNECTED;

@@ -36,6 +36,7 @@ import pl.otros.logview.gui.renderers.PossibleLogImportersRenderer;
 import pl.otros.logview.gui.session.*;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
+import pl.otros.swing.OtrosSwingUtils;
 import pl.otros.swing.Progress;
 import pl.otros.swing.renderer.NamedTableRenderer;
 import pl.otros.swing.suggest.SuggestDecorator;
@@ -532,7 +533,7 @@ public class AdvanceOpenPanel extends JPanel {
     importButton.setName("OpenPanel.import");
     importButton.setMnemonic('I');
     final Font font = importButton.getFont();
-    importButton.setFont(font.deriveFont(font.getSize() * 2f));
+    OtrosSwingUtils.fontSize2(importButton);
     mainPanel.add(importButton, BorderLayout.SOUTH);
     tableModel.addTableModelListener(e -> {
       if (e.getType() == TableModelEvent.INSERT) {
