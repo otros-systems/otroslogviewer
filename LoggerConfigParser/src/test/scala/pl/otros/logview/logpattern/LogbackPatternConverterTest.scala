@@ -14,7 +14,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%level %d{HH:mm:ss.SSS} %thread %logger %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("LEVEL DATE THREAD CLASS MESSAGE")
+      map.get("pattern") shouldBe Some("LEVEL TIMESTAMP THREAD CLASS MESSAGE")
       map.get("dateFormat") shouldBe Some("HH:mm:ss.SSS")
     }
 
@@ -22,7 +22,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE [THREAD] LEVEL CLASS - MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP [THREAD] LEVEL CLASS - MESSAGE")
       map.get("dateFormat") shouldBe Some("HH:mm:ss.SSS")
     }
 
@@ -30,7 +30,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%d %level %logger %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS MESSAGE")
       map.get("dateFormat") shouldBe Some("yyyy-MM-dd HH:mm:ss,SSS")
     }
 
@@ -38,7 +38,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%d{ISO8601} %level %logger %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS MESSAGE")
       map.get("dateFormat") shouldBe Some("yyyy-MM-dd HH:mm:ss,SSS")
     }
 
@@ -46,7 +46,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%d %level %logger %msg %exception %n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS MESSAGE")
     }
 
 
@@ -55,7 +55,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val result = LogbackPatternConverter.convert(logPattern)
 
       result match {
-        case Right(map) => map.get("pattern") shouldBe Some("DATE LEVEL CLASS MESSAGE")
+        case Right(map) => map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS MESSAGE")
         case Left(error) => fail(error)
       }
 
@@ -66,21 +66,21 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
       val logPattern = "%d %level %logger %mdc{requestId} %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS PROP(requestId) MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS PROP(requestId) MESSAGE")
     }
 
     "parse format with 2 MDC keys as list" in {
       val logPattern = "%d %level %logger %mdc{requestId, userId} %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS requestId=PROP(requestId) userId=PROP(userId) MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS requestId=PROP(requestId) userId=PROP(userId) MESSAGE")
     }
 
     "parse format with 2 MDC keys" in {
       val logPattern = "%d %level %logger %mdc{requestId} %mdc{userId} %msg%n"
       val map = LogbackPatternConverter.convert(logPattern).getOrElse(Map.empty[String, String])
 
-      map.get("pattern") shouldBe Some("DATE LEVEL CLASS PROP(requestId) PROP(userId) MESSAGE")
+      map.get("pattern") shouldBe Some("TIMESTAMP LEVEL CLASS PROP(requestId) PROP(userId) MESSAGE")
     }
 
 
