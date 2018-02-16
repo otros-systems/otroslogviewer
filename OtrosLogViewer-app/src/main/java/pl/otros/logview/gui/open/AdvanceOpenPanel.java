@@ -532,7 +532,6 @@ public class AdvanceOpenPanel extends JPanel {
     final JButton importButton = new JButton(importAction);
     importButton.setName("OpenPanel.import");
     importButton.setMnemonic('I');
-    final Font font = importButton.getFont();
     OtrosSwingUtils.fontSize2(importButton);
     mainPanel.add(importButton, BorderLayout.SOUTH);
     tableModel.addTableModelListener(e -> {
