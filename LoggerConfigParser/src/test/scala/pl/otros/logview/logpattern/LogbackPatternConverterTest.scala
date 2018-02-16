@@ -120,7 +120,7 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
 
       result.isLeft shouldBe true
     }
-    "don't parse illegal format - No conversion word don't separated with white char" in {
+    "don't parse illegal format - Conversion word don't separated with white char" in {
       val logPattern = "%date{yyyy-MM-dd} %-5level[%thread] %logger - %msg%n"
       val result = LogbackPatternConverter.convert(logPattern)
 

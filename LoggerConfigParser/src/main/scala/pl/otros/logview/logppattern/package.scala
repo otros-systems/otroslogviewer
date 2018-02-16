@@ -123,6 +123,15 @@ package object logppattern {
       .filter(_.forall(!_.isInstanceOf[StringLiteral]))
       .toList
 
+    val allMergedWithWhitechar: Boolean = tokens
+      .map(t => if (t == NewLine) StringLiteral("\n") else t)
+      .filter(_.isInstanceOf[StringLiteral])
+      .map(_.asInstanceOf[StringLiteral])
+      .forall(l => {
+        val bool = l.literal.matches(".*\\s+.*")
+        println(s"$l => $bool")
+        bool
+      })
 
     if (forbiddenTokensAfterMessage.nonEmpty) {
       Left(s"Forbidden token after message: ${forbiddenTokensAfterMessage.mkString(", ")}")
@@ -132,14 +141,14 @@ package object logppattern {
 
     } else if (tokens.count(_ == Message) > 1) {
       Left("Message can't be used more that once")
-
     } else if (tokens.exists(_.isInstanceOf[NotSupportedToken])) {
       Left(s"Not supported token used: ${tokens.filter(_.isInstanceOf[NotSupportedToken]).map(_.asInstanceOf[NotSupportedToken].token).mkString(", ")}")
-
     } else if (mergedTokens.nonEmpty) {
       Left(s"Token are merged: ${mergedTokens.mkString(",")}")
-    } else if (tokens.forall(_.isInstanceOf[StringLiteral])){
-      Left(s"No conversion word found")
+    } else if (tokens.forall(_.isInstanceOf[StringLiteral])) {
+      Left("No conversion word found")
+    } else if (!allMergedWithWhitechar) {
+      Left("Conversion words merged without whitespace")
     } else {
       Right(tokens)
     }
