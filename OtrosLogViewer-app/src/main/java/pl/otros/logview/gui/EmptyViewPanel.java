@@ -38,7 +38,7 @@ class EmptyViewPanel extends JPanel {
   private final JAnimatedLogo jLabel;
   private List<SocketLogReader> logReaders;
 
-  EmptyViewPanel(OtrosApplication otrosApplication, java.util.List<SocketLogReader> logReaders) {
+  EmptyViewPanel(OtrosApplication otrosApplication, List<SocketLogReader> logReaders) {
     super();
     this.logReaders = logReaders;
     this.setName("WelcomeScreen");
