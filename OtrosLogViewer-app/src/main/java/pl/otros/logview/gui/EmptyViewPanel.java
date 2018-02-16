@@ -21,57 +21,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
-import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.api.pluginable.PluginableElement;
-import pl.otros.logview.api.pluginable.PluginableElementEventListener;
-import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.actions.*;
+import pl.otros.logview.reader.SocketLogReader;
+import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.List;
 
 class EmptyViewPanel extends JPanel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(EmptyViewPanel.class.getName());
   private final OtrosApplication otrosApplication;
   private final JAnimatedLogo jLabel;
+  private List<SocketLogReader> logReaders;
 
-  protected EmptyViewPanel(OtrosApplication otrosApplication) {
+  EmptyViewPanel(OtrosApplication otrosApplication, java.util.List<SocketLogReader> logReaders) {
     super();
+    this.logReaders = logReaders;
     this.setName("WelcomeScreen");
     this.otrosApplication = otrosApplication;
     jLabel = new JAnimatedLogo("Welcome to OtrosLogViewer", SwingConstants.LEFT);
     jLabel.setFont(jLabel.getFont().deriveFont(20f).deriveFont(Font.BOLD));
     initGui();
-
-    PluginableElementsContainer<LogImporter> logImportersContainer = otrosApplication.getAllPluginables().getLogImportersContainer();
-    logImportersContainer.addListener(new PluginableElementEventListener<LogImporter>() {
-      @Override
-      public void elementAdded(LogImporter element) {
-        LOGGER.debug("Plugins updated, updating GUI");
-        initIntEDT();
-      }
-
-      @Override
-      public void elementRemoved(LogImporter element) {
-        LOGGER.debug("Plugins updated, updating GUI");
-        initIntEDT();
-      }
-
-      @Override
-      public void elementChanged(LogImporter element) {
-        LOGGER.debug("Plugins updated, updating GUI");
-        initIntEDT();
-      }
-
-      private void initIntEDT() {
-        GuiUtils.runLaterInEdt(EmptyViewPanel.this::initGui);
-      }
-    });
     jLabel.start();
 
     this.addAncestorListener(new AncestorListener() {
@@ -95,9 +69,6 @@ class EmptyViewPanel extends JPanel {
 
 
   private void initGui() {
-    this.removeAll();
-    TreeSet<LogImporter> logImportersList = new TreeSet<>(Comparator.comparing(PluginableElement::getName));
-    logImportersList.addAll(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
     GridBagLayout bagLayout = new GridBagLayout();
     GridBagConstraints bagConstraints = new GridBagConstraints();
     bagConstraints.anchor = GridBagConstraints.EAST;
@@ -121,60 +92,39 @@ class EmptyViewPanel extends JPanel {
     final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
     final JButton advanceOpenButton = new JButton(advanceOpenAction);
     advanceOpenButton.setName("open log files");
-    this.add(advanceOpenButton,bagConstraints);
+    OtrosSwingUtils.fontSize2(advanceOpenButton);
+    advanceOpenButton.setIcon(Icons.ARROW_JOIN_24);
+    this.add(advanceOpenButton, bagConstraints);
     bagConstraints.gridy++;
 
     OpenLogInvestigationAction openLogInvestigationAction = new OpenLogInvestigationAction(otrosApplication);
     JButton jb2 = new JButton("Open log investigation", Icons.IMPORT_24);
+    OtrosSwingUtils.fontSize2(jb2);
     jb2.addActionListener(openLogInvestigationAction);
     this.add(jb2, bagConstraints);
     bagConstraints.gridy++;
 
 
-    ParseClipboard parseClipboard = new ParseClipboard(otrosApplication);
-    JButton jb3 = new JButton(parseClipboard);
-    this.add(jb3, bagConstraints);
+    this.add(OtrosSwingUtils.fontSize2(new JButton(new ParseClipboard(otrosApplication))), bagConstraints);
     bagConstraints.gridy++;
 
+    this.add(OtrosSwingUtils.fontSize2(new JButton(new StartSocketListener(otrosApplication, logReaders))), bagConstraints);
+    bagConstraints.gridy++;
 
-
-
-    bagConstraints.insets = new Insets(15, 15, 3, 15);
+    bagConstraints.insets = new Insets(20, 5, 20, 5);
     this.add(new JSeparator(SwingConstants.HORIZONTAL), bagConstraints);
     bagConstraints.insets = new Insets(2, 5, 0, 5);
     bagConstraints.gridy++;
 
-    int startY = bagConstraints.gridy;
-
-//    JLabel openLabel = new JLabel("Open log", Icons.FOLDER_OPEN, SwingConstants.CENTER);
-//    this.add(openLabel, bagConstraints);
+    final JButton convertPatterButton = OtrosSwingUtils.fontSize2(new JButton(new ConvertLogbackLog4jPatternAction(otrosApplication)));
+    this.add(convertPatterButton, bagConstraints);
     bagConstraints.gridy++;
-    bagConstraints.gridy = startY;
-    bagConstraints.gridwidth=2;
-    bagConstraints.gridx=0;
-    JLabel tailLabel = new JLabel("Tail log with specific log parser [from beginning of file]", Icons.ARROW_REPEAT, SwingConstants.CENTER);
-    this.add(tailLabel, bagConstraints);
-    bagConstraints.gridwidth = 1;
-    bagConstraints.gridy++;
-    for (LogImporter logImporter : logImportersList) {
-      TailLogActionListener importLogActionListener = new TailLogActionListener(otrosApplication, logImporter);
-      JButton b = new JButton("Tail " + logImporter.getName(), logImporter.getIcon());
-      b.addActionListener(importLogActionListener);
-      b.setHorizontalAlignment(SwingConstants.LEFT);
-      this.add(b, bagConstraints);
-      if (bagConstraints.gridx == 0){
-        bagConstraints.gridx++;
-      } else {
-        bagConstraints.gridy++;
-        bagConstraints.gridx=0;
-      }
-    }
 
     bagConstraints.gridy++;
     JTextArea visitTf = new JTextArea(
       "Have a different log format? Go to https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout\nto check how to create a log parser based on the log4j PatternLayout.");
     visitTf.setEditable(false);
-    visitTf.setBackground(tailLabel.getBackground());
+    visitTf.setBackground(new JLabel().getBackground());
     visitTf.setBorder(null);
     bagConstraints.gridwidth = 2;
     bagConstraints.gridx = 0;
