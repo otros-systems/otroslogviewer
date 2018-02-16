@@ -26,13 +26,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleContext;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import static java.lang.ClassLoader.getSystemResourceAsStream;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static pl.otros.logview.gui.message.StackTraceColorizer.STYLE_ATTRIBUTE_EXCEPTION_MSG;
@@ -42,7 +43,7 @@ public class StackTraceColorizerTest {
   @Test
   public void testColorizingNeeded() throws IOException {
     //given
-    String string = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("stacktrace/stacktrace.txt"));
+    String string = IOUtils.toString(getSystemResourceAsStream("stacktrace/stacktrace.txt"), UTF_8);
     StackTraceColorizer colorizer = new StackTraceColorizer();
     //when
     boolean colorizingNeeded = colorizer.colorizingNeeded(string);
@@ -53,7 +54,7 @@ public class StackTraceColorizerTest {
   @Test
   public void findExceptionNameAndMessage() throws IOException, BadLocationException {
     //given
-    String stacktrace = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("stacktrace/stacktrace3.txt"), Charset.forName("UTF-8"));
+    String stacktrace = IOUtils.toString(getSystemResourceAsStream("stacktrace/stacktrace3.txt"), UTF_8).replace("\r", "");
     StackTraceColorizer colorizer = new StackTraceColorizer();
     colorizer.initStyles();
     final Style style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);

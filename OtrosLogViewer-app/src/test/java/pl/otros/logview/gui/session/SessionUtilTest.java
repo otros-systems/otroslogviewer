@@ -77,7 +77,7 @@ public class SessionUtilTest {
         "  sftp://server3/asd/n";
 
     //when
-    final String actual = SessionUtil.toStringGroupedByServer(session);
+    final String actual = SessionUtil.toStringGroupedByServer(session).replaceAll("\r", "");
 
     //then
     assertEquals(actual, expected);

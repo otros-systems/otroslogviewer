@@ -40,6 +40,8 @@ import java.util.zip.GZIPInputStream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static java.lang.ClassLoader.getSystemResourceAsStream;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,8 +58,8 @@ public class UtilsTest {
     fsManager = VFS.getManager();
     System.out.println("Starting wiremock");
     wireMock = new WireMockServer(wireMockConfig().port(PORT));
-    final byte[] gzipped = IOUtils.toByteArray(UtilsTest.class.getClassLoader().getResourceAsStream("hierarchy/hierarchy.log.gz"));
-    final byte[] notGzipped = IOUtils.toByteArray(UtilsTest.class.getClassLoader().getResourceAsStream("hierarchy/hierarchy.log"));
+    final byte[] gzipped = IOUtils.toByteArray(getSystemResourceAsStream("hierarchy/hierarchy.log.gz"));
+    final byte[] notGzipped = IOUtils.toByteArray(getSystemResourceAsStream("hierarchy/hierarchy.log"));
 
     wireMock.stubFor(get(urlEqualTo("/log.txt"))
         .willReturn(aResponse()
@@ -354,7 +356,7 @@ public class UtilsTest {
   public void testDetectLogEventStartFromNewLines() throws IOException, InitializationException {
     //given
     final LogImporterAndFile importerAndFile = TestingUtils.log4jPatternImporterAndFile();
-    final String logFile = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(importerAndFile.getFile()), "UTF-8");
+    final String logFile = IOUtils.toString(getSystemResourceAsStream(importerAndFile.getFile()), UTF_8).replace("\r", "");
     final LogImporter logImporter = importerAndFile.getLogImporter();
     final List<Long> expected = Arrays.asList(44L, 94L, 110L, 160L, 182L, 248L, 249L, 299L, 349L, 399L, 450L, 500L, 550L, 601L, 651L);
 
@@ -369,7 +371,7 @@ public class UtilsTest {
   @Test
   public void testDetectLogEventStartFromNewCustomPositions() throws IOException, InitializationException {
     //given
-    final String logFile = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("log4j.txt"), "UTF-8");
+    final String logFile = IOUtils.toString(getSystemResourceAsStream("log4j.txt"), UTF_8).replace("\r", "");
     final LogImporter logImporter = new LogImporterStartingWithT();
     final List<Long> expected = Arrays.asList(31L, 75L, 141L, 213L, 280L, 330L, 380L, 425L, 431L, 481L, 531L, 581L, 631L, 681L);
 
@@ -390,7 +392,7 @@ public class UtilsTest {
     @Override
     public void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext) {
       try {
-        final String string = IOUtils.toString(in, "UTF-8");
+        final String string = IOUtils.toString(in, UTF_8);
         if (string.startsWith("T")) {
           final String replaceAll = string.replaceAll("[^T]*", "");
           final int count = replaceAll.length();

@@ -16,7 +16,6 @@
 
 package pl.otros.logview.importer;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -100,10 +99,11 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
                 detectLogImporter.initParsingContext(parsingContext);
                 customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
                 byte[] buf = byteArrayOutputStream.toByteArray();
-                try (SequenceInputStream sequenceInputStream = new SequenceInputStream(new ByteArrayInputStream(buf), in)) {
-                  detectLogImporter.importLogs(sequenceInputStream, dataCollector, parsingContext);
-                  return;
-                }
+                
+                PushbackInputStream pushbackWrapper = new PushbackInputStream(in, buf.length);
+                pushbackWrapper.unread(buf);
+                detectLogImporter.importLogs(pushbackWrapper, dataCollector, parsingContext);
+                return;
               }
             }
           }
@@ -112,8 +112,6 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
       } catch (IOException e) {
         e.printStackTrace();
         LOGGER.warn("IOException reading log file " + parsingContext.getLogSource());
-      } finally {
-        IOUtils.closeQuietly(in);
       }
 
     }

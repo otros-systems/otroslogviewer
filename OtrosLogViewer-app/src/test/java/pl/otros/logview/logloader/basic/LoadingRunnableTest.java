@@ -30,9 +30,7 @@ import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
 import static org.awaitility.Awaitility.*;
-import static org.awaitility.Duration.*   ;
 import static java.util.concurrent.TimeUnit.*;
-import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,11 +69,9 @@ public class LoadingRunnableTest {
       return data.getMessage().endsWith("99");
     }
   };
-  private final int julSimpleAvailableBytes;
 
   public LoadingRunnableTest() throws IOException {
     final InputStream julSimpleLogInputStream = LoadingRunnableTest.class.getClassLoader().getResourceAsStream("logloader/jul-simple.log");
-    julSimpleAvailableBytes = julSimpleLogInputStream.available();
     julSimpleLogLines = IOUtils.readLines(julSimpleLogInputStream);
 
     final InputStream julXmlLogInputStream = LoadingRunnableTest.class.getClassLoader().getResourceAsStream("logloader/jul-xml.log");
@@ -232,8 +228,6 @@ public class LoadingRunnableTest {
     saveLines(range3, logLines, outputStream);
     Thread.sleep(300);
     Assert.assertEquals(collector.getLogData().length, countForThirdImport);
-
-    underTest.stop();
   }
 
   @Test
@@ -288,14 +282,13 @@ public class LoadingRunnableTest {
     logImporter = getJulLogParser();
     underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), Optional.empty());
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
-
+    
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
 
-    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getPosition() == julSimpleAvailableBytes);
-    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getTotal() == julSimpleAvailableBytes);
-    underTest.stop();
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getPosition() == file.length());
+    await().atMost(5, SECONDS).until(() -> underTest.getLoadStatistic().getTotal() == file.length());
   }
 
 
