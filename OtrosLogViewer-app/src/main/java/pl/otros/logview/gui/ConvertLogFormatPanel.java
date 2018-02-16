@@ -117,22 +117,10 @@ public class ConvertLogFormatPanel extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        List<LogPatternsTableModelEntry> toAdd = logPatternsTableModel.data
+        logPatternsTableModel.data
           .stream()
           .filter(x -> x.getStatus() instanceof WillImport)
-          .collect(Collectors.toList());
-        toAdd.forEach(p -> {
-          final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
-          final LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(logParser);
-          try (OutputStream out = new FileOutputStream(new File(AllPluginables.USER_LOG_IMPORTERS, UUID.randomUUID().toString() + ".pattern"))) {
-            p.getProperties().setProperty("name", p.getPattern());
-            logImporterUsingParser.init(p.properties);
-            otrosApplication.getAllPluginables().getLogImportersContainer().addElement(logImporterUsingParser);
-            p.getProperties().store(out, "Imported log pattern");
-          } catch (InitializationException | IOException e1) {
-            //Ignore it
-          }
-        });
+          .forEach(p -> addLog4jParser(otrosApplication, p.getPattern(), p.getProperties()));
         closeFunction.apply(ConvertLogFormatPanel.this);
         otrosApplication.getStatusObserver().updateStatus("Log patterns imported");
       }
@@ -208,6 +196,19 @@ public class ConvertLogFormatPanel extends JPanel {
     };
     this.setTransferHandler(newHandler);
 
+  }
+
+  private void addLog4jParser(OtrosApplication otrosApplication, String name, Properties properties) {
+    final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    final LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(logParser);
+    try (OutputStream out = new FileOutputStream(new File(AllPluginables.USER_LOG_IMPORTERS, UUID.randomUUID().toString() + ".pattern"))) {
+      properties.setProperty("name", name);
+      logImporterUsingParser.init(properties);
+      otrosApplication.getAllPluginables().getLogImportersContainer().addElement(logImporterUsingParser);
+      properties.store(out, "Imported log pattern");
+    } catch (InitializationException | IOException e1) {
+      //Ignore it
+    }
   }
 
   private void updateRowHeights() {
