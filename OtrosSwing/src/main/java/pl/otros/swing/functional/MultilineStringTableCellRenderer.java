@@ -13,9 +13,15 @@ public class MultilineStringTableCellRenderer<E> implements TableCellRenderer {
   private final Function<E, String> mapping;
 
   public MultilineStringTableCellRenderer(Function<E, String> mapping) {
+    this(mapping, false);
+  }
+
+  public MultilineStringTableCellRenderer(Function<E, String> mapping, boolean lineWrap) {
     this.mapping = mapping;
     textArea = new JTextArea();
     renderer = new DefaultTableCellRenderer();
+    textArea.setLineWrap(lineWrap);
+    textArea.setWrapStyleWord(lineWrap);
   }
 
 
@@ -28,8 +34,7 @@ public class MultilineStringTableCellRenderer<E> implements TableCellRenderer {
     try {
       final String text = mapping.apply((E) value);
       textArea.setText(text);
-      table.setRowHeight(row,table.getRowHeight() * text.split("\n").length);
-    } catch (Exception e){
+    } catch (Exception e) {
       //ignore it
     }
     return textArea;

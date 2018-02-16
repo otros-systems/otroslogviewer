@@ -123,22 +123,31 @@ package object logppattern {
       .filter(_.forall(!_.isInstanceOf[StringLiteral]))
       .toList
 
-    val allMergedWithWhitechar: Boolean = tokens
+    val allMergedWithWhiteCharacter: Boolean = tokens
       .map(t => if (t == NewLine) StringLiteral("\n") else t)
       .filter(_.isInstanceOf[StringLiteral])
       .map(_.asInstanceOf[StringLiteral])
-      .forall(l => {
-        val bool = l.literal.matches(".*\\s+.*")
-        println(s"$l => $bool")
-        bool
-      })
+      .forall(_.literal.matches(".*\\s+.*"))
+
+    val mdcSurroundedByWhiteSpace: List[String] = tokens
+      .sliding(3)
+      .flatMap {
+        case StringLiteral(before: String) :: MDC(mdc: String) :: StringLiteral(after: String) :: Nil if MDC(mdc).multiProperty() =>
+          None
+        case StringLiteral(before: String) :: MDC(mdc: String) :: StringLiteral(after: String) :: Nil if mdc.trim.nonEmpty =>
+          if (!before.toCharArray.last.isWhitespace) {
+            None
+          } else {
+            Some(mdc)
+          }
+        case _ => None
+      }.toList
+
 
     if (forbiddenTokensAfterMessage.nonEmpty) {
       Left(s"Forbidden token after message: ${forbiddenTokensAfterMessage.mkString(", ")}")
-
     } else if (tokens.find(_.isInstanceOf[MDC]).exists(_.asInstanceOf[MDC].mdc.isEmpty)) {
       Left("MDC without specified property is not supported")
-
     } else if (tokens.count(_ == Message) > 1) {
       Left("Message can't be used more that once")
     } else if (tokens.exists(_.isInstanceOf[NotSupportedToken])) {
@@ -147,8 +156,12 @@ package object logppattern {
       Left(s"Token are merged: ${mergedTokens.mkString(",")}")
     } else if (tokens.forall(_.isInstanceOf[StringLiteral])) {
       Left("No conversion word found")
-    } else if (!allMergedWithWhitechar) {
-      Left("Conversion words merged without whitespace")
+    } else if (!allMergedWithWhiteCharacter) {
+      Left("Conversion words merged without white character between")
+    } else if (mdcSurroundedByWhiteSpace.nonEmpty) {
+      val str = mdcSurroundedByWhiteSpace.mkString(", ")
+      val msg = s"""Following MDC keys are surrounded by not white characters: $str. Log parser will not be able to parse log event if MDC will not be set. You can define log format using [] like: "[%mdc{property}]\""""
+      Left(msg)
     } else {
       Right(tokens)
     }
@@ -225,6 +238,8 @@ package object logppattern {
         case elements => elements.map(e => s"$e=PROP($e)").mkString(" ")
       }
     }
+
+    def multiProperty(): Boolean = mdc.contains(",")
   }
 
   case object Exception extends Token {

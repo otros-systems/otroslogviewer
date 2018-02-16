@@ -16,9 +16,11 @@ import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.swing.OtrosSwingUtils;
+import pl.otros.swing.TableColumnModelListenerAdapter;
 import pl.otros.swing.functional.MultilineStringTableCellRenderer;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -46,6 +48,7 @@ public class ConvertLogFormatPanel extends JPanel {
   private final LayoutEncoderConverter logbackLayoutEncoderConverter = new LogbackLayoutEncoderConverter();
   private AbstractAction addLoggers;
   private JXTextArea pasteTextArea;
+  private final JTable jTable;
 
   public ConvertLogFormatPanel(OtrosApplication otrosApplication, Function<JComponent, Void> closeFunction) {
     this.otrosApplication = otrosApplication;
@@ -81,7 +84,7 @@ public class ConvertLogFormatPanel extends JPanel {
     pasteButton.setName("ConvertLogFormatPanel.paste");
     OtrosSwingUtils.fontSize2(pasteButton);
     final JPanel panelSelect = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
-    panelSelect.add(new JLabel(""), "wrap, pushy");
+    panelSelect.add(new JLabel("."), "wrap, pushy");
     panelSelect.add(fromFile, "wrap");
     panelSelect.add(pasteButton, "wrap");
     panelSelect.add(OtrosSwingUtils.fontSize2(new JLabel("You can drag and drop logger configuration files here.")), "wrap");
@@ -89,7 +92,7 @@ public class ConvertLogFormatPanel extends JPanel {
 
     JPanel panelApprove = new JPanel(new BorderLayout());
     panelApprove.add(new JLabel("Parsing result:"), BorderLayout.NORTH);
-    final JTable jTable = new JTable(logPatternsTableModel);
+    jTable = new JTable(logPatternsTableModel);
     jTable.setDefaultRenderer(Properties.class, new MultilineStringTableCellRenderer<Properties>(
       properties -> properties
         .keySet()
@@ -98,7 +101,17 @@ public class ConvertLogFormatPanel extends JPanel {
         .sorted()
         .map(key -> key + "=" + properties.getProperty(key))
         .collect(Collectors.joining("\n"))
-    ));
+      , true));
+    jTable.setDefaultRenderer(String.class, new MultilineStringTableCellRenderer<String>(s -> s, true));
+    jTable.setDefaultRenderer(LogPatternStatus.class, new MultilineStringTableCellRenderer<>(LogPatternStatus::toString, true));
+    logPatternsTableModel.addTableModelListener(e -> updateRowHeights());
+    jTable.getColumnModel().addColumnModelListener(new TableColumnModelListenerAdapter() {
+      @Override
+      public void columnMarginChanged(ChangeEvent e) {
+        updateRowHeights();
+      }
+    });
+    jTable.setIntercellSpacing(new Dimension(10,10));
     panelApprove.add(new JScrollPane(jTable));
     addLoggers = new AbstractAction("Add logger definition", Icons.PLUS_24) {
 
@@ -197,6 +210,18 @@ public class ConvertLogFormatPanel extends JPanel {
 
   }
 
+  private void updateRowHeights() {
+    for (int row = 0; row < jTable.getRowCount(); row++) {
+      int rowHeight = jTable.getRowHeight();
+      for (int column = 0; column < jTable.getColumnCount(); column++) {
+        Component comp = jTable.prepareRenderer(jTable.getCellRenderer(row, column), row, column);
+        comp.setSize(jTable.getColumnModel().getColumn(column).getWidth(), comp.getPreferredSize().height);
+        rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+      }
+      jTable.setRowHeight(row, rowHeight + jTable.getRowMargin());
+    }
+  }
+
   private void backFromApprove() {
     cardLayout.show(this, backFromApproveTo);
   }
@@ -219,6 +244,7 @@ public class ConvertLogFormatPanel extends JPanel {
     logPatternsTableModel.setData(newData);
     addLoggers.setEnabled(newData.stream().anyMatch(p -> p.getStatus() instanceof WillImport));
     cardLayout.show(ConvertLogFormatPanel.this, PANEL_APPROVE);
+    updateRowHeights();
   }
 
   private boolean checkIfAlreadyExist(Properties candidate) {
