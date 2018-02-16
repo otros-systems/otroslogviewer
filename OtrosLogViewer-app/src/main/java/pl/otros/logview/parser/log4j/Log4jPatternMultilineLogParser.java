@@ -201,6 +201,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
   private Boolean trimUnmatchedLines;
 
   private final ParserDescription parserDescription;
+  private Properties properties;
 
   public Log4jPatternMultilineLogParser() {
     keywords.add(TIMESTAMP);
@@ -742,6 +743,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
 
   @Override
   public void init(Properties properties) throws InitializationException {
+    this.properties = properties;
     String rePattern = properties.getProperty(PROPERTY_REPATTERN);
     logFormat = properties.getProperty(PROPERTY_PATTERN);
     if (!StringUtils.isBlank(logFormat) && rePattern != null) {
@@ -866,5 +868,9 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser, Table
       list.add(TableColumns.PROPERTIES);
 
     return list.toArray(new TableColumns[list.size()]);
+  }
+
+  public Properties getProperties() {
+    return properties;
   }
 }

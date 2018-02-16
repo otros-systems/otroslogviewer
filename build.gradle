@@ -89,7 +89,8 @@ project(':Common-libs') {
         compile 'ch.qos.logback:logback-classic:1.1.3'
         compile 'com.github.arnabk:pgslookandfeel:1.1.4'
         compile 'org.unix4j:unix4j-command:0.3'
-        compile "org.scala-lang:scala-library:2.11.8"
+        compile "org.scala-lang:scala-library:2.12.4"
+        compile "org.scala-lang.modules:scala-parser-combinators_2.12:1.1.0"
     }
 }
 
@@ -143,6 +144,7 @@ project(':OtrosLogViewer-app') {
         compile project(':OtrosVfsBrowser')
         compile project(':OtrosLogViewer-api')
         compile project(':ScalaFormatter')
+        compile project(':LoggerConfigParser')
         testCompile 'com.github.tomakehurst:wiremock:1.58'
         testCompile 'org.awaitility:awaitility:2.0.0'
     }
@@ -174,16 +176,24 @@ project(':ScalaFormatter'){
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosLogViewer-api')
-        testCompile "org.scalatest:scalatest_2.11:2.2.2"
+        testCompile "org.scalatest:scalatest_2.12:3.0.4"
         testRuntime 'org.pegdown:pegdown:1.1.0'
         testCompile 'junit:junit:4.12'
     }
 
-//    task spec(dependsOn: ['testClasses'], type: JavaExec) {
-//        main = 'org.scalatest.tools.Runner'
-//        args = ['-R', 'build/classes/test', '-o']
-//        classpath = sourceSets.test.runtimeClasspath
-//    }
+}
+
+project(':LoggerConfigParser'){
+    apply plugin: "com.github.maiflai.scalatest"
+    apply plugin: 'scala'
+
+    dependencies {
+        compile project(':Common-libs')
+        compile project(':OtrosLogViewer-api')
+        testCompile "org.scalatest:scalatest_2.12:3.0.4"
+        testRuntime 'org.pegdown:pegdown:1.1.0'
+        testCompile 'junit:junit:4.12'
+    }
 
 }
 
