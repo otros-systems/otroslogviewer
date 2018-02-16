@@ -15,6 +15,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.util.LoggerConfigUtil;
@@ -24,6 +25,7 @@ import pl.otros.swing.functional.MultilineStringTableCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -81,10 +83,12 @@ public class ConvertLogFormatPanel extends JPanel {
         backFromApproveTo = PANEL_PASTE;
         String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
         pasteTextArea.setText(data);
+        pasteTextArea.selectAll();
       } catch (UnsupportedFlavorException | IOException e1) {
         LOGGER.info("Can't paste logger configuration" + e1.getMessage());
       }
       cardLayout.show(ConvertLogFormatPanel.this, PANEL_PASTE);
+      pasteTextArea.requestFocus();
     });
     pasteButton.setName("ConvertLogFormatPanel.paste");
     OtrosSwingUtils.fontSize2(pasteButton);
@@ -144,10 +148,18 @@ public class ConvertLogFormatPanel extends JPanel {
 
     final JPanel panelPaste = new JPanel(new BorderLayout());
     pasteTextArea = new JXTextArea("Paste logback, log4j configuration file or just layout pattern");
+    pasteTextArea.setBorder(BorderFactory.createTitledBorder("Paste logback, log4j configuration file or just layout pattern"));
     panelPaste.add(pasteTextArea);
     final JXButton processPastedButton = new JXButton("Process");
+    processPastedButton.setMnemonic('P');
     OtrosSwingUtils.fontSize2(processPastedButton);
     processPastedButton.addActionListener(e -> processLoggerConfig(pasteTextArea.getText()));
+    pasteTextArea.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+      @Override
+      protected void documentChanged(DocumentEvent e) {
+        processPastedButton.setEnabled(pasteTextArea.getText().trim().length() > 0);
+      }
+    });
     panelPaste.add(processPastedButton, BorderLayout.SOUTH);
     final JButton pasteBackButton = new JButton(Icons.ARROW_LEFT_24);
     pasteBackButton.addActionListener(e -> cardLayout.show(ConvertLogFormatPanel.this, PANEL_SELECT));
@@ -227,7 +239,7 @@ public class ConvertLogFormatPanel extends JPanel {
     };
   }
 
-  private boolean checkIfAlreadyExist(Properties candidate,Collection<LogImporter> logImporters ) {
+  private boolean checkIfAlreadyExist(Properties candidate, Collection<LogImporter> logImporters) {
     return logImporters
       .stream()
       .filter(logImporter -> logImporter instanceof LogImporterUsingParser)
@@ -254,7 +266,7 @@ public class ConvertLogFormatPanel extends JPanel {
 
     @Override
     public String getDescription() {
-      return "XML or properties files";
+      return "XML or properties files with logger configuration";
     }
   }
 
