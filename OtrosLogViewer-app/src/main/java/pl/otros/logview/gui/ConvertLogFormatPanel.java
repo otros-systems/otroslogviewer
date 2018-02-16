@@ -6,6 +6,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXTextArea;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.LayoutEncoderConverter;
 import pl.otros.logview.api.OtrosApplication;
@@ -37,6 +39,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ConvertLogFormatPanel extends JPanel {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConvertLogFormatPanel.class.getName());
 
   private OtrosApplication otrosApplication;
   private static final String PANEL_SELECT = "panel select";
@@ -77,7 +80,7 @@ public class ConvertLogFormatPanel extends JPanel {
         String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
         pasteTextArea.setText(data);
       } catch (UnsupportedFlavorException | IOException e1) {
-        //Ignore exceptions
+        LOGGER.info("Can't paste logger configuration" + e1.getMessage());
       }
       cardLayout.show(ConvertLogFormatPanel.this, PANEL_PASTE);
     });
@@ -111,7 +114,7 @@ public class ConvertLogFormatPanel extends JPanel {
         updateRowHeights();
       }
     });
-    jTable.setIntercellSpacing(new Dimension(10,10));
+    jTable.setIntercellSpacing(new Dimension(10, 10));
     panelApprove.add(new JScrollPane(jTable));
     addLoggers = new AbstractAction("Add logger definition", Icons.PLUS_24) {
 
@@ -146,7 +149,7 @@ public class ConvertLogFormatPanel extends JPanel {
       try {
         processLoggerConfig(pasteTextArea.getText());
       } catch (IOException e1) {
-        e1.printStackTrace();
+        LOGGER.error("There was an issue during processing logger config:", e1);
       }
     });
     panelPaste.add(processPastedButton, BorderLayout.SOUTH);
@@ -161,39 +164,7 @@ public class ConvertLogFormatPanel extends JPanel {
     this.add(panelPaste, PANEL_PASTE);
     cardLayout.show(this, PANEL_SELECT);
 
-    final TransferHandler newHandler = new TransferHandler() {
-      @Override
-      public boolean canImport(TransferSupport support) {
-        return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
-      }
-
-      @Override
-      public boolean importData(TransferSupport support) {
-
-        try {
-          final List<File> transferData = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-          final List<Optional<String>> collect = transferData
-            .stream()
-            .map(file -> {
-              try {
-                return Optional.of(Files.toString(file, Charset.forName("UTF-8")));
-              } catch (IOException e) {
-                return Optional.<String>empty();
-              }
-            }).collect(Collectors.toList());
-
-          if (collect.stream().allMatch(Optional::isPresent)) {
-            String content = collect.stream().map(o -> o.orElse("")).collect(Collectors.joining("\n"));
-            processLoggerConfig(content);
-            return true;
-          } else {
-            return false;
-          }
-        } catch (UnsupportedFlavorException | IOException e) {
-          return false;
-        }
-      }
-    };
+    final TransferHandler newHandler = new DragAndDropTransferHandler();
     this.setTransferHandler(newHandler);
 
   }
@@ -208,6 +179,7 @@ public class ConvertLogFormatPanel extends JPanel {
       properties.store(out, "Imported log pattern");
     } catch (InitializationException | IOException e1) {
       //Ignore it
+      LOGGER.error("Problem with saving Log4jPatternMultilineLogParser configuration: ", e1);
     }
   }
 
@@ -448,4 +420,37 @@ public class ConvertLogFormatPanel extends JPanel {
 
   }
 
+  private class DragAndDropTransferHandler extends TransferHandler {
+    @Override
+    public boolean canImport(TransferSupport support) {
+      return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+    }
+
+    @Override
+    public boolean importData(TransferSupport support) {
+
+      try {
+        final List<File> transferData = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+        final List<Optional<String>> collect = transferData
+          .stream()
+          .map(file -> {
+            try {
+              return Optional.of(Files.toString(file, Charset.forName("UTF-8")));
+            } catch (IOException e) {
+              return Optional.<String>empty();
+            }
+          }).collect(Collectors.toList());
+
+        if (collect.stream().allMatch(Optional::isPresent)) {
+          String content = collect.stream().map(o -> o.orElse("")).collect(Collectors.joining("\n"));
+          processLoggerConfig(content);
+          return true;
+        } else {
+          return false;
+        }
+      } catch (UnsupportedFlavorException | IOException e) {
+        return false;
+      }
+    }
+  }
 }
