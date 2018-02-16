@@ -113,6 +113,12 @@ class LogbackPatternConverterTest extends WordSpecLike with Matchers {
 
       result.isLeft shouldBe true
     }
+    "don't parse illegal format - No conversion word found" in {
+      val logPattern = "something ..... ..."
+      val result = LogbackPatternConverter.convert(logPattern)
+
+      result.isLeft shouldBe true
+    }
 
   }
 }

@@ -138,6 +138,8 @@ package object logppattern {
 
     } else if (mergedTokens.nonEmpty) {
       Left(s"Token are merged: ${mergedTokens.mkString(",")}")
+    } else if (tokens.forall(_.isInstanceOf[StringLiteral])){
+      Left(s"No conversion word found")
     } else {
       Right(tokens)
     }
