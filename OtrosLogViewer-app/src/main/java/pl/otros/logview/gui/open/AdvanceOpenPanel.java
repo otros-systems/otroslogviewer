@@ -582,12 +582,11 @@ public class AdvanceOpenPanel extends JPanel {
     });
 
     final JScrollPane scrollPane = new JScrollPane(table);
-    final JButton addMoreFilesButton = new JButton(addMoreFilesAction);
 
     JPanel emptyView = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
     emptyView.add(new JLabel(""),"wrap, pushy");
-    emptyView.add(addMoreFilesButton,"wrap");
-    emptyView.add(new JButton(loadSession),"wrap");
+    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(addMoreFilesAction)),"wrap");
+    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(loadSession)),"wrap");
     emptyView.add(new JLabel(""),"wrap, pushy");
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
