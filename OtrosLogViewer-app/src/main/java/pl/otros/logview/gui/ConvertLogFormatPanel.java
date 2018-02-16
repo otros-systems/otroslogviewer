@@ -4,12 +4,14 @@ import com.google.common.io.Files;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXTextArea;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.LayoutEncoderConverter;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
+import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
@@ -195,30 +197,38 @@ public class ConvertLogFormatPanel extends JPanel {
 
   private void processLoggerConfig(String content) {
     final Set<String> layoutPatterns = LoggerConfigUtil.extractLayoutPatterns(content);
+    final Collection<LogImporter> logImporters = otrosApplication
+      .getAllPluginables()
+      .getLogImportersContainer()
+      .getElements();
+
     final List<LogPatternsTableModelEntry> newData = layoutPatterns
       .stream()
-      .map(pattern -> {
-        try {
-          final Properties properties = logbackLayoutEncoderConverter.convert(pattern);
-          final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
-          logParser.init(properties);
-          logParser.initParsingContext(new ParsingContext());
-          return new LogPatternsTableModelEntry(pattern, properties, checkIfAlreadyExist(properties) ? new Duplicated() : new WillImport());
-        } catch (Exception exception) {
-          return new LogPatternsTableModelEntry(pattern, new Properties(), new Error(exception.getMessage()));
-        }
-      }).collect(Collectors.toList());
+      .map(convertToTableModel(logImporters))
+      .collect(Collectors.toList());
     logPatternsTableModel.setData(newData);
     addLoggers.setEnabled(newData.stream().anyMatch(p -> p.getStatus() instanceof WillImport));
     cardLayout.show(ConvertLogFormatPanel.this, PANEL_APPROVE);
     updateRowHeights();
   }
 
-  private boolean checkIfAlreadyExist(Properties candidate) {
-    return otrosApplication
-      .getAllPluginables()
-      .getLogImportersContainer()
-      .getElements()
+  @NotNull
+  private Function<String, LogPatternsTableModelEntry> convertToTableModel(Collection<LogImporter> logImporters) {
+    return pattern -> {
+      try {
+        final Properties properties = logbackLayoutEncoderConverter.convert(pattern);
+        final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+        logParser.init(properties);
+        logParser.initParsingContext(new ParsingContext());
+        return new LogPatternsTableModelEntry(pattern, properties, checkIfAlreadyExist(properties, logImporters) ? new Duplicated() : new WillImport());
+      } catch (Exception exception) {
+        return new LogPatternsTableModelEntry(pattern, new Properties(), new Error(exception.getMessage()));
+      }
+    };
+  }
+
+  private boolean checkIfAlreadyExist(Properties candidate,Collection<LogImporter> logImporters ) {
+    return logImporters
       .stream()
       .filter(logImporter -> logImporter instanceof LogImporterUsingParser)
       .map(LogImporterUsingParser.class::cast)
