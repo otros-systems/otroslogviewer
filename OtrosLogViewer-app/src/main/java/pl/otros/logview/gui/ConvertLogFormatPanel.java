@@ -1,11 +1,9 @@
 package pl.otros.logview.gui;
 
-import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXTextArea;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -17,6 +15,7 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
+import pl.otros.logview.util.LoggerConfigUtil;
 import pl.otros.swing.OtrosSwingUtils;
 import pl.otros.swing.TableColumnModelListenerAdapter;
 import pl.otros.swing.functional.MultilineStringTableCellRenderer;
@@ -29,13 +28,14 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ConvertLogFormatPanel extends JPanel {
@@ -145,13 +145,7 @@ public class ConvertLogFormatPanel extends JPanel {
     panelPaste.add(pasteTextArea);
     final JXButton processPastedButton = new JXButton("Process");
     OtrosSwingUtils.fontSize2(processPastedButton);
-    processPastedButton.addActionListener(e -> {
-      try {
-        processLoggerConfig(pasteTextArea.getText());
-      } catch (IOException e1) {
-        LOGGER.error("There was an issue during processing logger config:", e1);
-      }
-    });
+    processPastedButton.addActionListener(e -> processLoggerConfig(pasteTextArea.getText()));
     panelPaste.add(processPastedButton, BorderLayout.SOUTH);
     final JButton pasteBackButton = new JButton(Icons.ARROW_LEFT_24);
     pasteBackButton.addActionListener(e -> cardLayout.show(ConvertLogFormatPanel.this, PANEL_SELECT));
@@ -199,8 +193,8 @@ public class ConvertLogFormatPanel extends JPanel {
     cardLayout.show(this, backFromApproveTo);
   }
 
-  private void processLoggerConfig(String content) throws IOException {
-    final Set<String> layoutPatterns = extractLayoutPatterns(content);
+  private void processLoggerConfig(String content) {
+    final Set<String> layoutPatterns = LoggerConfigUtil.extractLayoutPatterns(content);
     final List<LogPatternsTableModelEntry> newData = layoutPatterns
       .stream()
       .map(pattern -> {
@@ -241,65 +235,6 @@ public class ConvertLogFormatPanel extends JPanel {
       );
   }
 
-  @NotNull
-  private Set<String> extractLayoutPatterns(String content) throws IOException {
-    Set<String> result = new HashSet<>();
-    final Matcher logbackMatcher = Pattern.compile("<pattern>\\s*(.*?)\\s*</pattern>", Pattern.MULTILINE).matcher(content);
-    while (logbackMatcher.find()) {
-      result.add(logbackMatcher.group(1));
-    }
-
-    final List<String> barePatterns = Splitter
-      .onPattern("\r?\n")
-      .trimResults()
-      .omitEmptyStrings()
-      .splitToList(content)
-      .stream()
-      .filter(line -> line.contains("value=\"")) //log4j.xml
-      .filter(line -> line.contains("ConversionPattern=\"")) //log4j.properties
-      .filter(line -> line.contains("<pattern>\"")) //logback.xml
-      .filter(line -> line.contains("<Pattern>\"")) //log4j2.xml
-      .filter(line -> line.contains("<PatternLayout>\"")) //log4j2.xml
-      .filter(line -> {
-        try {
-          logbackLayoutEncoderConverter.convert(line);
-          return true;
-        } catch (Exception e) {
-          return false;
-        }
-      }).collect(Collectors.toList());
-    result.addAll(barePatterns);
-
-
-    final Matcher log4jMatcher = Pattern.compile("<param\\s*name=\"ConversionPattern\"\\s*value=\"(.*?)\".*", Pattern.MULTILINE).matcher(content);
-    while (log4jMatcher.find()) {
-      result.add(log4jMatcher.group(1));
-    }
-
-    final Matcher log4j2Matcher = Pattern.compile("<Pattern>\\s*(.*?)\\s*</Pattern>", Pattern.MULTILINE).matcher(content);
-    while (log4j2Matcher.find()) {
-      result.add(log4j2Matcher.group(1));
-    }
-
-    final Matcher log4jMatcher2 = Pattern.compile("<PatternLayout.*?pattern=\"(.*?)\".*", Pattern.MULTILINE).matcher(content);
-    while (log4jMatcher2.find()) {
-      result.add(log4jMatcher2.group(1));
-    }
-
-    final Properties properties = new Properties();
-    properties.load(new StringReader(content));
-    List<String> patterns = properties
-      .<String>keySet()
-      .stream()
-      .map(Object::toString)
-      .filter(key -> key.endsWith("ConversionPattern"))
-      .map(properties::getProperty)
-      .collect(Collectors.toList());
-
-    result.addAll(patterns);
-
-    return result;
-  }
 
   private static class XmlPropertiesFilter extends FileFilter {
     @Override
