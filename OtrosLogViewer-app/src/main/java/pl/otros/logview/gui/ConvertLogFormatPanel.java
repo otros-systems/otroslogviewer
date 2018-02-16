@@ -11,6 +11,7 @@ import pl.otros.logview.api.LayoutEncoderConverter;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
@@ -83,6 +84,7 @@ public class ConvertLogFormatPanel extends JPanel {
     panelSelect.add(new JLabel(""), "wrap, pushy");
     panelSelect.add(fromFile, "wrap");
     panelSelect.add(pasteButton, "wrap");
+    panelSelect.add(OtrosSwingUtils.fontSize2(new JLabel("You can drag and drop logger configuration files here.")), "wrap");
     panelSelect.add(new JLabel(""), "wrap, pushy");
 
     JPanel panelApprove = new JPanel(new BorderLayout());
@@ -104,7 +106,7 @@ public class ConvertLogFormatPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         List<LogPatternsTableModelEntry> toAdd = logPatternsTableModel.data
           .stream()
-          .filter(x -> x.status instanceof WillImport)
+          .filter(x -> x.getStatus() instanceof WillImport)
           .collect(Collectors.toList());
         toAdd.forEach(p -> {
           final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
@@ -157,6 +159,42 @@ public class ConvertLogFormatPanel extends JPanel {
     this.add(panelApprove, PANEL_APPROVE);
     this.add(panelPaste, PANEL_PASTE);
     cardLayout.show(this, PANEL_SELECT);
+
+    final TransferHandler newHandler = new TransferHandler() {
+      @Override
+      public boolean canImport(TransferSupport support) {
+        return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+      }
+
+      @Override
+      public boolean importData(TransferSupport support) {
+
+        try {
+          final List<File> transferData = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+          final List<Optional<String>> collect = transferData
+            .stream()
+            .map(file -> {
+              try {
+                return Optional.of(Files.toString(file, Charset.forName("UTF-8")));
+              } catch (IOException e) {
+                return Optional.<String>empty();
+              }
+            }).collect(Collectors.toList());
+
+          if (collect.stream().allMatch(Optional::isPresent)) {
+            String content = collect.stream().map(o -> o.orElse("")).collect(Collectors.joining("\n"));
+            processLoggerConfig(content);
+            return true;
+          } else {
+            return false;
+          }
+        } catch (UnsupportedFlavorException | IOException e) {
+          return false;
+        }
+      }
+    };
+    this.setTransferHandler(newHandler);
+
   }
 
   private void backFromApprove() {
@@ -170,13 +208,16 @@ public class ConvertLogFormatPanel extends JPanel {
       .map(pattern -> {
         try {
           final Properties properties = logbackLayoutEncoderConverter.convert(pattern);
+          final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+          logParser.init(properties);
+          logParser.initParsingContext(new ParsingContext());
           return new LogPatternsTableModelEntry(pattern, properties, checkIfAlreadyExist(properties) ? new Duplicated() : new WillImport());
         } catch (Exception exception) {
           return new LogPatternsTableModelEntry(pattern, new Properties(), new Error(exception.getMessage()));
         }
       }).collect(Collectors.toList());
     logPatternsTableModel.setData(newData);
-    addLoggers.setEnabled(newData.stream().anyMatch(p -> p.status instanceof WillImport));
+    addLoggers.setEnabled(newData.stream().anyMatch(p -> p.getStatus() instanceof WillImport));
     cardLayout.show(ConvertLogFormatPanel.this, PANEL_APPROVE);
   }
 
@@ -306,11 +347,11 @@ public class ConvertLogFormatPanel extends JPanel {
     public Object getValueAt(int rowIndex, int columnIndex) {
       final LogPatternsTableModelEntry d = data.get(rowIndex);
       if (columnIndex == 0) {
-        return d.pattern;
+        return d.getPattern();
       } else if (columnIndex == 1) {
         return d.getProperties();
       } else {
-        return d.status;
+        return d.getStatus();
       }
     }
 

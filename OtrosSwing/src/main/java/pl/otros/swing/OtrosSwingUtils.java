@@ -14,7 +14,12 @@ public class OtrosSwingUtils {
     frame.setAlwaysOnTop(false);
   }
 
-  public static void fontSize2(JButton button) {
+  public static JButton fontSize2(JButton button) {
     button.setFont(button.getFont().deriveFont(new JButton().getFont().getSize() * 2f));
+    return button;
+  }
+  public static JLabel fontSize2(JLabel label) {
+    label.setFont(label.getFont().deriveFont(new JLabel().getFont().getSize() * 2f));
+    return label;
   }
 }
