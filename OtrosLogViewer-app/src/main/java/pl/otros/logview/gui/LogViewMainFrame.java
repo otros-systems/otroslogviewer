@@ -115,6 +115,7 @@ public class LogViewMainFrame extends JFrame {
   private SearchResultColorizer searchResultColorizer;
   private OtrosApplication otrosApplication;
   private ExitAction exitAction;
+  private java.util.List<SocketLogReader> logReaders = new ArrayList<>();
 
   public LogViewMainFrame(DataConfiguration c) throws InitializationException {
     super();
@@ -199,7 +200,7 @@ public class LogViewMainFrame extends JFrame {
     addMenuBarReloadListener();
     otrosApplication.setSearchField(searchField);
     cardLayoutPanel.add(logsTabbedPane, CARD_LAYOUT_LOGS_TABLE);
-    EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication);
+    EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication, logReaders );
     final JScrollPane jScrollPane = new JScrollPane(emptyViewPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     SwingUtilities.invokeLater(() -> jScrollPane.getVerticalScrollBar().setValue(0));
     cardLayoutPanel.add(jScrollPane, CARD_LAYOUT_EMPTY);
@@ -723,7 +724,7 @@ public class LogViewMainFrame extends JFrame {
     toolsMenu.setMnemonic(KeyEvent.VK_T);
     JMenuItem closeAll = new JMenuItem(new CloseAllTabsAction(otrosApplication));
     enableDisableComponetsForTabs.addComponent(closeAll);
-    ArrayList<SocketLogReader> logReaders = new ArrayList<>();
+
     toolsMenu.add(new JMenuItem(new StartSocketListener(otrosApplication, logReaders)));
     toolsMenu.add(new JMenuItem(new StopAllSocketListeners(otrosApplication, logReaders)));
     toolsMenu.add(new ShowMarkersEditor(otrosApplication));
