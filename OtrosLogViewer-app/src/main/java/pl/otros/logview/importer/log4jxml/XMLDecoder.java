@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,6 +79,17 @@ public class XMLDecoder {
 
   
   private static final Pattern KEY_OR_EOL_PATTERN = Pattern.compile("(\\s\\w+=|$)");
+
+  /**
+   * XML 1.0 valid characters: 0x9 | 0xA | 0xD | 0x20-0xD7FF | 0xE000-0xFFFD | 0x10000-0x10FFFF
+   */
+  private static final String INVALID_XML_CHARS = "[^" + "\u0009\r\n" + "\u0020-\uD7FF" + "\uE000-\uFFFD" + "\ud800\udc00-\udbff\udfff" + "]";
+  /**
+   * Used to replace an unknown, unrecognized or unrepresentable character<br/>
+   * http://www.unicode.org/charts/PDF/UFFF0.pdf
+   */
+  private static final String REPLACEMENT_CHARACTER = "\uFFFD";
+  private static final Pattern INVALID_XML_CHARS_PATTERN = Pattern.compile(INVALID_XML_CHARS);
 
   /**
    * Document builder.
@@ -157,9 +167,8 @@ public class XMLDecoder {
       return parseString(buf);
     }
     catch (SAXParseException e) {
-      // log4j writes messages between CDATA markers. If the message itself also contains a CData marker (for example in a SOAP Fault) it gets nested.
-      // This is fixed in log4j itself (see bug 9514 and 37560), but we need to deal with logfiles created with older versions.
       try {
+        buf = replaceInvalidCharacters(buf);
         buf = escapeNestedCData(buf);
         return parseString(buf);
       } catch (SAXParseException e1) {
@@ -178,6 +187,14 @@ public class XMLDecoder {
     }
   }
 
+  private String replaceInvalidCharacters(String buf) {
+    return INVALID_XML_CHARS_PATTERN.matcher(buf).replaceAll(REPLACEMENT_CHARACTER);
+  }
+
+  /**
+   * log4j writes messages between CDATA markers. If the message itself also contains a CData marker (for example in a SOAP Fault) it gets
+   * nested. This is fixed in log4j itself (see bug 9514 and 37560), but we need to deal with logfiles created with older versions.
+   */
   private String escapeNestedCData(String log4jEvents) {
     String escapedLog4jEvents = log4jEvents;
     
