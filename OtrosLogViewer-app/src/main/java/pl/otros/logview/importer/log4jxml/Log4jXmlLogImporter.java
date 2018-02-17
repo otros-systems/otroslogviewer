@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Vector;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class Log4jXmlLogImporter extends AbstractPluginableElement implements
   LogImporter {
 
@@ -56,7 +58,7 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
       byte[] buff = new byte[parseBufferSize];
       int read = 0;
       while ((read = in.read(buff)) > 0) {
-        line = new String(buff, 0, read);
+        line = new String(buff, 0, read, UTF_8);
         Vector decodeEvents = decoder.decodeEvents(line);
         if (decodeEvents != null) {
           for (Object object : decodeEvents) {

@@ -66,6 +66,11 @@ public class Log4jXmlLogImporterTest {
     testImportLogs("log4j/log4j_nested_cdata.xml");
   }
 
+  @Test
+  public void testImportInvalidCharacters() throws Exception {
+    testImportLogs("log4j/log4j_invalid_chars.xml");
+  }
+
   private static void testImportLogs(String resourceName) throws Exception {
     // given
     URL resource = getSystemResource(resourceName);
@@ -99,7 +104,7 @@ public class Log4jXmlLogImporterTest {
     assertEquals(new Date(1483646202027l), logData.getDate());
     assertEquals(expectedLevel, logData.getLevel());
     assertEquals("main", logData.getThread());
-    assertEquals("A descriptive message\njava.lang.Exception: A nice exception\n\tat Classname.main(Classname.java:18)", message);
+    assertEquals("A descriptive message\uFFFD\njava.lang.Exception: A nice exception\n\tat Classname.main(Classname.java:18)", message);
     assertEquals("Outer section Inner section", ndc);
     assertEquals("Classname", logData.getClazz());
     assertEquals("main", logData.getMethod());
@@ -107,7 +112,7 @@ public class Log4jXmlLogImporterTest {
 
     Map<String, String> expectedProperties = new HashMap<>();
     expectedProperties.put("correlationID", "0050569c-5ef2-11e5-e246-876af0931fc5");
-    expectedProperties.put("username", "cn=Directory Manager,o=mycompany.com");
+    expectedProperties.put("username", "cn=Directory Manager\uFFFD,o=mycompany.com");
 
     assertEquals(expectedProperties, logData.getProperties());
     assertEquals(parsingContext.getLogSource(), logData.getLogSource());
