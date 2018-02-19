@@ -24,7 +24,6 @@ import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.api.pluginable.PluginableElement;
 import pl.otros.logview.api.services.PersistService;
 import pl.otros.logview.gui.GuiUtils;
@@ -652,9 +651,6 @@ public class AdvanceOpenPanel extends JPanel {
     return logImporters.stream()
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .filter(l -> !(l instanceof DetectOnTheFlyLogImporter))
-      .filter(l -> l instanceof TableColumnNameSelfDescribable)
-      .map(l -> (TableColumnNameSelfDescribable) l)
       .flatMap(l -> Arrays.stream(l.getTableColumnsToUse()))
       .distinct()
       .toArray(TableColumns[]::new);

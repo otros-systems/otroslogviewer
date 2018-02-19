@@ -19,13 +19,11 @@ import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
-import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 
 import javax.swing.*;
 
@@ -69,16 +67,10 @@ public class LogFileInNewTabOpener {
   }
 
   private LogViewPanelWrapper createPanelForLog(FileObject file, final LoadingInfo openFileObject, LogImporter importer) {
-    TableColumns[] tableColumnsToUse = TableColumns.ALL_WITHOUT_LOG_SOURCE;
-    if (importer instanceof TableColumnNameSelfDescribable) {
-      TableColumnNameSelfDescribable describable = (TableColumnNameSelfDescribable) importer;
-      tableColumnsToUse = describable.getTableColumnsToUse();
-    }
-
     return new LogViewPanelWrapper(
       file.getName().getBaseName(),
       openFileObject.getObserableInputStreamImpl(),
-      tableColumnsToUse, otrosApplication);
+      importer.getTableColumnsToUse(), otrosApplication);
   }
 
 

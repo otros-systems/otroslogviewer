@@ -17,6 +17,7 @@ package pl.otros.logview.importer.log4jxml;
 
 import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
@@ -24,16 +25,28 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.parser.log4j.Log4jUtil;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
-import javax.swing.*;
+import javax.swing.Icon;
+
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Vector;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static pl.otros.logview.api.TableColumns.CLASS;
+import static pl.otros.logview.api.TableColumns.FILE;
+import static pl.otros.logview.api.TableColumns.ID;
+import static pl.otros.logview.api.TableColumns.LEVEL;
+import static pl.otros.logview.api.TableColumns.LINE;
+import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
+import static pl.otros.logview.api.TableColumns.LOG_SOURCE;
+import static pl.otros.logview.api.TableColumns.MESSAGE;
+import static pl.otros.logview.api.TableColumns.METHOD;
+import static pl.otros.logview.api.TableColumns.NDC;
+import static pl.otros.logview.api.TableColumns.PROPERTIES;
+import static pl.otros.logview.api.TableColumns.THREAD;
+import static pl.otros.logview.api.TableColumns.TIME;
 
-public class Log4jXmlLogImporter extends AbstractPluginableElement implements
-  LogImporter {
-
+public class Log4jXmlLogImporter extends AbstractPluginableElement implements LogImporter {
   private static final int DEFAULT_PARSE_BUFFER_SIZE = 16 * 1024;
   private static final String LOG4J_XML_LOG_IMPORTER_DECODER = "Log4jXmlLogImporter.decoder";
 
@@ -74,6 +87,11 @@ public class Log4jXmlLogImporter extends AbstractPluginableElement implements
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public TableColumns[] getTableColumnsToUse() {
+    return new TableColumns[] { ID, TIME, MESSAGE, LEVEL, CLASS, METHOD, FILE, LINE, NDC, THREAD, LOGGER_NAME, PROPERTIES, LOG_SOURCE };
   }
 
   @Override

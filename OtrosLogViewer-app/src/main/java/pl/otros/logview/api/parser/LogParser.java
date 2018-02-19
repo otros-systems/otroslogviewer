@@ -21,7 +21,7 @@ import pl.otros.logview.api.model.LogData;
 import java.text.ParseException;
 import java.util.Properties;
 
-public interface LogParser {
+public interface LogParser extends TableColumnNameSelfDescribable {
 
   int LOG_PARSER_VERSION_1 = 1;
 

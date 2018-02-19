@@ -30,7 +30,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Properties;
 
-public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfDescribable {
+public class LogImporterUsingParser implements LogImporter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogImporterUsingParser.class.getName());
   private LogParser parser = null;
@@ -170,12 +170,7 @@ public class LogImporterUsingParser implements LogImporter, TableColumnNameSelfD
 
   @Override
   public TableColumns[] getTableColumnsToUse() {
-    TableColumns[] columns = TableColumns.ALL_WITHOUT_LOG_SOURCE;
-    if (parser instanceof TableColumnNameSelfDescribable) {
-      TableColumnNameSelfDescribable descriable = (TableColumnNameSelfDescribable) parser;
-      columns = descriable.getTableColumnsToUse();
-    }
-    return columns;
+    return parser.getTableColumnsToUse();
   }
 
   @Override
