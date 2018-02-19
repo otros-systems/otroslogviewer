@@ -29,7 +29,6 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
 import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
@@ -45,7 +44,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 
-public class UtilLoggingXmlLogImporter extends AbstractPluginableElement implements LogImporter, TableColumnNameSelfDescribable {
+public class UtilLoggingXmlLogImporter extends AbstractPluginableElement implements LogImporter {
 
   private static final String DOC_BUILDER = "DOC_BUILDER";
   private static final String PARTIAL_EVENT = "PARTIAL_EVENT";

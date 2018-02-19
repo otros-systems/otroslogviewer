@@ -32,7 +32,6 @@ import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -56,6 +55,7 @@ public class TailLogActionListener extends OtrosAction {
     this.importer = importer;
   }
 
+  @Override
   public void actionPerformed(ActionEvent e) {
     JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser);
@@ -104,12 +104,7 @@ public class TailLogActionListener extends OtrosAction {
   }
 
   protected TableColumns[] determineTableColumnsToUse(LoadingInfo loadingInfo, LogImporter importer) {
-    TableColumns[] tableColumnsToUse = TableColumns.ALL_WITHOUT_LOG_SOURCE;
-    if (importer instanceof TableColumnNameSelfDescribable) {
-      TableColumnNameSelfDescribable describable = (TableColumnNameSelfDescribable) importer;
-      tableColumnsToUse = describable.getTableColumnsToUse();
-    }
-    return tableColumnsToUse;
+    return importer.getTableColumnsToUse();
   }
 
 

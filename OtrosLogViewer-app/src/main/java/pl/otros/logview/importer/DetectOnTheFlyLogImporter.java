@@ -19,6 +19,7 @@ package pl.otros.logview.importer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataCollector;
@@ -31,6 +32,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Properties;
+
+import static pl.otros.logview.api.TableColumns.CLASS;
+import static pl.otros.logview.api.TableColumns.FILE;
+import static pl.otros.logview.api.TableColumns.ID;
+import static pl.otros.logview.api.TableColumns.LEVEL;
+import static pl.otros.logview.api.TableColumns.LINE;
+import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
+import static pl.otros.logview.api.TableColumns.LOG_SOURCE;
+import static pl.otros.logview.api.TableColumns.MARK;
+import static pl.otros.logview.api.TableColumns.MESSAGE;
+import static pl.otros.logview.api.TableColumns.METHOD;
+import static pl.otros.logview.api.TableColumns.NDC;
+import static pl.otros.logview.api.TableColumns.PROPERTIES;
+import static pl.otros.logview.api.TableColumns.THREAD;
+import static pl.otros.logview.api.TableColumns.TIME;
 
 public class DetectOnTheFlyLogImporter extends AbstractPluginableElement implements LogImporter {
 
@@ -115,6 +131,12 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
       }
 
     }
+  }
+
+  @Override
+  public TableColumns[] getTableColumnsToUse() {
+    return new TableColumns[] { ID, TIME, LEVEL, MESSAGE, CLASS, METHOD, THREAD, MARK, FILE, LINE, NDC, PROPERTIES, LOGGER_NAME,
+        LOG_SOURCE };
   }
 
   @Override
