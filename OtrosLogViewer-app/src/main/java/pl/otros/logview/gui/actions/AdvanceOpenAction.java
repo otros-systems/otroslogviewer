@@ -11,13 +11,13 @@ import java.awt.event.ActionEvent;
 public class AdvanceOpenAction extends OtrosAction {
 
   public AdvanceOpenAction(OtrosApplication otrosApplication) {
-    super("Open log files", Icons.ARROW_JOIN, otrosApplication);
-    this.putValue(Action.LONG_DESCRIPTION, "Open log files from local or remote file systems");
+    super("Merge log files", Icons.ARROW_JOIN, otrosApplication);
+    this.putValue(Action.LONG_DESCRIPTION, "Merge log files from local or remote file systems");
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    getOtrosApplication().addClosableTab("Open log files", "Select files you want to open",
+    getOtrosApplication().addClosableTab("Merge log files", "Select files you want to merge",
         null, new AdvanceOpenPanel(getOtrosApplication()), true);
 
   }

@@ -89,9 +89,17 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.fill = GridBagConstraints.HORIZONTAL;
     bagConstraints.gridy++;
 
+    final Action tailAction = new TailLogWithAutoDetectActionListener(otrosApplication);
+    final JButton tailButton = new JButton(tailAction);
+    tailButton.setName("Open log files");
+    OtrosSwingUtils.fontSize2(tailButton);
+    tailButton.setIcon(Icons.FOLDER_OPEN);
+    this.add(tailButton, bagConstraints);
+    bagConstraints.gridy++;
+
     final AdvanceOpenAction advanceOpenAction = new AdvanceOpenAction(otrosApplication);
     final JButton advanceOpenButton = new JButton(advanceOpenAction);
-    advanceOpenButton.setName("open log files");
+    advanceOpenButton.setName("Merge log files");
     OtrosSwingUtils.fontSize2(advanceOpenButton);
     advanceOpenButton.setIcon(Icons.ARROW_JOIN_24);
     this.add(advanceOpenButton, bagConstraints);
