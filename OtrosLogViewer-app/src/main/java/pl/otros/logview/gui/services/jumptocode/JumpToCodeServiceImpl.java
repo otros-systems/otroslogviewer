@@ -8,12 +8,13 @@ import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class JumpToCodeServiceImpl implements JumpToCodeService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JumpToCodeServiceImpl.class.getName());
 
-  public JumpToCodeClient jumpToCodeClient;
+  private JumpToCodeClient jumpToCodeClient;
 
   public JumpToCodeServiceImpl(Configuration configuration) {
     jumpToCodeClient = new JumpToCodeClient(configuration);
@@ -54,7 +55,7 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   }
 
   @Override
-  public boolean isJumpable(LocationInfo locationInfo) throws IOException {
+  public boolean isJumpable(LocationInfo locationInfo) {
     boolean jumpable = jumpToCodeClient.isJumpable(locationInfo);
     LOGGER.trace("Checking if location " + locationInfo + " is jumpable: " + jumpable);
     return jumpable;
@@ -63,5 +64,15 @@ public class JumpToCodeServiceImpl implements JumpToCodeService {
   @Override
   public String getContent(LocationInfo locationInfo) throws IOException {
     return jumpToCodeClient.getContent(locationInfo);
+  }
+
+  @Override
+  public Set<Capabilities> capabilities() throws IOException {
+    return jumpToCodeClient.capabilities();
+  }
+
+  @Override
+  public Set<String> loggerPatterns() throws IOException {
+    return jumpToCodeClient.loggerPatterns();
   }
 }

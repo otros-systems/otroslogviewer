@@ -59,6 +59,7 @@ project(':Common-libs') {
         compile 'com.github.insubstantial:trident:7.3'
         compile 'com.github.insubstantial:substance-swingx:7.3'
         compile 'com.google.guava:guava:16.0.1'
+        compile 'com.google.code.gson:gson:2.8.2'
         compile 'com.jcraft:jsch:0.1.+'
         compile 'com.jcraft:jzlib:1.+'
         compile 'com.jgoodies:looks:2.+'
@@ -137,7 +138,7 @@ project(':OtrosLogViewer-api') {
 }
 
 project(':OtrosLogViewer-app') {
-    def today = new Date().format("yyyy-MM-dd");
+    def today = new Date().format("yyyy-MM-dd")
     dependencies {
         compile project(':Common-libs')
         compile project(':OtrosSwing')
