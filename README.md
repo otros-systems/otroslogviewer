@@ -1,14 +1,19 @@
 # OtrosLogViewer
 Useful software for analysing applications logs and traces.
 
-![Build status](https://api.travis-ci.org/otros-systems/otroslogviewer.svg)
+![Build status](https://api.travis-ci.org/otros-systems/otroslogviewer.svg?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a6c121e140b4493911e064621e0e635)](https://www.codacy.com/app/Otros-systems/otroslogviewer)
+[![Download OtrosLogViewer](https://img.shields.io/sourceforge/dm/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
+[![Download OtrosLogViewer](https://img.shields.io/sourceforge/dt/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
+
 
 ## Requirements
   * Java 8 since version 1.4.0
   * Java 6 for verions 1.3.x
 
 ## Download 
-  * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dm/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
+  * You can download latest version from [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) 
+  
 
 ## Features
   * Loading logs from remote servers using ftp, sftp, ssh, samba and others ([supported file systems](http://commons.apache.org/vfs/filesystems.html))
