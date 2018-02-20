@@ -87,14 +87,13 @@ public class LogViewPanelWrapper extends JPanel {
         closing();
       }
     });
-    final TableColumns[] columns = (visibleColumns == null) ? TableColumns.ALL_WITHOUT_LOG_SOURCE : visibleColumns;
 
     fillDefaultConfiguration();
 
     SoftReference<Stoppable> stoppableReference = new SoftReference<>(stoppable);
     // this.statusObserver = statusObserver;
     dataTableModel = logDataTableModel == null ? new LogDataTableModel() : logDataTableModel;
-    logViewPanel = new LogViewPanel(dataTableModel, columns, otrosApplication);
+    logViewPanel = new LogViewPanel(dataTableModel, visibleColumns, otrosApplication);
 
     cardLayout = new CardLayout();
     GridBagConstraints c = new GridBagConstraints();
@@ -142,10 +141,12 @@ public class LogViewPanelWrapper extends JPanel {
   }
 
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public void setName(String name) {
     this.name = name;
   }

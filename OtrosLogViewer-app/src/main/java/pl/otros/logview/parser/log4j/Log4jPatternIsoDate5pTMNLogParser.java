@@ -18,6 +18,7 @@ package pl.otros.logview.parser.log4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
@@ -30,7 +31,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.logging.Level;
+
+import static pl.otros.logview.api.TableColumns.ID;
+import static pl.otros.logview.api.TableColumns.LEVEL;
+import static pl.otros.logview.api.TableColumns.MESSAGE;
+import static pl.otros.logview.api.TableColumns.THREAD;
+import static pl.otros.logview.api.TableColumns.TIME;
 
 public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
 
@@ -120,16 +126,16 @@ public class Log4jPatternIsoDate5pTMNLogParser implements MultiLineLogParser {
 
     String level = sb.substring(24, 30).trim();
     String thread = sb.substring(threadStartIndex + 1, threadEndIndex);
-    logData.setClazz("");
-    logData.setMessage("");
     logData.setThread(thread);
-    logData.setLoggerName("");
     logData.setMessage(sb.substring(threadEndIndex + 1).trim());
-    Level l = Log4jUtil.parseLevel(level);
-    logData.setLevel(l);
+    logData.setLevel(Log4jUtil.parseLevel(level));
     sb.setLength(0);
     return logData;
+  }
 
+  @Override
+  public TableColumns[] getTableColumnsToUse() {
+    return new TableColumns[] { ID, TIME, MESSAGE, THREAD, LEVEL };
   }
 
   @Override

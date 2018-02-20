@@ -21,6 +21,7 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
@@ -34,6 +35,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Properties;
+
+import static pl.otros.logview.api.TableColumns.CLASS;
+import static pl.otros.logview.api.TableColumns.FILE;
+import static pl.otros.logview.api.TableColumns.ID;
+import static pl.otros.logview.api.TableColumns.LEVEL;
+import static pl.otros.logview.api.TableColumns.LINE;
+import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
+import static pl.otros.logview.api.TableColumns.LOG_SOURCE;
+import static pl.otros.logview.api.TableColumns.MESSAGE;
+import static pl.otros.logview.api.TableColumns.METHOD;
+import static pl.otros.logview.api.TableColumns.NDC;
+import static pl.otros.logview.api.TableColumns.PROPERTIES;
+import static pl.otros.logview.api.TableColumns.THREAD;
+import static pl.otros.logview.api.TableColumns.TIME;
 
 public class Log4jSerilizedLogImporter extends AbstractPluginableElement implements LogImporter {
 
@@ -77,6 +92,11 @@ public class Log4jSerilizedLogImporter extends AbstractPluginableElement impleme
     } finally {
       IOUtils.closeQuietly(in);
     }
+  }
+
+  @Override
+  public TableColumns[] getTableColumnsToUse() {
+    return new TableColumns[] { ID, TIME, MESSAGE, LEVEL, CLASS, METHOD, FILE, LINE, NDC, THREAD, LOGGER_NAME, PROPERTIES, LOG_SOURCE };
   }
 
   @Override

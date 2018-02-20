@@ -1,6 +1,7 @@
 package pl.otros.logview.parser.json;
 
 import pl.otros.logview.api.InitializationException;
+import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.api.parser.ParserDescription;
@@ -10,6 +11,21 @@ import pl.otros.logview.pluginable.AbstractPluginableElement;
 import java.text.ParseException;
 import java.util.Optional;
 import java.util.Properties;
+
+import static pl.otros.logview.api.TableColumns.CLASS;
+import static pl.otros.logview.api.TableColumns.FILE;
+import static pl.otros.logview.api.TableColumns.ID;
+import static pl.otros.logview.api.TableColumns.LEVEL;
+import static pl.otros.logview.api.TableColumns.LINE;
+import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
+import static pl.otros.logview.api.TableColumns.MARK;
+import static pl.otros.logview.api.TableColumns.MESSAGE;
+import static pl.otros.logview.api.TableColumns.METHOD;
+import static pl.otros.logview.api.TableColumns.NDC;
+import static pl.otros.logview.api.TableColumns.NOTE;
+import static pl.otros.logview.api.TableColumns.PROPERTIES;
+import static pl.otros.logview.api.TableColumns.THREAD;
+import static pl.otros.logview.api.TableColumns.TIME;
 
 /**
  * Parser of log in json format. It can skip if between json object are some junk (from standard output). From properties
@@ -60,6 +76,10 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
     return null;
   }
 
+  @Override
+  public TableColumns[] getTableColumnsToUse() {
+    return new TableColumns[] { ID, LEVEL, TIME, MESSAGE, THREAD, LOGGER_NAME, CLASS, METHOD, LINE, FILE, NOTE, NDC, MARK, PROPERTIES };
+  }
 
   @Override
   public ParserDescription getParserDescription() {

@@ -44,7 +44,6 @@ import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.parser.CustomLevelsParser;
 
 import java.text.DateFormat;
@@ -138,7 +137,7 @@ import java.util.regex.PatternSyntaxException;
  * @author Code highly based on
  *         http://svn.apache.org/repos/asf/logging/log4j/companions/receivers/trunk/src/main/java/org/apache/log4j/varia/LogFilePatternReceiver.java
  */
-public class Log4jPatternMultilineLogParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
+public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
 
   private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Log4jPatternMultilineLogParser.class.getName());
 

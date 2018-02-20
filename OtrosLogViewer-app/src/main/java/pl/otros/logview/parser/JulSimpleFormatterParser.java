@@ -23,7 +23,6 @@ import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,7 +34,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 
-public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumnNameSelfDescribable {
+public class JulSimpleFormatterParser implements MultiLineLogParser {
 
   private static final String DATE_PATTERNS = "DATE_PATTERNS";
 
@@ -73,6 +72,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser, TableColumn
     return pd;
   }
 
+  @Override
   public LogData parse(String event, ParsingContext context) throws ParseException {
     if (event == null) {
       return null;

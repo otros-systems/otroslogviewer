@@ -18,13 +18,14 @@ package pl.otros.logview.api.importer;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.api.pluginable.PluginableElement;
 
 import javax.swing.*;
 import java.io.InputStream;
 import java.util.Properties;
 
-public interface LogImporter extends PluginableElement {
+public interface LogImporter extends PluginableElement, TableColumnNameSelfDescribable {
 
   int LOG_IMPORTER_VERSION_1 = 1;
 
