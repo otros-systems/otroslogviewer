@@ -30,15 +30,11 @@ import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Responsible for global drag-and-drop operations.
@@ -64,72 +60,61 @@ public class DragAndDropFilesHandler extends TransferHandler {
 
   @Override
   public boolean canImport(TransferSupport support) {
-    if (isText(support) || isListOfFiles(support) || isUriList(support) || isURL(support)) {
-      LOGGER.info("Can import support ");
-      return true;
-    }
-    return super.canImport(support);
+    LOGGER.info("Checking if can import data from DnD");
+    boolean canImport = (isListOfFiles(support) || isUriList(support) || isURL(support));
+    LOGGER.info("Can import from DnD " + canImport);
+    return canImport;
   }
 
   private boolean isListOfFiles(TransferSupport support) {
-    boolean dataFlavorSupported = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
-    LOGGER.info("Data transfer is list of files: " + dataFlavorSupported);
-    return dataFlavorSupported;
-  }
-
-  private boolean isText(TransferSupport support) {
-    boolean b = DataFlavor.selectBestTextFlavor(support.getDataFlavors()) != null;
-    LOGGER.info("Data transfer is text: " + b);
-    return b;
+    return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
   }
 
   private boolean isURL(TransferSupport support) {
-    DataFlavor[] dataFlavors = support.getDataFlavors();
-    boolean isUrl = false;
-    for (DataFlavor dataFlavor : dataFlavors) {
-      if (dataFlavor.getMimeType().equals(APPLICATION_X_JAVA_URL_DATA_FLAVOR)) {
-        isUrl = true;
-        break;
-      }
+    return isMimeType(support, APPLICATION_X_JAVA_URL_DATA_FLAVOR);
+  }
+
+  private boolean isMimeType(TransferSupport support, String mimeType) {
+    try {
+      final DataFlavor flavor = new DataFlavor(mimeType);
+      return isMimeType(support, flavor);
+    } catch (Exception ignored) {
     }
-    LOGGER.info("Data transfer is list of file: " + isUrl);
-    return isUrl;
+    return false;
+
+  }
+
+  private boolean isMimeType(TransferSupport support, DataFlavor flavor) {
+    try {
+      if (support.getTransferable().isDataFlavorSupported(flavor)){
+        final Object transferData = support.getTransferable().getTransferData(flavor);
+        return null != transferData;
+      }
+    } catch (Exception ignored) {
+    }
+    return false;
   }
 
   private boolean isUriList(TransferSupport support) {
-    DataFlavor[] dataFlavors = support.getDataFlavors();
-    boolean isUriList = false;
-    for (DataFlavor dataFlavor : dataFlavors) {
-      if (dataFlavor.getMimeType().equals(TEXT_URI_LIST)) {
-        isUriList = true;
-        break;
-      }
-    }
-    LOGGER.info("Data transfer is URI list: " + isUriList);
-    return isUriList;
+    return isMimeType(support, TEXT_URI_LIST);
   }
 
   @Override
   public boolean importData(TransferSupport support) {
-
+    LOGGER.info("Importing data from DnD");
     if (isURL(support)) {
       LOGGER.trace("Importing URL");
       return importUrl(support);
     }
 
-    if (isUriList(support)) {
-      LOGGER.trace("Importing URI list");
-      return importUriList(support);
-    }
-
-    if (isText(support)) {
-      LOGGER.trace("Importing text");
-      return importString(support);
-    }
-
     if (isListOfFiles(support)) {
       LOGGER.trace("Importing list of files");
       return importListOfFiles(support);
+    }
+
+    if (isUriList(support)) {
+      LOGGER.trace("Importing URI list");
+      return importUriList(support);
     }
 
     return super.importData(support);
@@ -163,25 +148,10 @@ public class DragAndDropFilesHandler extends TransferHandler {
     }
   }
 
-  private boolean importString(TransferSupport support) {
-    try {
-      tryToImportString(support);
-      return true;
-    } catch (RuntimeException e) {
-      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
-      JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      return false;
-    }
-  }
-
   private boolean importUrl(TransferSupport support) {
     try {
       tryToImportUrl(support);
       return true;
-    } catch (RuntimeException e) {
-      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
-      JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      return false;
     } catch (Exception e) {
       LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -193,19 +163,11 @@ public class DragAndDropFilesHandler extends TransferHandler {
     try {
       tryToImportUriList(support);
       return true;
-    } catch (RuntimeException e) {
-      LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
-      JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      return false;
     } catch (Exception e) {
       LOGGER.error("Problem dropping something on the GUI: " + e.getMessage(), e);
       JOptionPane.showMessageDialog(null, "Problem during drag-and-drop of strings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       return false;
     }
-  }
-
-  private void tryToImportString(TransferSupport support) {
-    getFileObjects(support).forEach(this::openLogFile);
   }
 
   private void tryToImportUrl(TransferSupport support) throws UnsupportedFlavorException, IOException, ClassNotFoundException {
@@ -229,29 +191,6 @@ public class DragAndDropFilesHandler extends TransferHandler {
 
   }
 
-  private List<FileObject> getFileObjects(TransferSupport support) {
-    return getFileUris(support).stream()
-      .map(uriString -> getFileObjectForLocalFile(getFileForUriString(uriString)))
-      .collect(Collectors.toList());
-  }
-
-  public List<String> getFileUris(TransferSupport support) {
-    List<String> files = new ArrayList<>();
-    try (BufferedReader reader =
-           new BufferedReader(
-             DataFlavor.selectBestTextFlavor(support.getDataFlavors()).getReaderForText(support.getTransferable()))) {
-      String uri;
-      while ((uri = reader.readLine()) != null) {
-        files.add(uri);
-      }
-    } catch (UnsupportedFlavorException e) {
-      throw new RuntimeException("The dropped data is not supported. The unsupported DataFlavors are " + StringUtils.join(support.getDataFlavors(), ","), e);
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot read the dropped data.", e);
-    }
-    return files;
-  }
-
   private FileObject getFileObjectForLocalFile(File file) {
     try {
       return VFS.getManager().toFileObject(file);
@@ -260,18 +199,11 @@ public class DragAndDropFilesHandler extends TransferHandler {
     }
   }
 
-  private File getFileForUriString(String uriString) {
-    LOGGER.trace(String.format("Creating uri for %s", uriString));
-    return new File(URI.create(uriString));
-  }
-
   private void openLogFile(FileObject file) {
     Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
     LogImporter importer = new DetectOnTheFlyLogImporter(importers);
     TailLogActionListener tailLogActionListener = new TailLogActionListener(otrosApplication, importer);
     tailLogActionListener.openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
-
-    // new LogFileInNewTabOpener(new AutoDetectingImporterProvider(importers), tabbedPane, observer).open(file);
   }
 
 }
