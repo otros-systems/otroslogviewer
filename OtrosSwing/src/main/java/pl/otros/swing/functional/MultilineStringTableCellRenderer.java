@@ -13,15 +13,18 @@ public class MultilineStringTableCellRenderer<E> implements TableCellRenderer {
   private final Function<E, String> mapping;
 
   public MultilineStringTableCellRenderer(Function<E, String> mapping) {
-    this(mapping, false);
+    this(mapping, false,0);
   }
 
-  public MultilineStringTableCellRenderer(Function<E, String> mapping, boolean lineWrap) {
+  public MultilineStringTableCellRenderer(Function<E, String> mapping, boolean lineWrap, int border) {
     this.mapping = mapping;
     textArea = new JTextArea();
     renderer = new DefaultTableCellRenderer();
     textArea.setLineWrap(lineWrap);
     textArea.setWrapStyleWord(lineWrap);
+    if (border>0){
+      textArea.setBorder(BorderFactory.createEmptyBorder(border,border,border,border));
+    }
   }
 
 
