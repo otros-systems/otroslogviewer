@@ -32,7 +32,7 @@ public class UnMarkRowAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
     Optional<LogDataTableModel> maybeModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
 

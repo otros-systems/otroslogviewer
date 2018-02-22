@@ -313,5 +313,8 @@ public class Icons {
   @Path(path = "/img/fugue/document-hf-select-footer.png")
   public static ImageIcon FROM_END;
 
+  @Path(path = "/img/fugue/document-number.png")
+  public static ImageIcon DOCUMENT_NUMBER;
+
 
 }

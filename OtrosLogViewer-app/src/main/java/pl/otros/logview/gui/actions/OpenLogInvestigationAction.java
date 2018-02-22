@@ -41,7 +41,8 @@ public class OpenLogInvestigationAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
+    getOtrosApplication().getServices().getStatsService().actionExecuted(this);
     StatusObserver observer = getOtrosApplication().getStatusObserver();
     //TODO get one file chooser
     JFileChooser chooser = LogInvestiagionPersitanceUtil.getFileChooser();

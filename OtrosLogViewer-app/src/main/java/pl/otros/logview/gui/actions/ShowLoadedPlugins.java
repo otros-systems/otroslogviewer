@@ -42,7 +42,7 @@ public class ShowLoadedPlugins extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     refreshData();
     getOtrosApplication().addClosableTab("Loaded plugins", "List loaded plugins", Icons.PLUGIN, loadedComponents, true);
 

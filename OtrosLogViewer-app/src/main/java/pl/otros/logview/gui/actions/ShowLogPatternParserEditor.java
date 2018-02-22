@@ -50,7 +50,7 @@ public class ShowLogPatternParserEditor extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     if (log4jEditor == null) {
       log4jEditor = viewSupplier.get();
       log4jEditor.setLogPattern(logPatternText);

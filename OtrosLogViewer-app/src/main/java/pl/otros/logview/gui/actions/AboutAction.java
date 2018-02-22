@@ -92,7 +92,7 @@ public class AboutAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     animatedLogo.start();
     OtrosApplication otrosApplication = getOtrosApplication();
     JFrame applicationJFrame = otrosApplication.getApplicationJFrame();

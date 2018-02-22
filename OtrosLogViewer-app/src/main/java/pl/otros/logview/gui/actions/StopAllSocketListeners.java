@@ -45,7 +45,7 @@ public class StopAllSocketListeners extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     if (logReaders.size() == 0) {
       JOptionPane.showMessageDialog((Component) arg0.getSource(), "OtrosLogViewer is not listening on socket");
       return;

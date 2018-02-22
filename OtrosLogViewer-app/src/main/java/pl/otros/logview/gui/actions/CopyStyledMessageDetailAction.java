@@ -64,7 +64,7 @@ public class CopyStyledMessageDetailAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     MessageUpdateUtils messageUpdateUtils = new MessageUpdateUtils();
     Optional<LogViewPanelI> selectedLogViewPanel1 = getOtrosApplication().getSelectedLogViewPanel();
     selectedLogViewPanel1.ifPresent(selectedLogViewPanel -> {

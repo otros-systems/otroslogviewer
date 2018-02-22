@@ -31,7 +31,7 @@ public class MarkRowAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     Optional<LogDataTableModel> maybeModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
     Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
     maybeTable.ifPresent(table -> maybeModel.ifPresent(model -> {

@@ -56,7 +56,7 @@ public class RemoveByAcceptanceCriteria extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     StatusObserver observer = getOtrosApplication().getStatusObserver();
     Optional<LogDataTableModel> maybeDataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
     maybeDataTableModel.ifPresent(dataTableModel -> {

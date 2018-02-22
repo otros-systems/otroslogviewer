@@ -67,7 +67,7 @@ public class ParseClipboard extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     final Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 

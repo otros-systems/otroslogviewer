@@ -43,7 +43,7 @@ public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends Otr
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     Optional<JXTable> maybeTable = getOtrosApplication().getSelectPaneJXTable();
 
     final Optional<LogDataTableModel> maybeTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();

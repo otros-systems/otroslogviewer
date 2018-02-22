@@ -20,7 +20,7 @@ public class FontSize extends OtrosAction {
 
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     setDefaultSize(fontSize);
     Arrays.asList(JFrame.getFrames()).forEach(SwingUtilities::updateComponentTreeUI);
   }
