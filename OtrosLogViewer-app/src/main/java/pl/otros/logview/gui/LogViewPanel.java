@@ -43,6 +43,7 @@ import pl.otros.logview.gui.table.JTableWith2RowHighliting;
 import pl.otros.logview.gui.util.JumpToCodeSelectionListener;
 import pl.otros.logview.pluginable.PluginableElementNameComparator;
 import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
+import pl.otros.logview.util.DateUtil;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.swing.table.ColumnLayout;
@@ -54,7 +55,9 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -73,7 +76,7 @@ public class LogViewPanel extends LogViewPanelI {
   private final OtrosApplication otrosApplication;
   private final FullWidthJTextPane logDetailTextArea;
   private final JXTable table;
-  private final TableRowSorter<LogDataTableModel> sorter;
+  private TableRowSorter<LogDataTableModel> sorter;
   private final StatusObserver statusObserver;
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   //  private JScrollPane scrollPane;
@@ -221,6 +224,17 @@ public class LogViewPanel extends LogViewPanelI {
         table.repaint();
       }
     });
+    table.getSelectionModel().addListSelectionListener(listener -> {
+      if (table.getSelectedRowCount() > 1) {
+        final int[] selectedRows = table.getSelectedRows();
+        final int first = selectedRows[0];
+        final int last = selectedRows[selectedRows.length - 1];
+        final long date1 = dataTableModel.getLogData(sorter.convertRowIndexToModel(first)).getDate().getTime();
+        final long date2 = dataTableModel.getLogData(sorter.convertRowIndexToModel(last)).getDate().getTime();
+        long duration = date2 - date1;
+        otrosApplication.getStatusObserver().updateStatus("Duration between selected log events is " + DateUtil.formatDelta (duration));
+      }
+    });
     table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
     ((EventSource) configuration.getConfiguration()).addConfigurationListener(ce -> {
@@ -268,7 +282,7 @@ public class LogViewPanel extends LogViewPanelI {
     messageDetailToolbar = new JToolBar("MessageDetail");
     messageDetailsPanel.add(messageDetailToolbar, BorderLayout.NORTH);
     messageDetailsPanel.add(logDetailWithRulerScrollPane);
-    messageDetailsPanel.setMinimumSize(new Dimension(300,150));
+    messageDetailsPanel.setMinimumSize(new Dimension(300, 150));
     initMessageDetailsToolbar();
 
     JTabbedPane jTabbedPane = new JTabbedPane();
