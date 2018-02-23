@@ -498,7 +498,7 @@ public class AdvanceOpenPanel extends JPanel {
     initContextMenu(table);
     initToolbar(jToolBar);
 
-    importAction = new AbstractAction("Import", Icons.ARROW_JOIN_24) {
+    importAction = new AbstractAction("Merge", Icons.ARROW_JOIN_24) {
 
       @Override
       public void actionPerformed(ActionEvent e) {
