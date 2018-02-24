@@ -1,6 +1,5 @@
 package pl.otros.logview.parser.json;
 
-import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.LogParser;
@@ -8,24 +7,10 @@ import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
-import java.text.ParseException;
 import java.util.Optional;
 import java.util.Properties;
 
-import static pl.otros.logview.api.TableColumns.CLASS;
-import static pl.otros.logview.api.TableColumns.FILE;
-import static pl.otros.logview.api.TableColumns.ID;
-import static pl.otros.logview.api.TableColumns.LEVEL;
-import static pl.otros.logview.api.TableColumns.LINE;
-import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
-import static pl.otros.logview.api.TableColumns.MARK;
-import static pl.otros.logview.api.TableColumns.MESSAGE;
-import static pl.otros.logview.api.TableColumns.METHOD;
-import static pl.otros.logview.api.TableColumns.NDC;
-import static pl.otros.logview.api.TableColumns.NOTE;
-import static pl.otros.logview.api.TableColumns.PROPERTIES;
-import static pl.otros.logview.api.TableColumns.THREAD;
-import static pl.otros.logview.api.TableColumns.TIME;
+import static pl.otros.logview.api.TableColumns.*;
 
 /**
  * Parser of log in json format. It can skip if between json object are some junk (from standard output). From properties
@@ -47,7 +32,7 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   }
 
   @Override
-  public void init(Properties properties) throws InitializationException {
+  public void init(Properties properties) {
     jsonExtractor.init(properties);
     parserDescription.setDisplayName(properties.getProperty("name", "Unnamed json parser"));
     parserDescription.setDescription(properties.getProperty("description", "<Without description>"));
@@ -60,7 +45,7 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   }
 
   @Override
-  public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
+  public LogData parse(String line, ParsingContext parsingContext) {
 
     final StringBuilder unmatchedLog = parsingContext.getUnmatchedLog();
     if (unmatchedLog.length() == 0 && !line.startsWith("{")) {
