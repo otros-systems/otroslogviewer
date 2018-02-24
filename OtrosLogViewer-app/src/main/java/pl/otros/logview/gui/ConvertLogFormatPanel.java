@@ -1,5 +1,6 @@
 package pl.otros.logview.gui;
 
+import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
@@ -15,6 +16,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
@@ -39,6 +41,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,6 +52,7 @@ public class ConvertLogFormatPanel extends JPanel {
   private static final String PANEL_SELECT = "panel select";
   private static final String PANEL_PASTE = "panel paste";
   private static final String PANEL_APPROVE = "panel approve";
+  private static final String PANEL_LOADING = "panel loading";
   private String backFromApproveTo = PANEL_SELECT;
   private CardLayout cardLayout;
   private final LogPatternsTableModel logPatternsTableModel = new LogPatternsTableModel(Collections.emptyList());
@@ -92,10 +96,68 @@ public class ConvertLogFormatPanel extends JPanel {
     });
     pasteButton.setName("ConvertLogFormatPanel.paste");
     OtrosSwingUtils.fontSize2(pasteButton);
+
+    final JXButton importFromIde = new JXButton("Import from IDE");
+    importFromIde.setToolTipText("Requires OtrosJumpToCode v1.9+ plugin installed in Intellij IDEA");
+    OtrosSwingUtils.fontSize2(importFromIde);
+    final JProgressBar jProgressBar = new JProgressBar();
+    jProgressBar.setIndeterminate(true);
+    jProgressBar.setString("Contacting IDE");
+    jProgressBar.setStringPainted(true);
+    JPanel panelLoading = new JPanel(new MigLayout("align 50% 50%"));
+    panelLoading.add(OtrosSwingUtils.fontSize2(jProgressBar));
+
+    importFromIde.addActionListener(e -> {
+      final JumpToCodeService jumpToCodeService = otrosApplication.getServices().getJumpToCodeService();
+      if (jumpToCodeService.isIdeAvailable()) {
+        final SwingWorker<ImportFromIdeResponse, Void> worker = new SwingWorker<ImportFromIdeResponse, Void>() {
+
+          @Override
+          protected ImportFromIdeResponse doInBackground() {
+            try {
+              if (jumpToCodeService.capabilities().contains(JumpToCodeService.Capabilities.LoggersConfig)) {
+                return ImportFromIdeResponse.successfull(jumpToCodeService.loggerPatterns());
+              } else {
+                return ImportFromIdeResponse.error("OtrosJumpToCode IDE plugin is not supporting this feature");
+              }
+            } catch (IOException exception) {
+              LOGGER.error("Can't connect to IDE", exception);
+              return ImportFromIdeResponse.error("Can't extract logger patterns from IDE: " + exception.getMessage());
+            }
+          }
+
+          @Override
+          protected void done() {
+            try {
+              final ImportFromIdeResponse response = get();
+              if (response.isSuccess() && response.getPatterns().isEmpty()) {
+                JOptionPane.showMessageDialog(ConvertLogFormatPanel.this, "No log patterns found in current project");
+                backFromApprove();
+              } else if (response.isSuccess()) {
+                processLoggerConfig(Joiner.on("\n").join(response.getPatterns()));
+              } else {
+                JOptionPane.showMessageDialog(ConvertLogFormatPanel.this, response.getErrorMessage());
+                backFromApprove();
+              }
+            } catch (InterruptedException | ExecutionException e1) {
+              JOptionPane.showMessageDialog(ConvertLogFormatPanel.this, "Error: " + e1.getMessage());
+              backFromApprove();
+            }
+          }
+        };
+        cardLayout.show(ConvertLogFormatPanel.this, PANEL_LOADING);
+        worker.execute();
+      } else {
+        JOptionPane.showMessageDialog(this, "IDE is not available");
+      }
+    });
+
     final JPanel panelSelect = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
-    panelSelect.add(new JLabel("."), "wrap, pushy");
-    panelSelect.add(fromFile, "wrap");
-    panelSelect.add(pasteButton, "wrap");
+    panelSelect.add(new JLabel(""), "wrap, pushy");
+    panelSelect.add(OtrosSwingUtils.fontSize2(new JLabel("Select source of log patterns:")), "wrap");
+    panelSelect.add(fromFile, "wrap, growx");
+    panelSelect.add(pasteButton, "wrap, growx");
+    panelSelect.add(importFromIde, "wrap, growx");
     panelSelect.add(OtrosSwingUtils.fontSize2(new JLabel("You can drag and drop logger configuration files here.")), "wrap");
     panelSelect.add(new JLabel(""), "wrap, pushy");
 
@@ -110,9 +172,9 @@ public class ConvertLogFormatPanel extends JPanel {
         .sorted()
         .map(key -> key + "=" + properties.getProperty(key))
         .collect(Collectors.joining("\n"))
-      , true));
-    jTable.setDefaultRenderer(String.class, new MultilineStringTableCellRenderer<String>(s -> s, true));
-    jTable.setDefaultRenderer(LogPatternStatus.class, new MultilineStringTableCellRenderer<>(LogPatternStatus::toString, true));
+      , true, 7));
+    jTable.setDefaultRenderer(String.class, new MultilineStringTableCellRenderer<String>(s -> s, true, 7));
+    jTable.setDefaultRenderer(LogPatternStatus.class, new MultilineStringTableCellRenderer<>(LogPatternStatus::toString, true, 7));
     logPatternsTableModel.addTableModelListener(e -> updateRowHeights());
     jTable.getColumnModel().addColumnModelListener(new TableColumnModelListenerAdapter() {
       @Override
@@ -120,7 +182,6 @@ public class ConvertLogFormatPanel extends JPanel {
         updateRowHeights();
       }
     });
-    jTable.setIntercellSpacing(new Dimension(10, 10));
     panelApprove.add(new JScrollPane(jTable));
     addLoggers = new AbstractAction("Add logger definition", Icons.PLUS_24) {
 
@@ -170,6 +231,7 @@ public class ConvertLogFormatPanel extends JPanel {
     this.add(panelSelect, PANEL_SELECT);
     this.add(panelApprove, PANEL_APPROVE);
     this.add(panelPaste, PANEL_PASTE);
+    this.add(panelLoading, PANEL_LOADING);
     cardLayout.show(this, PANEL_SELECT);
 
     final TransferHandler newHandler = new DragAndDropTransferHandler();
@@ -408,6 +470,39 @@ public class ConvertLogFormatPanel extends JPanel {
       } catch (UnsupportedFlavorException | IOException e) {
         return false;
       }
+    }
+  }
+
+  private static class ImportFromIdeResponse {
+    private boolean success;
+    private String errorMessage = "";
+    private Set<String> patterns = Collections.emptySet();
+
+    public static ImportFromIdeResponse successfull(Set<String> patterns) {
+      final ImportFromIdeResponse importFromIdeResponse = new ImportFromIdeResponse();
+      importFromIdeResponse.success = true;
+      importFromIdeResponse.patterns = patterns;
+      return importFromIdeResponse;
+    }
+
+    public static ImportFromIdeResponse error(String errorMessage) {
+      final ImportFromIdeResponse importFromIdeResponse = new ImportFromIdeResponse();
+      importFromIdeResponse.success = false;
+      importFromIdeResponse.errorMessage = errorMessage;
+      return importFromIdeResponse;
+    }
+
+
+    public boolean isSuccess() {
+      return success;
+    }
+
+    public String getErrorMessage() {
+      return errorMessage;
+    }
+
+    public Set<String> getPatterns() {
+      return patterns;
     }
   }
 }

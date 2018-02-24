@@ -51,7 +51,8 @@ public class TailLogActionListener extends OtrosAction {
   private LogImporter importer;
 
   public TailLogActionListener(OtrosApplication otrosApplication, LogImporter importer) {
-    super(otrosApplication);
+    super("Open log files", Icons.FOLDER_OPEN, otrosApplication);
+    this.putValue(Action.LONG_DESCRIPTION, "Open log files from local or remote file systems");
     this.importer = importer;
   }
 

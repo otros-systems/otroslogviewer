@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 public class DateUtil {
 
+  private static final int SECOND = 1000;
+  private static final int MINUTE = 60 * SECOND;
+  private static final int HOUR = 60 * MINUTE;
+
   public Collection<String> allDateFormats() {
     final ArrayList<String> list = new ArrayList<>(dateFormatsInAllLocales());
     list.addAll(getPredefinedDateFormats());
@@ -38,10 +42,9 @@ public class DateUtil {
   public Set<String> matchingDateFormat(Collection<String> definedDateFormats, Collection<String> dates) {
     return definedDateFormats.stream()
       .filter(df ->
-        dates.stream()
-          .filter(date -> canParseDate(df, date))
-          .findFirst()
-          .isPresent())
+        dates
+          .stream()
+          .anyMatch(date -> canParseDate(df, date)))
       .collect(Collectors.toSet());
   }
 
@@ -55,13 +58,50 @@ public class DateUtil {
     }
   }
 
-  public static void main(String[] args) {
-    final DateUtil dateUtil = new DateUtil();
-    final List<String> dates = Arrays.asList("2015 08 24 20:43:43.082", "2015-08-24T20:23:43.082+0000");
-    final Collection<String> allFormats = dateUtil.allDateFormats();
-    allFormats.stream().forEach(s -> System.out.println(new SimpleDateFormat(s).format(new Date())));
-    final Set<String> strings = dateUtil.matchingDateFormat(allFormats, dates);
-
-    System.out.println("Have " + strings.size() + " matching formats");
+  /**
+   * Format time duration to descriptive form like 1,3s, 5h, 2h 3m
+   *
+   * @param deltaInMillis duration in milliseconds
+   * @return time duration in descriptive form
+   */
+  public static String formatDelta(long deltaInMillis) {
+    StringBuilder sb = new StringBuilder();
+    if (deltaInMillis < 0) {
+      sb.append("-");
+    }
+    final long abs = Math.abs(deltaInMillis);
+    final long millis = abs % SECOND;
+    final long seconds = (abs % MINUTE) / SECOND;
+    final long minutes = (abs % HOUR) / MINUTE;
+    final long hours = (long) Math.floor(((double) abs) / HOUR);
+    if (hours > 3) {
+      sb.append(hours).append("h");
+    } else if (hours > 0) {
+      sb.append(hours).append("h");
+      if (minutes > 0) {
+        sb.append(" ").append(minutes).append("m");
+      }
+    } else if (minutes > 4) {
+      sb.append(minutes).append("m");
+    } else if (minutes > 0) {
+      sb.append(minutes).append("m");
+      if (seconds > 0) {
+        sb.append(" ").append(seconds).append("s");
+      }
+    } else if (seconds > 3) {
+      sb.append(seconds).append("s");
+    } else if (seconds > 0) {
+      sb.append(seconds);
+      if (millis != 0) {
+        final String s = Long.toString(Math.round((double) millis / 100));
+        sb.append(",").append(s);
+      }
+      sb.append("s");
+    } else {
+      sb.append(millis).append("ms");
+    }
+    return sb.toString();
   }
+
+
 }

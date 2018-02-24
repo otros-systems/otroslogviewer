@@ -1,7 +1,10 @@
 package pl.otros.logview.gui.services.jumptocode;
 
+import com.google.common.base.Splitter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -14,11 +17,12 @@ import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * This class is the interface with the JumpToCode plugin for IntellijJ IDEA
@@ -30,6 +34,8 @@ public class JumpToCodeClient {
   private final Cache<LocationInfo, Boolean> locationInfoCache;
   private final Cache<LocationInfo, String> locationSourceCache;
   private final Cache<String, Ide> ideCache;
+  private final Map<String, JumpToCodeService.Capabilities> capabilitiesMap = Arrays.stream(JumpToCodeService.Capabilities.values())
+    .collect(Collectors.toMap(JumpToCodeService.Capabilities::getValue, f -> f));
 
   public JumpToCodeClient(Configuration configuration) {
     this.configuration = configuration;
@@ -41,7 +47,7 @@ public class JumpToCodeClient {
     ideCache = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(10, TimeUnit.SECONDS).build();
   }
 
-  public String getContent(final LocationInfo locationInfo) throws IOException {
+  public String getContent(final LocationInfo locationInfo) {
     try {
       return locationSourceCache.get(locationInfo, () -> {
         HttpMethod httpMethod = buildMethod(getUrl(), locationInfo, HttpOperation.GET_SOURCE);
@@ -77,6 +83,7 @@ public class JumpToCodeClient {
       return null;
     }
   }
+
 
   /**
    * jump to location represented by given URL
@@ -155,6 +162,19 @@ public class JumpToCodeClient {
     }
   }
 
+  private Map<String, String> executeAndGetHeaders(HttpMethod method) throws IOException {
+    try {
+      client.executeMethod(method);
+      return Arrays.stream(method.getResponseHeaders())
+        .collect(Collectors.toMap(Header::getName, Header::getValue));
+    } catch (IOException e) {
+      // probably either configuration error or IDEA is not running
+      throw new IOException("Failed to communicate with JumpToCode", e);
+    } finally {
+      method.releaseConnection();
+    }
+  }
+
   private String executeAndGetContent(HttpMethod method) throws IOException {
     try {
       // we don't even read the response body
@@ -181,12 +201,42 @@ public class JumpToCodeClient {
     return Ide.DISCONNECTED;
   }
 
+  public Set<JumpToCodeService.Capabilities> capabilities() throws IOException {
+    final Map<String, String> stringStringMap = executeAndGetHeaders(new GetMethod(getUrl()));
+    final Set<String> definedCapabilities = Arrays
+      .stream(JumpToCodeService.Capabilities.values())
+      .map(JumpToCodeService.Capabilities::getValue)
+      .collect(Collectors.toSet());
+
+    return Splitter
+      .on(",")
+      .trimResults()
+      .splitToList(stringStringMap.getOrDefault("plugin-features", ""))
+      .stream()
+      .filter(definedCapabilities::contains)
+      .map(capabilitiesMap::get)
+      .collect(Collectors.toSet());
+  }
+
+  public Set<String> loggerPatterns() throws IOException {
+    final GetMethod method = new GetMethod(getUrl());
+    method.setQueryString(new NameValuePair[]{new NameValuePair("o", "loggersConfig")});
+    final String content = executeAndGetContent(method);
+    final Type type = new TypeToken<Collection<LoggerPatternsResponse>>() {
+    }.getType();
+    final List<LoggerPatternsResponse> o = new Gson().fromJson(content, type);
+    return o.stream().flatMap(patterns -> patterns.getPatterns().stream()).collect(Collectors.toSet());
+  }
+
   public void clearLocationCaches() {
     locationInfoCache.invalidateAll();
   }
 
   private enum HttpOperation {
-    JUMP("jump"), TEST("test"), GET_SOURCE("content");
+    JUMP("jump"),
+    TEST("test"),
+    GET_SOURCE("content"),
+    LOGGERS_CONFIG("loggersConfig");
     String operation;
 
     HttpOperation(String operation) {
@@ -207,14 +257,14 @@ public class JumpToCodeClient {
     }
 
     @Override
-    public Ide call() throws Exception {
+    public Ide call() {
       HttpMethod method = buildMethod(url, new LocationInfo(Optional.empty(), Optional.empty(), Optional.empty()), HttpOperation.TEST);
       Ide ide = Ide.DISCONNECTED;
       try {
         // we don't even read the response body
         // the statusCode is enough information
         client.executeMethod(method);
-        Header responseHeader = method.getResponseHeader("IDE");
+        Header responseHeader = method.getResponseHeader("ide");
         if (responseHeader != null) {
           String value = responseHeader.getValue();
           if (StringUtils.equalsIgnoreCase(value, "eclipse")) {
@@ -235,4 +285,33 @@ public class JumpToCodeClient {
   }
 
 
+  private static class LoggerPatternsResponse {
+    private String fileName;
+    private List<String> patterns;
+    private String type;
+
+    public String getFileName() {
+      return fileName;
+    }
+
+    public void setFileName(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public List<String> getPatterns() {
+      return patterns;
+    }
+
+    public void setPatterns(List<String> patterns) {
+      this.patterns = patterns;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+  }
 }

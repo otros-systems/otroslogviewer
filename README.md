@@ -90,7 +90,7 @@ Filter level WARNING or higher and highlighting:
 If you have any questions please write to otros.systems at gmail.com
 
 Follow us on [Twitter](https://twitter.com/OtrosSystems)
-Created with: [![](http://www.jetbrains.com/idea/opensource/img/all/banners/idea125x37_white.gif)](http://www.jetbrains.com/idea/)
+Created with: [Intellij IDEA](http://www.jetbrains.com/idea/)
 
 
 ## Do you want help
