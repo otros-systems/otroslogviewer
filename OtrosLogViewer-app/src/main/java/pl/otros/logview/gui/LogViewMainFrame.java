@@ -233,7 +233,7 @@ public class LogViewMainFrame extends JFrame {
       Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueueProxy());
       // Check new version on start
       if (c.getBoolean(ConfKeys.VERSION_CHECK_ON_STARTUP, true)) {
-        new ChekForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
+        new CheckForNewVersionOnStartupAction(otrosApplication).actionPerformed(null);
       }
     }
     ListUncaughtExceptionHandlers listUncaughtExceptionHandlers = new ListUncaughtExceptionHandlers(//

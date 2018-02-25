@@ -28,11 +28,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URI;
 
-public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract {
+public class CheckForNewVersionOnStartupAction extends CheckForNewVersionAbstract {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
 
-  public ChekForNewVersionOnStartupAction(OtrosApplication otrosApplication) {
+  public CheckForNewVersionOnStartupAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
   }
 
@@ -46,6 +46,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
   @Override
   protected void handleNewVersionIsAvailable(final String current, String running) {
     LOGGER.info(String.format("Running version is %s, current is %s", running, current));
+    getOtrosApplication().getStatusObserver().updateStatus(String.format("New version %s is available", current));
     DataConfiguration configuration = getOtrosApplication().getConfiguration();
     String doNotNotifyThisVersion = configuration.getString(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, "2000-01-01");
     if (current != null && doNotNotifyThisVersion.compareTo(current) > 0) {
@@ -65,10 +66,10 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
     });
     message.add(button);
 
-    final JCheckBox chboxDoNotNotifyMeAboutVersion = new JCheckBox("Do not notify me about version " + current);
-    message.add(chboxDoNotNotifyMeAboutVersion);
-    final JCheckBox chboxDoNotCheckVersionOnStart = new JCheckBox("Do not check for new version on startup");
-    message.add(chboxDoNotCheckVersionOnStart);
+    final JCheckBox checkBoxDoNotNotifyMeAboutVersion = new JCheckBox("Do not notify me about version " + current);
+    message.add(checkBoxDoNotNotifyMeAboutVersion);
+    final JCheckBox checkDoNotCheckVersionOnStart = new JCheckBox("Do not check for new version on startup");
+    message.add(checkDoNotCheckVersionOnStart);
 
     final JDialog dialog = new JDialog((Frame) null, "New version is available");
     dialog.getContentPane().setLayout(new BorderLayout(5, 5));
@@ -86,11 +87,11 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
         dialog.dispose();
-        if (chboxDoNotNotifyMeAboutVersion.isSelected()) {
-          LOGGER.debug("Disabling new version notificiation for " + current);
+        if (checkBoxDoNotNotifyMeAboutVersion.isSelected()) {
+          LOGGER.debug("Disabling new version notification for " + current);
           getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_SKIP_NOTIFICATION_FOR_VERSION, current);
         }
-        if (chboxDoNotCheckVersionOnStart.isSelected()) {
+        if (checkDoNotCheckVersionOnStart.isSelected()) {
           LOGGER.debug("Disabling new version check on start");
           getOtrosApplication().getConfiguration().setProperty(ConfKeys.VERSION_CHECK_ON_STARTUP, false);
         }
@@ -107,6 +108,7 @@ public class ChekForNewVersionOnStartupAction extends CheckForNewVersionAbstract
   @Override
   protected void handleVersionIsUpToDate(String current) {
     LOGGER.info("Version is up to date: " + current);
+    getOtrosApplication().getStatusObserver().updateStatus("Your version is up to date");
 
   }
 
