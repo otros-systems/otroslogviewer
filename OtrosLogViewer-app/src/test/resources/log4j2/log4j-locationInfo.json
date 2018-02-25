@@ -1,0 +1,270 @@
+{
+  "timeMillis" : 1519502084529,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 0",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 15
+  }
+}
+{
+  "timeMillis" : 1519502084637,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 0",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 16
+  }
+}
+{
+  "timeMillis" : 1519502084639,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : [ {
+      "class" : "Log4j2Example",
+      "method" : "lambda$main$0",
+      "file" : "Log4j2Example.java",
+      "line" : 17,
+      "exact" : false,
+      "location" : "classes/",
+      "version" : "?"
+    }, {
+      "class" : "java.util.stream.Streams$RangeIntSpliterator",
+      "method" : "forEachRemaining",
+      "file" : "Streams.java",
+      "line" : 110,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "java.util.stream.IntPipeline$Head",
+      "method" : "forEach",
+      "file" : "IntPipeline.java",
+      "line" : 557,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "Log4j2Example",
+      "method" : "main",
+      "file" : "Log4j2Example.java",
+      "line" : 11,
+      "exact" : true,
+      "location" : "classes/",
+      "version" : "?"
+    } ]
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 17
+  }
+}
+{
+  "timeMillis" : 1519502084669,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 1",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 15
+  }
+}
+{
+  "timeMillis" : 1519502084670,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 1",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 16
+  }
+}
+{
+  "timeMillis" : 1519502084671,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : [ {
+      "class" : "Log4j2Example",
+      "method" : "lambda$main$0",
+      "file" : "Log4j2Example.java",
+      "line" : 17,
+      "exact" : false,
+      "location" : "classes/",
+      "version" : "?"
+    }, {
+      "class" : "java.util.stream.Streams$RangeIntSpliterator",
+      "method" : "forEachRemaining",
+      "file" : "Streams.java",
+      "line" : 110,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "java.util.stream.IntPipeline$Head",
+      "method" : "forEach",
+      "file" : "IntPipeline.java",
+      "line" : 557,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "Log4j2Example",
+      "method" : "main",
+      "file" : "Log4j2Example.java",
+      "line" : 11,
+      "exact" : true,
+      "location" : "classes/",
+      "version" : "?"
+    } ]
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 17
+  }
+}
+{
+  "timeMillis" : 1519502084673,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 2",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 15
+  }
+}
+{
+  "timeMillis" : 1519502084673,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 2",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 16
+  }
+}
+{
+  "timeMillis" : 1519502084674,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : [ {
+      "class" : "Log4j2Example",
+      "method" : "lambda$main$0",
+      "file" : "Log4j2Example.java",
+      "line" : 17,
+      "exact" : false,
+      "location" : "classes/",
+      "version" : "?"
+    }, {
+      "class" : "java.util.stream.Streams$RangeIntSpliterator",
+      "method" : "forEachRemaining",
+      "file" : "Streams.java",
+      "line" : 110,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "java.util.stream.IntPipeline$Head",
+      "method" : "forEach",
+      "file" : "IntPipeline.java",
+      "line" : 557,
+      "exact" : true,
+      "location" : "?",
+      "version" : "1.8.0_121"
+    }, {
+      "class" : "Log4j2Example",
+      "method" : "main",
+      "file" : "Log4j2Example.java",
+      "line" : 11,
+      "exact" : true,
+      "location" : "classes/",
+      "version" : "?"
+    } ]
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "Log4j2Example",
+    "method" : "lambda$main$0",
+    "file" : "Log4j2Example.java",
+    "line" : 17
+  }
+}

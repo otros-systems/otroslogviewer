@@ -58,7 +58,7 @@ project(':Common-libs') {
         compile 'com.beust:jcommander:1.29'
         compile 'com.github.insubstantial:trident:7.3'
         compile 'com.github.insubstantial:substance-swingx:7.3'
-        compile 'com.google.guava:guava:16.0.1'
+        compile 'com.google.guava:guava:23.0'
         compile 'com.google.code.gson:gson:2.8.2'
         compile 'com.jcraft:jsch:0.1.+'
         compile 'com.jcraft:jzlib:1.+'
