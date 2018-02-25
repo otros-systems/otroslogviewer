@@ -70,7 +70,7 @@ public class SearchAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
     String text = getOtrosApplication().getSearchField().getText().trim();
     if (text.trim().length() == 0) {

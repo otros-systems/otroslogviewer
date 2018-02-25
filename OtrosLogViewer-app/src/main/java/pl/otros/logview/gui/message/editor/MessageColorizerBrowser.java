@@ -328,7 +328,7 @@ public class MessageColorizerBrowser extends JPanel {
     }
 
     @Override
-    public void actionPerformedHook(ActionEvent e) {
+    public void actionWithConfirmationPerformedHook(ActionEvent e) {
       deleteSelected();
     }
 

@@ -44,7 +44,7 @@ public class GoToDonatePageAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     try {
       LOGGER.debug("Opening donation page");
       Desktop.getDesktop().browse(new URI(DONATE_URL));

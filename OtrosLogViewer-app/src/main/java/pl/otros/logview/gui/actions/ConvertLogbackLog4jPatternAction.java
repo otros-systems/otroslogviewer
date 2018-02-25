@@ -19,7 +19,7 @@ public class ConvertLogbackLog4jPatternAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     final Function<JComponent, Void> closeFunction = component -> {
       getOtrosApplication().closeTab(component);
       return null;

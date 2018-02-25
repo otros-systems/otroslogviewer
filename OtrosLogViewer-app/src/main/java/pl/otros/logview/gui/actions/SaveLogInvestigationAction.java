@@ -43,7 +43,7 @@ public class SaveLogInvestigationAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     //TODO get one file chooser
     JFileChooser chooser = LogInvestiagionPersitanceUtil.getFileChooser();
     int result = chooser.showSaveDialog((Component) arg0.getSource());

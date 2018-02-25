@@ -16,7 +16,7 @@ public class AdvanceOpenAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     getOtrosApplication().addClosableTab("Merge log files", "Select files you want to merge",
         null, new AdvanceOpenPanel(getOtrosApplication()), true);
 

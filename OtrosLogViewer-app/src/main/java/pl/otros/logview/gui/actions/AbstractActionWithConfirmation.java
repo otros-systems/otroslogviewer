@@ -31,7 +31,7 @@ public abstract class AbstractActionWithConfirmation extends OtrosAction {
   }
 
   @Override
-  public final void actionPerformed(ActionEvent e) {
+  protected final void actionPerformedHook(ActionEvent e) {
     boolean confirm = true;
     if (!doNotAskAgain) {
       JPanel component = new JPanel(new BorderLayout());
@@ -47,7 +47,7 @@ public abstract class AbstractActionWithConfirmation extends OtrosAction {
     }
   }
 
-  public abstract void actionPerformedHook(ActionEvent e);
+  public abstract void actionWithConfirmationPerformedHook(ActionEvent e);
 
   public abstract String getWarnningMessage();
 }

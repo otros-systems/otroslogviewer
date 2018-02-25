@@ -38,7 +38,7 @@ public class CopySelectedText extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     String selectedText = logDetailTextArea.getSelectedText();
     if (logDetailTextArea.getSelectionStart() == logDetailTextArea.getSelectionEnd()) {
       selectedText = logDetailTextArea.getText();

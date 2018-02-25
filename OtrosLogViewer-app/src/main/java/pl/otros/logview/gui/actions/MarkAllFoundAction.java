@@ -51,7 +51,7 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     JTabbedPane jTabbedPane = getOtrosApplication().getJTabbedPane();
     LogViewPanelWrapper lvFrame = (LogViewPanelWrapper) jTabbedPane.getSelectedComponent();
     if (lvFrame == null) {

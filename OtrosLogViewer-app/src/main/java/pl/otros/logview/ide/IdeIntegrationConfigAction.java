@@ -35,7 +35,7 @@ public class IdeIntegrationConfigAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     showConfigDialog();
   }
 }

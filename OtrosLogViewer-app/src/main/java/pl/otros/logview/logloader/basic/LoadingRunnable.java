@@ -16,6 +16,8 @@ import pl.otros.logview.api.loading.Source;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.services.StatsService;
+import pl.otros.logview.stats.StatsLogDataCollector;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -25,7 +27,8 @@ public class LoadingRunnable implements Runnable {
 
   private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(LoadingRunnable.class);
   private final Source source;
-  private final FilteringLogDataCollector logDataCollector;
+  private StatsService statsService;
+  private final LogDataCollector logDataCollector;
   private final Optional<Long> bufferingTime;
   private final long sleepTime;
 
@@ -35,19 +38,28 @@ public class LoadingRunnable implements Runnable {
   private long currentRead = 0;
   private long lastFileSize = 0;
   private Optional<ObservableInputStreamImpl> obserableInputStreamImpl = Optional.empty();
+  private FilteringLogDataCollector filteringLogDataCollector;
 
   private enum SleepAction {Sleep, Break, Import}
 
-  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime) {
-    this(source, logImporter, logDataCollector, sleepTime, bufferingTime, Optional.empty());
+  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, StatsService statsService) {
+    this(source, logImporter, logDataCollector, sleepTime, bufferingTime, Optional.empty(), statsService);
   }
 
-  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, Optional<AcceptCondition> withAcceptCondition) {
+  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, Optional<AcceptCondition> withAcceptCondition, StatsService statsService) {
     this.source = source;
-    this.logDataCollector = new FilteringLogDataCollector(logDataCollector, withAcceptCondition);
+    this.statsService = statsService;
+    filteringLogDataCollector = new FilteringLogDataCollector(logDataCollector, withAcceptCondition);
     this.bufferingTime = bufferingTime;
     this.sleepTime = sleepTime;
     this.importer = logImporter;
+    String scheme = "";
+    if (source instanceof VfsSource) {
+      scheme = ((VfsSource)source).getFileObject().getName().getScheme();
+    } else if (source instanceof SocketSource) {
+      scheme = "socket";
+    }
+    this.logDataCollector = new StatsLogDataCollector(scheme, filteringLogDataCollector, statsService);
   }
 
   @Override
@@ -62,6 +74,8 @@ public class LoadingRunnable implements Runnable {
   }
 
   private void runWithSocket(SocketSource source) {
+    statsService.importLogsFromScheme("socket");
+    statsService.logParserUsed(importer);
     final ParsingContext parsingContext = new ParsingContext("Socket", "Socket " + source.getSocket().getRemoteSocketAddress());
     importer.initParsingContext(parsingContext);
     try {
@@ -88,8 +102,10 @@ public class LoadingRunnable implements Runnable {
             Thread.sleep(sleepTime);
           } else if (SleepAction.Break == action) {
             break;
-          } else {
+          } else {Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             importer.importLogs(observableInputStream, collector, parsingContext);
+            Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
+            statsService.bytesRead("socket", afterRead - beforeRead);
           }
 
           Thread.sleep(sleepTime);
@@ -106,13 +122,15 @@ public class LoadingRunnable implements Runnable {
 
   private void runWithVfs(VfsSource vfs) {
     try {
+      statsService.importLogsFromScheme(vfs.getFileObject().getName().getScheme());
+      statsService.logParserUsed(importer);
       final LoadingInfo loadingInfo = Utils.openFileObject(vfs.getFileObject(), true);
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
       ParsingContext parsingContext = new ParsingContext(
-          loadingInfo.getFileObject().getName().getFriendlyURI(),
-          loadingInfo.getFileObject().getName().getBaseName());
+        loadingInfo.getFileObject().getName().getFriendlyURI(),
+        loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
       Utils.reloadFileObject(loadingInfo, vfs.getPosition());
@@ -126,6 +144,7 @@ public class LoadingRunnable implements Runnable {
         try {
           SleepAction action;
           obserableInputStreamImpl = Optional.of(loadingInfo.getObserableInputStreamImpl());
+
           synchronized (this) {
             if (stop) {
               action = SleepAction.Break;
@@ -143,7 +162,10 @@ public class LoadingRunnable implements Runnable {
             LOGGER.debug("Log import stopped");
             break;
           } else {
+            Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             importer.importLogs(loadingInfo.getContentInputStream(), collector, parsingContext);
+            Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
+            statsService.bytesRead(loadingInfo.getFileObject().getName().getScheme(), afterRead - beforeRead);
             if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
               break;
             }
@@ -173,12 +195,10 @@ public class LoadingRunnable implements Runnable {
     }
   }
 
-
   public synchronized LoadStatistic getLoadStatistic() {
     final Long position = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
     return new LoadStatistic(source, position, lastFileSize);
   }
-
 
   public synchronized void pause() {
     pause = true;
@@ -193,6 +213,6 @@ public class LoadingRunnable implements Runnable {
   }
 
   public synchronized void setFilter(Optional<AcceptCondition> acceptCondition) {
-    logDataCollector.setAcceptCondition(acceptCondition);
+    filteringLogDataCollector.setAcceptCondition(acceptCondition);
   }
 }

@@ -35,7 +35,7 @@ public class ShowMarkersEditor extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     if (markersEditor == null) {
       markersEditor = new MarkersEditor();
     }

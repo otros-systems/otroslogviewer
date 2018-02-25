@@ -60,7 +60,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
 
     final FileObject[] files = getFileObjects(e);
     if (files == null || files.length == 0) {

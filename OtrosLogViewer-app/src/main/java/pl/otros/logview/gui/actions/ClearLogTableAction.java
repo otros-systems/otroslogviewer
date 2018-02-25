@@ -36,7 +36,7 @@ public class ClearLogTableAction extends AbstractActionWithConfirmation {
   }
 
   @Override
-  public void actionPerformedHook(ActionEvent e) {
+  public void actionWithConfirmationPerformedHook(ActionEvent e) {
     getOtrosApplication().getSelectedPaneLogDataTableModel().ifPresent(LogDataTableModel::clear);
   }
 

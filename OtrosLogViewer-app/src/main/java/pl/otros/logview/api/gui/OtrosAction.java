@@ -19,6 +19,7 @@ package pl.otros.logview.api.gui;
 import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +38,7 @@ public abstract class OtrosAction extends AbstractAction {
   protected OtrosAction(String name, OtrosApplication otrosApplication) {
     super(name);
     this.otrosApplication = otrosApplication;
+
   }
 
   protected OtrosAction(String name, Icon icon, OtrosApplication otrosApplication) {
@@ -51,4 +53,12 @@ public abstract class OtrosAction extends AbstractAction {
   public void setOtrosApplication(OtrosApplication otrosApplication) {
     this.otrosApplication = otrosApplication;
   }
+
+  @Override
+  public final void actionPerformed(ActionEvent e) {
+    getOtrosApplication().getServices().getStatsService().actionExecuted(this);
+    actionPerformedHook(e);
+  }
+
+  protected abstract void actionPerformedHook(ActionEvent e);
 }

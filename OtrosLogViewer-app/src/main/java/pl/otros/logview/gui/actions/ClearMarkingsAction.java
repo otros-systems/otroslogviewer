@@ -36,7 +36,7 @@ public class ClearMarkingsAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     long start = System.currentTimeMillis();
     Optional<LogDataTableModel> maybeDataTableModel = getOtrosApplication().getSelectedPaneLogDataTableModel();
     maybeDataTableModel.ifPresent(dataTableModel -> {

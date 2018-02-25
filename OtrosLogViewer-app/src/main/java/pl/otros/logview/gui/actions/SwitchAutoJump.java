@@ -32,7 +32,7 @@ public class SwitchAutoJump extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     final boolean newValue = !configuration.getBoolean(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, true);
     configuration.setProperty(ConfKeys.JUMP_TO_CODE_AUTO_JUMP_ENABLED, newValue);
     putValue(SMALL_ICON, getIcon(newValue));

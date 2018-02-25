@@ -51,7 +51,7 @@ public class StartSocketListener extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
 
     LogImporterAndPort chooseLogImporter = chooseLogImporter();
     if (chooseLogImporter == null) {
