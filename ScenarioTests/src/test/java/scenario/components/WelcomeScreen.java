@@ -18,9 +18,9 @@ public class WelcomeScreen extends TestComponent<JPanelFixture, WelcomeScreen> {
     return frame.panel("WelcomeScreen");
   }
 
-  public OpenPanel clickOpenLogs(){
-    final JButtonFixture openLogs = me().button("open log files");
-    openLogs.click();
+  public OpenPanel clickMergeLogs(){
+    final JButtonFixture mergeLogs = me().button("Merge log files");
+    mergeLogs.click();
     return new OpenPanel(frame,robot).waitFor();
   }
 
