@@ -819,7 +819,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   @Override
   public void initParsingContext(ParsingContext parsingContext) {
     if (timestampFormat != null) {
-      parsingContext.setDateFormat(new SimpleDateFormat(timestampFormat));
+      parsingContext.setDateFormat(new SimpleDateFormat(timestampFormat, Locale.ENGLISH));
     }
     parsingContext.getCustomConextProperties().put(PROPERTY_LOG_EVENT_PROPERTIES, new HashMap<String, Object>());
 

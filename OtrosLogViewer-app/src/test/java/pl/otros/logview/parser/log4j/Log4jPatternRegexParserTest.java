@@ -17,9 +17,9 @@ package pl.otros.logview.parser.log4j;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -269,11 +270,12 @@ public class Log4jPatternRegexParserTest {
     assertEquals(Level.INFO, logDatas[3].getLevel());
     assertEquals(Level.WARNING, logDatas[4].getLevel());
 
-    assertEquals(new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS").parse("Nov 23 2013 21:50:45.755").getTime(), logDatas[0].getDate().getTime());
-    assertEquals(new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS").parse("Nov 23 2013 21:50:45.791").getTime(), logDatas[1].getDate().getTime());
-    assertEquals(new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS").parse("Nov 23 2013 21:50:45.798").getTime(), logDatas[2].getDate().getTime());
-    assertEquals(new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS").parse("Nov 23 2013 21:50:45.805").getTime(), logDatas[3].getDate().getTime());
-    assertEquals(new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS").parse("Nov 23 2013 21:50:45.817").getTime(), logDatas[4].getDate().getTime());
+    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss.SSS", Locale.ENGLISH);
+    assertEquals(simpleDateFormat.parse("Nov 23 2013 21:50:45.755").getTime(), logDatas[0].getDate().getTime());
+    assertEquals(simpleDateFormat.parse("Nov 23 2013 21:50:45.791").getTime(), logDatas[1].getDate().getTime());
+    assertEquals(simpleDateFormat.parse("Nov 23 2013 21:50:45.798").getTime(), logDatas[2].getDate().getTime());
+    assertEquals(simpleDateFormat.parse("Nov 23 2013 21:50:45.805").getTime(), logDatas[3].getDate().getTime());
+    assertEquals(simpleDateFormat.parse("Nov 23 2013 21:50:45.817").getTime(), logDatas[4].getDate().getTime());
 
     // org.apache.log4j.spi.LocationInfo converts null location fields to "?"s
     assertEquals("?", logDatas[0].getFile());

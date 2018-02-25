@@ -51,7 +51,8 @@ public class LevelLowerAcceptCondition extends AbstractAcceptContidion implement
     ArrayList<Icon> iconsList = new ArrayList<>();
     for (Level l : levels) {
       if (l.intValue() < levelIntValue) {
-        iconsList.add(LevelRenderer.getIconByLevel(l));
+        final Icon iconByLevel = LevelRenderer.getIconByLevel(l);
+        iconsList.add(iconByLevel);
       }
     }
     icon = new CompoundIcon(iconsList);

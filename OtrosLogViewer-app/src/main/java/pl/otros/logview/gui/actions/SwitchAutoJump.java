@@ -27,7 +27,7 @@ public class SwitchAutoJump extends OtrosAction {
     });
   }
 
-  private ImageIcon getIcon(boolean enabled) {
+  private Icon getIcon(boolean enabled) {
     return enabled ? Icons.ARROW_STEP_OVER : Icons.ARROW_STEP_OVER_GRAY;
   }
 
