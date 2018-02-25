@@ -39,8 +39,9 @@ Useful software for analysing applications logs and traces.
 ## Included parsers
   * Java Util Logging XMLFormatter
   * Java Util Logging SimpleFormatter
-  * log4j pattern layout [(how to create your own)](https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout)
-  * [JSON format](https://github.com/otros-systems/otroslogviewer/wiki/Parsing-logs-in-JSON-format)
+  * log4j/logback pattern layout (can parse log4j, log4j2 and logback configuration). User can also [define log format manually](https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout)
+  * [Custom JSON format](https://github.com/otros-systems/otroslogviewer/wiki/Parsing-logs-in-JSON-format)
+  * [Log4j2 JSON layout](https://logging.apache.org/log4j/2.x/manual/layouts.html#JSONLayout)
   * log4j XMLLayout
 
 ## Included filters
