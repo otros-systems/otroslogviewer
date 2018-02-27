@@ -1,17 +1,14 @@
 package scenario.components;
 
 import org.assertj.swing.core.GenericTypeMatcher;
+import org.assertj.swing.core.KeyPressInfo;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.data.TableCell;
 import org.assertj.swing.dependency.jsr305.Nonnull;
 import org.assertj.swing.finder.WindowFinder;
-import org.assertj.swing.fixture.DialogFixture;
-import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JPanelFixture;
-import org.assertj.swing.fixture.JTableFixture;
+import org.assertj.swing.fixture.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.util.LinkedList;
 
@@ -28,17 +25,8 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
 
   public OpenPanel addFile(File file) throws InterruptedException {
     me().button("OpenPanel.add more files").click();
-    WindowFinder.findDialog(new GenericTypeMatcher<Dialog>(Dialog.class) {
-      @Override
-      protected boolean isMatching(@Nonnull Dialog component) {
-        System.out.println("Searching for dialog " + component.getTitle() + " / " + component.getName());
-        return false;
-      }
-    });
     final DialogFixture vfsBrowserDialog = WindowFinder.findDialog("VfsBrowserDialog").using(robot);
-
     openFile(file, vfsBrowserDialog);
-//    Thread.sleep(1000);
     return this;
   }
 
@@ -65,13 +53,26 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
       }
     });
     while (table.cell(TableCell.row(0).column(0)).value().equals("[..]")) {
-      table.cell("[..]").doubleClick();
-      Thread.sleep(50);
+      System.out.println("OpenPanel.openFile clicking on [..]");
+      table.cell("[..]").click();
+      table.pressAndReleaseKey(KeyPressInfo.keyCode('\n'));
+      Thread.sleep(250);
     }
     while (paths.size() > 0) {
       final String dir = paths.removeLast().getName();
       if (dir.length() > 0) {
-        await().ignoreExceptions().until(() -> table.cell(dir).doubleClick());
+        await().ignoreExceptions().until(() -> {
+          if (dir.equalsIgnoreCase("appdata") && System.getProperty("os.name").toLowerCase().contains("win")) {
+            //AppData folder is not visible when listing files in user home :(
+            vfsBrowserDialog.textBox("VfsBrowser.path").enterText("/" + dir);
+            vfsBrowserDialog.textBox("VfsBrowser.path").pressAndReleaseKey(KeyPressInfo.keyCode('\n'));
+          } else {
+            System.out.println("OpenPanel.openFile clicking on " + dir);
+            final JTableCellFixture cell = table.cell(dir);
+            System.out.println("OpenPanel.openFile table cell: " + cell);
+            cell.doubleClick();
+          }
+        });
       }
     }
     final String name = file.getName();
