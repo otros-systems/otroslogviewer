@@ -24,4 +24,10 @@ public class WelcomeScreen extends TestComponent<JPanelFixture, WelcomeScreen> {
     return new OpenPanel(frame,robot).waitFor();
   }
 
+  public ParseClipboardDialog clickParseClipboard(){
+    me().button("Parse clipboard").click();
+    return new ParseClipboardDialog(robot);
+  }
+
+
 }

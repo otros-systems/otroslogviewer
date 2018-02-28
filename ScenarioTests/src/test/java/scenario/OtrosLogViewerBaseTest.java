@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 public class OtrosLogViewerBaseTest extends AssertJSwingTestngTestCase {
+
   @Override
   protected void onSetUp() {
     System.setProperty("runForScenarioTest", "true");

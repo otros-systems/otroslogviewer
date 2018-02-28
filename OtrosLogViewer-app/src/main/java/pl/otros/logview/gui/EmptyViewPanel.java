@@ -113,7 +113,9 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.gridy++;
 
 
-    this.add(OtrosSwingUtils.fontSize2(new JButton(new ParseClipboard(otrosApplication))), bagConstraints);
+    final JButton clipboardButton = new JButton(new ParseClipboard(otrosApplication));
+    clipboardButton.setName("Parse clipboard");
+    this.add(OtrosSwingUtils.fontSize2(clipboardButton), bagConstraints);
     bagConstraints.gridy++;
 
     this.add(OtrosSwingUtils.fontSize2(new JButton(new StartSocketListener(otrosApplication, logReaders))), bagConstraints);
