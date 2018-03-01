@@ -113,7 +113,6 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       ensureLimit();
     } catch (IOException e) {
       LOGGER.error(String.format("Error adding %d events: %s", logDatas.length, e.getMessage()));
-      e.printStackTrace();
     } finally {
       IOUtils.closeQuietly(oout);
     }
@@ -141,7 +140,6 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
     try {
       return getLogDataById(logDataId);
     } catch (Exception e) {
-      e.printStackTrace();
       LOGGER.error(String.format("Can't load data for row %d: %s", row, e.getMessage()));
     }
     return null;
@@ -197,7 +195,6 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       old.close();
     } catch (IOException e) {
       LOGGER.warn("Can't close temporary file: " + e.getMessage());
-      e.printStackTrace();
     }
     return size;
   }
@@ -221,8 +218,6 @@ public class FileLogDataStore extends AbstractMemoryLogStore implements LogDataS
       try {
         return getLogDataById(logId);
       } catch (Exception e) {
-        // TODO
-        e.printStackTrace();
         throw new RuntimeException("Can't get next data: " + e.getMessage(), e);
       }
     }

@@ -243,9 +243,8 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
         LogImporterUsingParser log4jImporter = craeteLogImporter(text);
         otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
       } catch (Exception e) {
-        LOGGER.error("Can't save parser: " + e.getMessage());
+        LOGGER.error("Can't save parser: ", e);
         JOptionPane.showMessageDialog(this, "Can't save parser: " + e.getMessage(), "Error saving parser", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
       } finally {
         IOUtils.closeQuietly(output);
       }

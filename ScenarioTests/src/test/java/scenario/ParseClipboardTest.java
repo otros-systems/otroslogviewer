@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
 import scenario.components.ParseClipboardDialog;
+import scenario.testng.RetryAnalyzer;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -22,7 +23,7 @@ import static org.awaitility.Awaitility.await;
 public class ParseClipboardTest extends OtrosLogViewerBaseTest {
 
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void pasteClipboardOnOpen() throws IOException {
     final File file1 = File.createTempFile("otrosTest", "");
     logEvents(file1, 10);
@@ -34,7 +35,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
     assertThat(actual).isEqualTo(clipboardContent);
   }
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void processClipboardWithUnixCommand() {
     setClipboard("line1\nline2\nline3");
     final MainFrame mainFrame = new MainFrame(robot());
@@ -46,7 +47,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
 
   }
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void importLogsFromClipboard() throws IOException {
     final File tempFile = File.createTempFile("olv", "logs");
     logEvents(tempFile, 10, integer -> Level.INFO);

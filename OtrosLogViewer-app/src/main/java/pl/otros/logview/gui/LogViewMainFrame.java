@@ -177,7 +177,7 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     otrosApplication.setLogLoader(new BasicLogLoader(otrosApplication.getServices().getStatsService()));
-    if (!runningForTests()){
+    if (!runningForTests()) {
       SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
     }
     ToolTipManager.sharedInstance().setDismissDelay(5000);
@@ -200,7 +200,7 @@ public class LogViewMainFrame extends JFrame {
     addMenuBarReloadListener();
     otrosApplication.setSearchField(searchField);
     cardLayoutPanel.add(logsTabbedPane, CARD_LAYOUT_LOGS_TABLE);
-    EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication, logReaders );
+    EmptyViewPanel emptyViewPanel = new EmptyViewPanel(otrosApplication, logReaders);
     final JScrollPane jScrollPane = new JScrollPane(emptyViewPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     SwingUtilities.invokeLater(() -> jScrollPane.getVerticalScrollBar().setValue(0));
     cardLayoutPanel.add(jScrollPane, CARD_LAYOUT_EMPTY);
@@ -286,7 +286,7 @@ public class LogViewMainFrame extends JFrame {
       }
       return;
     }
-    if (!runningForTests()){
+    if (!runningForTests()) {
       SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
       SingleInstance singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
         singleInstanceRequestResponseDelegate, args);
@@ -296,6 +296,7 @@ public class LogViewMainFrame extends JFrame {
       }
     }
 
+
     LOGGER.info("Starting application");
     OtrosSplash.setMessage("Starting application");
     OtrosSplash.setMessage("Loading configuration");
@@ -303,6 +304,7 @@ public class LogViewMainFrame extends JFrame {
     if (!c.containsKey(ConfKeys.UUID)) {
       c.setProperty(ConfKeys.UUID, java.util.UUID.randomUUID().toString());
     }
+
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(() -> {
@@ -485,7 +487,7 @@ public class LogViewMainFrame extends JFrame {
   }
 
   private void initToolbar() {
-    toolBar = new JToolBar(){
+    toolBar = new JToolBar() {
 
     };
     final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
@@ -677,7 +679,8 @@ public class LogViewMainFrame extends JFrame {
     enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.INFO)))
       .setName("MainFrame.NextInfo");
     enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.WARNING)))
-      .setName("MainFrame.NextWarning");;
+      .setName("MainFrame.NextWarning");
+    ;
     enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, 1, Level.SEVERE)))
       .setName("MainFrame.NextSevere");
     enableDisableComponetsForTabs.addComponent(toolBar.add(new SearchByLevel(otrosApplication, -1, Level.INFO)))

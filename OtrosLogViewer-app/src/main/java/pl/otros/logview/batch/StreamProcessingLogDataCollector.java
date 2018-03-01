@@ -43,7 +43,6 @@ public class StreamProcessingLogDataCollector implements LogDataCollector {
       } catch (Exception e) {
         LOGGER.error("Error processing log data " + e.getMessage(), e);
         System.out.println("Error processing log data " + e.getMessage());
-        e.printStackTrace();
       }
     }
   }

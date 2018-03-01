@@ -17,31 +17,13 @@
 
 package pl.otros.logview.importer.log4jxml;
 
-import java.awt.Component;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.ProgressMonitorInputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 import org.apache.log4j.xml.Log4jEntityResolver;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,6 +31,20 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Decodes Logging Events in XML formated into elements that are used by Chainsaw.
@@ -63,6 +59,7 @@ import org.xml.sax.SAXParseException;
  */
 public class XMLDecoder {
 
+  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(XMLDecoder.class);
   /**
    * Document prolog.
    */
@@ -254,7 +251,7 @@ public class XMLDecoder {
           reader.close();
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.warn("Can't close reader");
       }
     }
     return v;

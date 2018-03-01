@@ -66,7 +66,7 @@ public class LogbackSocketLogImporter extends AbstractPluginableElement implemen
         }
       }
     } catch (IOException | ClassNotFoundException e) {
-      LOGGER.error("Can't read serialized logback events from stream: " + e.getMessage(), e);
+      LOGGER.error("Can't read serialized logback events from stream: " + e.getMessage());
     }
   }
 

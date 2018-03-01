@@ -212,7 +212,7 @@ public class LvDynamicLoader {
           LOGGER.warn("Cant add pluginable element " + element.getPluginableId() + ", wrong version: " + element.getApiVersion());
         }
       } catch (Throwable e) {
-        LOGGER.warn("Cant add pluginable element " + element);
+        LOGGER.warn("Cant add pluginable element " + element + ": " + e.getMessage());
       }
     }
   }

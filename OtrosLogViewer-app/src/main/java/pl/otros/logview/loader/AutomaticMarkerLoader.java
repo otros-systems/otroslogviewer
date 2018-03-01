@@ -16,7 +16,6 @@
 package pl.otros.logview.loader;
 
 import com.google.common.base.Splitter;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.BaseLoader;
@@ -116,7 +115,7 @@ public class AutomaticMarkerLoader {
       marker = new StringMarker(p);
       marker.setFileName(file.getName());
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.error("Can't read automatic marker from file " + file.getName());
     }
     return marker;
   }

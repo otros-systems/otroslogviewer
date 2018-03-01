@@ -1,4 +1,4 @@
-<configuration>
+<configuration debug="true">
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>olv-test.log</file>
@@ -7,9 +7,19 @@
         </encoder>
     </appender>
 
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="scenario.log.LogFilter" />
+        <encoder>
+            <pattern>
+                %-5level %d{HH:mm:ss} %logger{0} - %msg %ex%n
+            </pattern>
+        </encoder>
+    </appender>
+
     <!--<appender name="GUI" class="pl.otros.logview.logging.GuiAppender"/>-->
-    <root level="debug">
-        <appender-ref ref="FILE" />
-        <appender-ref ref="GUI" />
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

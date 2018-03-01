@@ -17,6 +17,8 @@ package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.BaseConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.OtrosApplication;
@@ -35,6 +37,7 @@ import java.util.Collection;
 
 public class StartSocketListener extends OtrosAction {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(StartSocketListener.class);
   private Collection<SocketLogReader> logReaders = null;
   private BufferingLogDataCollectorProxy logDataCollector;
 
@@ -82,7 +85,7 @@ public class StartSocketListener extends OtrosAction {
         logReaders.add(logReader);
         observer.updateStatus(String.format("Socket opened on port %d with %s.", chooseLogImporter.port, chooseLogImporter.logImporter));
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.error("Failed to open Socket listener", e);
         observer.updateStatus("Failed to open listener " + e.getMessage(), StatusObserver.LEVEL_ERROR);
       }
     }

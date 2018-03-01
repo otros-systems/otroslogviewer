@@ -62,8 +62,7 @@ public class MessageColorizerLoader {
           colorizer.setFile(file.getAbsolutePath());
           list.add(colorizer);
         } catch (Exception e) {
-          LOGGER.error(String.format("Can't load property file based message colorizer from file %s : %s", file.getName(), e.getMessage()));
-          e.printStackTrace();
+          LOGGER.error(String.format("Can't load property file based message colorizer from file %s : %s", file.getName(), e));
         } finally {
           IOUtils.closeQuietly(in);
         }

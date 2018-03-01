@@ -6,13 +6,21 @@ import org.assertj.swing.dependency.jsr305.Nonnull;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
 
 public class ConfirmClose {
-  public static void close(Robot robot) {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmClose.class);
+
+  public static void close(Robot robot) {
+    LOGGER.info("Closing confirmation dialog");
     final DialogFixture confirmDialog = WindowFinder.findDialog(new GenericTypeMatcher<Dialog>(Dialog.class) {
       @Override
       protected boolean isMatching(@Nonnull Dialog component) {
@@ -27,5 +35,12 @@ public class ConfirmClose {
       }
     });
     ok.click();
+
+    await()
+      .atMost(30, TimeUnit.SECONDS)
+      .ignoreExceptions()
+      .until(confirmDialog::requireNotVisible);
+
+    LOGGER.info("Confirmation dialog is closed");
   }
 }
