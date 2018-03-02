@@ -1,9 +1,12 @@
 package scenario.components;
 
+import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.AbstractComponentFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 import static org.awaitility.Awaitility.await;
 
@@ -36,5 +39,14 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
   public void clickButton(JButtonFixture button){
     await().until(button::isEnabled);
     button.click();
+  }
+
+  public GenericTypeMatcher<JButton> matcherForButtonWithText(String text){
+    return new GenericTypeMatcher<JButton>(JButton.class) {
+      @Override
+      protected boolean isMatching(JButton component) {
+        return component.getText().equalsIgnoreCase(text);
+      }
+    };
   }
 }

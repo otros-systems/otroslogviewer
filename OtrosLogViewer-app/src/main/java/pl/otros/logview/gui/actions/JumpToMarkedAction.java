@@ -49,7 +49,7 @@ public class JumpToMarkedAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     JTabbedPane tabbedPane = getOtrosApplication().getJTabbedPane();
     StatusObserver observer = getOtrosApplication().getStatusObserver();
     LogViewPanelWrapper lvPanel = (LogViewPanelWrapper) tabbedPane.getSelectedComponent();

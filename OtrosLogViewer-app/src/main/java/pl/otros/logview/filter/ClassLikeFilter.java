@@ -348,12 +348,12 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
 
   private class TreeRenderer extends DefaultTreeCellRenderer {
 
-    private final ImageIcon clazzIcon;
-    private final ImageIcon clazzIgnoredIcon;
-    private final ImageIcon packageOpenIcon;
-    private final ImageIcon packageOpenIgnoreIcon;
-    private final ImageIcon packageClosedIcon;
-    private final ImageIcon packageClosedIgnoredIcon;
+    private final Icon clazzIcon;
+    private final Icon clazzIgnoredIcon;
+    private final Icon packageOpenIcon;
+    private final Icon packageOpenIgnoreIcon;
+    private final Icon packageClosedIcon;
+    private final Icon packageClosedIgnoredIcon;
     private final Color background;
 
     public TreeRenderer() {

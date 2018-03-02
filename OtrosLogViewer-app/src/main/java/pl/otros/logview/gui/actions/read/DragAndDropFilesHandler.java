@@ -22,14 +22,17 @@ import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
+import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -52,10 +55,12 @@ public class DragAndDropFilesHandler extends TransferHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
   private final OtrosApplication otrosApplication;
+  private final StatsService statsService;
 
 
   public DragAndDropFilesHandler(OtrosApplication otrosApplication) {
     this.otrosApplication = otrosApplication;
+    statsService = this.otrosApplication.getServices().getStatsService();
   }
 
   @Override
@@ -200,10 +205,24 @@ public class DragAndDropFilesHandler extends TransferHandler {
   }
 
   private void openLogFile(FileObject file) {
-    Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
-    LogImporter importer = new DetectOnTheFlyLogImporter(importers);
-    TailLogActionListener tailLogActionListener = new TailLogActionListener(otrosApplication, importer);
-    tailLogActionListener.openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
+    //Usage statistic is collected for OtrosActions
+    new OpenLogUsingDnd(file).actionPerformed(null);
   }
 
+  private class OpenLogUsingDnd extends OtrosAction {
+    private final FileObject file;
+
+    OpenLogUsingDnd(FileObject file) {
+      super("Open files using Dnd", DragAndDropFilesHandler.this.otrosApplication);
+      this.file = file;
+    }
+
+    @Override
+    protected void actionPerformedHook(ActionEvent e) {
+      Collection<LogImporter> importers = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+      LogImporter importer = new DetectOnTheFlyLogImporter(importers);
+      TailLogActionListener tailLogActionListener = new TailLogActionListener(otrosApplication, importer);
+      tailLogActionListener.openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
+    }
+  }
 }

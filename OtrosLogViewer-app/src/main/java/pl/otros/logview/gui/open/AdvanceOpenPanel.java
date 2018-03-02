@@ -26,6 +26,7 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.pluginable.PluginableElement;
 import pl.otros.logview.api.services.PersistService;
+import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.gui.GuiUtils;
 import pl.otros.logview.gui.PopupListener;
 import pl.otros.logview.gui.renderers.ContentProbeRenderer;
@@ -508,7 +509,7 @@ public class AdvanceOpenPanel extends JPanel {
             .stream()
             .map(l -> l.getPossibleLogImporters().getLogImporter())
             .collect(toList());
-
+        
         final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper(
             "Multiple log files " + rowCount,
             null,
@@ -714,6 +715,8 @@ public class AdvanceOpenPanel extends JPanel {
 
     @Override
     protected List<LoadingBean> doInBackground() throws Exception {
+      final StatsService statsService = otrosApplication.getServices().getStatsService();
+
       LogDataCollector logDataCollector = logViewPanelWrapper.getDataTableModel();
       LogImporter detectLaterImporter = new DetectOnTheFlyLogImporter(otrosApplication.getAllPluginables().getLogImportersContainer().getElements());
       try {
@@ -758,6 +761,7 @@ public class AdvanceOpenPanel extends JPanel {
             Optional.of(2000L));
         logLoader.changeFilters(session, new LevelHigherOrEqualAcceptCondition(l.fileObjectToImport.getLevel()));
       });
+      statsService.filesImportedIntoOneView(loadingBeans.size());
       logViewPanelWrapper.onClose(() -> logLoader.close(logDataCollector));
       return loadingBeans;
     }

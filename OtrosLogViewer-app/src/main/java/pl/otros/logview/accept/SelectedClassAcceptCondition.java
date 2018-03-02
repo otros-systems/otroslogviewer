@@ -22,6 +22,7 @@ import pl.otros.logview.api.model.LogData;
 
 import javax.swing.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class SelectedClassAcceptCondition extends SelectionAwareAcceptCondition implements HasIcon {
@@ -54,9 +55,11 @@ public class SelectedClassAcceptCondition extends SelectionAwareAcceptCondition 
     StringBuilder sb = new StringBuilder();
     sb.append(classes.size()).append(" classes: ");
     for (String aClass : classes) {
-      int lastDot = aClass.lastIndexOf('.');
-      sb.append(aClass.substring(Math.max(0, lastDot + 1)));
-      sb.append(", ");
+      Optional.ofNullable(aClass).ifPresent( c -> {
+        int lastDot = c.lastIndexOf('.');
+        sb.append(c.substring(Math.max(0, lastDot + 1)));
+        sb.append(", ");
+      });
     }
     sb.setLength(sb.length() - 2);
     description = sb.toString();

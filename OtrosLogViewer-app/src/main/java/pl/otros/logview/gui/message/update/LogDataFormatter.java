@@ -28,7 +28,6 @@ import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
-import pl.otros.logview.gui.LogViewMainFrame;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
@@ -38,10 +37,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -138,7 +135,7 @@ public class LogDataFormatter {
     if (levelIcon != null) {
       chunks.add(new TextChunkWithStyle(levelIcon));
     }
-    s1 = " " + ld.getLevel().getName() + NEW_LINE;
+    s1 = " " + Optional.ofNullable(ld.getLevel()).map(Level::getName).orElse("") + NEW_LINE;
     chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
   }
 

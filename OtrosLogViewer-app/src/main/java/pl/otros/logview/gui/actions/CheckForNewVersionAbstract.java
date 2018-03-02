@@ -88,7 +88,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
     versionChecker.execute();
   }
 

@@ -1,0 +1,120 @@
+{
+  "timeMillis" : 1519502084529,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 0",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084637,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 0",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084639,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : "java.lang.RuntimeException: Runtime exception!\n\tat Log4j2Example.lambda$main$0(Log4j2Example.java:17) ~[classes/:?]\n\tat java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:110) [?:1.8.0_121]\n\tat java.util.stream.IntPipeline$Head.forEach(IntPipeline.java:557) [?:1.8.0_121]\n\tat Log4j2Example.main(Log4j2Example.java:11) [classes/:?]\n"
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084669,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 1",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084670,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 1",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084671,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : "java.lang.RuntimeException: Runtime exception!\n\tat Log4j2Example.lambda$main$0(Log4j2Example.java:17) ~[classes/:?]\n\tat java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:110) [?:1.8.0_121]\n\tat java.util.stream.IntPipeline$Head.forEach(IntPipeline.java:557) [?:1.8.0_121]\n\tat Log4j2Example.main(Log4j2Example.java:11) [classes/:?]\n"
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084673,
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "message" : "Some message 2",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084673,
+  "thread" : "main",
+  "level" : "WARN",
+  "loggerName" : "HelloWorld",
+  "message" : "Some warning 2",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}
+{
+  "timeMillis" : 1519502084674,
+  "thread" : "main",
+  "level" : "ERROR",
+  "loggerName" : "HelloWorld",
+  "message" : "Exception",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "localizedMessage" : "Runtime exception!",
+    "message" : "Runtime exception!",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : "java.lang.RuntimeException: Runtime exception!\n\tat Log4j2Example.lambda$main$0(Log4j2Example.java:17) ~[classes/:?]\n\tat java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:110) [?:1.8.0_121]\n\tat java.util.stream.IntPipeline$Head.forEach(IntPipeline.java:557) [?:1.8.0_121]\n\tat Log4j2Example.main(Log4j2Example.java:11) [classes/:?]\n"
+  },
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 1,
+  "threadPriority" : 5
+}

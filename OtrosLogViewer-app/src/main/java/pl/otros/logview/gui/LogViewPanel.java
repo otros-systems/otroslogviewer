@@ -696,7 +696,7 @@ public class LogViewPanel extends LogViewPanelI {
     final JCheckBox wrapText = new JCheckBox(Icons.SCROLL_HORIZONTAL);
     wrapText.addActionListener(e -> {
       logDetailTextArea.setFullWidth(wrapText.isSelected());
-      final ImageIcon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(Icons.SCROLL_HORIZONTAL.getImage())) : Icons.SCROLL_HORIZONTAL;
+      final Icon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon)Icons.SCROLL_HORIZONTAL).getImage())) : Icons.SCROLL_HORIZONTAL;
       wrapText.setIcon(imageIcon);
     });
     wrapText.setToolTipText("Enable/disable line wrapping");

@@ -67,7 +67,7 @@ public class ParseClipboard extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     final Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 
@@ -78,28 +78,32 @@ public class ParseClipboard extends OtrosAction {
     progressBar.setString("Detecting logs");
     final JDialog dialog = new JDialog(getOtrosApplication().getApplicationJFrame());
     dialog.setModal(true);
+    dialog.setName("Import logs from clipboard");
     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
     final JPanel contentPanel = new JPanel(new MigLayout(
       new LC().fill().width("100%")
     ));
 
-    final JTextArea textArea = new JTextArea(10, 100);
-    textArea.setEditable(true);
-    textArea.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
-    final JScrollPane contentView = new JScrollPane(textArea);
+    final JTextArea clipboardContentTextArea = new JTextArea(10, 100);
+    clipboardContentTextArea.setName("importClipboard.content");
+    clipboardContentTextArea.setEditable(true);
+    clipboardContentTextArea.setFont(new Font(Font.MONOSPACED, clipboardContentTextArea.getFont().getStyle(), clipboardContentTextArea.getFont().getSize()));
+    final JScrollPane contentView = new JScrollPane(clipboardContentTextArea);
     contentView.setBorder(BorderFactory.createTitledBorder("Clipboard content"));
 
     final AbstractAction refreshAction = new AbstractAction("Paste clipboard") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        updateFromClipboard(systemClipboard, textArea);
+        updateFromClipboard(systemClipboard, clipboardContentTextArea);
       }
     };
     JXHyperlink refresh = new JXHyperlink(refreshAction);
+    refresh.setName("importClipboard.refresh");
 
     final JLabel labelCutGrepSed = new JLabel("cut  | grep | sed");
     final JXTextField processingPattern = new JXTextField("Unix CLI style: grep INFO | cut -c10-9999");
+    processingPattern.setName("importClipboard.processingPattern");
     labelCutGrepSed.setDisplayedMnemonic('c');
     labelCutGrepSed.setLabelFor(processingPattern);
 
@@ -111,8 +115,9 @@ public class ParseClipboard extends OtrosAction {
       s->processingPattern.setText(s.getValue().getFullContent()));
 
     final JTextArea textAreaProceed = new JTextArea("");
+    textAreaProceed.setName("importClipboard.processedContent");
     textAreaProceed.setEditable(false);
-    textAreaProceed.setFont(new Font(Font.MONOSPACED, textArea.getFont().getStyle(), textArea.getFont().getSize()));
+    textAreaProceed.setFont(new Font(Font.MONOSPACED, clipboardContentTextArea.getFont().getStyle(), clipboardContentTextArea.getFont().getSize()));
     final JScrollPane processedContentView = new JScrollPane(textAreaProceed);
     processedContentView.setBorder(BorderFactory.createTitledBorder("Processed clipboard"));
 
@@ -152,7 +157,7 @@ public class ParseClipboard extends OtrosAction {
         try {
           final String processingPatternText = processingPattern.getText();
           final TabWithName target = viewCombobox.getItemAt(viewCombobox.getSelectedIndex());
-          loadLogFileAsContent(processText(textArea.getText(), processingPatternText), target);
+          loadLogFileAsContent(processText(clipboardContentTextArea.getText(), processingPatternText), target);
           dialog.dispose();
           if (StringUtils.isNotBlank(processingPatternText)) {
             suggestionSource.add(new SearchSuggestion(processingPatternText.trim(), processingPatternText.trim()));
@@ -180,7 +185,7 @@ public class ParseClipboard extends OtrosAction {
       @Override
       protected void performActionHook() {
         try {
-          final String text = textArea.getText();
+          final String text = clipboardContentTextArea.getText();
           final String pattern = processingPattern.getText();
           String processed = processText(text, pattern);
           textAreaProceed.setText(processed);
@@ -213,7 +218,7 @@ public class ParseClipboard extends OtrosAction {
         delayedSwingInvoke.performAction();
       }
     });
-    textArea.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
+    clipboardContentTextArea.getDocument().addDocumentListener(new DocumentInsertUpdateHandler() {
       @Override
       protected void documentChanged(DocumentEvent e) {
         LOGGER.debug("Text area with source log changed, firing delayed action");
@@ -252,7 +257,7 @@ public class ParseClipboard extends OtrosAction {
     dialog.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
     dialog.setUndecorated(false);
     dialog.setTitle("Import logs from clipboard");
-    updateFromClipboard(systemClipboard, textArea);
+    updateFromClipboard(systemClipboard, clipboardContentTextArea);
     dialog.pack();
     dialog.setLocationRelativeTo(getOtrosApplication().getApplicationJFrame());
     dialog.setVisible(true);

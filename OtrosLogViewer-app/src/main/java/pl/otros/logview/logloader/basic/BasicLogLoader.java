@@ -6,6 +6,7 @@ import pl.otros.logview.api.AcceptCondition;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.loading.*;
 import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.services.StatsService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,11 +16,15 @@ public class BasicLogLoader implements LogLoader {
   private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
   public static final int DEFAULT_SLEEP_TIME = 3000;
 
+  private StatsService statsService;
 
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new HashMap<>();
   private final Map<LogDataCollector, FilteringLogDataCollector> ldCollectorsMap = new HashMap<>();
   private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new HashMap<>();
 
+  public BasicLogLoader(StatsService statsService) {
+    this.statsService = statsService;
+  }
 
   @Override
   public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector) {
@@ -31,7 +36,7 @@ public class BasicLogLoader implements LogLoader {
     ldCollectorsMap.putIfAbsent(logDataCollector, new FilteringLogDataCollector(logDataCollector, Optional.empty()));
     final FilteringLogDataCollector filteringLogDataCollector = ldCollectorsMap.get(logDataCollector);
 
-    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, filteringLogDataCollector, sleepTime, bufferingTime);
+    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, filteringLogDataCollector, sleepTime, bufferingTime, statsService);
     final Thread thread = new Thread(loadingRunnable);
     thread.setDaemon(true);
     thread.start();
@@ -40,7 +45,7 @@ public class BasicLogLoader implements LogLoader {
     lrMap.put(session, loadingRunnable);
     final List<LogLoadingSession> sessionsForCollector = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
     sessionsForCollector.add(session);
-    ldCollectorToSession.put(logDataCollector,sessionsForCollector);
+    ldCollectorToSession.put(logDataCollector, sessionsForCollector);
     LOGGER.info("Started {} ", id);
     return session;
   }
@@ -52,7 +57,7 @@ public class BasicLogLoader implements LogLoader {
       final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
       loadingRunnable.pause();
     } else {
-      LOGGER.info("Pausing {} will not work, don't have this loading session",logLoadingSession );
+      LOGGER.info("Pausing {} will not work, don't have this loading session", logLoadingSession);
     }
   }
 
@@ -64,7 +69,8 @@ public class BasicLogLoader implements LogLoader {
       loadingRunnable.resume();
     } else {
       final String map = lrMap.entrySet().stream().map(es -> es.getKey() + "/" + es.getValue()).collect(Collectors.joining());
-      LOGGER.info("Resuming {} will not work, don't have this loading session, all:\n{}", logLoadingSession.getId(),map );}
+      LOGGER.info("Resuming {} will not work, don't have this loading session, all:\n{}", logLoadingSession.getId(), map);
+    }
   }
 
   @Override
@@ -125,7 +131,7 @@ public class BasicLogLoader implements LogLoader {
 
   @Override
   public LoadingDetails getLoadingDetails(LogDataCollector logDataCollector) {
-    return new LoadingDetails(logDataCollector, ldCollectorToSession.getOrDefault(logDataCollector,new ArrayList<>()));
+    return new LoadingDetails(logDataCollector, ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>()));
   }
 
   @Override

@@ -15,9 +15,13 @@
  ******************************************************************************/
 package pl.otros.logview.gui.renderers;
 
+import com.google.common.collect.ImmutableMap;
+import pl.otros.logview.gui.actions.EmptyIcon;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import static pl.otros.logview.api.gui.Icons.*;
@@ -35,6 +39,26 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
   private final JLabel label = new JLabel();
   private Mode mode = Mode.IconsOnly;
 
+  private static final ImmutableMap<Level, Icon> iconsMap = new ImmutableMap.Builder<Level, Icon>()
+    .put(Level.SEVERE, Optional.ofNullable(LEVEL_SEVERE).orElse(new EmptyIcon()))
+    .put(Level.WARNING, Optional.ofNullable(LEVEL_WARNING).orElse(new EmptyIcon()))
+    .put(Level.INFO, Optional.ofNullable(LEVEL_INFO).orElse(new EmptyIcon()))
+    .put(Level.CONFIG, Optional.ofNullable(LEVEL_CONFIG).orElse(new EmptyIcon()))
+    .put(Level.FINE, Optional.ofNullable(LEVEL_FINE).orElse(new EmptyIcon()))
+    .put(Level.FINER, Optional.ofNullable(LEVEL_FINER).orElse(new EmptyIcon()))
+    .put(Level.FINEST, Optional.ofNullable(LEVEL_FINEST).orElse(new EmptyIcon()))
+    .build();
+
+  private static final ImmutableMap<Level, Color> colorsMap = new ImmutableMap.Builder<Level, Color>()
+    .put(Level.SEVERE, colorSevere)
+    .put(Level.WARNING, colorWarning)
+    .put(Level.INFO, colorInfo)
+    .put(Level.CONFIG, colorConfig)
+    .put(Level.FINE, colorFine)
+    .put(Level.FINER, colorFiner)
+    .put(Level.FINEST, colorFinest)
+    .build();
+
   public LevelRenderer() {
     label.setOpaque(true);
   }
@@ -45,43 +69,11 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
   }
 
   public static Color getColorByLevel(Level level) {
-    Color result = Color.WHITE;
-    if (level.equals(Level.SEVERE)) {
-      result = colorSevere;
-    } else if (level.equals(Level.WARNING)) {
-      result = colorWarning;
-    } else if (level.equals(Level.INFO)) {
-      result = colorInfo;
-    } else if (level.equals(Level.CONFIG)) {
-      result = colorConfig;
-    } else if (level.equals(Level.FINE)) {
-      result = colorFine;
-    } else if (level.equals(Level.FINER)) {
-      result = colorFiner;
-    } else if (level.equals(Level.FINEST)) {
-      result = colorFinest;
-    }
-    return result;
+    return colorsMap.getOrDefault(level, Color.WHITE);
   }
 
   public static Icon getIconByLevel(Level level) {
-    Icon result = LEVEL_INFO;
-    if (level.equals(Level.SEVERE)) {
-      result = LEVEL_SEVERE;
-    } else if (level.equals(Level.WARNING)) {
-      result = LEVEL_WARNING;
-    } else if (level.equals(Level.INFO)) {
-      result = LEVEL_INFO;
-    } else if (level.equals(Level.CONFIG)) {
-      result = LEVEL_CONFIG;
-    } else if (level.equals(Level.FINE)) {
-      result = LEVEL_FINE;
-    } else if (level.equals(Level.FINER)) {
-      result = LEVEL_FINER;
-    } else if (level.equals(Level.FINEST)) {
-      result = LEVEL_FINEST;
-    }
-    return result;
+    return iconsMap.getOrDefault(level, LEVEL_INFO);
   }
 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

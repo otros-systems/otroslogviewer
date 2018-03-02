@@ -120,7 +120,7 @@ public class JsonExtractor {
   }
 
   public List<String> extractFieldValues(String json, String field) {
-    final List<String> lines = Arrays.asList(json.split("\n")).stream().map(String::trim).collect(Collectors.toList());
+    final List<String> lines = Arrays.stream(json.split("\n")).map(String::trim).collect(Collectors.toList());
     StringBuilder buffer = new StringBuilder();
     List<String> result = new ArrayList<>();
     for (String line : lines) {

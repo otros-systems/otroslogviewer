@@ -22,6 +22,7 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
+import pl.otros.logview.api.services.EmptyStatsService;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
@@ -29,22 +30,14 @@ import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
-import static org.awaitility.Awaitility.*;
-import static java.util.concurrent.TimeUnit.*;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.zip.GZIPOutputStream;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 
 public class LoadingRunnableTest {
 
@@ -107,7 +100,7 @@ public class LoadingRunnableTest {
   public void testLoadingFullWithLogParser() throws IOException, InterruptedException {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), new EmptyStatsService());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -120,7 +113,7 @@ public class LoadingRunnableTest {
   public void testLoadingFullWithLogParserGzipped() throws IOException, InterruptedException {
     logImporter = getJulLogParser();
     saveLinesGzipped(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(),new EmptyStatsService());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -134,7 +127,7 @@ public class LoadingRunnableTest {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
 
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(),new EmptyStatsService());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -153,7 +146,7 @@ public class LoadingRunnableTest {
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
 
     //when
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 50, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 50, Optional.empty(),new EmptyStatsService());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -206,7 +199,7 @@ public class LoadingRunnableTest {
     LOGGER.debug("Testing " + name);
     saveLines(range1, logLines, outputStream);
 
-    underTest = new LoadingRunnable(vfsSource, importer, collector, 100, Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, importer, collector, 100, Optional.empty(),new EmptyStatsService());
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
     thread.start();
@@ -233,7 +226,7 @@ public class LoadingRunnableTest {
   @Test
   public void testLoadingWithFilterSetOnStartWithLogParser() throws IOException, InterruptedException {
     logImporter = getJulLogParser();
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.of(acceptCondition99));
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.of(acceptCondition99),new EmptyStatsService());
 
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
     final Thread thread = new Thread(underTest);
@@ -248,7 +241,7 @@ public class LoadingRunnableTest {
     logImporter = getJulLogParser();
     saveLines(Range.closed(0, 1000), julSimpleLogLines, outputStream);
 
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty(),new EmptyStatsService());
 
     final Thread thread = new Thread(underTest);
     thread.setDaemon(true);
@@ -264,7 +257,7 @@ public class LoadingRunnableTest {
   @Test
   public void testLoadStatisticEmptyOnStartWithLogParser() throws Exception {
     logImporter = getJulLogParser();
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, 100, Optional.empty(), Optional.empty(),new EmptyStatsService());
 
     Assert.assertEquals(underTest.getLoadStatistic().getPosition(), 0);
 
@@ -280,7 +273,7 @@ public class LoadingRunnableTest {
   @Test(invocationCount = 10)
   public void testLoadStatisticAfterFullReadWithLogParser() throws Exception {
     logImporter = getJulLogParser();
-    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), Optional.empty());
+    underTest = new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), Optional.empty(),new EmptyStatsService());
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
     
     final Thread thread = new Thread(underTest);
@@ -303,7 +296,7 @@ public class LoadingRunnableTest {
       saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, writingSocket.getOutputStream());
 
       logImporter = getJulLogParser();
-      underTest = new LoadingRunnable(socketSource, logImporter, collector, 100, Optional.empty(), Optional.empty());
+      underTest = new LoadingRunnable(socketSource, logImporter, collector, 100, Optional.empty(), Optional.empty(),new EmptyStatsService());
 
       final Thread thread = new Thread(underTest);
       thread.setDaemon(true);

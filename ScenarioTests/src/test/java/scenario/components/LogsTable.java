@@ -4,6 +4,8 @@ import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.fixture.JTableFixture;
 
+import java.util.Arrays;
+
 import static org.awaitility.Awaitility.await;
 
 public class LogsTable extends TestComponent<JTableFixture, LogsTable> {
@@ -33,6 +35,13 @@ public class LogsTable extends TestComponent<JTableFixture, LogsTable> {
     await()
       .ignoreExceptions()
       .until(() -> me().requireSelectedRows(number));
+    return this;
+  }
+
+  public LogsTable hasValueInRow(int row, String content){
+    await()
+      .ignoreExceptions()
+      .until(() -> Arrays.stream(me().contents()[row]).anyMatch(c -> c.equals(content)));
     return this;
   }
 

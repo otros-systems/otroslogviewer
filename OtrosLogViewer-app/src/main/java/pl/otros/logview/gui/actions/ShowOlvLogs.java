@@ -38,7 +38,7 @@ public class ShowOlvLogs extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     if (logViewPanelWrapper == null) {
       LogDataTableModel dataTableModel = new LogDataTableModel();
       dataTableModel.setDataLimit(10000);

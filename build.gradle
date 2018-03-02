@@ -58,7 +58,7 @@ project(':Common-libs') {
         compile 'com.beust:jcommander:1.29'
         compile 'com.github.insubstantial:trident:7.3'
         compile 'com.github.insubstantial:substance-swingx:7.3'
-        compile 'com.google.guava:guava:16.0.1'
+        compile 'com.google.guava:guava:23.0'
         compile 'com.google.code.gson:gson:2.8.2'
         compile 'com.jcraft:jsch:0.1.+'
         compile 'com.jcraft:jzlib:1.+'
@@ -92,6 +92,7 @@ project(':Common-libs') {
         compile 'org.unix4j:unix4j-command:0.3'
         compile "org.scala-lang:scala-library:2.12.4"
         compile "org.scala-lang.modules:scala-parser-combinators_2.12:1.1.0"
+        compile "io.dropwizard.metrics:metrics-core:3.2.2"
     }
 }
 

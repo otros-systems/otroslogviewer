@@ -36,7 +36,7 @@ public class ShowMessageColorizerEditor extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
 //		StatusObserver statusObserver = getOtrosApplication().getStatusObserver();
 //		PluginableElementsContainer<MessageColorizer> container = getOtrosApplication().getAllPluginables().getMessageColorizers();
 //		JTabbedPane tabbedPane = getOtrosApplication().getJTabbedPane();

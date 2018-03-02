@@ -37,7 +37,7 @@ public class ClassWrapperRenderer implements TableCellRenderer {
     String abbreviatePackage = "";
     if (value != null) {
       final ClassWrapper classWrapper = (ClassWrapper) value;
-      final String className = classWrapper.getClassName();
+      final String className = Optional.ofNullable(classWrapper.getClassName()).orElse("");
       abbreviatePackage = abbreviatePackageUsingMappings(className, replacements);
 
       int availableWidth = table.getColumnModel().getColumn(column).getWidth();
@@ -95,7 +95,7 @@ public class ClassWrapperRenderer implements TableCellRenderer {
 
   protected String abbreviatePackageUsingMappings(String clazz, SortedMap<String, String> abbreviations) {
     for (String s : abbreviations.keySet()) {
-      if (clazz.startsWith(s)) {
+      if (StringUtils.startsWith(clazz,s)) {
         return StringUtils.replaceOnce(clazz, s, abbreviations.get(s));
       }
     }

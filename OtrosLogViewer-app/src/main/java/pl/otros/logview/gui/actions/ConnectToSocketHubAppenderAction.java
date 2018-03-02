@@ -70,7 +70,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
   }
 
   @Override
-  public void actionPerformed(ActionEvent arg0) {
+  protected void actionPerformedHook(ActionEvent arg0) {
 
     boolean accepted = chooseLogImporter();
     if (!accepted) {

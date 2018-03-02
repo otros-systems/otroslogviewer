@@ -28,7 +28,7 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
     logEvents(file, 10);
 
     final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
+    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
 
     final LogViewPanel logViewPanel = openPanel
       .addFile(file)
@@ -54,7 +54,7 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
     logEvents(file1, 10);
 
     final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
+    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
 
     final LogViewPanel logViewPanel = openPanel
       .addFile(file1)
@@ -78,7 +78,7 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
     logEvents(file, 10_000);
 
     final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
+    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
 
     final LogViewPanel logViewPanel = openPanel
       .addFile(file)
@@ -101,7 +101,7 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
     logEvents(file, 100_000);
 
     final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickOpenLogs();
+    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
 
     final LogViewPanel logViewPanel = openPanel
       .addFile(file)

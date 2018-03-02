@@ -37,7 +37,7 @@ public class ExitAction extends OtrosAction implements WindowListener {
 
 
   @Override
-  public void actionPerformed(ActionEvent e) {
+  protected void actionPerformedHook(ActionEvent e) {
     askAndExit();
   }
 

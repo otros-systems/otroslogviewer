@@ -25,8 +25,8 @@ import java.awt.*;
 
 public class NoteRenderer extends DefaultTableCellRenderer {
 
-  private final ImageIcon iconEmpty;
-  private final ImageIcon iconExist;
+  private final Icon iconEmpty;
+  private final Icon iconExist;
   private final JLabel label;
 
   public NoteRenderer() {
