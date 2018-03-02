@@ -22,7 +22,6 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataStore;
 import pl.otros.logview.api.parser.ParsingContext;
 
@@ -60,6 +59,6 @@ public final class ImportLogRunnable implements Runnable {
       dataTableModel.fireTableDataChanged();
       panel.switchToContentView();
     });
-    Utils.closeQuietly(openFileObject.getFileObject());
+    openFileObject.close();
   }
 }

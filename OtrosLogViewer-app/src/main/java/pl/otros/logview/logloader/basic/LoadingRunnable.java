@@ -124,7 +124,7 @@ public class LoadingRunnable implements Runnable {
     try {
       statsService.importLogsFromScheme(vfs.getFileObject().getName().getScheme());
       statsService.logParserUsed(importer);
-      final LoadingInfo loadingInfo = Utils.openFileObject(vfs.getFileObject(), true);
+      final LoadingInfo loadingInfo = new LoadingInfo(vfs.getFileObject(), true);
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
@@ -133,7 +133,7 @@ public class LoadingRunnable implements Runnable {
         loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
-      Utils.reloadFileObject(loadingInfo, vfs.getPosition());
+      loadingInfo.reload(vfs.getPosition());
       try {
         loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
       } catch (FileSystemException e1) {
@@ -172,12 +172,12 @@ public class LoadingRunnable implements Runnable {
           }
 
           Thread.sleep(sleepTime);
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
           synchronized (this) {
             obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
             lastFileSize = loadingInfo.getFileObject().getContent().getSize();
           }
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
 
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: ", e.getMessage());
@@ -186,7 +186,7 @@ public class LoadingRunnable implements Runnable {
       LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
       parsingContext.setParsingInProgress(false);
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
-      Utils.closeQuietly(loadingInfo.getFileObject());
+      loadingInfo.close();
     } catch (Exception e) {
       e.printStackTrace();
       LOGGER.error("Error when reading log", e);

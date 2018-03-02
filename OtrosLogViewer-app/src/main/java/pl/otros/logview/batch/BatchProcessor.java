@@ -30,7 +30,6 @@ import pl.otros.logview.api.batch.LogDataParsedListener;
 import pl.otros.logview.api.batch.SingleFileBatchProcessingListener;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.gui.actions.read.AutoDetectingImporterProvider;
@@ -96,13 +95,12 @@ public class BatchProcessor {
       i++;
 
       String fileName = resolveFile.getName().getBaseName();
-      try {
+      try (LoadingInfo openFileObject = new LoadingInfo(resolveFile)) {
         batchProcessingContext.printIfVerbose("Opening file %s [%d of %d]", fileName, i, fileObjects.size());
         batchProcessingContext.setCurrentFile(resolveFile);
         if (logDataParsedListener instanceof SingleFileBatchProcessingListener) {
           ((SingleFileBatchProcessingListener) logDataParsedListener).processingFileStarted(batchProcessingContext);
         }
-        LoadingInfo openFileObject = Utils.openFileObject(resolveFile);
         LogImporter logImporter = importerProvider.getLogImporter(openFileObject);
         if (logImporter == null) {
           System.err.println("Can't find suitable log importer for " + fileName);

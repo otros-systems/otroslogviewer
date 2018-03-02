@@ -2,18 +2,15 @@ package pl.otros.logview.api.io;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
-import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
@@ -21,8 +18,6 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
-import utils.LogImporterAndFile;
-import utils.TestingUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,9 +26,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.SequenceInputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPInputStream;
@@ -122,17 +115,6 @@ public class UtilsTest {
         checkIfIsGzipped);
   }
 
-  //Can't ungzip file from middle: http://stackoverflow.com/questions/14225751/random-access-to-gzipped-files
-  @Test(enabled = false)
-  public void testLoadProbeAtEndGzipped() throws Exception {
-    FileObject resolveFile = resolveFileObject("/jul_log.txt.gz");
-    final FileContent content = resolveFile.getContent();
-    final byte[] bytes = Utils.loadProbeAtEnd(content.getInputStream(), content.getSize(), 200);
-    final String s = new String(bytes);
-    AssertJUnit.assertTrue(bytes.length > 0);
-    AssertJUnit.assertTrue("Checking message " + s, s.endsWith("SCHWERWIEGEND: Message in locales de_DE"));
-  }
-
   private FileObject resolveFileObject(String resources)
       throws FileSystemException {
     URL resource = this.getClass().getResource(resources);
@@ -142,7 +124,7 @@ public class UtilsTest {
   @Test
   public void testLoadHttpNotGzipped() throws Exception {
     String url = HTTP_NOT_GZIPPED;
-    LoadingInfo loadingInfo = Utils.openFileObject(fsManager
+    LoadingInfo loadingInfo = new LoadingInfo(fsManager
         .resolveFile(url));
     InputStream contentInputStream = loadingInfo.getContentInputStream();
     byte[] actual = IOUtils.toByteArray(contentInputStream);
@@ -157,7 +139,7 @@ public class UtilsTest {
 
   @Test
   public void testLoadHttpNotGzippedBufferedReader() throws Exception {
-    LoadingInfo loadingInfo = Utils.openFileObject(fsManager
+    LoadingInfo loadingInfo = new LoadingInfo(fsManager
         .resolveFile(HTTP_NOT_GZIPPED));
     InputStream contentInputStream = loadingInfo.getContentInputStream();
     // byte[] expectedBytes =
@@ -180,7 +162,7 @@ public class UtilsTest {
   @Test
   public void testLoadHttpGzipped() throws Exception {
     String url = HTTP_GZIPPED;
-    LoadingInfo loadingInfo = Utils.openFileObject(fsManager
+    LoadingInfo loadingInfo = new LoadingInfo(fsManager
         .resolveFile(url));
     InputStream contentInputStream = loadingInfo.getContentInputStream();
     byte[] actual = IOUtils.toByteArray(contentInputStream);
@@ -194,7 +176,7 @@ public class UtilsTest {
   @Test
   public void testLoadLocalNotGzipped() throws Exception {
     FileObject fileObject = resolveFileObject("/hierarchy/hierarchy.log");
-    LoadingInfo loadingInfo = Utils.openFileObject(fileObject);
+    LoadingInfo loadingInfo = new LoadingInfo(fileObject);
     InputStream contentInputStream = loadingInfo.getContentInputStream();
     byte[] actual = IOUtils.toByteArray(contentInputStream);
     byte[] expected = IOUtils.toByteArray(fileObject.getContent()
@@ -208,7 +190,7 @@ public class UtilsTest {
   @Test
   public void testLoadLocalGzipped() throws Exception {
     FileObject fileObject = resolveFileObject("/hierarchy/hierarchy.log.gz");
-    LoadingInfo loadingInfo = Utils.openFileObject(fileObject);
+    LoadingInfo loadingInfo = new LoadingInfo(fileObject);
     InputStream contentInputStream = loadingInfo.getContentInputStream();
     byte[] actual = IOUtils.toByteArray(contentInputStream);
     byte[] expected = IOUtils.toByteArray(new GZIPInputStream(fileObject
@@ -235,7 +217,7 @@ public class UtilsTest {
     byte[] byteArray = IOUtils.toByteArray(new ObservableInputStreamImpl(
         sequenceInputStream));
 
-    LoadingInfo loadingInfo = Utils.openFileObject(
+    LoadingInfo loadingInfo = new LoadingInfo(
         fsManager.resolveFile(url), false);
     byte[] byteArrayUtils = IOUtils.toByteArray(loadingInfo
         .getContentInputStream());
@@ -258,7 +240,7 @@ public class UtilsTest {
     byte[] byteArray = IOUtils.toByteArray(new GZIPInputStream(
         new ObservableInputStreamImpl(sequenceInputStream)));
 
-    LoadingInfo loadingInfo = Utils.openFileObject(
+    LoadingInfo loadingInfo = new LoadingInfo(
         fsManager.resolveFile(url), false);
     byte[] byteArrayUtils = IOUtils.toByteArray(loadingInfo
         .getContentInputStream());
@@ -267,7 +249,7 @@ public class UtilsTest {
 
   @Test
   public void testLoadingLog() throws Exception {
-    LoadingInfo loadingInfo = Utils.openFileObject(
+    LoadingInfo loadingInfo = new LoadingInfo(
         fsManager.resolveFile(HTTP_GZIPPED), false);
     LogImporter importer = new UtilLoggingXmlLogImporter();
     importer.init(new Properties());
@@ -350,38 +332,6 @@ public class UtilsTest {
     // then
     AssertJUnit.assertEquals(0, loadProbe.length);
   }
-
-
-  @Test
-  public void testDetectLogEventStartFromNewLines() throws IOException, InitializationException {
-    //given
-    final LogImporterAndFile importerAndFile = TestingUtils.log4jPatternImporterAndFile();
-    final String logFile = IOUtils.toString(getSystemResourceAsStream(importerAndFile.getFile()), UTF_8).replace("\r", "");
-    final LogImporter logImporter = importerAndFile.getLogImporter();
-    final List<Long> expected = Arrays.asList(44L, 94L, 110L, 160L, 182L, 248L, 249L, 299L, 349L, 399L, 450L, 500L, 550L, 601L, 651L);
-
-    //when
-
-    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
-
-    //then
-    Assert.assertEquals(positions, expected);
-  }
-
-  @Test
-  public void testDetectLogEventStartFromNewCustomPositions() throws IOException, InitializationException {
-    //given
-    final String logFile = IOUtils.toString(getSystemResourceAsStream("log4j.txt"), UTF_8).replace("\r", "");
-    final LogImporter logImporter = new LogImporterStartingWithT();
-    final List<Long> expected = Arrays.asList(31L, 75L, 141L, 213L, 280L, 330L, 380L, 425L, 431L, 481L, 531L, 581L, 631L, 681L);
-
-    //when
-    final List<Long> positions = Utils.detectLogEventStart(logFile.getBytes(), logImporter);
-
-    //then
-    Assert.assertEquals(positions, expected);
-  }
-
 
   private static class LogImporterStartingWithT extends DetectOnTheFlyLogImporter {
 

@@ -30,7 +30,6 @@ import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
@@ -73,7 +72,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
     ArrayList<LoadingInfo> list = new ArrayList<>();
     for (final FileObject file : files) {
       try {
-        list.add(Utils.openFileObject(file, true));
+        list.add(new LoadingInfo(file, true));
       } catch (Exception e1) {
         LOGGER.warn(String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage()));
       }
