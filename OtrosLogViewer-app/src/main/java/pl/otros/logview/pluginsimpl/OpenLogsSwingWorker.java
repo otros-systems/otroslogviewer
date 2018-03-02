@@ -29,7 +29,6 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.logview.gui.actions.TailLogActionListener;
@@ -123,7 +122,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
           }
           Thread.sleep(1000);
 
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
         }
@@ -132,7 +131,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       parsingContext.setParsingInProgress(false);
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
       pluginContext.getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-      Utils.closeQuietly(loadingInfo.getFileObject());
+      loadingInfo.close();
     };
     Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
     t.setDaemon(true);
@@ -165,7 +164,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     publish("Opening  log files");
     for (final FileObject file : fileObjects) {
       try {
-        list.add(Utils.openFileObject(file, true));
+        list.add(new LoadingInfo(file, true));
       } catch (Exception e1) {
         String msg = String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage());
         publish(msg);

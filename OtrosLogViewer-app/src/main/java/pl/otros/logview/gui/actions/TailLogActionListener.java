@@ -74,7 +74,7 @@ public class TailLogActionListener extends OtrosAction {
   public void openFileObjectInTailMode(final FileObject file, String tabName) {
     final LoadingInfo loadingInfo;
     try {
-      loadingInfo = Utils.openFileObject(file, true);
+      loadingInfo = new LoadingInfo(file, true);
     } catch (Exception e2) {
       LOGGER.error("Cannot open tailing input stream for " + file.getName().getFriendlyURI() + ", " + e2.getMessage());
       JOptionPane.showMessageDialog(null, "Cannot open tailing input stream for: " + file.getName().getFriendlyURI() + ", " + e2.getMessage(), "Error",

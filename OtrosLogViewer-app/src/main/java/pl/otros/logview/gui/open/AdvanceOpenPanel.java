@@ -737,13 +737,13 @@ public class AdvanceOpenPanel extends JPanel {
             continue;
           }
           publish(new Progress(progress, fileObjects.size(), "Processing " + file.getFileName().getBaseName()));
-          final LoadingInfo e1 = Utils.openFileObject(file.getFileObject(), true);
+          final LoadingInfo e1 = new LoadingInfo(file.getFileObject(), true);
           loadingBeans.add(new LoadingBean(file, e1));
           Utils.closeQuietly(file.getFileObject());
         } catch (Exception e1) {
           final String msg = String.format("Can't open file %s: %s", file.getFileName().getFriendlyURI(), e1.getMessage());
           LOGGER.warn(msg);
-          loadingBeans.forEach(li -> Utils.closeQuietly(li.loadingInfo.getFileObject()));
+          loadingBeans.forEach(li -> li.loadingInfo.close());
           showMainPanel();
           e1.printStackTrace();
           throw e1;
