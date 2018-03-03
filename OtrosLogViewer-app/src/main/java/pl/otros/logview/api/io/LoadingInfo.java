@@ -21,6 +21,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.RandomAccessContent;
 import org.apache.commons.vfs2.util.RandomAccessMode;
 
+import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
 import static pl.otros.logview.api.io.Utils.checkIfIsGzipped;
 import static pl.otros.logview.api.io.Utils.closeQuietly;
 import static pl.otros.logview.api.io.Utils.ungzip;
@@ -71,7 +72,7 @@ public final class LoadingInfo implements AutoCloseable {
 
     this.tailing = tailing;
     if (fileObject.getType().hasContent()) {
-      setLastFileSize(content.getSize());
+      this.lastFileSize = content.getSize();
     }
   }
 
@@ -115,12 +116,12 @@ public final class LoadingInfo implements AutoCloseable {
     fileObject.refresh();
     long currentSize = fileObject.getContent().getSize();
     obserableInputStreamImpl.close();
-    setLastFileSize(currentSize);
+    this.lastFileSize = currentSize;
     if (gziped) {
       obserableInputStreamImpl = new ObservableInputStreamImpl(fileObject.getContent().getInputStream());
       contentInputStream = new GZIPInputStream(obserableInputStreamImpl);
     } else {
-      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(RandomAccessMode.READ);
+      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
       randomAccessContent.seek(position);
       obserableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), 0);
       contentInputStream = obserableInputStreamImpl;
@@ -134,9 +135,9 @@ public final class LoadingInfo implements AutoCloseable {
     if (currentSize > lastFileSize) {
       obserableInputStreamImpl.close();
 
-      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(RandomAccessMode.READ);
+      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
       randomAccessContent.seek(lastFileSize);
-      setLastFileSize(currentSize);
+      this.lastFileSize = currentSize;
       obserableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
       if (gziped) {
         contentInputStream = new GZIPInputStream(obserableInputStreamImpl);
@@ -152,7 +153,7 @@ public final class LoadingInfo implements AutoCloseable {
       } else {
         contentInputStream = obserableInputStreamImpl;
       }
-      setLastFileSize(fileObject.getContent().getSize());
+      this.lastFileSize = fileObject.getContent().getSize();
     }
   }
 
