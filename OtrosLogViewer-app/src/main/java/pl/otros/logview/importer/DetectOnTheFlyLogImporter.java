@@ -18,7 +18,6 @@ package pl.otros.logview.importer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
@@ -27,26 +26,16 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Properties;
 
-import static pl.otros.logview.api.TableColumns.CLASS;
-import static pl.otros.logview.api.TableColumns.FILE;
-import static pl.otros.logview.api.TableColumns.ID;
-import static pl.otros.logview.api.TableColumns.LEVEL;
-import static pl.otros.logview.api.TableColumns.LINE;
-import static pl.otros.logview.api.TableColumns.LOGGER_NAME;
-import static pl.otros.logview.api.TableColumns.LOG_SOURCE;
-import static pl.otros.logview.api.TableColumns.MARK;
-import static pl.otros.logview.api.TableColumns.MESSAGE;
-import static pl.otros.logview.api.TableColumns.METHOD;
-import static pl.otros.logview.api.TableColumns.NDC;
-import static pl.otros.logview.api.TableColumns.PROPERTIES;
-import static pl.otros.logview.api.TableColumns.THREAD;
-import static pl.otros.logview.api.TableColumns.TIME;
+import static pl.otros.logview.api.TableColumns.*;
 
 public class DetectOnTheFlyLogImporter extends AbstractPluginableElement implements LogImporter {
 
@@ -54,7 +43,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
 
   protected static final String PROPERTY_BYTE_BUFFER = "DetectInTheFlyLogImporter.byteBuffer";
   protected static final String PROPERTY_LOG_IMPORTER = "DetectInTheFlyLogImporter.logImporter";
-  protected int detectTryMinimum = 128;
+  private int detectTryMinimum = 128;
   protected int detectTryMaximum = 200 * 1024;
   private final Collection<LogImporter> logImporters;
 
@@ -69,7 +58,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
   }
 
   @Override
-  public void init(Properties properties) throws InitializationException {
+  public void init(Properties properties) {
 
   }
 
@@ -90,7 +79,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
     } else {
       try {
         byte[] buff = new byte[16 * 1024];
-        int read = 0;
+        int read;
         while ((read = in.read(buff)) > 0) {
           try (ByteArrayOutputStream byteArrayOutputStream = (ByteArrayOutputStream) customContextProperties.get(PROPERTY_BYTE_BUFFER)) {
 
@@ -126,7 +115,6 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
 
         }
       } catch (IOException e) {
-        e.printStackTrace();
         LOGGER.warn("IOException reading log file " + parsingContext.getLogSource());
       }
 

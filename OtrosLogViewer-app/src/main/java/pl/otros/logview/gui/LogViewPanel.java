@@ -402,6 +402,11 @@ public class LogViewPanel extends LogViewPanelI {
     return dataTableModel.getLogData();
   }
 
+  @Override
+  public int getCount() {
+    return dataTableModel.getCount();
+  }
+
   private void addFiltersGUIsToPanel(JPanel filtersPanel) {
     filtersPanel.setLayout(new MigLayout("", "[grow]", ""));
 

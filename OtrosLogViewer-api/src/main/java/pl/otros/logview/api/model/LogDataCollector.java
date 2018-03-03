@@ -21,6 +21,8 @@ public interface LogDataCollector {
 
   LogData[] getLogData();
 
+  int getCount();
+
   int clear();
 
 }

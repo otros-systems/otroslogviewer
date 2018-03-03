@@ -55,7 +55,7 @@ public class LoadingRunnable implements Runnable {
     this.importer = logImporter;
     String scheme = "";
     if (source instanceof VfsSource) {
-      scheme = ((VfsSource)source).getFileObject().getName().getScheme();
+      scheme = ((VfsSource) source).getFileObject().getName().getScheme();
     } else if (source instanceof SocketSource) {
       scheme = "socket";
     }
@@ -102,16 +102,17 @@ public class LoadingRunnable implements Runnable {
             Thread.sleep(sleepTime);
           } else if (SleepAction.Break == action) {
             break;
-          } else {Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
+          } else {
+            Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             importer.importLogs(observableInputStream, collector, parsingContext);
             Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             statsService.bytesRead("socket", afterRead - beforeRead);
           }
 
-          Thread.sleep(sleepTime);
-
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
+        } finally {
+          Thread.sleep(sleepTime);
         }
       }
     } catch (Exception e) {
@@ -127,7 +128,7 @@ public class LoadingRunnable implements Runnable {
       final LoadingInfo loadingInfo = Utils.openFileObject(vfs.getFileObject(), true);
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
-      LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
+      LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElse(logDataCollector);
       ParsingContext parsingContext = new ParsingContext(
         loadingInfo.getFileObject().getName().getFriendlyURI(),
         loadingInfo.getFileObject().getName().getBaseName());
@@ -153,8 +154,8 @@ public class LoadingRunnable implements Runnable {
             } else {
               action = SleepAction.Import;
             }
-            obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
-            lastFileSize = loadingInfo.getFileObject().getContent().getSize();
+
+            updateStats(loadingInfo);
           }
           if (SleepAction.Sleep == action) {
             Thread.sleep(sleepTime);
@@ -173,14 +174,12 @@ public class LoadingRunnable implements Runnable {
 
           Thread.sleep(sleepTime);
           Utils.reloadFileObject(loadingInfo);
-          synchronized (this) {
-            obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
-            lastFileSize = loadingInfo.getFileObject().getContent().getSize();
-          }
+          updateStats(loadingInfo);
           Utils.reloadFileObject(loadingInfo);
 
         } catch (Exception e) {
-          LOGGER.warn("Exception in tailing loop: ", e.getMessage());
+          LOGGER.warn("Exception in tailing loop: " + e.getMessage());
+          Thread.sleep(sleepTime);
         }
       }
       LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
@@ -188,10 +187,18 @@ public class LoadingRunnable implements Runnable {
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
       Utils.closeQuietly(loadingInfo.getFileObject());
     } catch (Exception e) {
-      e.printStackTrace();
       LOGGER.error("Error when reading log", e);
     } finally {
       Utils.closeQuietly(vfs.getFileObject());
+    }
+  }
+
+  private synchronized void updateStats(LoadingInfo loadingInfo) {
+    obserableInputStreamImpl.ifPresent(in -> currentRead = in.getCurrentRead());
+    try {
+      lastFileSize = loadingInfo.getFileObject().getContent().getSize();
+    } catch (FileSystemException ex) {
+      LOGGER.debug("Can't update stats");
     }
   }
 

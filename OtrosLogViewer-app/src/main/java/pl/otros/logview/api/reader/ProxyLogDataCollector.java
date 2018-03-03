@@ -42,6 +42,11 @@ public class ProxyLogDataCollector implements LogDataCollector {
   }
 
   @Override
+  public int getCount() {
+    return list.size();
+  }
+
+  @Override
   public int clear() {
     int size = list.size();
     list.clear();

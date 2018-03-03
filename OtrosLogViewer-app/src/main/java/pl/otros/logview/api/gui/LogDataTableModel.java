@@ -286,6 +286,11 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
   }
 
   @Override
+  public int getCount() {
+    return getRowCount();
+  }
+
+  @Override
   public void setValueAt(Object value, int rowIndex, int columnIndex) {
     if (columnIndex == TableColumns.MARK.getColumn()) {
       MarkerColors marked = (MarkerColors) value;

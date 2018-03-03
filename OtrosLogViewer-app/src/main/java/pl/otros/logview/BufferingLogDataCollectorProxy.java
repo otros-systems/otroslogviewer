@@ -76,6 +76,11 @@ public class BufferingLogDataCollectorProxy implements LogDataCollector, Stoppab
   }
 
   @Override
+  public int getCount() {
+    return proxyLogDataCollector.getCount();
+  }
+
+  @Override
   public void stop() {
     stop = true;
 

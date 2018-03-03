@@ -21,8 +21,6 @@ import java.util.TreeMap;
 
 public interface LogDataStore extends MarkableTableModel, Iterable<LogData>, LogDataCollector {
 
-  int getCount();
-
   void remove(int... ids);
 
   LogData getLogData(int row);
