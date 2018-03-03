@@ -753,7 +753,7 @@ public class AdvanceOpenPanel extends JPanel {
         final LogLoadingSession session = logLoader.startLoading(
             new VfsSource(
                 l.loadingInfo.getFileObject(),
-                l.fileObjectToImport.getOpenMode().equals(OpenMode.FROM_END) ? l.loadingInfo.getLastFileSize() : 0
+                l.fileObjectToImport.getOpenMode()
             ),
             l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
             logDataCollector,

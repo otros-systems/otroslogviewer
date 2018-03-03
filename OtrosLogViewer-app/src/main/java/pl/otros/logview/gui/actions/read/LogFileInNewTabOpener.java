@@ -69,7 +69,7 @@ public class LogFileInNewTabOpener {
   private LogViewPanelWrapper createPanelForLog(FileObject file, final LoadingInfo openFileObject, LogImporter importer) {
     return new LogViewPanelWrapper(
       file.getName().getBaseName(),
-      openFileObject.getObserableInputStreamImpl(),
+      openFileObject.getObservableInputStreamImpl(),
       importer.getTableColumnsToUse(), otrosApplication);
   }
 

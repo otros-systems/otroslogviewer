@@ -1,7 +1,6 @@
 package pl.otros.logview.logloader.basic;
 
 import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.AcceptCondition;
@@ -20,6 +19,7 @@ import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.stats.StatsLogDataCollector;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -124,7 +124,7 @@ public class LoadingRunnable implements Runnable {
     try {
       statsService.importLogsFromScheme(vfs.getFileObject().getName().getScheme());
       statsService.logParserUsed(importer);
-      final LoadingInfo loadingInfo = new LoadingInfo(vfs.getFileObject(), true);
+      final LoadingInfo loadingInfo = new LoadingInfo(vfs.getFileObject(), true, vfs.getOpenMode());
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
@@ -133,17 +133,16 @@ public class LoadingRunnable implements Runnable {
         loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
-      loadingInfo.reload(vfs.getPosition());
       try {
-        loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-      } catch (FileSystemException e1) {
+        loadingInfo.resetLastFileSize();
+      } catch (IOException e1) {
         LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
       }
 
       while (parsingContext.isParsingInProgress()) {
         try {
           SleepAction action;
-          obserableInputStreamImpl = Optional.of(loadingInfo.getObserableInputStreamImpl());
+          obserableInputStreamImpl = Optional.of(loadingInfo.getObservableInputStreamImpl());
 
           synchronized (this) {
             if (stop) {
@@ -166,7 +165,7 @@ public class LoadingRunnable implements Runnable {
             importer.importLogs(loadingInfo.getContentInputStream(), collector, parsingContext);
             Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             statsService.bytesRead(loadingInfo.getFileObject().getName().getScheme(), afterRead - beforeRead);
-            if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+            if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
               break;
             }
           }

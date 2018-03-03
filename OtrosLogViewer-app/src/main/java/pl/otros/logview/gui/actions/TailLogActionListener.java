@@ -84,7 +84,7 @@ public class TailLogActionListener extends OtrosAction {
 
     TableColumns[] tableColumnsToUse = determineTableColumnsToUse(loadingInfo, importer);
 
-    final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), loadingInfo.getObserableInputStreamImpl(),
+    final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), loadingInfo.getObservableInputStreamImpl(),
       tableColumnsToUse, getOtrosApplication());
     panel.goToLiveMode();
 

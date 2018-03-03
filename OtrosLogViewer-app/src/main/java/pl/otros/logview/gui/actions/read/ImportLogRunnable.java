@@ -47,7 +47,7 @@ public final class ImportLogRunnable implements Runnable {
     ParsingContext parsingContext = new ParsingContext(file.getName().getFriendlyURI(), file.getName().getBaseName());
     final LogDataTableModel dataTableModel = panel.getDataTableModel();
     final LogDataStore logDataStore = dataTableModel.getLogDataStore();
-    panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObserableInputStreamImpl()));
+    panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObservableInputStreamImpl()));
     importer.initParsingContext(parsingContext);
     try {
       importer.importLogs(openFileObject.getContentInputStream(), logDataStore, parsingContext);

@@ -16,63 +16,66 @@
 package pl.otros.logview.api.io;
 
 
-import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.RandomAccessContent;
-import org.apache.commons.vfs2.util.RandomAccessMode;
+
+import pl.otros.logview.gui.session.OpenMode;
 
 import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
 import static pl.otros.logview.api.io.Utils.checkIfIsGzipped;
 import static pl.otros.logview.api.io.Utils.closeQuietly;
 import static pl.otros.logview.api.io.Utils.ungzip;
+import static pl.otros.logview.gui.session.OpenMode.FROM_START;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.SequenceInputStream;
+import java.io.PushbackInputStream;
 import java.util.zip.GZIPInputStream;
 
 public final class LoadingInfo implements AutoCloseable {
 
   private final String friendlyUrl;
   private final FileObject fileObject;
-  private ObservableInputStreamImpl obserableInputStreamImpl;
+  private ObservableInputStreamImpl observableInputStreamImpl;
   private InputStream contentInputStream;
   private final boolean tailing;
-  private final boolean gziped;
+  private final boolean gzipped;
   private final byte[] inputStreamBufferedStart;
   private long lastFileSize = 0;
 
   public LoadingInfo(FileObject fileObject) throws IOException {
-    this(fileObject, false);
+    this(fileObject, false, FROM_START);
   }
 
   public LoadingInfo(FileObject fileObject, boolean tailing) throws IOException {
+    this(fileObject, tailing, FROM_START);
+  }
+
+  public LoadingInfo(FileObject fileObject, boolean tailing, OpenMode openMode) throws IOException {
     this.fileObject = fileObject;
-    this.friendlyUrl = fileObject.getName().getFriendlyURI();
-
-    final FileContent content = fileObject.getContent();
-    InputStream httpInputStream = content.getInputStream();
-    byte[] buff = Utils.loadProbe(httpInputStream, 10000);
-
-    this.gziped = checkIfIsGzipped(buff, buff.length);
-
-    ByteArrayInputStream bin = new ByteArrayInputStream(buff);
-    SequenceInputStream sequenceInputStream = new SequenceInputStream(bin, httpInputStream);
-    ObservableInputStreamImpl observableInputStreamImpl = new ObservableInputStreamImpl(sequenceInputStream);
-
-    if (isGziped()) {
-      this.contentInputStream = new GZIPInputStream(observableInputStreamImpl);
-      this.inputStreamBufferedStart = ungzip(buff);
-    } else {
-      this.contentInputStream = observableInputStreamImpl;
-      this.inputStreamBufferedStart = buff;
-    }
-    this.obserableInputStreamImpl = observableInputStreamImpl;
-
     this.tailing = tailing;
+    friendlyUrl = fileObject.getName().getFriendlyURI();
+
+    fileObject.refresh();
+    InputStream inputStream = fileObject.getContent().getInputStream();
+    byte[] probe = Utils.loadProbe(inputStream, 10000);
+    gzipped = checkIfIsGzipped(probe, probe.length);
+    inputStreamBufferedStart = gzipped ? ungzip(probe) : probe;
+
+    if (openMode == FROM_START || gzipped) {
+      PushbackInputStream pushBackInputStream = new PushbackInputStream(inputStream, probe.length);
+      pushBackInputStream.unread(probe);
+      observableInputStreamImpl = new ObservableInputStreamImpl(pushBackInputStream);
+      contentInputStream = gzipped ? new GZIPInputStream(observableInputStreamImpl) : observableInputStreamImpl;
+    } else {
+      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
+      randomAccessContent.seek(randomAccessContent.length());
+      observableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream());
+      contentInputStream = observableInputStreamImpl;
+    }
+
     if (fileObject.getType().hasContent()) {
-      this.lastFileSize = content.getSize();
+      lastFileSize = fileObject.getContent().getSize();
     }
   }
 
@@ -84,16 +87,16 @@ public final class LoadingInfo implements AutoCloseable {
     return tailing;
   }
 
-  public boolean isGziped() {
-    return gziped;
+  public boolean isGzipped() {
+    return gzipped;
   }
 
   public String getFriendlyUrl() {
     return friendlyUrl;
   }
 
-  public ObservableInputStreamImpl getObserableInputStreamImpl() {
-    return obserableInputStreamImpl;
+  public ObservableInputStreamImpl getObservableInputStreamImpl() {
+    return observableInputStreamImpl;
   }
 
   public FileObject getFileObject() {
@@ -104,28 +107,12 @@ public final class LoadingInfo implements AutoCloseable {
     return lastFileSize;
   }
 
-  public void setLastFileSize(long lastFileSize) {
-    this.lastFileSize = lastFileSize;
+  public void resetLastFileSize() throws IOException {
+    this.lastFileSize = fileObject.getContent().getSize();
   }
 
   public byte[] getInputStreamBufferedStart() {
     return inputStreamBufferedStart;
-  }
-
-  public void reload(long position) throws IOException {
-    fileObject.refresh();
-    long currentSize = fileObject.getContent().getSize();
-    obserableInputStreamImpl.close();
-    this.lastFileSize = currentSize;
-    if (gziped) {
-      obserableInputStreamImpl = new ObservableInputStreamImpl(fileObject.getContent().getInputStream());
-      contentInputStream = new GZIPInputStream(obserableInputStreamImpl);
-    } else {
-      RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
-      randomAccessContent.seek(position);
-      obserableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), 0);
-      contentInputStream = obserableInputStreamImpl;
-    }
   }
 
   public void reloadIfFileSizeChanged() throws IOException {
@@ -133,25 +120,25 @@ public final class LoadingInfo implements AutoCloseable {
     long lastFileSize = getLastFileSize();
     long currentSize = fileObject.getContent().getSize();
     if (currentSize > lastFileSize) {
-      obserableInputStreamImpl.close();
+      observableInputStreamImpl.close();
 
       RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
       randomAccessContent.seek(lastFileSize);
       this.lastFileSize = currentSize;
-      obserableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
-      if (gziped) {
-        contentInputStream = new GZIPInputStream(obserableInputStreamImpl);
+      observableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
+      if (gzipped) {
+        contentInputStream = new GZIPInputStream(observableInputStreamImpl);
       } else {
-        contentInputStream = obserableInputStreamImpl;
+        contentInputStream = observableInputStreamImpl;
       }
     } else if (currentSize < lastFileSize) {
-      obserableInputStreamImpl.close();
+      observableInputStreamImpl.close();
       InputStream inputStream = fileObject.getContent().getInputStream();
-      obserableInputStreamImpl = new ObservableInputStreamImpl(inputStream, 0);
-      if (isGziped()) {
-        contentInputStream = new GZIPInputStream(obserableInputStreamImpl);
+      observableInputStreamImpl = new ObservableInputStreamImpl(inputStream, 0);
+      if (isGzipped()) {
+        contentInputStream = new GZIPInputStream(observableInputStreamImpl);
       } else {
-        contentInputStream = obserableInputStreamImpl;
+        contentInputStream = observableInputStreamImpl;
       }
       this.lastFileSize = fileObject.getContent().getSize();
     }

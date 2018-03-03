@@ -18,7 +18,6 @@ package pl.otros.logview.pluginsimpl;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
@@ -36,6 +35,8 @@ import pl.otros.logview.gui.actions.read.ReadingStopperForRemove;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
 import javax.swing.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -105,19 +106,19 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     Runnable r = () -> {
       ParsingContext parsingContext = new ParsingContext(loadingInfo.getFriendlyUrl(), loadingInfo.getFileObject().getName()
         .getBaseName());
-      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl()));
+      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObservableInputStreamImpl()));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(logDataCollector));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
       importer.initParsingContext(parsingContext);
       try {
-        loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-      } catch (FileSystemException e1) {
+        loadingInfo.resetLastFileSize();
+      } catch (IOException e1) {
         LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
       }
       while (parsingContext.isParsingInProgress()) {
         try {
           importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-          if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+          if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
             break;
           }
           Thread.sleep(1000);
@@ -142,7 +143,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     String baseName = loadingInfo.getFileObject().getName().getBaseName();
     ParsingContext parsingContext = new ParsingContext(friendlyURI, baseName);
     logViewPanelWrapper.addHierarchyListener(
-      new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(),
+      new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObservableInputStreamImpl(),
         logDataCollector,
         new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
   }

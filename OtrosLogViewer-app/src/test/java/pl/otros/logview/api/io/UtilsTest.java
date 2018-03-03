@@ -182,7 +182,7 @@ public class UtilsTest {
     byte[] expected = IOUtils.toByteArray(fileObject.getContent()
         .getInputStream());
 
-    AssertJUnit.assertFalse(loadingInfo.isGziped());
+    AssertJUnit.assertFalse(loadingInfo.isGzipped());
     AssertJUnit.assertEquals(expected.length, actual.length);
     // assertArrayEquals(expected, actual);
   }
@@ -196,7 +196,7 @@ public class UtilsTest {
     byte[] expected = IOUtils.toByteArray(new GZIPInputStream(fileObject
         .getContent().getInputStream()));
 
-    AssertJUnit.assertTrue(loadingInfo.isGziped());
+    AssertJUnit.assertTrue(loadingInfo.isGzipped());
     AssertJUnit.assertArrayEquals(expected, actual);
 
   }
