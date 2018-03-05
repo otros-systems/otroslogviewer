@@ -54,6 +54,11 @@ public class StreamProcessingLogDataCollector implements LogDataCollector {
   }
 
   @Override
+  public int getCount() {
+    return 0;
+  }
+
+  @Override
   public int clear() {
     return 0;
   }

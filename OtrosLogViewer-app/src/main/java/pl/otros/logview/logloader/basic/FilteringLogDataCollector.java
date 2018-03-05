@@ -42,6 +42,11 @@ public class FilteringLogDataCollector implements LogDataCollector {
   }
 
   @Override
+  public int getCount() {
+    return dataCollector.getLogData().length;
+  }
+
+  @Override
   public int clear() {
     return dataCollector.clear();
   }

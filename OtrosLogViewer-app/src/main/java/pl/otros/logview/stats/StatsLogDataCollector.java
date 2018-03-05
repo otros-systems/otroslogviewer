@@ -28,6 +28,11 @@ public class StatsLogDataCollector implements LogDataCollector {
   }
 
   @Override
+  public int getCount() {
+    return dataCollector.getCount();
+  }
+
+  @Override
   public int clear() {
     return dataCollector.clear();
   }
