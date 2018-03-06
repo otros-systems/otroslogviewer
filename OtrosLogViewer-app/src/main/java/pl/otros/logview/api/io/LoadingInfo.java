@@ -103,10 +103,6 @@ public final class LoadingInfo implements AutoCloseable {
     return fileObject;
   }
 
-  public long getLastFileSize() {
-    return lastFileSize;
-  }
-
   public void resetLastFileSize() throws IOException {
     this.lastFileSize = fileObject.getContent().getSize();
   }
@@ -117,7 +113,7 @@ public final class LoadingInfo implements AutoCloseable {
 
   public void reloadIfFileSizeChanged() throws IOException {
     fileObject.refresh();
-    long lastFileSize = getLastFileSize();
+    long lastFileSize = this.lastFileSize;
     long currentSize = fileObject.getContent().getSize();
     if (currentSize > lastFileSize) {
       observableInputStreamImpl.close();
@@ -135,7 +131,7 @@ public final class LoadingInfo implements AutoCloseable {
       observableInputStreamImpl.close();
       InputStream inputStream = fileObject.getContent().getInputStream();
       observableInputStreamImpl = new ObservableInputStreamImpl(inputStream, 0);
-      if (isGzipped()) {
+      if (gzipped) {
         contentInputStream = new GZIPInputStream(observableInputStreamImpl);
       } else {
         contentInputStream = observableInputStreamImpl;

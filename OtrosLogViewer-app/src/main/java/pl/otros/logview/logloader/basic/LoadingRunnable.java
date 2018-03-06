@@ -1,6 +1,7 @@
 package pl.otros.logview.logloader.basic;
 
 import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.AcceptCondition;
