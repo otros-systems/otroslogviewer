@@ -106,7 +106,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
     } catch (UnsupportedEncodingException e) {
       LOGGER.error("Cant load codepage " + e.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.warn("IOException when reading logs: " + e.getMessage());
     } finally {
       decodeEvents(sb.toString(), collector, parsingContext);
       IOUtils.closeQuietly(in);

@@ -96,12 +96,10 @@ public class LogImporterUsingParser implements LogImporter {
         }
 
       } catch (IOException e) {
-        e.printStackTrace();
         LOGGER.error(String.format("IOException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
         break;
       } catch (ParseException e) {
         LOGGER.error(String.format("ParseException during log import (file %s): %s", parsingContext.getLogSource(), e.getMessage()));
-        e.printStackTrace();
         break;
       }
     }
