@@ -49,6 +49,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
         proxy = new Proxy(proxyType, proxySocketAddress);
       }
       try {
+        LOGGER.info("Checking current and running versionss");
         running = versionUtil.getRunningVersion();
         current = versionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
       } catch (Exception e) {

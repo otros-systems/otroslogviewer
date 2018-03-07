@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions.search;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
 import pl.otros.logview.api.OtrosApplication;
@@ -32,6 +34,8 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class SearchAction extends OtrosAction {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SearchAction.class);
 
   public enum SearchMode {
     STRING_CONTAINS("String contains search"), REGEX("Regex search"), QUERY("Query search");
@@ -147,7 +151,7 @@ public class SearchAction extends OtrosAction {
       String string = toHighlight.get(0);
       textPane.setCaretPosition(Math.max(text.indexOf(string), 0));
     } catch (BadLocationException e) {
-      e.printStackTrace();
+      LOGGER.warn("Cant scroll to content, wrong location: " + e.getMessage());
     }
   }
 

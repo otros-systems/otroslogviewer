@@ -5,6 +5,7 @@ import scenario.components.LogViewPanel;
 import scenario.components.LogsTable;
 import scenario.components.MainFrame;
 import scenario.components.OpenPanel;
+import scenario.testng.RetryAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import static org.awaitility.Awaitility.await;
 
 public class SearchTest extends OtrosLogViewerBaseTest {
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void testSearchString() throws Exception {
     final int count = 12;
 
@@ -43,7 +44,7 @@ public class SearchTest extends OtrosLogViewerBaseTest {
 
   }
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void testSearchRegex() throws Exception {
     final int count = 25;
 
@@ -70,7 +71,7 @@ public class SearchTest extends OtrosLogViewerBaseTest {
     logsTable.waitForSelectedRow(23);
   }
 
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void testSearchQuery() throws Exception {
     final int count = 25;
 

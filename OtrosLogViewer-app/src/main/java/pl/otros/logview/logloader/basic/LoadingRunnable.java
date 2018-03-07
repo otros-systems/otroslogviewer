@@ -116,7 +116,7 @@ public class LoadingRunnable implements Runnable {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.error("Error occured when importing logs from socket", e);
     }
     LOGGER.info("Log importing finished");
   }

@@ -6,6 +6,7 @@ import scenario.components.ConfirmClose;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
 import scenario.components.OpenPanel;
+import scenario.testng.RetryAnalyzer;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -22,10 +23,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class LogImportTest extends OtrosLogViewerBaseTest {
 
-  @Test
-  public void testImport1SmallFile() throws Exception {
+  @Test(retryAnalyzer = RetryAnalyzer.class)
+  public void testImport1File() throws Exception {
+
     final File file = File.createTempFile("otrosTest", "");
-    logEvents(file, 10);
+    logEvents(file, 10_000);
 
     final MainFrame mainFrame = new MainFrame(robot());
     final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
@@ -35,19 +37,16 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
       .importFiles();
 
     Awaitility.await()
-      .atMost(10, TimeUnit.SECONDS)
-      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
+      .atMost(30, TimeUnit.SECONDS)
+      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10_000);
 
     mainFrame.tabBar().tab().close();
-
     ConfirmClose.close(robot());
 
-    mainFrame.welcomeScreen().waitFor();
   }
 
-
-  @Test
-  public void testImport2SmallFiles() throws Exception {
+  @Test(retryAnalyzer = RetryAnalyzer.class)
+  public void testImport2Files() throws Exception {
     final File file1 = File.createTempFile("otrosTest", "");
     logEvents(file1, 10);
     final File file2 = File.createTempFile("otrosTest", "");
@@ -65,58 +64,6 @@ public class LogImportTest extends OtrosLogViewerBaseTest {
       .atMost(10, TimeUnit.SECONDS)
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 20);
 
-    mainFrame.tabBar().tab().close();
-
-    ConfirmClose.close(robot());
-
-    mainFrame.welcomeScreen().waitFor();
   }
-
-  @Test
-  public void testImport10kEvents() throws Exception {
-    final File file = File.createTempFile("otrosTest", "");
-    logEvents(file, 10_000);
-
-    final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
-
-    final LogViewPanel logViewPanel = openPanel
-      .addFile(file)
-      .importFiles();
-
-    Awaitility.await()
-      .atMost(30, TimeUnit.SECONDS)
-      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10_000);
-
-    mainFrame.tabBar().tab().close();
-
-    ConfirmClose.close(robot());
-
-    mainFrame.welcomeScreen().waitFor();
-  }
-
-  @Test
-  public void testImport100kEvents() throws Exception {
-    final File file = File.createTempFile("otrosTest", "");
-    logEvents(file, 100_000);
-
-    final MainFrame mainFrame = new MainFrame(robot());
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
-
-    final LogViewPanel logViewPanel = openPanel
-      .addFile(file)
-      .importFiles();
-
-    Awaitility.await()
-      .atMost(30, TimeUnit.SECONDS)
-      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 100_000);
-
-    mainFrame.tabBar().tab().close();
-
-    ConfirmClose.close(robot());
-
-    mainFrame.welcomeScreen().waitFor();
-  }
-
 
 }

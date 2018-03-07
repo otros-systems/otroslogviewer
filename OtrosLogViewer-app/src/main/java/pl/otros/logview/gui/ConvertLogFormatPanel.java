@@ -77,7 +77,7 @@ public class ConvertLogFormatPanel extends JPanel {
           String content = Files.readLines(selectedFile, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
           processLoggerConfig(content);
         } catch (IOException e1) {
-          e1.printStackTrace();
+          LOGGER.warn("Cant read content of file " + selectedFile.getAbsolutePath());
         }
       }
     });

@@ -290,9 +290,8 @@ public class LogViewPanelWrapper extends JPanel {
               table.clearSelection();
               table.setRowSelectionInterval(row, row);
             }
-          } catch (IllegalArgumentException iae) {
+          } catch (IllegalArgumentException ignore) {
             // ignore..out of bounds
-            iae.printStackTrace();
           }
         };
         // Wait for JViewPort size update
@@ -304,9 +303,7 @@ public class LogViewPanelWrapper extends JPanel {
           }
           SwingUtilities.invokeLater(r);
         };
-        final Thread thread = new Thread(r2);
-        thread.setDaemon(true);
-        thread.start();
+        otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService().execute(r2);
       }
     });
   }

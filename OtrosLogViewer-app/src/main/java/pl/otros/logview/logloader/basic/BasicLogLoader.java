@@ -21,6 +21,7 @@ public class BasicLogLoader implements LogLoader {
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new HashMap<>();
   private final Map<LogDataCollector, FilteringLogDataCollector> ldCollectorsMap = new HashMap<>();
   private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new HashMap<>();
+  private Source source;
 
   public BasicLogLoader(StatsService statsService) {
     this.statsService = statsService;
@@ -33,6 +34,7 @@ public class BasicLogLoader implements LogLoader {
 
   @Override
   public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime) {
+    this.source = source;
     ldCollectorsMap.putIfAbsent(logDataCollector, new FilteringLogDataCollector(logDataCollector, Optional.empty()));
     final FilteringLogDataCollector filteringLogDataCollector = ldCollectorsMap.get(logDataCollector);
 
@@ -126,7 +128,9 @@ public class BasicLogLoader implements LogLoader {
   @Override
   public LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession) {
     final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
-    return loadingRunnable.getLoadStatistic();
+    return Optional.ofNullable(loadingRunnable)
+      .map(l->l.getLoadStatistic())
+      .orElse(new LoadStatistic(source,0,1));
   }
 
   @Override

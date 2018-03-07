@@ -23,6 +23,7 @@ public class OtrosAppERDC implements ErrorReportDataCollector {
 
   @Override
   public Map<String, String> collect(ErrorReportCollectingContext context) {
+    LOGGER.info("Gathering application details for error report");
     OtrosApplication otrosApplication = context.getOtrosApplication();
 
     HashMap<String, String> r = new HashMap<>();
@@ -40,7 +41,9 @@ public class OtrosAppERDC implements ErrorReportDataCollector {
     r.put("APPLICATION:uptime", uptimeFormatted);
 
     try {
-      r.put(VERSION, new VersionUtil().getRunningVersion());
+      final String runningVersion = new VersionUtil().getRunningVersion();
+      LOGGER.debug("Running version is " + runningVersion);
+      r.put(VERSION, runningVersion);
     } catch (IOException e) {
       LOGGER.warn("Cannot check running version", e);
     }

@@ -230,15 +230,13 @@ project(':OtrosAppDist') {
 }
 
 project(':ScenarioTests'){
-    //gradle -PscenarioTests=true   :ScenarioTests:check
     dependencies {
         compile project(':OtrosLogViewer-app')
     }
     test {
+        testLogging.showStandardStreams = true
         useTestNG()
-        onlyIf {
-            project.hasProperty("scenarioTests")
-        }
+        options.listeners << 'scenario.testng.ScenarioTestListener'
     }
 }
 

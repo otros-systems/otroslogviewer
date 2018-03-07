@@ -40,6 +40,7 @@ public class VersionUtil {
   private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
   private String currentVersionPageUrl;
+  private Optional<String> runningVersion = Optional.empty();
 
   public VersionUtil() {
     this("http://otroslogviewer.appspot.com/services/currentVersion");
@@ -98,24 +99,26 @@ public class VersionUtil {
    * @throws IOException
    */
   public String getRunningVersion() throws IOException {
-    LOGGER.info("Checking running version");
-    String result = "";
+    if (!runningVersion.isPresent()) {
+      runningVersion = readRunningVersionFromManifest();
+    }
+    return runningVersion.orElse("");
+  }
+
+  private Optional<String> readRunningVersionFromManifest() throws IOException {
     Enumeration<URL> resources = VersionUtil.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
     while (resources.hasMoreElements()) {
       URL url = resources.nextElement();
       if (url.toString().contains("OtrosLogViewer-app")) {
-        InputStream inputStream = url.openStream();
-        try {
+        try (InputStream inputStream = url.openStream()) {
           Manifest manifest = new Manifest(inputStream);
-          result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
-          LOGGER.info("Running version is " + result);
-
-        } finally {
-          IOUtils.closeQuietly(inputStream);
+          String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
+          LOGGER.debug("Running version is " + result);
+          return Optional.of(result);
         }
       }
     }
-    return result;
+    return Optional.empty();
   }
 
 }

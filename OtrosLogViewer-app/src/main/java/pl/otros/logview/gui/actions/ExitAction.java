@@ -71,9 +71,10 @@ public class ExitAction extends OtrosAction implements WindowListener {
 
   @Override
   public void windowClosed(WindowEvent e) {
-//nothing
-    getOtrosApplication().getServices().getTaskSchedulerService().getListeningScheduledExecutorService().shutdown();
+    //nothing
     getOtrosApplication().getLogLoader().shutdown();
+    getOtrosApplication().getServices().getTaskSchedulerService().getListeningScheduledExecutorService().shutdown();
+    frame.dispose();
   }
 
   @Override

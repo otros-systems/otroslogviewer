@@ -45,7 +45,7 @@ public class CreateUMLActionListener implements ActionListener {
       throw new Exception("Not implemented!");
     } catch (Exception e) {
       JOptionPane.showMessageDialog((Component) arg0.getSource(), "Error Creating UML " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      e.printStackTrace();
+      
     }
 
   }

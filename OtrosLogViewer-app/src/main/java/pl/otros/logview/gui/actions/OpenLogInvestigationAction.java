@@ -16,6 +16,8 @@
 package pl.otros.logview.gui.actions;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.TableColumns;
@@ -33,6 +35,7 @@ import java.io.FileInputStream;
 
 public class OpenLogInvestigationAction extends OtrosAction {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenLogInvestigationAction.class);
 
   public OpenLogInvestigationAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
@@ -72,7 +75,7 @@ public class OpenLogInvestigationAction extends OtrosAction {
       panelWrapper.switchToContentView();
       observer.updateStatus("Log \"" + panelWrapper.getName() + "\" loaded.");
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.error("Can't read log investigation");
       JOptionPane.showMessageDialog((Component) arg0.getSource(), "Problem with loading: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       observer.updateStatus("Log not loaded.", StatusObserver.LEVEL_ERROR);
     } finally {
