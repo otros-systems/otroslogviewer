@@ -95,7 +95,7 @@ public void initialize() throws InitializationException, IOException {
 
   @Test
   public void testImportJulSimpleFormatter() throws IOException, InitializationException {
-    testImport("jul_log.txt", 230);
+    testImport("jul_log.txt", 200);
 
   }
 

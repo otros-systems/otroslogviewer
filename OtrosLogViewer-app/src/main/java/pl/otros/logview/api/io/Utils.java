@@ -28,11 +28,9 @@ import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.vfs.browser.util.VFSUtils;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,82 +38,10 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPInputStream;
 
 public class Utils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getName());
-  private static final int GZIP_MIN_SIZE = 26;
-  private static final int GZIP_CHECK_BUFFER_SIZE = 8 * 1024;
-
-  static boolean checkIfIsGzipped(FileObject fileObject) throws IOException {
-    boolean gziped = false;
-    if (fileObject.getContent().getSize() == 0) {
-      LOGGER.debug("File object " + fileObject.getName() + " is empty, can't detect gzip compression");
-      return false;
-    }
-    InputStream inputStream = fileObject.getContent().getInputStream();
-    byte[] loadProbe = loadProbe(inputStream, GZIP_CHECK_BUFFER_SIZE);
-    // IOUtils.closeQuietly(inputStream);
-    if (loadProbe.length < GZIP_MIN_SIZE) {
-      LOGGER.info("Loaded probe is too small to check if it is gziped");
-      return false;
-    }
-    try {
-      ByteArrayInputStream bin = new ByteArrayInputStream(loadProbe);
-      int available = bin.available();
-      byte[] b = new byte[available < GZIP_CHECK_BUFFER_SIZE ? available : GZIP_CHECK_BUFFER_SIZE];
-      int read = bin.read(b);
-      gziped = checkIfIsGzipped(b, read);
-    } catch (IOException e) {
-      // Not gziped
-      LOGGER.debug(fileObject.getName() + " is not gzip");
-    }
-
-    return gziped;
-  }
-
-  static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
-    boolean gziped;
-    try {
-      ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
-      GZIPInputStream gzipInputStream = new GZIPInputStream(bin);
-      gzipInputStream.read(new byte[buffer.length], 0, bin.available());
-      gziped = true;
-    } catch (IOException e) {
-      gziped = false;
-    }
-    return gziped;
-  }
-
-  public static byte[] loadProbe(InputStream in, int buffSize) throws IOException {
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    byte[] buff = new byte[buffSize];
-    int read = in.read(buff);
-    if (read > 0) {
-      bout.write(buff, 0, read);
-    }
-
-    return bout.toByteArray();
-  }
-
-  public static byte[] loadProbe(InputStream in, int buffSize,boolean tryToUngzip) throws IOException {
-    final byte[] probe = loadProbe(in, buffSize);
-        if (checkIfIsGzipped(probe, probe.length)) {
-      return ungzip(probe);
-    } else {
-      return probe;
-    }
-  }
-
-  static byte[] ungzip(byte[] buff) throws IOException {
-    GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(buff));
-    byte[] ungzippedRead = new byte[buff.length];
-    int read = gzipInputStream.read(ungzippedRead);
-    byte[] ungzipped = new byte[read];
-    System.arraycopy(ungzippedRead, 0, ungzipped, 0, read);
-    return ungzipped;
-  }
 
   public static Optional<LogImporter> detectLogImporter(Collection<LogImporter> importers, byte[] buff) {
     return detectPossibleLogImporter(importers, buff).getLogImporter();

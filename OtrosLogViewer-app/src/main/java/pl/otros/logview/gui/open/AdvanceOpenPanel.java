@@ -55,7 +55,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -561,8 +560,8 @@ public class AdvanceOpenPanel extends JPanel {
               byte[] bytes = new byte[0];
               PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
               publish(new AddingDetail(CanParse.TESTING, possibleLogImporters, new ContentProbe(bytes)));
-              try (InputStream in = fileObjectAt.getFileObject().getContent().getInputStream()) {
-                bytes = Utils.loadProbe(in, 4000, true);
+              try (LoadingInfo logFileContent = new LoadingInfo(fileObjectAt.getFileObject())) {
+                bytes = logFileContent.getInputStreamBufferedStart();
                 possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
                 if (possibleLogImporters.getLogImporter().isPresent()) {
                   canParse = CanParse.YES;

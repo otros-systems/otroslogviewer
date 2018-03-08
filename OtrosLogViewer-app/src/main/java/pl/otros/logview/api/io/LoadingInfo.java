@@ -15,22 +15,22 @@
  ******************************************************************************/
 package pl.otros.logview.api.io;
 
+import static org.apache.commons.io.IOUtils.copy;
+import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
+import static pl.otros.logview.api.io.Utils.closeQuietly;
+import static pl.otros.logview.gui.session.OpenMode.FROM_START;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.RandomAccessContent;
 
 import pl.otros.logview.gui.session.OpenMode;
-
-import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
-import static pl.otros.logview.api.io.Utils.checkIfIsGzipped;
-import static pl.otros.logview.api.io.Utils.closeQuietly;
-import static pl.otros.logview.api.io.Utils.ungzip;
-import static pl.otros.logview.gui.session.OpenMode.FROM_START;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.util.zip.GZIPInputStream;
 
 public final class LoadingInfo implements AutoCloseable {
 
@@ -58,12 +58,12 @@ public final class LoadingInfo implements AutoCloseable {
 
     fileObject.refresh();
     InputStream inputStream = fileObject.getContent().getInputStream();
-    byte[] probe = Utils.loadProbe(inputStream, 10000);
+    byte[] probe = loadProbe(inputStream, 10000);
     gzipped = checkIfIsGzipped(probe, probe.length);
     inputStreamBufferedStart = gzipped ? ungzip(probe) : probe;
 
     if (openMode == FROM_START || gzipped) {
-      PushbackInputStream pushBackInputStream = new PushbackInputStream(inputStream, probe.length);
+      PushbackInputStream pushBackInputStream = new PushbackInputStream(inputStream, probe.length + 1); // +1 to support empty files
       pushBackInputStream.unread(probe);
       observableInputStreamImpl = new ObservableInputStreamImpl(pushBackInputStream);
       contentInputStream = gzipped ? new GZIPInputStream(observableInputStreamImpl) : observableInputStreamImpl;
@@ -143,5 +143,35 @@ public final class LoadingInfo implements AutoCloseable {
   @Override
   public void close() {
     closeQuietly(fileObject);
+  }
+
+  private static byte[] loadProbe(InputStream in, int buffSize) throws IOException {
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    byte[] buff = new byte[buffSize];
+    int read = in.read(buff);
+    if (read > 0) {
+      bout.write(buff, 0, read);
+    }
+    return bout.toByteArray();
+  }
+
+  private static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
+    boolean gziped;
+    try {
+      ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
+      GZIPInputStream gzipInputStream = new GZIPInputStream(bin);
+      gzipInputStream.read(new byte[buffer.length], 0, bin.available());
+      gziped = true;
+    } catch (IOException e) {
+      gziped = false;
+    }
+    return gziped;
+  }
+
+  private static byte[] ungzip(byte[] buff) throws IOException {
+    try (InputStream in = new GZIPInputStream(new ByteArrayInputStream(buff)); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      copy(in, out);
+      return out.toByteArray();
+    }
   }
 }
