@@ -1,7 +1,6 @@
 package pl.otros.logview.gui.config;
 
 import com.google.common.base.Joiner;
-import jsyntaxpane.DefaultSyntaxKit;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -10,6 +9,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXRadioGroup;
 import org.slf4j.Logger;
@@ -19,6 +19,7 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.gui.browser.LogParsableListener;
 import pl.otros.logview.gui.renderers.LevelRenderer;
+import pl.otros.logview.gui.util.SyntaxPane;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
 import pl.otros.swing.config.ValidationResult;
@@ -38,13 +39,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,7 +68,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   private final JXRadioGroup radioGroup;
   private final JXComboBox dateFormatRadio;
   private final JPanel panel;
-  private final JEditorPane packageAbbreviationTa;
+  private final RSyntaxTextArea packageAbbreviationTa;
   private final JList columnLayoutsList;
   private MutableListModel<ColumnLayout> columnLayoutListModel;
   private final OtrosApplication otrosApplication;
@@ -102,13 +97,14 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     radioGroup = new JXRadioGroup(LevelRenderer.Mode.values());
     addLabel("Level display", 'l', radioGroup, panel);
 
-    DefaultSyntaxKit.initKit();
-    packageAbbreviationTa = new JEditorPane();
+
+    packageAbbreviationTa = SyntaxPane.propertiesTextArea(otrosApplication.getTheme());
     final JScrollPane packageAbbreviationSp = new JScrollPane(packageAbbreviationTa);
     packageAbbreviationTa.setText(DEFAULT_ABBREVIATION_HEADER);
-    packageAbbreviationTa.setContentType("text/properties");
+    packageAbbreviationTa.setLineWrap(true);
     packageAbbreviationTa.setPreferredSize(new Dimension(500, 200));
     packageAbbreviationTa.setToolTipText(DEFAULT_ABBREVIATION_HEADER);
+
 
     addLabel("Package abbreviation", 'a', packageAbbreviationSp, panel);
 

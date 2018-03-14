@@ -23,6 +23,8 @@ import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.api.services.Services;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeConfig;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;
@@ -203,6 +205,9 @@ public class OtrosApplication {
     this.menuActionProviders.add(menuActionProviders);
   }
 
+  public Theme getTheme(){
+    return new ThemeConfig(getConfiguration());
+  }
   /**
    * Return menu action providers
    *

@@ -18,10 +18,11 @@ package pl.otros.logview.gui.message;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -32,12 +33,19 @@ import java.util.regex.Pattern;
 
 public class SearchResultColorizer extends AbstractPluginableElement implements MessageColorizer {
 
-  private final Color color = Color.YELLOW;
   private String searchString = "";
   private SearchMode searchMode;
+  private Theme theme;
 
-  public SearchResultColorizer() {
+  public SearchResultColorizer(Theme theme) {
     super("Search result", "Mark search result");
+    this.theme = theme;
+  }
+
+  public SearchResultColorizer(Theme theme, SearchMode searchMode, String searchString) {
+    this(theme);
+    this.searchString = searchString;
+    this.searchMode = searchMode;
   }
 
   @Override
@@ -66,13 +74,14 @@ public class SearchResultColorizer extends AbstractPluginableElement implements 
   }
 
   @Override
-  public Collection<MessageFragmentStyle> colorize(String textToColorize) throws BadLocationException {
+  public Collection<MessageFragmentStyle> colorize(String textToColorize) {
     Collection<MessageFragmentStyle> list = new ArrayList<>();
     if (StringUtils.isEmpty(searchString)) {
       return list;
     }
     StyleContext sc = new StyleContext();
     Style searchStyle = sc.addStyle("searchResult", sc.getStyle(StyleContext.DEFAULT_STYLE));
+    final Color color = theme.getColor(ThemeKey.SEARCH_RESULT);
     StyleConstants.setBackground(searchStyle, color);
     if (searchMode.equals(SearchMode.STRING_CONTAINS)) {
       list.addAll(colorizeString(textToColorize, searchStyle, searchString));

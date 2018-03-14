@@ -28,7 +28,7 @@ public class MarkerColorsComboBoxRenderer extends BasicComboBoxRenderer {
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
     JLabel component2 = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     MarkerColors selected = (MarkerColors) value;
-    component2.setIcon(new ColorIcon(selected.getBackground(), selected.getForeground(), 16, 16));
+    component2.setIcon(new ColorIcon(selected.getBackground(), selected.getForeground(), 16, 16,"Ab"));
     component2.setText(selected.name());
     return component2;
   }

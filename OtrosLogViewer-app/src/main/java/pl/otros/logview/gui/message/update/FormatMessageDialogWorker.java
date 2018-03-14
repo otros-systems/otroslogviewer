@@ -122,7 +122,7 @@ public class FormatMessageDialogWorker extends SwingWorker<List<TextChunkWithSty
     }
 
     otrosJTextWithRulerScrollPane.getjTextComponent().setCaretPosition(0);
-    MessageUpdateUtils.highlightSearchResult(otrosJTextWithRulerScrollPane, colorizersContainer);
+    MessageUpdateUtils.highlightSearchResult(otrosJTextWithRulerScrollPane, colorizersContainer, otrosApplication.getTheme());
     RulerBarHelper.scrollToFirstMarker(otrosJTextWithRulerScrollPane);
   }
 

@@ -24,18 +24,23 @@ public class ColorIcon implements Icon {
   private final Color foreground;
   private final int width;
   private final int height;
-  private final char[] chars = {'A', 'b'};
+  private char[] chars = {};
 
-  public ColorIcon(Color background, Color foreground) {
-    this(background, foreground, 16, 16);
+  public ColorIcon(Color background) {
+    this(background, background, "");
   }
 
-  public ColorIcon(Color background, Color foreground, int width, int height) {
+  public ColorIcon(Color background, Color foreground, String text) {
+    this(background, foreground, 16, 16, text);
+  }
+
+  public ColorIcon(Color background, Color foreground, int width, int height, String string) {
     super();
     this.background = background;
     this.foreground = foreground;
     this.width = width;
     this.height = height;
+    this.chars = string.toCharArray();
   }
 
   @Override

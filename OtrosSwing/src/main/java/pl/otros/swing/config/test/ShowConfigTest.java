@@ -1,8 +1,8 @@
 package pl.otros.swing.config.test;
 
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 import pl.otros.swing.config.ConfigComponent;
 import pl.otros.swing.config.ConfigView;
 import pl.otros.swing.config.provider.ConfigurationProvider;
@@ -14,10 +14,9 @@ import java.io.File;
 
 public class ShowConfigTest {
   public static void main(String[] args) throws UnsupportedLookAndFeelException {
-    UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-//    OtrosApplication otrosApplication = new OtrosApplication();
-//    otrosApplication.setConfiguration(new DataConfiguration(new BaseConfiguration()));
-//    DataConfiguration configuration = otrosApplication.getConfiguration();
+    final SubstanceBusinessBlackSteelLookAndFeel newLookAndFeel = new SubstanceBusinessBlackSteelLookAndFeel();
+    UIManager.setLookAndFeel(newLookAndFeel);
+
     DataConfiguration configuration = new DataConfiguration(new BaseConfiguration());
     ConfigurationProvider configurationProvider = new ConfigurationProviderImpl(configuration, new File(System.getProperty("java.io.tmpdir")));
     configuration.setProperty("view1.text", "ASD ASD");

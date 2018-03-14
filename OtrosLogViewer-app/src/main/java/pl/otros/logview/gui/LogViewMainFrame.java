@@ -17,8 +17,6 @@ package pl.otros.logview.gui;
 
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.negusoft.singleinstance.SingleInstance;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
@@ -26,6 +24,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.VersionUtil;
@@ -63,6 +62,7 @@ import pl.otros.logview.gui.suggestion.SearchSuggestionSource;
 import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
+import pl.otros.logview.gui.util.LookAndFeelUtil;
 import pl.otros.logview.ide.IdeAvailabilityCheck;
 import pl.otros.logview.ide.IdeIntegrationConfigAction;
 import pl.otros.logview.loader.IconsLoader;
@@ -97,7 +97,6 @@ import java.util.logging.Level;
 import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogViewMainFrame extends JFrame {
-  public static final String VFS_IDENTITIES = "vfs.Identities";
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class.getName());
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
@@ -117,9 +116,13 @@ public class LogViewMainFrame extends JFrame {
   private ExitAction exitAction;
   private java.util.List<SocketLogReader> logReaders = new ArrayList<>();
 
-  public LogViewMainFrame(DataConfiguration c) throws InitializationException {
+  public LogViewMainFrame(DataConfiguration c) {
     super();
     this.configuration = c;
+
+    otrosApplication = new OtrosApplication();
+    otrosApplication.setConfiguration(configuration);
+
     this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     String title = "OtrosLogViewer";
     try {
@@ -144,7 +147,7 @@ public class LogViewMainFrame extends JFrame {
     try {
       OtrosSplash.setMessage("Loading plugins");
       LvDynamicLoader.getInstance().setStatusObserver(OtrosSplash.getSplashStatusObserver());
-      LvDynamicLoader.getInstance().loadAll();
+      LvDynamicLoader.getInstance().loadAll(otrosApplication.getTheme());
       OtrosSplash.setMessage("Loading plugins loaded");
     } catch (IOException e) {
       LOGGER.error("Problem with loading automatic markers, filter or log importers: " + e.getMessage());
@@ -167,10 +170,9 @@ public class LogViewMainFrame extends JFrame {
     enableDisableComponetsForTabs = new EnableDisableComponetsForTabs(logsTabbedPane);
     logsTabbedPane.addChangeListener(enableDisableComponetsForTabs);
 
-    otrosApplication = new OtrosApplication();
+
     otrosApplication.setAllPluginables(AllPluginables.getInstance());
     otrosApplication.setApplicationJFrame(this);
-    otrosApplication.setConfiguration(configuration);
     otrosApplication.setjTabbedPane(logsTabbedPane);
     otrosApplication.setStatusObserver(observer);
     final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
@@ -223,9 +225,8 @@ public class LogViewMainFrame extends JFrame {
     setVisible(true);
     if (modalDisplayException != null)
       JOptionPane.showMessageDialog(this,
-        "Problem with loading automatic markers,"
-          + "filter or log importers:\n"
-          + modalDisplayException.getMessage(), "Initialization Error",
+        "Problem with loading automatic markers, filter or log importers:\n" + modalDisplayException.getMessage(),
+        "Initialization Error",
         JOptionPane.ERROR_MESSAGE);
 
     if (!runningForTests()) {
@@ -313,40 +314,28 @@ public class LogViewMainFrame extends JFrame {
         FontSize.setDefaultSize(fontSize);
       }
 
-      try {
-        String lookAndFeel = c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-        OtrosSplash.setMessage("Loading L&F " + lookAndFeel);
-        LOGGER.debug("Initializing look and feel: " + lookAndFeel);
-        PlasticLookAndFeel.setTabStyle(Plastic3DLookAndFeel.TAB_STYLE_METAL_VALUE);
-        UIManager.setLookAndFeel(lookAndFeel);
-      } catch (Throwable e1) {
-        LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
-      }
-      try {
-        final DataConfiguration c1 = new OtrosConfiguration(c);
-        final LogViewMainFrame mf = new LogViewMainFrame(c1);
-        mf.addComponentListener(new ComponentAdapter() {
-          @Override
-          public void componentResized(ComponentEvent e) {
-            c.setProperty("gui.state", mf.getExtendedState());
-            if (mf.getExtendedState() == Frame.NORMAL) {
-              c.setProperty("gui.width", mf.getWidth());
-              c.setProperty("gui.height", mf.getHeight());
-            }
+      LookAndFeelUtil.initLf(c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, SubstanceBusinessBlackSteelLookAndFeel.class.getName()));
+      final OtrosConfiguration c1 = new OtrosConfiguration(c);
+      final LogViewMainFrame mf = new LogViewMainFrame(c1);
+      mf.addComponentListener(new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+          c.setProperty("gui.state", mf.getExtendedState());
+          if (mf.getExtendedState() == Frame.NORMAL) {
+            c.setProperty("gui.width", mf.getWidth());
+            c.setProperty("gui.height", mf.getHeight());
           }
+        }
 
-          @Override
-          public void componentMoved(ComponentEvent e) {
-            c.setProperty("gui.location.x", mf.getLocation().x);
-            c.setProperty("gui.location.y", mf.getLocation().y);
-          }
-        });
-        mf.addWindowListener(mf.exitAction);
-        SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-          mf.otrosApplication.getAppProperties().getCurrentDir());
-      } catch (InitializationException e) {
-        LOGGER.error("Cannot initialize main frame", e);
-      }
+        @Override
+        public void componentMoved(ComponentEvent e) {
+          c.setProperty("gui.location.x", mf.getLocation().x);
+          c.setProperty("gui.location.y", mf.getLocation().y);
+        }
+      });
+      mf.addWindowListener(mf.exitAction);
+      SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
+        mf.otrosApplication.getAppProperties().getCurrentDir());
     });
   }
 
@@ -524,7 +513,9 @@ public class LogViewMainFrame extends JFrame {
           final Optional<LogViewPanelI> selectedLogViewPanel = otrosApplication.getSelectedLogViewPanel();
           selectedLogViewPanel.ifPresent(selectedPanel -> {
             OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane = selectedPanel.getLogDetailWithRulerScrollPane();
-            MessageUpdateUtils.highlightSearchResult(logDetailWithRulerScrollPane, otrosApplication.getAllPluginables().getMessageColorizers());
+            MessageUpdateUtils.highlightSearchResult(logDetailWithRulerScrollPane,
+              otrosApplication.getAllPluginables().getMessageColorizers(),
+              otrosApplication.getTheme());
             RulerBarHelper.scrollToFirstMarker(logDetailWithRulerScrollPane);
           });
         } catch (BadLocationException e) {

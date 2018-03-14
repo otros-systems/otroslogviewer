@@ -16,6 +16,7 @@
 package pl.otros.logview.gui.message.pattern;
 
 import org.apache.commons.configuration.DataConfiguration;
+import pl.otros.logview.api.theme.Theme;
 
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -48,16 +49,18 @@ public class StyleProperties {
 
   }
 
-  public static Style getStyle(StyleContext styleContext, DataConfiguration styleConfig, String styleName) {
-    return getStyle(styleContext, styleConfig, styleName, -1);
+  public static Style getStyle(Theme.Type themeType,StyleContext styleContext, DataConfiguration styleConfig, String styleName) {
+    return getStyle(themeType, styleContext, styleConfig, styleName, -1);
   }
 
-  public static Style getStyle(StyleContext styleContext, DataConfiguration styleConfig, String styleName, int group) {
+  public static Style getStyle(Theme.Type themeType,StyleContext styleContext, DataConfiguration styleConfig, String styleName, int group) {
     Style style = styleContext.addStyle(styleName, styleContext.getStyle(StyleContext.DEFAULT_STYLE));
 
-    String groupSuffix = "." + group;
+    final String groupSuffix;
     if (group <= 0) {
       groupSuffix = "";
+    } else {
+      groupSuffix = "." + group;
     }
 
     String fontFamily = styleConfig.getString(PROP_FONT_FAMILY + groupSuffix, "");
@@ -81,13 +84,25 @@ public class StyleProperties {
       StyleConstants.setUnderline(style, styleConfig.getBoolean(PROP_FONT_UNDERLINE + groupSuffix));
     }
 
-    if (styleConfig.getString(PROP_BACKGROUND + groupSuffix, "").trim().length() > 0) {
+    String theme;
+    if (themeType.equals(Theme.Type.Light)) {
+      theme = "light";
+    } else {
+      theme = "dark";
+    }
+
+    if (styleConfig.getString(PROP_BACKGROUND + groupSuffix + "." + theme,"").trim().length() > 0) {
+      StyleConstants.setBackground(style, styleConfig.getColor(PROP_BACKGROUND + groupSuffix + "." + theme, null));
+    } else if (styleConfig.getString(PROP_BACKGROUND + groupSuffix, "").trim().length() > 0) {
       StyleConstants.setBackground(style, styleConfig.getColor(PROP_BACKGROUND + groupSuffix));
     }
 
-    if (styleConfig.getString(PROP_FOREGROUND + groupSuffix, "").trim().length() > 0) {
+    if (styleConfig.getString(PROP_FOREGROUND + groupSuffix + "." + theme,"").trim().length() > 0) {
+      StyleConstants.setForeground(style, styleConfig.getColor(PROP_FOREGROUND + groupSuffix + "." + theme, null));
+    } else if (styleConfig.getString(PROP_FOREGROUND + groupSuffix, "").trim().length() > 0) {
       StyleConstants.setForeground(style, styleConfig.getColor(PROP_FOREGROUND + groupSuffix));
     }
+
     return style;
   }
 

@@ -28,6 +28,8 @@ import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
@@ -38,6 +40,7 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -45,27 +48,26 @@ import java.util.stream.Collectors;
  */
 public class LogDataFormatter {
 
-  public static final String NEW_LINE = "\n";
+  private static final String NEW_LINE = "\n";
   private static final Logger LOGGER = LoggerFactory.getLogger(LogDataFormatter.class.getName());
 
-  private final LogData ld;
-  private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
-  private final DateFormat dateFormat;
-  private Style mainStyle = null;
-  private Style messageMonospacedStyle = null;
-  private Style classMethodStyle = null;
-  private Style boldArialStyle = null;
-  private Style propertyNameStyle = null;
-  private Style propertyValueStyle = null;
-
   private final StyleContext sc;
-
-
-  private int maximumMessageSize;
-
   private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
   private final CancelStatus cancelStatus;
+  private final LogData ld;
+  private final ArrayList<TextChunkWithStyle> chunks = new ArrayList<>();
+  private final DateFormat dateFormat;
+
+  private Style mainStyle;
+  private Style propertyStyle;
+  private Style messageStyle;
+  private Style messageMonospacedStyle;
+  private Style valueStyle;
+  private Style propertyNameStyle;
+  private Style propertyValueStyle;
+  private int maximumMessageSize;
+
 
   private final MessageUpdateUtils messageUtils;
   private OtrosApplication otrosApplication;
@@ -85,102 +87,114 @@ public class LogDataFormatter {
     this.formattersContainer = formattersContainer;
     this.cancelStatus = cancelStatus;
     this.maximumMessageSize = maximumMessageSize;
-
+    final Theme theme = otrosApplication.getTheme();
 
     sc = new StyleContext();
     Style defaultStyle = sc.getStyle(StyleContext.DEFAULT_STYLE);
     mainStyle = sc.addStyle("MainStyle", defaultStyle);
-    StyleConstants.setForeground(mainStyle, Color.BLACK);
+    StyleConstants.setForeground(mainStyle, theme.getColor(ThemeKey.LOG_DETAILS_DEFAULT));
 
-    messageMonospacedStyle =  sc.addStyle("messageMonospaced", null);
+    messageStyle = sc.addStyle("message", defaultStyle);
+    StyleConstants.setForeground(messageStyle, theme.getColor(ThemeKey.LOG_DETAILS_MESSAGE));
+
+    messageMonospacedStyle = sc.addStyle("messageMonospaced", messageStyle);
     StyleConstants.setFontFamily(messageMonospacedStyle, "monospaced");
-    StyleConstants.setForeground(messageMonospacedStyle, Color.BLACK);
+    StyleConstants.setForeground(messageMonospacedStyle, theme.getColor(ThemeKey.LOG_DETAILS_MESSAGE));
 
-    classMethodStyle = sc.addStyle("classMethod", null);
-    StyleConstants.setFontFamily(classMethodStyle, "monospaced");
-    StyleConstants.setForeground(classMethodStyle, Color.BLUE);
+    valueStyle = sc.addStyle("valueStyle", null);
+    StyleConstants.setFontFamily(valueStyle, "monospaced");
+    StyleConstants.setForeground(valueStyle, theme.getColor(ThemeKey.LOG_DETAILS_VALUE));
 
-    boldArialStyle = sc.addStyle("note", mainStyle);
-    StyleConstants.setFontFamily(boldArialStyle, "arial");
-    StyleConstants.setBold(boldArialStyle, true);
+    propertyStyle = sc.addStyle("property", null);
+    StyleConstants.setFontFamily(propertyStyle, "monospaced");
+    StyleConstants.setForeground(propertyStyle, theme.getColor(ThemeKey.LOG_DETAILS_PROPERTY));
 
-    propertyNameStyle = sc.addStyle("propertyValue", classMethodStyle);
-    StyleConstants.setForeground(propertyNameStyle, new Color(0, 0, 128));
+    propertyNameStyle = sc.addStyle("propertyName", valueStyle);
+    final Color propValueColor = theme.getColor(ThemeKey.LOG_DETAILS_PROPERTY_KEY);
+    StyleConstants.setForeground(propertyNameStyle, propValueColor);
 
-    propertyValueStyle = sc.addStyle("propertyValue", classMethodStyle);
-    StyleConstants.setForeground(propertyNameStyle, new Color(0, 128, 0));
+    propertyValueStyle = sc.addStyle("propertyValue", valueStyle);
+    final Color color = theme.getColor(ThemeKey.LOG_DETAILS_PROPERTY_VALUE);
+    StyleConstants.setForeground(propertyValueStyle, color);
 
 
   }
 
-  private TextChunkWithStyle getDateChunk() {
-    String s1 = "Date:    " + dateFormat.format(ld.getDate()) + NEW_LINE;
-    return new TextChunkWithStyle(s1, mainStyle);
+  private Collection<TextChunkWithStyle> getDateChunk() {
+    return Arrays.asList(
+      new TextChunkWithStyle("Date:    ", propertyStyle),
+      new TextChunkWithStyle(dateFormat.format(ld.getDate()) + NEW_LINE, valueStyle)
+    );
   }
 
-  private TextChunkWithStyle getClassChunk() {
-    String s1 = "Class:   " + ld.getClazz() + NEW_LINE;
-    return new TextChunkWithStyle(s1, classMethodStyle);
+  private Collection<TextChunkWithStyle> getClassChunk() {
+    return Arrays.asList(
+      new TextChunkWithStyle("Class:   ", propertyStyle),
+      new TextChunkWithStyle(ld.getClazz() + NEW_LINE, valueStyle));
   }
 
-  private TextChunkWithStyle getMethodChunk() {
-    String s1 = "Method:  " + ld.getMethod() + NEW_LINE;
-    return new TextChunkWithStyle(s1, classMethodStyle);
+  private Collection<TextChunkWithStyle> getMethodChunk() {
+    String s1 = ld.getMethod() + NEW_LINE;
+    return Arrays.asList(new TextChunkWithStyle("Method:  ", propertyStyle), new TextChunkWithStyle(s1, valueStyle));
   }
 
   private void addLevelChunk() {
     String s1 = "Level:   ";
-    chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
+    chunks.add(new TextChunkWithStyle(s1, propertyStyle));
     Icon levelIcon = LevelRenderer.getIconByLevel(ld.getLevel());
     if (levelIcon != null) {
       chunks.add(new TextChunkWithStyle(levelIcon));
     }
     s1 = " " + Optional.ofNullable(ld.getLevel()).map(Level::getName).orElse("") + NEW_LINE;
-    chunks.add(new TextChunkWithStyle(s1, classMethodStyle));
+    chunks.add(new TextChunkWithStyle(s1, valueStyle));
   }
 
   private void addFileChunk() {
-    String s1 = null;
     if (StringUtils.isNotBlank(ld.getFile())) {
-      s1 = "File: " + ld.getFile();
+      chunks.add(new TextChunkWithStyle("File:    ", propertyStyle));
+      chunks.add(new TextChunkWithStyle(ld.getFile(), valueStyle));
       if (StringUtils.isNotBlank(ld.getLine())) {
-        s1 = s1 + ":" + ld.getLine();
+        chunks.add(new TextChunkWithStyle(":" + ld.getLine(), valueStyle));
       }
-      chunks.add(new TextChunkWithStyle(s1 + NEW_LINE, mainStyle));
+      chunks.add(new TextChunkWithStyle(NEW_LINE, valueStyle));
     }
   }
 
   private void addNDCChunk() {
     if (StringUtils.isNotBlank(ld.getNDC())) {
-      chunks.add(new TextChunkWithStyle("NDC: " + ld.getNDC() + NEW_LINE, mainStyle));
+      chunks.add(new TextChunkWithStyle("NDC: ", propertyStyle));
+      chunks.add(new TextChunkWithStyle(ld.getNDC() + NEW_LINE, mainStyle));
     }
   }
 
   private void addLoggerNameChunk() {
     if (StringUtils.isNotBlank(ld.getLoggerName())) {
-      chunks.add(new TextChunkWithStyle("Logger name: " + ld.getLoggerName() + NEW_LINE, mainStyle));
+      chunks.add(new TextChunkWithStyle("Logger:  ", propertyStyle));
+      chunks.add(new TextChunkWithStyle(ld.getLoggerName() + NEW_LINE, valueStyle));
     }
   }
 
   private void addPropertiesChunk() {
     Map<String, String> properties = ld.getProperties();
     if (properties != null && properties.size() > 0) {
-      chunks.add(new TextChunkWithStyle("Properties:\n", boldArialStyle));
-      ArrayList<String> keys = new ArrayList(properties.keySet());
-      Collections.sort(keys);
-      for (String key : keys) {
-        chunks.add(new TextChunkWithStyle(key + "=", propertyNameStyle));
-        chunks.add(new TextChunkWithStyle(properties.get(key) + "\n", propertyValueStyle));
-      }
+      chunks.add(new TextChunkWithStyle("Properties:\n", propertyStyle));
+      properties
+        .keySet()
+        .stream()
+        .sorted()
+        .forEach(key -> {
+          chunks.add(new TextChunkWithStyle(" * " + key + "=", propertyNameStyle));
+          chunks.add(new TextChunkWithStyle(properties.get(key) + "\n", propertyValueStyle));
+        });
     }
   }
 
   private void addMessageChunk() {
     Boolean useMonospaceFont = otrosApplication.getConfiguration().getBoolean(ConfKeys.MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK,
       false);
-    String s1 = "Message: ";
-    chunks.add(new TextChunkWithStyle(s1, boldArialStyle));
-    s1 = ld.getMessage();
+
+    chunks.add(new TextChunkWithStyle("\nMessage: ", propertyStyle));
+    String s1 = ld.getMessage();
     if (s1.length() > maximumMessageSize) {
       int removedCharsSize = s1.length() - maximumMessageSize;
       s1 = StringUtils.left(s1, maximumMessageSize) + String.format("%n...%n...(+%,d chars)", removedCharsSize);
@@ -195,10 +209,10 @@ public class LogDataFormatter {
       s1 = messageUtils.formatMessageWithTimeLimit(s1, messageFormatter, 5);
       s1 = StringUtils.remove(s1, '\r');
     }
-    if(useMonospaceFont){
+    if (useMonospaceFont) {
       chunks.add(new TextChunkWithStyle(s1, messageMonospacedStyle));
-    }else {
-      chunks.add(new TextChunkWithStyle(s1, mainStyle));
+    } else {
+      chunks.add(new TextChunkWithStyle(s1, messageStyle));
     }
 
 
@@ -217,26 +231,25 @@ public class LogDataFormatter {
   }
 
   private void addMarkedChunk() {
-    chunks.add(new TextChunkWithStyle("\nMarked: ", boldArialStyle));
+    chunks.add(new TextChunkWithStyle("\nMarked: ", propertyStyle));
     if (ld.isMarked()) {
       MarkerColors markerColors = ld.getMarkerColors();
       chunks.add(new TextChunkWithStyle(" " + markerColors.name() + NEW_LINE, getStyleForMarkerColor(markerColors)));
     } else {
-      chunks.add(new TextChunkWithStyle("false\n", boldArialStyle));
+      chunks.add(new TextChunkWithStyle("false\n", propertyValueStyle));
     }
   }
 
   private void addNoteChunk() {
-    String s1 = null;
     Note note = ld.getNote();
     if (note != null && note.getNote() != null && note.getNote().length() > 0) {
-      s1 = "Note: " + note.getNote();
-      chunks.add(new TextChunkWithStyle(s1, boldArialStyle));
+      chunks.add(new TextChunkWithStyle("Note: ", propertyStyle));
+      chunks.add(new TextChunkWithStyle(note.getNote(), messageStyle));
     }
 
   }
 
-  public java.util.List<TextChunkWithStyle> format() throws Exception {
+  public List<TextChunkWithStyle> format() {
 
     LOGGER.trace("Start do in background");
     if (otrosApplication.getConfiguration() != null) {
@@ -247,52 +260,42 @@ public class LogDataFormatter {
       for (String currentChunkOrder : chunkOrderArr) {
         if (currentChunkOrder.contains("date")) {
           //1 date and time
-          chunks.add(getDateChunk());
-        }
-        if (currentChunkOrder.contains("class")) {
+          chunks.addAll(getDateChunk());
+        } else if (currentChunkOrder.contains("class")) {
           //2 class name
-          chunks.add(getClassChunk());
-        }
-        if (currentChunkOrder.contains("method")) {
+          chunks.addAll(getClassChunk());
+        } else if (currentChunkOrder.contains("method")) {
           //3 method name
-          chunks.add(getMethodChunk());
-        }
-        if (currentChunkOrder.contains("level")) {
+          chunks.addAll(getMethodChunk());
+        } else if (currentChunkOrder.contains("level")) {
           //4 logger level
           addLevelChunk();
-        }
-        if (currentChunkOrder.contains("thread")) {
+        } else if (currentChunkOrder.contains("thread")) {
           //5 thread name
-          chunks.add(new TextChunkWithStyle("Thread: " + ld.getThread() + NEW_LINE, classMethodStyle));
-        }
-        if (currentChunkOrder.contains("file")) {
+          chunks.add(new TextChunkWithStyle("Thread:  ", propertyStyle));
+          chunks.add(new TextChunkWithStyle(ld.getThread() + NEW_LINE, valueStyle));
+        } else if (currentChunkOrder.contains("file")) {
           //6 file
           addFileChunk();
-        }
-        if (currentChunkOrder.contains("NDC")) {
+        } else if (currentChunkOrder.contains("NDC")) {
           //7 NDC
           addNDCChunk();
-        }
-        if (currentChunkOrder.contains("logger")) {
+        } else if (currentChunkOrder.contains("logger")) {
           //8 logger name
           addLoggerNameChunk();
-        }
-        if (currentChunkOrder.contains("properties")) {
+        } else if (currentChunkOrder.contains("properties")) {
           //9 properties
           addPropertiesChunk();
-        }
-        if (currentChunkOrder.contains("message")) {
+        } else if (currentChunkOrder.contains("message")) {
           //10 message
           addMessageChunk();
           if (cancelStatus.isCancelled()) {
             return chunks;
           }
-        }
-        if (currentChunkOrder.contains("marked")) {
+        } else if (currentChunkOrder.contains("marked")) {
           //11 marked
           addMarkedChunk();
-        }
-        if (currentChunkOrder.contains("note")) {
+        } else if (currentChunkOrder.contains("note")) {
           //12 note
           addNoteChunk();
         }
@@ -322,11 +325,4 @@ public class LogDataFormatter {
     return style;
   }
 
-  public int getMaximumMessageSize() {
-    return maximumMessageSize;
-  }
-
-  public void setMaximumMessageSize(int maximumMessageSize) {
-    this.maximumMessageSize = maximumMessageSize;
-  }
 }

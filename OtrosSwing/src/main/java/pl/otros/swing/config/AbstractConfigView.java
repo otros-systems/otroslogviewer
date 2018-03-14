@@ -31,13 +31,20 @@ public abstract class AbstractConfigView implements ConfigView {
 
 
   protected void addLabel(String string, char c, JComponent jComponent, JPanel panelToAdd) {
-    addLabel(string,c,jComponent,jComponent,panelToAdd);
+    addLabel(string, c, jComponent, jComponent, panelToAdd);
   }
-  protected void addLabel(String string, char c, JComponent labelFor,JComponent jComponent, JPanel panelToAdd) {
+
+  protected void addLabel(String string, char c, JComponent labelFor, JComponent jComponent, JPanel panelToAdd) {
     JLabel label = new JLabel(string);
     panelToAdd.add(label);
     label.setDisplayedMnemonic(c);
     label.setLabelFor(labelFor);
+    panelToAdd.add(jComponent, "wrap");
+  }
+
+  protected void addLabel(String string, JComponent jComponent, JPanel panelToAdd) {
+    JLabel label = new JLabel(string);
+    panelToAdd.add(label);
     panelToAdd.add(jComponent, "growx, wrap");
   }
 }

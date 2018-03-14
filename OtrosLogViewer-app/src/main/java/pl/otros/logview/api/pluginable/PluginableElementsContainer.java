@@ -30,6 +30,10 @@ public class PluginableElementsContainer<T extends PluginableElement> {
     elements = new HashMap<>();
   }
 
+  public PluginableElementsContainer(Collection<T> e){
+    this();
+    e.forEach(this::addElement);
+  }
   public Collection<T> getElements() {
     return new ArrayList<>(elements.values());
   }

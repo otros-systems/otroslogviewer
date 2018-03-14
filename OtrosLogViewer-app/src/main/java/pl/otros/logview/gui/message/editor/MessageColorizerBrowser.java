@@ -29,7 +29,6 @@ import pl.otros.logview.api.pluginable.PluginableElementsContainer;
 import pl.otros.logview.gui.actions.AbstractActionWithConfirmation;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 import pl.otros.logview.gui.util.DirectoryRestrictedFileSystemView;
-import pl.otros.logview.pluginable.PluginableElementListModel;
 import pl.otros.logview.pluginable.PluginableElementNameListRenderer;
 
 import javax.swing.*;
@@ -47,7 +46,7 @@ public class MessageColorizerBrowser extends JPanel {
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerBrowser.class.getName());
   private final PluginableElementsContainer<MessageColorizer> container;
   private final OtrosApplication otrosApplication;
-  private final JList jList;
+  private final JComboBox jList;
   private final JPanel contentPanel;
   private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_EDITOR = "editor";
@@ -69,23 +68,28 @@ public class MessageColorizerBrowser extends JPanel {
     this.otrosApplication = otrosApplication;
 
     JToolBar toolBar = new JToolBar();
-    editor = new MessageColorizerEditor(otrosApplication.getStatusObserver());
+    editor = new MessageColorizerEditor(otrosApplication.getStatusObserver(), otrosApplication.getTheme());
     JLabel noEditable = new JLabel("Selected MessageColorizer is not editable.", SwingConstants.CENTER);
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 
-    PluginableElementListModel<MessageColorizer> listModel = new PluginableElementListModel<>(container);
-    jList = new JList<>(listModel);
-    jList.setCellRenderer(new PluginableElementNameListRenderer());
+//    PluginableElementListModel<MessageColorizer> listModel = new PluginableElementListModel<>(container);
+    jList = new JComboBox(container.getElements().toArray());
+//    jList.setCellRenderer(new PluginableElementNameListRenderer());
+    jList.setRenderer(new PluginableElementNameListRenderer());
     cardLayout = new CardLayout();
     contentPanel = new JPanel(cardLayout);
     contentPanel.add(editor, CARD_LAYOUT_EDITOR);
     contentPanel.add(noEditable, CARD_LAYOUT_NOT_EDITABLE);
     contentPanel.add(nothingSelected, CARD_LAYOUT_NO_SELECTED);
     cardLayout.show(contentPanel, CARD_LAYOUT_NOT_EDITABLE);
-    JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(jList), contentPanel);
-    mainSplitPane.setDividerLocation(220);
+    final JPanel jPanel = new JPanel(new BorderLayout());
+    jPanel.add(jList,BorderLayout.NORTH);
+    jPanel.add(contentPanel);
 
-    jList.getSelectionModel().addListSelectionListener(e -> {
+//    JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jList, contentPanel);
+//    mainSplitPane.setDividerLocation(220);
+
+    jList.addItemListener(e -> {
       showSelected();
       enableDisableButtonsForSelectedColorizer();
     });
@@ -128,7 +132,8 @@ public class MessageColorizerBrowser extends JPanel {
           removeMessageColorizerWithNullFile();
           applyMessageColorizer(selectedFile);
           saveMessageColorizer(selectedFile);
-          jList.setSelectedValue(mc, true);
+          jList.setSelectedItem(mc);
+//          jList.setSelectedValue(mc, true);
         } catch (ConfigurationException e1) {
           String errorMessage = String.format("Can't save message colorizer: %s", e1.getMessage());
           LOGGER.error(errorMessage);
@@ -155,7 +160,7 @@ public class MessageColorizerBrowser extends JPanel {
           removeMessageColorizerWithNullFile();
           applyMessageColorizer(selectedFile);
           saveMessageColorizer(selectedFile);
-          jList.setSelectedValue(editor.createMessageColorizer(), true);
+          jList.setSelectedItem(editor.createMessageColorizer());
         } catch (ConfigurationException e1) {
           String errorMessage = String.format("Can't save message colorizer: %s", e1.getMessage());
           LOGGER.error(errorMessage);
@@ -197,12 +202,12 @@ public class MessageColorizerBrowser extends JPanel {
     toolBar.add(deleteButton);
     enableDisableButtonsForSelectedColorizer();
     initFileChooser();
-    this.add(mainSplitPane);
+    this.add(jPanel);
     this.add(toolBar, BorderLayout.SOUTH);
   }
 
   protected void deleteSelected() {
-    Object selectedValue = jList.getSelectedValue();
+    Object selectedValue = jList.getSelectedItem();
     if (selectedValue instanceof PropertyPatternMessageColorizer) {
       PropertyPatternMessageColorizer mc = (PropertyPatternMessageColorizer) selectedValue;
       container.removeElement(mc);
@@ -219,7 +224,7 @@ public class MessageColorizerBrowser extends JPanel {
   }
 
   protected void removeMessageColorizerWithNullFile() {
-    PropertyPatternMessageColorizer mc = new PropertyPatternMessageColorizer();
+    PropertyPatternMessageColorizer mc = new PropertyPatternMessageColorizer(otrosApplication.getTheme());
     mc.setFile("");
     container.removeElement(mc);
   }
@@ -267,11 +272,11 @@ public class MessageColorizerBrowser extends JPanel {
     mc.setFile(f.getAbsolutePath());
     mc.setTestMessage(editor.getTextToColorize());
     container.addElement(mc);
-    jList.setSelectedValue(mc, true);
+    jList.setSelectedItem(mc);
   }
 
   protected void createNew() {
-    PropertyPatternMessageColorizer colorizer = new PropertyPatternMessageColorizer();
+    PropertyPatternMessageColorizer colorizer = new PropertyPatternMessageColorizer(otrosApplication.getTheme());
     try {
       colorizer.init(new ByteArrayInputStream(getDefaultContent().getBytes()));
     } catch (ConfigurationException e) {
@@ -279,12 +284,12 @@ public class MessageColorizerBrowser extends JPanel {
     }
     colorizer.setFile("");
     container.addElement(colorizer);
-    jList.setSelectedValue(colorizer, true);
+    jList.setSelectedItem(colorizer);
     saveAsButton.setEnabled(false);
   }
 
   protected void showSelected() {
-    MessageColorizer selectedValue = (MessageColorizer) jList.getSelectedValue();
+    MessageColorizer selectedValue = (MessageColorizer) jList.getSelectedItem();
     boolean actionEnabled = false;
     if (selectedValue == null) {
       cardLayout.show(contentPanel, CARD_LAYOUT_NO_SELECTED);
@@ -334,13 +339,13 @@ public class MessageColorizerBrowser extends JPanel {
 
     @Override
     public String getWarnningMessage() {
-      return String.format("Do you want to delete message colorizer \"%s\"?", ((MessageColorizer) jList.getSelectedValue()).getName());
+      return String.format("Do you want to delete message colorizer \"%s\"?", ((MessageColorizer) jList.getSelectedItem()).getName());
     }
 
   }
 
   private void enableDisableButtonsForSelectedColorizer() {
-    Object selectedValue = jList.getSelectedValue();
+    Object selectedValue = jList.getSelectedItem();
     if (selectedValue != null && selectedValue instanceof PropertyPatternMessageColorizer) {
       saveButton.setEnabled(true);
       saveAsButton.setEnabled(true);

@@ -609,7 +609,7 @@ public class LogViewPanel extends LogViewPanelI {
     for (String g : groups) {
       JMenuItem markerMenuItem = new JMenuItem(automaticMarker.getName());
 
-      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), 16, 16);
+      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), 16, 16,"Ab");
       markerMenuItem.setIcon(icon);
       markerMenuItem.setToolTipText(automaticMarker.getDescription());
       markerMenuItem.addActionListener(new AutomaticMarkUnamrkActionListener(dataTableModel, automaticMarker, mode, statusObserver));

@@ -23,6 +23,7 @@ import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.json.JsonMessageFormatter;
 import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
@@ -80,7 +81,7 @@ public class LvDynamicLoader {
     pluginInfos = new ArrayList<>();
   }
 
-  public void loadAll() throws IOException, InitializationException {
+  public void loadAll(Theme theme) throws IOException, InitializationException {
     updateStatus("Loading automatic markers");
     loadAutomaticMarkers();
 
@@ -98,7 +99,7 @@ public class LvDynamicLoader {
     }
 
     updateStatus("Loading message colorizers");
-    loadMessageColorized();
+    loadMessageColorized(theme);
 
     updateStatus("Loading message formatters");
     loadMessageFormatter();
@@ -126,13 +127,13 @@ public class LvDynamicLoader {
     addElementsToList(pluginableElementsContainer, messageFormatters, MessageFormatter.MESSAGE_FORMATTER_VERSION_1);
   }
 
-  private void loadMessageColorized() {
+  private void loadMessageColorized(Theme theme) {
     File file = new File("./plugins/message/");
-    messageColorizers.addAll(messageColorizerLoader.loadInternal());
+    messageColorizers.addAll(messageColorizerLoader.loadInternal(theme));
     messageColorizers.addAll(messageColorizerLoader.loadFromJars(file));
-    messageColorizers.addAll(messageColorizerLoader.loadFromProperies(file));
+    messageColorizers.addAll(messageColorizerLoader.loadFromProperties(file, theme));
     messageColorizers.addAll(messageColorizerLoader.loadFromJars(AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS));
-    messageColorizers.addAll(messageColorizerLoader.loadFromProperies(AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS));
+    messageColorizers.addAll(messageColorizerLoader.loadFromProperties(AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS, theme));
     PluginableElementsContainer<MessageColorizer> pluginableElementsContainer = AllPluginables.getInstance().getMessageColorizers();
     addElementsToList(pluginableElementsContainer, messageColorizers, MessageColorizer.MESSAGE_COLORIZER_VERSION_CURRENT);
 

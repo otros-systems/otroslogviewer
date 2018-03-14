@@ -15,12 +15,14 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.testng.AssertJUnit;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.ThemeConfig;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
@@ -44,7 +46,7 @@ public class StackTraceColorizerTest {
   public void testColorizingNeeded() throws IOException {
     //given
     String string = IOUtils.toString(getSystemResourceAsStream("stacktrace/stacktrace.txt"), UTF_8);
-    StackTraceColorizer colorizer = new StackTraceColorizer();
+    StackTraceColorizer colorizer = new StackTraceColorizer(new ThemeConfig(new BaseConfiguration()));
     //when
     boolean colorizingNeeded = colorizer.colorizingNeeded(string);
     //then
@@ -55,7 +57,7 @@ public class StackTraceColorizerTest {
   public void findExceptionNameAndMessage() throws IOException, BadLocationException {
     //given
     String stacktrace = IOUtils.toString(getSystemResourceAsStream("stacktrace/stacktrace3.txt"), UTF_8).replace("\r", "");
-    StackTraceColorizer colorizer = new StackTraceColorizer();
+    StackTraceColorizer colorizer = new StackTraceColorizer(new ThemeConfig(new BaseConfiguration()));
     colorizer.initStyles();
     final Style style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
@@ -113,7 +115,7 @@ public class StackTraceColorizerTest {
       "\tat A.ExTest.readMyFile(ExTest.java:19) //Some code\n" +
       "  at ExTest.main(ExTest.java:7)\n";
 
-    StackTraceColorizer colorizer = new StackTraceColorizer();
+    StackTraceColorizer colorizer = new StackTraceColorizer(new ThemeConfig(new BaseConfiguration()));
 
     //when
     Collection<MessageFragmentStyle> colorize = colorizer.colorize(string);

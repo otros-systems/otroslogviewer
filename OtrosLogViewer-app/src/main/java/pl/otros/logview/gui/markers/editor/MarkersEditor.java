@@ -16,10 +16,12 @@
 package pl.otros.logview.gui.markers.editor;
 
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.configuration.BaseConfiguration;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.theme.ThemeConfig;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
 import pl.otros.logview.loader.LvDynamicLoader;
@@ -130,7 +132,7 @@ public class MarkersEditor extends JPanel {
   }
 
   public static void main(String[] args) throws IOException, InitializationException {
-    LvDynamicLoader.getInstance().loadAll();
+    LvDynamicLoader.getInstance().loadAll(new ThemeConfig(new BaseConfiguration()));
 
     JFrame frame = new JFrame("Markers editor");
     frame.getContentPane().setLayout(new BorderLayout());
