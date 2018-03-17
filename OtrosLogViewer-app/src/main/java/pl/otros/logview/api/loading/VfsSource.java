@@ -1,28 +1,32 @@
 package pl.otros.logview.api.loading;
 
 
+import static pl.otros.logview.gui.session.OpenMode.FROM_START;
+
 import org.apache.commons.vfs2.FileObject;
+
+import pl.otros.logview.gui.session.OpenMode;
 
 public class VfsSource extends Source {
 
   private final FileObject fileObject;
-  private final long position;
+  private final OpenMode openMode;
 
   public VfsSource(FileObject fileObject) {
-    this(fileObject,0);
+    this(fileObject, FROM_START);
   }
 
-  public VfsSource(FileObject fileObject, long position) {
+  public VfsSource(FileObject fileObject, OpenMode openMode) {
     this.fileObject = fileObject;
-    this.position = position;
+    this.openMode = openMode;
   }
 
   public FileObject getFileObject() {
     return fileObject;
   }
 
-  public long getPosition() {
-    return position;
+  public OpenMode getOpenMode() {
+    return openMode;
   }
 
   @Override
@@ -36,7 +40,7 @@ public class VfsSource extends Source {
   public String toString() {
     return "VfsSource{" +
         "fileObject=" + fileObject +
-        ", position=" + position +
+        ", openMode=" + openMode +
         '}';
   }
 }

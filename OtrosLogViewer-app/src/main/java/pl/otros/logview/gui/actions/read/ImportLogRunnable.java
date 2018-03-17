@@ -22,7 +22,6 @@ import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataStore;
 import pl.otros.logview.api.parser.ParsingContext;
 
@@ -48,7 +47,7 @@ public final class ImportLogRunnable implements Runnable {
     ParsingContext parsingContext = new ParsingContext(file.getName().getFriendlyURI(), file.getName().getBaseName());
     final LogDataTableModel dataTableModel = panel.getDataTableModel();
     final LogDataStore logDataStore = dataTableModel.getLogDataStore();
-    panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObserableInputStreamImpl()));
+    panel.addHierarchyListener(new ReadingStopperForRemove(openFileObject.getObservableInputStreamImpl()));
     importer.initParsingContext(parsingContext);
     try {
       importer.importLogs(openFileObject.getContentInputStream(), logDataStore, parsingContext);
@@ -60,6 +59,6 @@ public final class ImportLogRunnable implements Runnable {
       dataTableModel.fireTableDataChanged();
       panel.switchToContentView();
     });
-    Utils.closeQuietly(openFileObject.getFileObject());
+    openFileObject.close();
   }
 }

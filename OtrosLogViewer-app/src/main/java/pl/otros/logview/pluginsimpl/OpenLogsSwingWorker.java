@@ -18,7 +18,6 @@ package pl.otros.logview.pluginsimpl;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
@@ -29,7 +28,6 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
-import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.plugins.PluginContext;
 import pl.otros.logview.gui.actions.TailLogActionListener;
@@ -37,6 +35,8 @@ import pl.otros.logview.gui.actions.read.ReadingStopperForRemove;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
 import javax.swing.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -106,24 +106,24 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     Runnable r = () -> {
       ParsingContext parsingContext = new ParsingContext(loadingInfo.getFriendlyUrl(), loadingInfo.getFileObject().getName()
         .getBaseName());
-      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl()));
+      logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(loadingInfo.getObservableInputStreamImpl()));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(logDataCollector));
       logViewPanelWrapper.addHierarchyListener(new ReadingStopperForRemove(new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
       importer.initParsingContext(parsingContext);
       try {
-        loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-      } catch (FileSystemException e1) {
+        loadingInfo.resetLastFileSize();
+      } catch (IOException e1) {
         LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
       }
       while (parsingContext.isParsingInProgress()) {
         try {
           importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-          if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+          if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
             break;
           }
           Thread.sleep(1000);
 
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
         }
@@ -132,7 +132,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       parsingContext.setParsingInProgress(false);
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
       pluginContext.getOtrosApplication().getStatusObserver().updateStatus("File " + loadingInfo.getFriendlyUrl() + " stop tailing");
-      Utils.closeQuietly(loadingInfo.getFileObject());
+      loadingInfo.close();
     };
     Thread t = new Thread(r, "Log reader-" + loadingInfo.getFileObject().getName().getFriendlyURI());
     t.setDaemon(true);
@@ -143,7 +143,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     String baseName = loadingInfo.getFileObject().getName().getBaseName();
     ParsingContext parsingContext = new ParsingContext(friendlyURI, baseName);
     logViewPanelWrapper.addHierarchyListener(
-      new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObserableInputStreamImpl(),
+      new TailLogActionListener.ReadingStopperForRemove(loadingInfo.getObservableInputStreamImpl(),
         logDataCollector,
         new TailLogActionListener.ParsingContextStopperForClosingTab(parsingContext)));
   }
@@ -165,7 +165,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
     publish("Opening  log files");
     for (final FileObject file : fileObjects) {
       try {
-        list.add(Utils.openFileObject(file, true));
+        list.add(new LoadingInfo(file, true));
       } catch (Exception e1) {
         String msg = String.format("Can't open file %s: %s", file.getName().getFriendlyURI(), e1.getMessage());
         publish(msg);

@@ -45,7 +45,7 @@ public class LogFileInNewTabOpener {
       if (file.getName().getScheme().startsWith("http")) {
         tailing = false;
       }
-      final LoadingInfo openFileObject = Utils.openFileObject(file, tailing);
+      final LoadingInfo openFileObject = new LoadingInfo(file, tailing);
 
       LogImporter importer = chooseImporter(openFileObject);
       if (isInvalid(importer)) {
@@ -69,7 +69,7 @@ public class LogFileInNewTabOpener {
   private LogViewPanelWrapper createPanelForLog(FileObject file, final LoadingInfo openFileObject, LogImporter importer) {
     return new LogViewPanelWrapper(
       file.getName().getBaseName(),
-      openFileObject.getObserableInputStreamImpl(),
+      openFileObject.getObservableInputStreamImpl(),
       importer.getTableColumnsToUse(), otrosApplication);
   }
 

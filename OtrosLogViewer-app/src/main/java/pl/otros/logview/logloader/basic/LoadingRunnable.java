@@ -20,6 +20,7 @@ import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.stats.StatsLogDataCollector;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class LoadingRunnable implements Runnable {
     this.importer = logImporter;
     String scheme = "";
     if (source instanceof VfsSource) {
-      scheme = ((VfsSource) source).getFileObject().getName().getScheme();
+      scheme = ((VfsSource)source).getFileObject().getName().getScheme();
     } else if (source instanceof SocketSource) {
       scheme = "socket";
     }
@@ -125,7 +126,7 @@ public class LoadingRunnable implements Runnable {
     try {
       statsService.importLogsFromScheme(vfs.getFileObject().getName().getScheme());
       statsService.logParserUsed(importer);
-      final LoadingInfo loadingInfo = Utils.openFileObject(vfs.getFileObject(), true);
+      final LoadingInfo loadingInfo = new LoadingInfo(vfs.getFileObject(), true, vfs.getOpenMode());
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElse(logDataCollector);
@@ -134,17 +135,16 @@ public class LoadingRunnable implements Runnable {
         loadingInfo.getFileObject().getName().getBaseName());
 
       importer.initParsingContext(parsingContext);
-      Utils.reloadFileObject(loadingInfo, vfs.getPosition());
       try {
-        loadingInfo.setLastFileSize(loadingInfo.getFileObject().getContent().getSize());
-      } catch (FileSystemException e1) {
+        loadingInfo.resetLastFileSize();
+      } catch (IOException e1) {
         LOGGER.warn("Can't initialize start position for tailing. Can duplicate some values for small files");
       }
 
       while (parsingContext.isParsingInProgress()) {
         try {
           SleepAction action;
-          obserableInputStreamImpl = Optional.of(loadingInfo.getObserableInputStreamImpl());
+          obserableInputStreamImpl = Optional.of(loadingInfo.getObservableInputStreamImpl());
 
           synchronized (this) {
             if (stop) {
@@ -167,15 +167,15 @@ public class LoadingRunnable implements Runnable {
             importer.importLogs(loadingInfo.getContentInputStream(), collector, parsingContext);
             Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             statsService.bytesRead(loadingInfo.getFileObject().getName().getScheme(), afterRead - beforeRead);
-            if (!loadingInfo.isTailing() || loadingInfo.isGziped()) {
+            if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
               break;
             }
           }
 
           Thread.sleep(sleepTime);
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
           updateStats(loadingInfo);
-          Utils.reloadFileObject(loadingInfo);
+          loadingInfo.reloadIfFileSizeChanged();
 
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());
@@ -185,7 +185,7 @@ public class LoadingRunnable implements Runnable {
       LOGGER.info(String.format("Loading of files %s is finished", loadingInfo.getFriendlyUrl()));
       parsingContext.setParsingInProgress(false);
       LOGGER.info("File " + loadingInfo.getFriendlyUrl() + " loaded");
-      Utils.closeQuietly(loadingInfo.getFileObject());
+      loadingInfo.close();
     } catch (Exception e) {
       LOGGER.error("Error when reading log", e);
     } finally {

@@ -77,7 +77,7 @@ public class LoadingRunnableTest {
   public void setUp() throws IOException {
     collector = new ProxyLogDataCollector();
     file = File.createTempFile("LoadingRunnableTest_", ".txt");
-    vfsSource = new VfsSource(VFS.getManager().toFileObject(file), 0);
+    vfsSource = new VfsSource(VFS.getManager().toFileObject(file));
     outputStream = new FileOutputStream(file, false);
 
   }

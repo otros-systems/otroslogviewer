@@ -14,6 +14,7 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.LogPatternParserEditor;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.api.parser.ParsingContext;
@@ -272,8 +273,8 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
   }
 
   protected void loadLogContent(FileObject fileObject) throws IOException {
-    try (InputStream is = fileObject.getContent().getInputStream()) {
-      byte[] loadProbe = Utils.loadProbe(is, 50 * 1024);
+    try (LoadingInfo logFile = new LoadingInfo(fileObject)) {
+      byte[] loadProbe = logFile.getInputStreamBufferedStart();
       logFileContent.setText(new String(loadProbe));
       logFileContent.setCaretPosition(0);
     } finally {
@@ -281,6 +282,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
     }
   }
 
+  @Override
   public LogViewPanel getLogViewPanel() {
     return logViewPanel;
   }

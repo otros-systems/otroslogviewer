@@ -55,7 +55,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -561,8 +560,8 @@ public class AdvanceOpenPanel extends JPanel {
               byte[] bytes = new byte[0];
               PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
               publish(new AddingDetail(CanParse.TESTING, possibleLogImporters, new ContentProbe(bytes)));
-              try (InputStream in = fileObjectAt.getFileObject().getContent().getInputStream()) {
-                bytes = Utils.loadProbe(in, 4000, true);
+              try (LoadingInfo logFileContent = new LoadingInfo(fileObjectAt.getFileObject())) {
+                bytes = logFileContent.getInputStreamBufferedStart();
                 possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
                 if (possibleLogImporters.getLogImporter().isPresent()) {
                   canParse = CanParse.YES;
@@ -737,13 +736,13 @@ public class AdvanceOpenPanel extends JPanel {
             continue;
           }
           publish(new Progress(progress, fileObjects.size(), "Processing " + file.getFileName().getBaseName()));
-          final LoadingInfo e1 = Utils.openFileObject(file.getFileObject(), true);
+          final LoadingInfo e1 = new LoadingInfo(file.getFileObject(), true);
           loadingBeans.add(new LoadingBean(file, e1));
           Utils.closeQuietly(file.getFileObject());
         } catch (Exception e1) {
           final String msg = String.format("Can't open file %s: %s", file.getFileName().getFriendlyURI(), e1.getMessage());
           LOGGER.warn(msg);
-          loadingBeans.forEach(li -> Utils.closeQuietly(li.loadingInfo.getFileObject()));
+          loadingBeans.forEach(li -> li.loadingInfo.close());
           showMainPanel();
           e1.printStackTrace();
           throw e1;
@@ -753,7 +752,7 @@ public class AdvanceOpenPanel extends JPanel {
         final LogLoadingSession session = logLoader.startLoading(
             new VfsSource(
                 l.loadingInfo.getFileObject(),
-                l.fileObjectToImport.getOpenMode().equals(OpenMode.FROM_END) ? l.loadingInfo.getLastFileSize() : 0
+                l.fileObjectToImport.getOpenMode()
             ),
             l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
             logDataCollector,
