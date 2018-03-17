@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ *******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +16,17 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.editor;
 
-import jsyntaxpane.DefaultSyntaxKit;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.message.pattern.PropertyPatternMessageColorizer;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
+import pl.otros.logview.gui.util.SyntaxPane;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -45,29 +48,30 @@ public class MessageColorizerEditor extends JPanel {
 
   private static String defaultContent;
 
-  private final JEditorPane editorPane;
+  private final RSyntaxTextArea editorPane;
 
   private final JTextPane textPane;
 
   private final DelayedSwingInvoke deleyedSwingInvoke;
 
   private final StatusObserver statusObserver;
+  private Theme theme;
 
   private String file;
   private final JLabel label;
 
-  public MessageColorizerEditor(StatusObserver observer) {
+  MessageColorizerEditor(StatusObserver observer, Theme theme) {
     statusObserver = observer;
+    this.theme = theme;
     this.setLayout(new BorderLayout());
-    DefaultSyntaxKit.initKit();
-    editorPane = new JEditorPane();
-    JScrollPane comp = new JScrollPane(editorPane);
+
+    editorPane = SyntaxPane.propertiesTextArea(theme);
+    JScrollPane comp = new JScrollPane(this.editorPane);
     JLabel propertyEditorLabel = new JLabel("Enter you message colorizer properties");
-    editorPane.setContentType("text/properties");
     label = new JLabel();
     String defaultContent = getDefaultContent();
     try {
-      editorPane.getDocument().insertString(0, defaultContent, null);
+      this.editorPane.getDocument().insertString(0, defaultContent, null);
     } catch (BadLocationException e1) {
       LOGGER.error(String.format("Can't set text: %s", e1.getMessage()));
     }
@@ -96,7 +100,7 @@ public class MessageColorizerEditor extends JPanel {
       public void changedUpdate(DocumentEvent e) {
       }
     };
-    editorPane.getDocument().addDocumentListener(documentListener);
+    this.editorPane.getDocument().addDocumentListener(documentListener);
 
     JLabel textPaneLabel = new JLabel("Enter log message body");
     textPane = new JTextPane();
@@ -108,14 +112,14 @@ public class MessageColorizerEditor extends JPanel {
     JPanel south = new JPanel(new BorderLayout());
     south.add(textPaneLabel, BorderLayout.NORTH);
     south.add(new JScrollPane(textPane));
-    JSplitPane jSplitPaneEditors = new JSplitPane(SwingConstants.HORIZONTAL, north, south);
+    JSplitPane jSplitPaneEditors = new JSplitPane(JSplitPane.VERTICAL_SPLIT, north, south);
     jSplitPaneEditors.setOneTouchExpandable(true);
-    jSplitPaneEditors.setDividerLocation(0.5d);
+    jSplitPaneEditors.setDividerLocation(200);
     this.add(jSplitPaneEditors);
     this.add(label, BorderLayout.SOUTH);
   }
 
-  protected void refreshView() {
+  private void refreshView() {
     LOGGER.info("refreshing view");
     Style defaultStyle = textPane.getStyle(StyleContext.DEFAULT_STYLE);
     String text = textPane.getText();
@@ -136,17 +140,17 @@ public class MessageColorizerEditor extends JPanel {
   }
 
   protected PropertyPatternMessageColorizer createMessageColorizer() throws ConfigurationException {
-    PropertyPatternMessageColorizer propertyPatternMessageColorizer = new PropertyPatternMessageColorizer();
+    PropertyPatternMessageColorizer propertyPatternMessageColorizer = new PropertyPatternMessageColorizer(theme);
     ByteArrayInputStream bin = new ByteArrayInputStream(editorPane.getText().getBytes());
     propertyPatternMessageColorizer.init(bin);
     propertyPatternMessageColorizer.setFile(file);
     return propertyPatternMessageColorizer;
   }
 
-  protected String getDefaultContent() {
+  private String getDefaultContent() {
     if (defaultContent == null) {
       try {
-        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
+        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT), "UTF-8");
       } catch (IOException e) {
         LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }

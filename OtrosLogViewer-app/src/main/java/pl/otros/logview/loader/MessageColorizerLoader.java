@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.BaseLoader;
 import pl.otros.logview.api.pluginable.MessageColorizer;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageColorizer;
 import pl.otros.logview.gui.message.StackTraceColorizer;
@@ -35,11 +36,11 @@ public class MessageColorizerLoader {
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerLoader.class.getName());
   private final BaseLoader baseLoader = new BaseLoader();
 
-  public ArrayList<MessageColorizer> loadInternal() {
+  public ArrayList<MessageColorizer> loadInternal(Theme theme) {
     ArrayList<MessageColorizer> list = new ArrayList<>();
-    list.add(new SearchResultColorizer());
-    list.add(new StackTraceColorizer());
-    list.add(new SoapMessageColorizer());
+    list.add(new SearchResultColorizer(theme));
+    list.add(new StackTraceColorizer(theme));
+    list.add(new SoapMessageColorizer(theme));
     return list;
 
   }
@@ -49,7 +50,7 @@ public class MessageColorizerLoader {
 
   }
 
-  public ArrayList<MessageColorizer> loadFromProperies(File dir) {
+  public ArrayList<MessageColorizer> loadFromProperties(File dir, Theme theme) {
     ArrayList<MessageColorizer> list = new ArrayList<>();
     File[] listFiles = dir.listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith("pattern")));
     if (listFiles != null) {
@@ -57,7 +58,7 @@ public class MessageColorizerLoader {
         FileInputStream in = null;
         try {
           in = new FileInputStream(file);
-          PropertyPatternMessageColorizer colorizer = new PropertyPatternMessageColorizer();
+          PropertyPatternMessageColorizer colorizer = new PropertyPatternMessageColorizer(theme);
           colorizer.init(in);
           colorizer.setFile(file.getAbsolutePath());
           list.add(colorizer);

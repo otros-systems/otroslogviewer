@@ -23,13 +23,14 @@ import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -121,20 +122,25 @@ public class MessageUpdateUtils {
   }
 
 
-  private static void markSearchResult(List<MessageFragmentStyle> searchResultPositions, OtrosJTextWithRulerScrollPane<? extends
-    JTextComponent> otrosJTextWithRulerScrollPane) {
+  private static void markSearchResult(
+    List<MessageFragmentStyle> searchResultPositions,
+    OtrosJTextWithRulerScrollPane<? extends JTextComponent> otrosJTextWithRulerScrollPane,
+    Theme theme
+  ) {
     RulerBarHelper.clearMarkers(otrosJTextWithRulerScrollPane);
     otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().removeAllHighlights();
-    Highlighter.HighlightPainter highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+    Highlighter.HighlightPainter highlighter = new DefaultHighlighter.DefaultHighlightPainter(theme.getColor(ThemeKey.SEARCH_RESULT));
 
     for (MessageFragmentStyle mfs : searchResultPositions) {
       int position = mfs.getOffset();
-      RulerBarHelper.addTextMarkerToPosition(otrosJTextWithRulerScrollPane, position, "Search result",
-        Color.YELLOW.darker().darker().darker(),
+      RulerBarHelper.addTextMarkerToPosition(
+        otrosJTextWithRulerScrollPane,
+        position,
+        "Search result",
+        theme.getColor(ThemeKey.SEARCH_RESULT),
         RulerBarHelper.TooltipMode.LINE_NUMBER_PREFIX);
       try {
-        otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().addHighlight(mfs.getOffset(), mfs.getLength() + mfs.getOffset(),
-          highlighter);
+        otrosJTextWithRulerScrollPane.getjTextComponent().getHighlighter().addHighlight(mfs.getOffset(), mfs.getLength() + mfs.getOffset(), highlighter);
       } catch (BadLocationException e) {
         LOGGER.error("Cant get text of log detail view for highlighting search result", e);
       }
@@ -142,8 +148,10 @@ public class MessageUpdateUtils {
     LOGGER.trace("Update with chunks finished");
   }
 
-  public static void highlightSearchResult(OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane,
-                                           PluginableElementsContainer<MessageColorizer> colorizersContainer) {
+  public static void highlightSearchResult(
+    OtrosJTextWithRulerScrollPane<JTextPane> otrosJTextWithRulerScrollPane,
+    PluginableElementsContainer<MessageColorizer> colorizersContainer,
+    Theme theme) {
     MessageUpdateUtils messageUpdateUtils = new MessageUpdateUtils();
     StyledDocument styledDocument = otrosJTextWithRulerScrollPane.getjTextComponent().getStyledDocument();
     String text;
@@ -158,7 +166,7 @@ public class MessageUpdateUtils {
     if (messageColorizer != null) {
       messageFragmentStyles.addAll(messageUpdateUtils.colorizeMessageWithTimeLimit(text, 0, messageColorizer, 10));
     }
-    markSearchResult(messageFragmentStyles, otrosJTextWithRulerScrollPane);
+    markSearchResult(messageFragmentStyles, otrosJTextWithRulerScrollPane, theme);
   }
 
 

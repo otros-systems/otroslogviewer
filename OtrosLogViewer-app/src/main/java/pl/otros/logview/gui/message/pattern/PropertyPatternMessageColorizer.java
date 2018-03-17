@@ -21,9 +21,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.message.MessageColorizerUtils;
 
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleContext;
 import java.io.InputStream;
@@ -58,6 +58,11 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
   private String file;
   private String testMessage;
   private PropertiesConfiguration propertiesConfiguration;
+  private Theme theme;
+
+  public PropertyPatternMessageColorizer(Theme theme) {
+    this.theme = theme;
+  }
 
   public void init(InputStream in) throws ConfigurationException {
     propertiesConfiguration = new PropertiesConfiguration();
@@ -95,12 +100,12 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
   }
 
   @Override
-  public Collection<MessageFragmentStyle> colorize(String message) throws BadLocationException {
+  public Collection<MessageFragmentStyle> colorize(String message) {
     Collection<MessageFragmentStyle> list = new ArrayList<>();
     StyleContext styleContext = new StyleContext();
     for (int i = 0; i <= groupCount; i++) {
       if (StyleProperties.isStyleForGroupDeclared(i, configuration)) {
-        Style style = StyleProperties.getStyle(styleContext, configuration, "propStyle" + getName(), i);
+        Style style = StyleProperties.getStyle(theme.themeType(), styleContext, configuration, "propStyle" + getName(), i);
         list.addAll(MessageColorizerUtils.colorizeRegex(style, message, pattern, i));
       }
     }

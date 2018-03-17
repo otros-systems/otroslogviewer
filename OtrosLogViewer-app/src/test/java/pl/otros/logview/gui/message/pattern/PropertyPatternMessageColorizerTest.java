@@ -15,10 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.pattern;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.ThemeConfig;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
@@ -58,7 +60,7 @@ public class PropertyPatternMessageColorizerTest {
     p.store(bout, "");
     ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
 
-    colorizer = new PropertyPatternMessageColorizer();
+    colorizer = new PropertyPatternMessageColorizer(new ThemeConfig(new BaseConfiguration()));
     colorizer.init(bin);
   }
 

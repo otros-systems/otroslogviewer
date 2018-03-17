@@ -30,7 +30,7 @@ public class AutomaticMarkerRenderer extends DefaultListCellRenderer implements 
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
     JLabel listCellRendererComponent = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     AutomaticMarker marker = (AutomaticMarker) value;
-    listCellRendererComponent.setIcon(new ColorIcon(marker.getColors().getBackground(), marker.getColors().getForeground()));
+    listCellRendererComponent.setIcon(new ColorIcon(marker.getColors().getBackground(), marker.getColors().getForeground(),"Ab"));
 
     listCellRendererComponent.setText(marker.getName());
     return listCellRendererComponent;

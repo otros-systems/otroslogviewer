@@ -16,6 +16,7 @@
 package pl.otros.logview.batch;
 
 import com.google.common.base.Throwables;
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.vfs2.FileObject;
@@ -32,6 +33,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.LoadingInfo;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
+import pl.otros.logview.api.theme.ThemeConfig;
 import pl.otros.logview.gui.actions.read.AutoDetectingImporterProvider;
 import pl.otros.logview.loader.LvDynamicLoader;
 
@@ -52,7 +54,7 @@ public class BatchProcessor {
   public BatchProcessor() throws IOException, InitializationException {
     files = new ArrayList<>();
     batchProcessingContext = new BatchProcessingContext();
-    LvDynamicLoader.getInstance().loadAll();
+    LvDynamicLoader.getInstance().loadAll(new ThemeConfig(new BaseConfiguration()));
   }
 
   public void process() throws Exception {

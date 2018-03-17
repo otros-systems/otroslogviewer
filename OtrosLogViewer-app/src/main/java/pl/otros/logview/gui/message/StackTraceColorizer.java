@@ -18,12 +18,13 @@ package pl.otros.logview.gui.message;
 import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.SortedSet;
@@ -53,8 +54,10 @@ public class StackTraceColorizer implements MessageColorizer {
   private Style styleCodeComment;
   private final StackTraceFinder stackTraceFinder;
   private StyleContext styleContext;
+  private Theme theme;
 
-  public StackTraceColorizer() {
+  public StackTraceColorizer(Theme theme) {
+    this.theme = theme;
     stackTraceFinder = new StackTraceFinder();
   }
 
@@ -64,22 +67,22 @@ public class StackTraceColorizer implements MessageColorizer {
     StyleConstants.setFontFamily(defaultStyle, "courier");
     styleStackTrace = styleContext.addStyle("stackTrace", defaultStyle);
 
-    StyleConstants.setBackground(styleStackTrace, new Color(255, 224, 193));
-    StyleConstants.setForeground(styleStackTrace, Color.BLACK);
+    StyleConstants.setBackground(styleStackTrace, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_BACKGROUND));
+    StyleConstants.setForeground(styleStackTrace, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_FOREGROUND));
     stylePackage = styleContext.addStyle("stylePackage", styleStackTrace);
     styleClass = styleContext.addStyle("styleClass", stylePackage);
-    StyleConstants.setForeground(styleClass, new Color(11, 143, 61));
+    StyleConstants.setForeground(styleClass, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_CLASS));
     StyleConstants.setBold(styleClass, true);
     styleMethod = styleContext.addStyle("styleMethod", styleStackTrace);
-    StyleConstants.setForeground(styleMethod, new Color(83, 112, 223));
+    StyleConstants.setForeground(styleMethod, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_METHOD));
     StyleConstants.setItalic(styleMethod, true);
     StyleConstants.setBold(styleMethod, true);
     styleFile = styleContext.addStyle("styleFile", styleStackTrace);
-    StyleConstants.setForeground(styleFile, Color.BLACK);
+    StyleConstants.setForeground(styleFile, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_FLE));
     StyleConstants.setUnderline(styleFile, true);
 
     styleCodeComment = styleContext.addStyle("styleCodeComment", defaultStyle);
-    StyleConstants.setForeground(styleCodeComment, Color.DARK_GRAY);
+    StyleConstants.setForeground(styleCodeComment, theme.getColor(ThemeKey.LOG_DETAILS_STACKTRACE_COMMENT));
     StyleConstants.setItalic(styleCodeComment, true);
   }
 

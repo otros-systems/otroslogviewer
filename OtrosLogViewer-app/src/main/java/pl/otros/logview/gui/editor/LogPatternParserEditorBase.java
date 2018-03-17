@@ -1,9 +1,9 @@
 package pl.otros.logview.gui.editor;
 
-import jsyntaxpane.DefaultSyntaxKit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.VFS;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -21,6 +21,7 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.gui.LogViewPanel;
 import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
+import pl.otros.logview.gui.util.SyntaxPane;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
   private JButton loadLog;
   private JButton saveParser;
   protected JTextArea logFileContent;
-  protected JEditorPane propertyEditor;
+  protected RSyntaxTextArea propertyEditor;
   protected LogViewPanel logViewPanel;
   private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private JLabel logFileContentLabel;
@@ -129,8 +130,8 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
     testParser = new JButton("Test parser", Icons.WRENCH_ARROW);
     saveParser = new JButton("Save", Icons.DISK);
     logFileContent = new JTextArea();
-    DefaultSyntaxKit.initKit();
-    propertyEditor = new JEditorPane();
+
+    propertyEditor = SyntaxPane.propertiesTextArea(otrosApplication.getTheme());
 
     logFileContent = new JTextArea();
     logViewPanel = new LogViewPanel(new LogDataTableModel(), TableColumns.ALL_WITHOUT_LOG_SOURCE, otrosApplication);
@@ -175,13 +176,9 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
 
     addHierarchyListener(e -> mainSplit.setDividerLocation(0.5));
     add(mainSplit);
-
-    propertyEditor.setContentType("text/properties");
-
   }
 
   protected void loadDefaultPropertyEditorContent() {
-
     propertyEditor.setText(logPatternText);
     propertyEditor.setCaretPosition(0);
   }

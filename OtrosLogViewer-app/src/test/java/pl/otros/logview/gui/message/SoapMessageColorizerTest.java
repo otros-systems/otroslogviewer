@@ -16,10 +16,12 @@
 
 package pl.otros.logview.gui.message;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
 import org.apache.commons.io.IOUtils;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
+import pl.otros.logview.api.theme.ThemeConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +30,7 @@ import java.util.HashMap;
 
 public class SoapMessageColorizerTest {
 
-	private final SoapMessageColorizer colorizer = new SoapMessageColorizer();
+	private final SoapMessageColorizer colorizer = new SoapMessageColorizer(new ThemeConfig(new BaseConfiguration()));
 
 	protected String loadResources(String resources) throws IOException {
 		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources);
@@ -47,8 +49,8 @@ public class SoapMessageColorizerTest {
 
 		AssertJUnit.assertEquals(map.get(Integer.valueOf(88)).getStyle(), colorizer.styleOperator);
 		AssertJUnit.assertEquals(map.get(Integer.valueOf(89)).getStyle(), colorizer.styleElementName);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttribtuteName);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttribtuteValue);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttributeName);
+		AssertJUnit.assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttributeValue);
 		AssertJUnit.assertEquals(map.get(Integer.valueOf(180)).getStyle(), colorizer.styleContent);
 	}
 }
