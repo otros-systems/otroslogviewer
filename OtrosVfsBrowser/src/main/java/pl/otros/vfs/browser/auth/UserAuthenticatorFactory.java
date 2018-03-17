@@ -20,6 +20,8 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class UserAuthenticatorFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserAuthenticatorFactory.class);
 
@@ -34,9 +36,8 @@ public class UserAuthenticatorFactory {
     } else if (url.startsWith("ftp://")) {
       authenticator = new UserPassUserAuthenticator(authStore, url, fileSystemOptions);
     }
-    UseCentralsFromSessionUserAuthenticator fromSessionUserAuthenticator = new UseCentralsFromSessionUserAuthenticator(authStore,
-        sessionAuthStore,url,fileSystemOptions,authenticator);
-    return fromSessionUserAuthenticator;
+    LOGGER.info("Returning authenticator {}", Optional.ofNullable(authenticator).map(a ->a.getClass().getName()).orElse("?"));
+    return new UseCentralsFromSessionUserAuthenticator(authStore, sessionAuthStore, url, fileSystemOptions, authenticator);
 
   }
 

@@ -1,6 +1,5 @@
 package pl.otros.swing.config.test;
 
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
 import pl.otros.swing.config.ConfigComponent;
@@ -14,7 +13,7 @@ import java.io.File;
 
 public class ShowConfigTest {
   public static void main(String[] args) throws UnsupportedLookAndFeelException {
-    UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+//    UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
 //    OtrosApplication otrosApplication = new OtrosApplication();
 //    otrosApplication.setConfiguration(new DataConfiguration(new BaseConfiguration()));
 //    DataConfiguration configuration = otrosApplication.getConfiguration();
