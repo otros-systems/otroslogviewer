@@ -16,9 +16,9 @@
 
 package pl.otros.vfs.browser.actions;
 
-import pl.otros.vfs.browser.VfsBrowser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.vfs.browser.VfsBrowser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,129 +28,128 @@ import java.util.concurrent.Executors;
 
 public abstract class BaseNavigateAction extends AbstractAction {
 
-	private static final int SWITCH_TO_LOADING_TIME = 120;
+  private static final int SWITCH_TO_LOADING_TIME = 120;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(BaseNavigateAction.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaseNavigateAction.class);
 
-	public VfsBrowser browser;
-	private static Executor executor = Executors.newSingleThreadExecutor();
-	private volatile SwingWorker<Void, Void> showLoadingAfterDelayWorker;
-	private Component focusOwner;
+  public VfsBrowser browser;
+  private static Executor executor = Executors.newCachedThreadPool();
+  private volatile SwingWorker<Void, Void> showLoadingAfterDelayWorker;
+  private Component focusOwner;
 
-	public BaseNavigateAction(VfsBrowser browser) {
-		super();
-		this.browser = browser;
-	}
+  public BaseNavigateAction(VfsBrowser browser) {
+    super();
+    this.browser = browser;
+  }
 
-	public BaseNavigateAction(VfsBrowser browser, String name) {
-		this(browser);
-		putValue(NAME, name);
-	}
+  public BaseNavigateAction(VfsBrowser browser, String name) {
+    this(browser);
+    putValue(NAME, name);
+  }
 
-	public BaseNavigateAction(VfsBrowser browser, String name, Icon icon) {
-		this(browser, name);
-		putValue(SMALL_ICON, icon);
-	}
+  public BaseNavigateAction(VfsBrowser browser, String name, Icon icon) {
+    this(browser, name);
+    putValue(SMALL_ICON, icon);
+  }
 
-	protected abstract void performLongOperation(CheckBeforeActionResult checkBeforeActionResult);
+  @Override
+  public final void actionPerformed(ActionEvent e) {
+    LOGGER.debug("Executing");
+    final CheckBeforeActionResult checkBeforeActionResult = doInUiThreadBefore();
+    if (CheckBeforeActionResult.CANT_GO.equals(checkBeforeActionResult)) {
+      return;
+    }
 
-	@Override
-	public final void actionPerformed(ActionEvent e) {
-		final CheckBeforeActionResult checkBeforeActionResult = doInUiThreadBefore();
-		if (CheckBeforeActionResult.CANT_GO.equals(checkBeforeActionResult)){
-			return;
-		}
+    SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
-		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+      @Override
+      protected void done() {
+        doInUiThreadAfter();
+      }
 
-			@Override
-			protected void done() {
-				doInUiThreadAfter();
-			}
+      @Override
+      protected Void doInBackground() {
+        try {
+          performLongOperation(checkBeforeActionResult);
+        } catch (Exception e) {
+          LOGGER.info("Exception occurred: ", e);
+        }
+        return null;
+      }
+    };
+    LOGGER.info("Starting SwingWorker");
+    executor.execute(worker);
 
-			@Override
-			protected Void doInBackground() throws Exception {
-				try {
-					performLongOperation(checkBeforeActionResult);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-		};
-		executor.execute(worker);
+  }
 
-	}
+  protected abstract void performLongOperation(CheckBeforeActionResult checkBeforeActionResult);
 
-	protected final void doInUiThreadAfter() {
-		LOGGER.debug("ShowLoadingStringWorker is "
-				+ showLoadingAfterDelayWorker);
-		if (showLoadingAfterDelayWorker != null) {
-			LOGGER.debug("Canceling showLoadingAfterDelayWorker");
-			showLoadingAfterDelayWorker.cancel(false);
-		}
-		updateGuiAfter();
-		LOGGER.debug("Updating UI after base action");
-		browser.showTable();
-		if (focusOwner!=null){
-			focusOwner.requestFocus();
-		}
-	}
+  protected final void doInUiThreadAfter() {
+    LOGGER.debug("ShowLoadingStringWorker is "
+      + showLoadingAfterDelayWorker);
+    if (showLoadingAfterDelayWorker != null) {
+      LOGGER.debug("Canceling showLoadingAfterDelayWorker");
+      showLoadingAfterDelayWorker.cancel(false);
+    }
+    updateGuiAfter();
+    LOGGER.debug("Updating UI after base action");
+    browser.showTable();
+    if (focusOwner != null) {
+      focusOwner.requestFocus();
+    }
+  }
 
-	protected void updateGuiAfter() {
+  protected void updateGuiAfter() {
 
-	}
+  }
 
-	protected final CheckBeforeActionResult doInUiThreadBefore() {
-		CheckBeforeActionResult result = CheckBeforeActionResult.CAN_GO;
-		if (!canGoUrl()) {
-			if (canExecuteDefaultAction()){
-				result = CheckBeforeActionResult.CANT_GO_USE_DEFAULT_ACTION;;				
-			} else {
-				result = CheckBeforeActionResult.CANT_GO;
-			}
-		} else {
-			if (canExecuteDefaultAction()){
-				result = CheckBeforeActionResult.CAN_GO_OR_USE_DEFAULT_ACTION;
-			} else {
-				result = CheckBeforeActionResult.CAN_GO;
-			}
-		}
-		
-		focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.getFocusOwner();
-		showLoadingAfterDelayWorker = new SwingWorker<Void, Void>() {
+  protected final CheckBeforeActionResult doInUiThreadBefore() {
+    CheckBeforeActionResult result = CheckBeforeActionResult.CAN_GO;
+    if (!canGoUrl()) {
+      if (canExecuteDefaultAction()) {
+        result = CheckBeforeActionResult.CANT_GO_USE_DEFAULT_ACTION;
+      } else {
+        result = CheckBeforeActionResult.CANT_GO;
+      }
+    } else {
+      if (canExecuteDefaultAction()) {
+        result = CheckBeforeActionResult.CAN_GO_OR_USE_DEFAULT_ACTION;
+      } else {
+        result = CheckBeforeActionResult.CAN_GO;
+      }
+    }
 
-			@Override
-			protected void done() {
-				boolean cancelled = isCancelled();
-				LOGGER.debug("showLoadingAfterDelayWorker is cancelled={}",
-						cancelled);
-				if (!cancelled) {
-					browser.showLoading();
-				}
-			}
+    focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    showLoadingAfterDelayWorker = new SwingWorker<Void, Void>() {
 
-			@Override
-			protected Void doInBackground() throws Exception {
-				Thread.sleep(SWITCH_TO_LOADING_TIME);
-				return null;
-			}
-		};
-		executor.execute(showLoadingAfterDelayWorker);
-		return result;
-	}
+      @Override
+      protected void done() {
+        boolean cancelled = isCancelled();
+        LOGGER.debug("showLoadingAfterDelayWorker is cancelled={}", cancelled);
+        if (!cancelled) {
+          browser.showLoading();
+        }
+      }
 
-	protected abstract boolean canExecuteDefaultAction();
+      @Override
+      protected Void doInBackground() throws Exception {
+        Thread.sleep(SWITCH_TO_LOADING_TIME);
+        return null;
+      }
+    };
+    executor.execute(showLoadingAfterDelayWorker);
+    return result;
+  }
 
-	protected abstract boolean canGoUrl();
+  protected abstract boolean canExecuteDefaultAction();
 
-	protected void updateGuiBefore() {
+  protected abstract boolean canGoUrl();
 
-	}
+  protected void updateGuiBefore() {
 
-	public enum CheckBeforeActionResult {
-		CAN_GO_OR_USE_DEFAULT_ACTION, CANT_GO, CANT_GO_USE_DEFAULT_ACTION, CAN_GO;
-	}
+  }
+
+  public enum CheckBeforeActionResult {
+    CAN_GO_OR_USE_DEFAULT_ACTION, CANT_GO, CANT_GO_USE_DEFAULT_ACTION, CAN_GO;
+  }
 }

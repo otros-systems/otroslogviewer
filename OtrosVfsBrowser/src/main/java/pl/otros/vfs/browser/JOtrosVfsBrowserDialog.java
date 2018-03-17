@@ -52,10 +52,10 @@ public class JOtrosVfsBrowserDialog {
   }
 
   public JOtrosVfsBrowserDialog(Configuration configuration,  SelectionListener... listeners) {
-    this(configuration, (String) null, listeners);
+    this(configuration, null, listeners);
   }
 
-  public JOtrosVfsBrowserDialog(Configuration configuration, final String initialPath, SelectionListener... listeners) {
+  private JOtrosVfsBrowserDialog(Configuration configuration, final String initialPath, SelectionListener... listeners) {
     super();
     vfsBrowser = new VfsBrowser(configuration, initialPath, listeners);
   }

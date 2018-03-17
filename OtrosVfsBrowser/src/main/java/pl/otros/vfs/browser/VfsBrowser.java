@@ -26,12 +26,7 @@ import org.apache.commons.vfs2.FileType;
 import org.jdesktop.swingx.prompt.PromptSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.vfs.browser.actions.AddCurrentLocationToFavoriteAction;
-import pl.otros.vfs.browser.actions.BaseNavigateAction;
-import pl.otros.vfs.browser.actions.ClickOnJComponentAction;
-import pl.otros.vfs.browser.actions.EditFavorite;
-import pl.otros.vfs.browser.actions.OpenSelectedFavorite;
-import pl.otros.vfs.browser.actions.SetFocusOnAction;
+import pl.otros.vfs.browser.actions.*;
 import pl.otros.vfs.browser.favorit.Favorite;
 import pl.otros.vfs.browser.favorit.FavoritesUtils;
 import pl.otros.vfs.browser.i18n.Messages;
@@ -42,44 +37,16 @@ import pl.otros.vfs.browser.list.SelectFirstElementFocusAdapter;
 import pl.otros.vfs.browser.listener.SelectionListener;
 import pl.otros.vfs.browser.preview.PreviewComponent;
 import pl.otros.vfs.browser.preview.PreviewListener;
-import pl.otros.vfs.browser.table.FavoriteListCellRenderer;
-import pl.otros.vfs.browser.table.FileNameWithType;
-import pl.otros.vfs.browser.table.FileNameWithTypeComparator;
-import pl.otros.vfs.browser.table.FileNameWithTypeTableCellRenderer;
-import pl.otros.vfs.browser.table.FileSize;
-import pl.otros.vfs.browser.table.FileSizeTableCellRenderer;
-import pl.otros.vfs.browser.table.FileTypeTableCellRenderer;
-import pl.otros.vfs.browser.table.MixedDateTableCellRenderer;
-import pl.otros.vfs.browser.table.VfsTableModel;
-import pl.otros.vfs.browser.table.VfsTableModelFileNameRowFilter;
-import pl.otros.vfs.browser.table.VfsTableModelHiddenFileRowFilter;
-import pl.otros.vfs.browser.table.VfsTableModelShowParentRowFilter;
+import pl.otros.vfs.browser.table.*;
 import pl.otros.vfs.browser.util.GuiUtils;
 import pl.otros.vfs.browser.util.SwingUtils;
 import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -97,6 +64,7 @@ public class VfsBrowser extends JPanel {
   private static final Object ACTION_ADD_CURRENT_LOCATION_TO_FAVORITES = "ADD CURRENT LOCATION TO FAVORITES";
   private static final String ACTION_DELETE = "DELETE";
   private static final String ACTION_APPROVE = "ACTION APPROVE";
+  private static final String ACTION_CANCEL = "ACTION CANCEL";
   private static final String ACTION_FOCUS_ON_TABLE = "FOCUS ON TABLE";
   private static final String ACTION_CLEAR_REGEX_FILTER = "CLEAR REGEX FILTER";
   private static final String ACTION_FOCUS_ON_REGEX_FILTER = "FOCUS ON REGEX FILTER";
@@ -106,12 +74,12 @@ public class VfsBrowser extends JPanel {
   private static final String ACTION_REFRESH = "REFRESH";
   private static final String TABLE = "TABLE";
   private static final String LOADING = "LOADING";
-  protected JTextField pathField;
-  protected JTable tableFiles;
-  protected JScrollPane tableScrollPane;
-  protected JList favoritesUserList;
-  protected VfsTableModel vfsTableModel;
-  protected JPanel tablePanel;
+  private JTextField pathField;
+  private JTable tableFiles;
+  private JScrollPane tableScrollPane;
+  private JList favoritesUserList;
+  private VfsTableModel vfsTableModel;
+  private JPanel tablePanel;
   private PreviewComponent previewComponent;
   private JCheckBox showHidCheckBox;
   private JButton goUpButton;
@@ -154,31 +122,28 @@ public class VfsBrowser extends JPanel {
   }
 
   public void goToUrl(String url) {
-    LOGGER.info("Going to URL: " + url);
+    LOGGER.info("Going to URL by string: " + url);
+    FileObject resolveFile;
     try {
-      FileObject resolveFile = VFSUtils.resolveFileObject(url);
-      String type = "?";
+      resolveFile = VFSUtils.resolveFileObject(url);
       if (resolveFile != null) {
-        type = resolveFile.getType().toString();
+        LOGGER.info("URL: " + url + " is resolved ");
+        goToFileObject(resolveFile);
       }
-      LOGGER.info("URL: " + url + " is resolved " + type);
-      goToUrl(resolveFile);
     } catch (FileSystemException e) {
       LOGGER.error("Can't go to URL " + url, e);
       final String message = ExceptionsUtils.getRootCause(e).getClass().getName() + ": " + ExceptionsUtils.getRootCause(e).getLocalizedMessage();
-
-      Runnable runnable = new Runnable() {
-        public void run() {
-          JOptionPane.showMessageDialog(VfsBrowser.this, message,
-              Messages.getMessage("browser.badlocation"),
-              JOptionPane.ERROR_MESSAGE);
-        }
-      };
+      Runnable runnable = () -> JOptionPane.showMessageDialog(VfsBrowser.this, message,
+        Messages.getMessage("browser.badlocation"),
+        JOptionPane.ERROR_MESSAGE);
       SwingUtils.runInEdt(runnable);
     }
+
+
   }
 
-  public void goToUrl(final FileObject fileObject) {
+  public void goToFileObject(final FileObject fileObject) {
+    LOGGER.info("goToFileObject by fileobject");
     Arrays.stream(listeners).forEach(s -> s.enteredDir(fileObject));
     if (taskContext != null) {
       taskContext.setStop(true);
@@ -193,7 +158,11 @@ public class VfsBrowser extends JPanel {
       taskContext.setIndeterminate(false);
       SwingWorker<Void, Void> refreshWorker = new SwingWorker<Void, Void>() {
         int icon = 0;
-        Icon[] icons = new Icon[]{Icons.getInstance().getNetworkStatusOnline(), Icons.getInstance().getNetworkStatusAway(), Icons.getInstance().getNetworkStatusOffline()};
+        Icon[] icons = new Icon[]{
+          Icons.getInstance().getNetworkStatusOnline(),
+          Icons.getInstance().getNetworkStatusAway(),
+          Icons.getInstance().getNetworkStatusOffline()
+        };
 
         @Override
         protected void process(List<Void> chunks) {
@@ -205,7 +174,7 @@ public class VfsBrowser extends JPanel {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
           try {
             while (!taskContext.isStop()) {
               publish();
@@ -217,7 +186,7 @@ public class VfsBrowser extends JPanel {
           return null;
         }
       };
-      new Thread(refreshWorker).start();
+      refreshWorker.execute();
 
       if (!skipCheckingLinksButton.isSelected()) {
         VFSUtils.checkForSftpLinks(files, taskContext);
@@ -225,36 +194,27 @@ public class VfsBrowser extends JPanel {
       taskContext.setStop(true);
 
       final FileObject[] fileObjectsWithParent = addParentToFiles(files);
-      Runnable r = new
-
-          Runnable() {
-
-            @Override
-            public void run() {
-              vfsTableModel.setContent(fileObjectsWithParent);
-              try {
-                pathField.setText(fileObject.getURL().toString());
-              } catch (FileSystemException e) {
-                LOGGER.error("Can't get URL", e);
-              }
-              if (tableFiles.getRowCount() > 0) {
-                tableFiles.getSelectionModel().setSelectionInterval(0, 0);
-              }
-              updateStatusText();
-            }
-          };
+      Runnable r = () -> {
+        vfsTableModel.setContent(fileObjectsWithParent);
+        try {
+          pathField.setText(fileObject.getURL().toString());
+        } catch (FileSystemException e) {
+          LOGGER.error("Can't get URL", e);
+        }
+        if (tableFiles.getRowCount() > 0) {
+          tableFiles.getSelectionModel().setSelectionInterval(0, 0);
+        }
+        updateStatusText();
+      };
       SwingUtils.runInEdt(r);
+
     } catch (Exception e) {
       LOGGER.error("Can't go to URL for " + fileObject, e);
       final String message = ExceptionsUtils.getRootCause(e).getClass().getName() + ": " + ExceptionsUtils.getRootCause(e).getLocalizedMessage();
 
-      Runnable runnable = new Runnable() {
-        public void run() {
-          JOptionPane.showMessageDialog(VfsBrowser.this, message,
-              Messages.getMessage("browser.badlocation"),
-              JOptionPane.ERROR_MESSAGE);
-        }
-      };
+      Runnable runnable = () -> JOptionPane.showMessageDialog(VfsBrowser.this, message,
+        Messages.getMessage("browser.badlocation"),
+        JOptionPane.ERROR_MESSAGE);
       SwingUtils.runInEdt(runnable);
     }
   }
@@ -266,10 +226,7 @@ public class VfsBrowser extends JPanel {
    * Current use case is that we are finished with the browser window.
    */
   private void loadAndSelSingleFile(FileObject fileObject) throws FileSystemException {
-    vfsTableModel.setContent(new FileObject[]{
-        new ParentFileObject(fileObject.getParent()),
-        fileObject,
-    });
+    vfsTableModel.setContent(new ParentFileObject(fileObject.getParent()), fileObject);
     tableFiles.getSelectionModel().setSelectionInterval(1, 1);
   }
 
@@ -310,22 +267,30 @@ public class VfsBrowser extends JPanel {
       @Override
       protected void performLongOperation(CheckBeforeActionResult actionResult) {
         try {
-          FileObject resolveFile =
-              VFSUtils.resolveFileObject(pathField.getText().trim());
+          LOGGER.info("Open path {}", pathField.getText());
+          SwingUtilities.invokeLater(() -> loadingProgressBar.setString("Resolving path"));
+          final long start = System.currentTimeMillis();
+          FileObject resolveFile = VFSUtils.resolveFileObject(pathField.getText().trim());
+          LOGGER.info("Path resolved in " + (System.currentTimeMillis() - start) + "ms");
+          LOGGER.info("Path {} resolved", pathField.getText());
           if (resolveFile != null && resolveFile.getType() == FileType.FILE) {
+            LOGGER.info("Resolved path is a file");
             loadAndSelSingleFile(resolveFile);
             pathField.setText(resolveFile.getURL().toString());
             actionApproveDelegate.actionPerformed(
-                // TODO:  Does actionResult provide an ID for 2nd param here,
-                // or should use a Random number?
-                new ActionEvent(actionResult,
-                    (int) new java.util.Date().getTime(), "SELECTED_FILE"));
-            return;
+              // TODO:  Does actionResult provide an ID for 2nd param here,
+              // or should use a Random number?
+              new ActionEvent(actionResult, (int) new java.util.Date().getTime(), "SELECTED_FILE"));
+          } else {
+            goToFileObject(resolveFile);
           }
         } catch (FileSystemException fse) {
-          // Intentionally empty
+          LOGGER.error("Can't open path ", fse);
+          SwingUtilities.invokeLater(() -> {
+            loadingProgressBar.setString("Path can't be resolved");
+            JOptionPane.showMessageDialog(VfsBrowser.this, "Can't open path: " + fse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          });
         }
-        goToUrl(pathField.getText().trim());
       }
 
       @Override
@@ -341,15 +306,15 @@ public class VfsBrowser extends JPanel {
     });
     actionFocusOnTable = new
 
-        AbstractAction() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            tableFiles.requestFocusInWindow();
-            if (tableFiles.getSelectedRow() < 0 && tableFiles.getRowCount() == 0) {
-              tableFiles.getSelectionModel().setSelectionInterval(0, 0);
-            }
+      AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          tableFiles.requestFocusInWindow();
+          if (tableFiles.getSelectedRow() < 0 && tableFiles.getRowCount() == 0) {
+            tableFiles.getSelectionModel().setSelectionInterval(0, 0);
           }
-        };
+        }
+      };
     pathField.getActionMap().put(ACTION_FOCUS_ON_TABLE, actionFocusOnTable);
 
     BaseNavigateActionGoUp goUpAction = new BaseNavigateActionGoUp(this);
@@ -404,23 +369,15 @@ public class VfsBrowser extends JPanel {
 
     tableFiles.setRowSorter(sorter);
     tableFiles.setShowGrid(false);
-    tableFiles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        try {
-          selectionChanged();
-        } catch (FileSystemException e1) {
-          LOGGER.error("Error during update state", e);
-        }
+    tableFiles.getSelectionModel().addListSelectionListener(e -> {
+      try {
+        selectionChanged();
+      } catch (FileSystemException e1) {
+        LOGGER.error("Error during update state", e);
       }
     });
     tableFiles.setColumnSelectionAllowed(false);
-    vfsTableModel.addTableModelListener(new TableModelListener() {
-      @Override
-      public void tableChanged(TableModelEvent e) {
-        updateStatusText();
-      }
-    });
+    vfsTableModel.addTableModelListener(e -> updateStatusText());
 
 
     tableFiles.setDefaultRenderer(FileSize.class, new FileSizeTableCellRenderer());
@@ -430,14 +387,14 @@ public class VfsBrowser extends JPanel {
 
     tableFiles.getSelectionModel().addListSelectionListener(new PreviewListener(this, previewComponent, listeners));
     tableFiles.getSelectionModel().addListSelectionListener(e -> {
-          if (!e.getValueIsAdjusting()) {
-            Arrays.stream(listeners).forEach(s -> s.selectedItem(getSelectedFiles()));
-          }
+        if (!e.getValueIsAdjusting()) {
+          Arrays.stream(listeners).forEach(s -> s.selectedItem(getSelectedFiles()));
         }
+      }
     );
 
     JPanel favoritesPanel = new JPanel(new MigLayout("wrap, fillx", "[grow]"));
-    favoritesUserListModel = new MutableListModel<Favorite>();
+    favoritesUserListModel = new MutableListModel<>();
 
     List<Favorite> favSystemLocations = FavoritesUtils.getSystemLocations();
     List<Favorite> favUser = FavoritesUtils.loadFromProperties(configuration);
@@ -478,7 +435,7 @@ public class VfsBrowser extends JPanel {
     addEditActionToList(favoritesUserList, favoritesUserListModel);
 
     favoritesUserList.getActionMap().put(ACTION_DELETE, new AbstractAction(Messages.getMessage("favorites.deleteButtonText"),
-        Icons.getInstance().getMinusButton()) {
+      Icons.getInstance().getMinusButton()) {
 
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -487,8 +444,8 @@ public class VfsBrowser extends JPanel {
           return;
         }
         int response = JOptionPane.showConfirmDialog(VfsBrowser.this, Messages.getMessage("favorites.areYouSureToDeleteConnections"),
-            Messages.getMessage("favorites.confirm"),
-            JOptionPane.YES_NO_OPTION);
+          Messages.getMessage("favorites.confirm"),
+          JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
           favoritesUserListModel.remove(favoritesUserList.getSelectedIndex());
@@ -570,12 +527,9 @@ public class VfsBrowser extends JPanel {
     loadingProgressBar.setIndeterminate(true);
     loadingIconLabel = new JLabel(Icons.getInstance().getNetworkStatusOnline());
     skipCheckingLinksButton = new JToggleButton(Messages.getMessage("browser.skipCheckingLinks"));
-    skipCheckingLinksButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        if (taskContext != null) {
-          taskContext.setStop(skipCheckingLinksButton.isSelected());
-        }
+    skipCheckingLinksButton.addActionListener(actionEvent -> {
+      if (taskContext != null) {
+        taskContext.setStop(skipCheckingLinksButton.isSelected());
       }
     });
 
@@ -585,11 +539,7 @@ public class VfsBrowser extends JPanel {
     showHidCheckBox.setMnemonic(Messages.getMessage("browser.showHidden.mnemonic").charAt(0));
     Font tmpFont = showHidCheckBox.getFont();
     showHidCheckBox.setFont(tmpFont.deriveFont(tmpFont.getSize() * 0.9f));
-    showHidCheckBox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        updateUiFilters();
-      }
-    });
+    showHidCheckBox.addActionListener(e -> updateUiFilters());
 
     final String defaultFilterText = Messages.getMessage("browser.nameFilter.defaultText");
     filterField = new JTextField("", 16);
@@ -628,13 +578,13 @@ public class VfsBrowser extends JPanel {
 
     AbstractAction actionClearRegexFilter = new
 
-        AbstractAction(Messages.getMessage("browser.nameFilter.clearFilterText")) {
+      AbstractAction(Messages.getMessage("browser.nameFilter.clearFilterText")) {
 
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            filterField.setText("");
-          }
-        };
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          filterField.setText("");
+        }
+      };
     filterField.getActionMap().put(ACTION_FOCUS_ON_TABLE, actionFocusOnTable);
     filterField.getActionMap().put(ACTION_CLEAR_REGEX_FILTER, actionClearRegexFilter);
 
@@ -675,6 +625,12 @@ public class VfsBrowser extends JPanel {
     browserActionMap.put(ACTION_ADD_CURRENT_LOCATION_TO_FAVORITES, addCurrentLocationToFavoriteAction);
     browserActionMap.put(ACTION_GO_UP, goUpAction);
     browserActionMap.put(ACTION_FOCUS_ON_TABLE, new SetFocusOnAction(tableFiles));
+    browserActionMap.put(ACTION_CANCEL, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        actionCancelDelegate.actionPerformed(e);
+      }
+    });
 
     InputMap browserInputMap = this.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     browserInputMap.put(KeyStroke.getKeyStroke("control F"), ACTION_FOCUS_ON_REGEX_FILTER);
@@ -686,6 +642,7 @@ public class VfsBrowser extends JPanel {
     browserInputMap.put(KeyStroke.getKeyStroke("control D"), ACTION_ADD_CURRENT_LOCATION_TO_FAVORITES);
     browserInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), ACTION_GO_UP);
     browserInputMap.put(KeyStroke.getKeyStroke("control T"), ACTION_FOCUS_ON_TABLE);
+    browserInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ACTION_CANCEL);
 
     //DO layout
     // create the layer for the panel using our custom layerUI
@@ -718,7 +675,7 @@ public class VfsBrowser extends JPanel {
 
 
     JPanel southPanel = new JPanel(
-        new MigLayout("", "[]push[][]", ""));
+      new MigLayout("", "[]push[][]", ""));
     southPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     southPanel.add(statusLabel);
     southPanel.add(listenerPanel);
@@ -730,8 +687,8 @@ public class VfsBrowser extends JPanel {
     this.add(southPanel, BorderLayout.SOUTH);
 
     Arrays.stream(listeners)
-        .map(SelectionListener::getView)
-        .forEach(listenerPanel::add);
+      .map(SelectionListener::getView)
+      .forEach(listenerPanel::add);
 
     try {
       selectionChanged();
@@ -742,11 +699,10 @@ public class VfsBrowser extends JPanel {
     // Is it assume that constructor is invoked from an  EDT?
     try {
       if (initialPath == null) {
-        goToUrl(VFSUtils.getUserHome());
+        goToFileObject(VFSUtils.getUserHome());
       } else {
         try {
-          FileObject resolveFile =
-              VFSUtils.resolveFileObject(initialPath);
+          FileObject resolveFile = VFSUtils.resolveFileObject(initialPath);
           if (resolveFile != null && resolveFile.getType() == FileType.FILE) {
             loadAndSelSingleFile(resolveFile);
             pathField.setText(resolveFile.getURL().toString());
@@ -853,7 +809,7 @@ public class VfsBrowser extends JPanel {
       FileObject selectedFileObject = getSelectedFileObject();
       FileType type = selectedFileObject.getType();
       if (selectionMode == SelectionMode.FILES_ONLY && type == FileType.FILE ||
-          selectionMode == SelectionMode.DIRS_ONLY && type == FileType.FOLDER) {
+        selectionMode == SelectionMode.DIRS_ONLY && type == FileType.FOLDER) {
         acceptEnabled = true;
       } else if (SelectionMode.DIRS_AND_FILES == selectionMode) {
         acceptEnabled = true;
@@ -875,7 +831,7 @@ public class VfsBrowser extends JPanel {
   }
 
   public void showLoading() {
-    LOGGER.trace("Showing loading panel");
+    LOGGER.debug("Showing loading panel");
     loadingProgressBar.setIndeterminate(true);
     loadingProgressBar.setString(Messages.getMessage("browser.loading..."));
     skipCheckingLinksButton.setSelected(false);
@@ -932,13 +888,12 @@ public class VfsBrowser extends JPanel {
     actionApproveButton.setName("VfsBrowser.open");
     if (action != null) {
       actionApproveButton.setText(String.format("%s [Ctrl+Enter]", actionApproveDelegate.getValue(Action.NAME)));
-    }
-    if (targetFileSelected) {
-      actionApproveDelegate.actionPerformed(
+      if (targetFileSelected) {
+        actionApproveDelegate.actionPerformed(
           // TODO:  Does actionResult provide an ID for 2nd param here,
           // or should use a Random number?
-          new ActionEvent(action,
-              (int) new java.util.Date().getTime(), "SELECTED_FILE"));
+          new ActionEvent(action, (int) new java.util.Date().getTime(), "SELECTED_FILE"));
+      }
     } else try {
       selectionChanged();
     } catch (FileSystemException e) {
@@ -948,7 +903,18 @@ public class VfsBrowser extends JPanel {
 
   public void setCancelAction(Action cancelAction) {
     actionCancelDelegate = cancelAction;
-    actionCancelButton.setAction(actionCancelDelegate);
+    actionCancelButton.setAction(new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        showTable();
+        cancelAction.actionPerformed(e);
+      }
+
+      @Override
+      public Object getValue(String key) {
+        return cancelAction.getValue(key);
+      }
+    });
     try {
       selectionChanged();
     } catch (FileSystemException e) {
@@ -1038,7 +1004,7 @@ public class VfsBrowser extends JPanel {
     public void performLongOperation(CheckBeforeActionResult actionResult) {
       LOGGER.info("Executing going up");
       try {
-        goToUrl(currentLocation.getParent());
+        goToFileObject(currentLocation.getParent());
       } catch (FileSystemException e) {
         LOGGER.error("Error go UP", e);
       }
@@ -1073,7 +1039,7 @@ public class VfsBrowser extends JPanel {
       if (canExecuteDefaultAction() && actionApproveButton.isEnabled()) {
         actionApproveButton.doClick();
       } else {
-        goToUrl(fileObject);
+        goToFileObject(fileObject);
       }
     }
 
@@ -1119,7 +1085,7 @@ public class VfsBrowser extends JPanel {
       } catch (FileSystemException e) {
         LOGGER.error("Can't refresh location", e);
       }
-      goToUrl(currentLocation);
+      goToFileObject(currentLocation);
     }
 
     @Override
