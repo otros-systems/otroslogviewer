@@ -30,15 +30,10 @@ public class TestDialog extends JFrame {
   private final JTextField textField;
 
   public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-    SwingUtilities.invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-                      new TestDialog();
-      }
-    });
+    SwingUtilities.invokeAndWait(TestDialog::new);
   }
 
-  public TestDialog(){
+  private TestDialog(){
     final JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(new ExampleListener());
     Action a = new AbstractAction("Select file") {
       @Override
@@ -56,7 +51,7 @@ public class TestDialog extends JFrame {
     pack();
     setTitle("OtrosVfsBrowser demo");
     setVisible(true);
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
   }
 }

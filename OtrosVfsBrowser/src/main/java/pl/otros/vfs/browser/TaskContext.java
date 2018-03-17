@@ -43,11 +43,11 @@ public class TaskContext {
     return name;
   }
 
-  public boolean isStop() {
+  public synchronized boolean isStop() {
     return stop;
   }
 
-  public void setStop(boolean stop) {
+  public synchronized void setStop(boolean stop) {
     this.stop = stop;
   }
 

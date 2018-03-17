@@ -16,7 +16,6 @@ public class ShowConfigTest {
   public static void main(String[] args) throws UnsupportedLookAndFeelException {
     final SubstanceBusinessBlackSteelLookAndFeel newLookAndFeel = new SubstanceBusinessBlackSteelLookAndFeel();
     UIManager.setLookAndFeel(newLookAndFeel);
-
     DataConfiguration configuration = new DataConfiguration(new BaseConfiguration());
     ConfigurationProvider configurationProvider = new ConfigurationProviderImpl(configuration, new File(System.getProperty("java.io.tmpdir")));
     configuration.setProperty("view1.text", "ASD ASD");

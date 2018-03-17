@@ -23,15 +23,7 @@ import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.vfs2.CacheStrategy;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileName;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.UserAuthenticationData;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.UserAuthenticationData.Type;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.impl.StandardFileSystemManager;
@@ -44,14 +36,7 @@ import org.slf4j.LoggerFactory;
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.LinkFileObject;
 import pl.otros.vfs.browser.TaskContext;
-import pl.otros.vfs.browser.auth.AuthStore;
-import pl.otros.vfs.browser.auth.AuthStoreUtils;
-import pl.otros.vfs.browser.auth.MemoryAuthStore;
-import pl.otros.vfs.browser.auth.OtrosUserAuthenticator;
-import pl.otros.vfs.browser.auth.StaticPasswordProvider;
-import pl.otros.vfs.browser.auth.UserAuthenticationDataWrapper;
-import pl.otros.vfs.browser.auth.UserAuthenticationInfo;
-import pl.otros.vfs.browser.auth.UserAuthenticatorFactory;
+import pl.otros.vfs.browser.auth.*;
 
 import javax.swing.*;
 import java.io.File;
@@ -62,11 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
@@ -249,7 +230,7 @@ public final class VFSUtils {
    * @return the files of a folder
    */
   public static FileObject[] getFiles(FileObject folder)
-      throws FileSystemException {
+    throws FileSystemException {
     return getChildren(folder);
   }
 
@@ -352,6 +333,7 @@ public final class VFSUtils {
       builder.setStrictHostKeyChecking(opts, "no");
       builder.setUserDirIsRoot(opts, false);
       builder.setCompression(opts, "zlib,none");
+      builder.setTimeout(opts,5000);
     }
 
     DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
@@ -366,21 +348,23 @@ public final class VFSUtils {
     } catch (FileSystemException e) {
       LOGGER.error("Error resolving file " + filePath, e);
       Throwable rootCause = Throwables.getRootCause(e);
-      boolean authorizationFailed = false;
-      authorizationFailed = checkForWrongCredentials(rootCause);
+      boolean authorizationFailed = checkForWrongCredentials(rootCause);
       if (authorizationFailed) {
         LOGGER.error("Wrong user name or password for " + filePath);
         //clear last data
         //authenticator can be null if user/password was entered in URL
         if (authenticator != null) {
-          UserAuthenticationDataWrapper lastUserAuthenticationData = authenticator.getLastUserAuthenticationData();
-          lastUserAuthenticationData.remove(UserAuthenticationDataWrapper.PASSWORD);
-          String user = new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME));
-          UserAuthenticationInfo auInfo = new UserAuthenticationInfo(parser.getProtocol().getName(), parser.getHostname(), user);
-          sessionAuthStore.remove(auInfo);
-          sessionAuthStore.add(auInfo, lastUserAuthenticationData);
-          LOGGER.info("Removing password for {} on {}", new Object[]{
-              new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME)), filePath});
+          Optional.ofNullable(authenticator.getLastUserAuthenticationData()).ifPresent(
+            lastUserAuthenticationData -> {
+              lastUserAuthenticationData.remove(UserAuthenticationDataWrapper.PASSWORD);
+              String user = new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME));
+              UserAuthenticationInfo auInfo = new UserAuthenticationInfo(parser.getProtocol().getName(), parser.getHostname(), user);
+              sessionAuthStore.remove(auInfo);
+              sessionAuthStore.add(auInfo, lastUserAuthenticationData);
+              LOGGER.info("Removing password for {} on {}", new Object[]{
+                new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME)), filePath});
+            }
+          );
         }
       }
       throw e;
@@ -393,7 +377,7 @@ public final class VFSUtils {
       UserAuthenticationInfo auInfo = new UserAuthenticationInfo(parser.getProtocol().getName(), parser.getHostname(), user);
       sessionAuthStore.add(auInfo, lastUserAuthenticationData.copy());
       if (authenticator.isPasswordSave()) {
-        LOGGER.info("Saving password for {}://{}@{}", new Object[]{parser.getProtocol().getName(), user, parser.getHostname()});
+        LOGGER.info("Saving password for {}://{}@{}", parser.getProtocol().getName(), user, parser.getHostname());
         persistentAuthStore.add(auInfo, lastUserAuthenticationData);
         saveAuthStore();
       }
@@ -401,16 +385,17 @@ public final class VFSUtils {
     return resolveFile;
   }
 
-  public static boolean checkForWrongCredentials(Throwable rootCause) {
-    boolean authorizationFailed = false;
-    String message = rootCause.getMessage();
-    if (rootCause instanceof SmbAuthException && message.contains("The specified network password is not correct")) {
-      authorizationFailed = true;
-    } else if (rootCause instanceof JSchException && message.contains("Auth fail")) {
-      authorizationFailed = true;
-
+  public static boolean checkForWrongCredentials(Throwable exception) {
+    if (exception.getCause() != null) {
+      return checkForWrongCredentials(exception.getCause());
+    } else {
+      String message = exception.getMessage();
+      return
+        exception instanceof SmbAuthException && message.contains("The specified network password is not correct") ||
+          exception instanceof JSchException && message.contains("Auth fail");
     }
-    return authorizationFailed;
+
+
   }
 
   /**
