@@ -4,15 +4,16 @@ import com.google.common.base.Splitter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.LayoutEncoderConverter;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
+import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -86,4 +87,18 @@ public class LoggerConfigUtil {
     return result;
   }
 
+
+  public static void addLog4jParser(OtrosApplication otrosApplication, String baseFileName, String name, Properties properties) {
+    final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    final LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(logParser);
+    try (OutputStream out = new FileOutputStream(new File(AllPluginables.USER_LOG_IMPORTERS, baseFileName + ".pattern"))) {
+      properties.setProperty("name", name);
+      logImporterUsingParser.init(properties);
+      otrosApplication.getAllPluginables().getLogImportersContainer().addElement(logImporterUsingParser);
+      properties.store(out, "Imported log pattern");
+    } catch (InitializationException | IOException e1) {
+      //Ignore it
+      LOGGER.error("Problem with saving Log4jPatternMultilineLogParser configuration: ", e1);
+    }
+  }
 }

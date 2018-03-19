@@ -8,14 +8,12 @@ import org.jdesktop.swingx.JXTextArea;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.LayoutEncoderConverter;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.services.JumpToCodeService;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
@@ -35,9 +33,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.List;
@@ -190,7 +186,7 @@ public class ConvertLogFormatPanel extends JPanel {
         logPatternsTableModel.data
           .stream()
           .filter(x -> x.getStatus() instanceof WillImport)
-          .forEach(p -> addLog4jParser(otrosApplication, p.getPattern(), p.getProperties()));
+          .forEach(p -> LoggerConfigUtil.addLog4jParser(otrosApplication, UUID.randomUUID().toString(), p.getPattern(), p.getProperties()));
         closeFunction.apply(ConvertLogFormatPanel.this);
         otrosApplication.getStatusObserver().updateStatus("Log patterns imported");
       }
@@ -239,19 +235,6 @@ public class ConvertLogFormatPanel extends JPanel {
 
   }
 
-  private void addLog4jParser(OtrosApplication otrosApplication, String name, Properties properties) {
-    final Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
-    final LogImporterUsingParser logImporterUsingParser = new LogImporterUsingParser(logParser);
-    try (OutputStream out = new FileOutputStream(new File(AllPluginables.USER_LOG_IMPORTERS, UUID.randomUUID().toString() + ".pattern"))) {
-      properties.setProperty("name", name);
-      logImporterUsingParser.init(properties);
-      otrosApplication.getAllPluginables().getLogImportersContainer().addElement(logImporterUsingParser);
-      properties.store(out, "Imported log pattern");
-    } catch (InitializationException | IOException e1) {
-      //Ignore it
-      LOGGER.error("Problem with saving Log4jPatternMultilineLogParser configuration: ", e1);
-    }
-  }
 
   private void updateRowHeights() {
     for (int row = 0; row < jTable.getRowCount(); row++) {

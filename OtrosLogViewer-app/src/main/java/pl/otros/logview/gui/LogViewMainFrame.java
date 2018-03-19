@@ -51,6 +51,7 @@ import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
 import pl.otros.logview.gui.browser.LogParsableListener;
 import pl.otros.logview.gui.editor.json.JsonPatternParserEditor;
 import pl.otros.logview.gui.editor.log4j.Log4jPatternParserEditor;
+import pl.otros.logview.gui.firstuse.FirstTimeUseWizard;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
@@ -157,6 +158,7 @@ public class LogViewMainFrame extends JFrame {
       modalDisplayException = ie;
     }
     OtrosSplash.setMessage("Initializing GUI");
+
     allPluginables = AllPluginables.getInstance();
     logImportersContainer = allPluginables.getLogImportersContainer();
     PluginableElementsContainer<MessageColorizer> messageColorizercontainer = allPluginables.getMessageColorizers();
@@ -248,33 +250,26 @@ public class LogViewMainFrame extends JFrame {
       new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
       25, 25, TimeUnit.SECONDS);
     ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
+
+    if (configuration.getBoolean(FIRST_USE, true) && !runningForTests()) {
+      new FirstTimeUseWizard().show(this, new InitialConfigurationProcessing(otrosApplication));
+    }
   }
 
   private static boolean runningForTests() {
-    final String runForTest = System.getProperty(RUN_FOR_SCENARIO_TEST, "false");
-    final boolean b = runForTest.equals("true");
-    return b;
+    return Boolean.valueOf(System.getProperty(RUN_FOR_SCENARIO_TEST, "false"));
   }
 
   private void initInputMap() {
     final JComponent contentPane = (JComponent) this.getContentPane();
     final InputMap inputMapInFocusedWindow = contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     String parseClipboard = "parseClipboard";
-    final JTextArea jTextArea = new JTextArea();
-    final KeyStroke[] keyStrokes = jTextArea.getInputMap().allKeys();
-    Arrays.asList(keyStrokes).forEach(ks -> LOGGER.debug("LogViewMainFrame.initInputMap: " + ks.toString() + " -> " + jTextArea.getInputMap().get(ks)));
 
     inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), parseClipboard);
     inputMapInFocusedWindow.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_MASK), parseClipboard);
     contentPane.getActionMap().put(parseClipboard, new ParseClipboard(otrosApplication));
   }
 
-  /**
-   * @param args porgram CLI arguments
-   * @throws InitializationException
-   * @throws InvocationTargetException
-   * @throws InterruptedException
-   */
   public static void main(final String[] args) throws InitializationException, InterruptedException, InvocationTargetException {
     if (args.length > 0 && "-batch".equals(args[0])) {
       try {
@@ -614,18 +609,6 @@ public class LogViewMainFrame extends JFrame {
       configuration.setProperty("gui.markFound", markFound.isSelected());
     });
     markColor.setRenderer(new MarkerColorsComboBoxRenderer());
-//		markColor.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
-//				searchActionForward.setMarkerColors(markerColors);
-//				searchActionBackward.setMarkerColors(markerColors);
-//				markAllFoundAction.setMarkerColors(markerColors);
-//				configuration.setProperty("gui.markColor", markColor.getSelectedItem());
-//				otrosApplication.setSelectedMarkColors(markerColors);
-//			}
-//		});
     markColor.addItemListener(e -> {
       MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
       searchActionForward.setMarkerColors(markerColors);
@@ -836,4 +819,5 @@ public class LogViewMainFrame extends JFrame {
     this.setLocation(location);
     this.setExtendedState(state);
   }
+
 }
