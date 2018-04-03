@@ -43,7 +43,7 @@ public abstract class AbstractActionWithConfirmation extends OtrosAction {
       doNotAskAgain = jCheckBox.isSelected();
     }
     if (confirm) {
-      actionPerformedHook(e);
+      actionWithConfirmationPerformedHook(e);
     }
   }
 
