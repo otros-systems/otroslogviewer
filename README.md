@@ -81,7 +81,7 @@ Filter level WARNING or higher and highlighting:
 
 ## Similar software
   * [log.io](http://logio.org/)
-  * [Apache chainsaw](http://logging.apache.org/chainsaw/index.html)
+  * [Apache chainsaw](http://logging.apache.org/chainsaw/2.x)
   * [Lilith](http://lilith.huxhorn.de/)
   * [eclipse logviewer](http://code.google.com/a/eclipselabs.org/p/logviewer/)
   * [Vigilog](http://vigilog.sourceforge.net/index.html)
