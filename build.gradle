@@ -45,6 +45,9 @@ subprojects {
         maven {
             url "https://bintray.com/artifact/download/otros-systems/maven"
         }
+        maven {
+            url "https://dl.bintray.com/cjwizard/CJWizard"
+        }
         //https://oss.sonatype.org/content/repositories
 
     }
@@ -92,6 +95,7 @@ project(':Common-libs') {
         compile "org.scala-lang:scala-library:2.12.4"
         compile "org.scala-lang.modules:scala-parser-combinators_2.12:1.1.0"
         compile "io.dropwizard.metrics:metrics-core:3.2.2"
+        compile "com.github.cjwizard:cjwizard:1.0.9"
     }
 }
 

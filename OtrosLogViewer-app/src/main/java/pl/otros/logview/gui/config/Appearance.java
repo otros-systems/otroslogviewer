@@ -218,7 +218,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
     final ArrayList<UIManager.LookAndFeelInfo> result = new ArrayList<>();
     result.addAll(installed);
     result.addAll(extraLf);
-    return result.toArray(new UIManager.LookAndFeelInfo[result.size()]);
+    return result.toArray(new UIManager.LookAndFeelInfo[0]);
   }
 
 

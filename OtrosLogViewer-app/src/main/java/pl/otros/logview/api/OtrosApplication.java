@@ -211,7 +211,7 @@ public class OtrosApplication {
   /**
    * Return menu action providers
    *
-   * @return manu action providers
+   * @return menu action providers
    */
   public List<MenuActionProvider> getLogViewPanelMenuActionProvider() {
     return new ArrayList<>(menuActionProviders);
