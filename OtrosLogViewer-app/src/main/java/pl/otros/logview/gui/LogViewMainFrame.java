@@ -38,6 +38,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
+import pl.otros.logview.api.services.Services;
 import pl.otros.logview.batch.BatchProcessor;
 import pl.otros.logview.exceptionshandler.*;
 import pl.otros.logview.filter.QueryFilter;
@@ -88,10 +89,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -126,11 +124,13 @@ public class LogViewMainFrame extends JFrame {
 
     this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     String title = "OtrosLogViewer";
+    String runningVersion = "";
     try {
-      title += ' ' + new VersionUtil().getRunningVersion();
+      runningVersion = new VersionUtil().getRunningVersion();
     } catch (Exception e) {
       LOGGER.warn("Can't load version of running OLV");
     }
+    title += ' ' + runningVersion;
     this.setTitle(title);
     try {
       String iconPath = "img/otros/logo16.png";
@@ -254,6 +254,7 @@ public class LogViewMainFrame extends JFrame {
     if (configuration.getBoolean(FIRST_USE, true) && !runningForTests()) {
       new FirstTimeUseWizard().show(this, new InitialConfigurationProcessing(otrosApplication));
     }
+    scheduleMaybeStatsSend(configuration, otrosApplication.getServices(), runningVersion);
   }
 
   private static boolean runningForTests() {
@@ -818,6 +819,37 @@ public class LogViewMainFrame extends JFrame {
     this.setSize(size);
     this.setLocation(location);
     this.setExtendedState(state);
+  }
+
+  private void scheduleMaybeStatsSend(Configuration configuration, Services services, String olvVersion) {
+    if (configuration.getBoolean(SEND_STATS, false)) {
+      final long now = System.currentTimeMillis();
+      final long interval = 10L * 24 * 60 * 60 * 1000;
+
+      if (!configuration.containsKey(NEXT_STATS_SEND_DATE)) {
+        configuration.setProperty(NEXT_STATS_SEND_DATE, now + interval);
+      }
+
+      final long nextSendDate = configuration.getLong(NEXT_STATS_SEND_DATE);
+      LOGGER.info("Next stats send will occur in: " + new Date(nextSendDate));
+
+      if (now > nextSendDate) {
+        configuration.setProperty(NEXT_STATS_SEND_DATE, (now + interval));
+        services
+          .getTaskSchedulerService()
+          .getListeningScheduledExecutorService()
+          .schedule(() -> {
+            LOGGER.info("Sending stats");
+            final Map<String, Long> stats = services.getStatsService().getStats();
+            services.getStatsReportService().sendStats(
+              stats,
+              configuration.getString(UUID, ""),
+              olvVersion,
+              System.getProperty("java.version", "")
+            );
+          }, 10L, TimeUnit.SECONDS);
+      }
+    }
   }
 
 }

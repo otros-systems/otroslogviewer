@@ -5,18 +5,21 @@ import pl.otros.logview.api.services.*;
 import pl.otros.logview.gui.services.persist.SerializePersisService;
 import pl.otros.logview.gui.services.tasks.TaskSchedulerServiceImpl;
 import pl.otros.logview.stats.DropwizardStatsService;
+import pl.otros.logview.stats.HttpStatsReporterService;
 
 public class ServicesImpl implements Services {
   private JumpToCodeService jumpToCodeService;
   private TaskSchedulerServiceImpl taskSchedulerService;
   private PersistService persistService;
   private StatsService statsService;
+  private StatsReporterService statsReporterService;
 
   public ServicesImpl(OtrosApplication otrosApplication) {
     jumpToCodeService = new JumpToCodeServiceImpl(otrosApplication.getConfiguration());
     taskSchedulerService = new TaskSchedulerServiceImpl();
     persistService = new SerializePersisService();
     statsService = new DropwizardStatsService(persistService);
+    statsReporterService = new HttpStatsReporterService();
   }
 
   @Override
@@ -37,5 +40,10 @@ public class ServicesImpl implements Services {
   @Override
   public StatsService getStatsService() {
     return statsService;
+  }
+
+  @Override
+  public StatsReporterService getStatsReportService() {
+    return statsReporterService;
   }
 }

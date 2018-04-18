@@ -20,6 +20,7 @@ import pl.otros.logview.api.OtrosApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,6 +59,10 @@ public abstract class OtrosAction extends AbstractAction {
   public final void actionPerformed(ActionEvent e) {
     getOtrosApplication().getServices().getStatsService().actionExecuted(this);
     actionPerformedHook(e);
+  }
+
+  public Optional<String> actionModeForStats(){
+    return Optional.empty();
   }
 
   protected abstract void actionPerformedHook(ActionEvent e);
