@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+* ******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +33,7 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class SearchAction extends OtrosAction {
 
@@ -179,4 +181,8 @@ public class SearchAction extends OtrosAction {
     return searchMode;
   }
 
+  @Override
+  public Optional<String> actionModeForStats() {
+    return Optional.of(searchMode.name());
+  }
 }

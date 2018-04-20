@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class DropwizardStatsService implements StatsService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DropwizardStatsService.class.getName());
-  public static final String STATS_COUNTERS = "stats.counters";
+  static final String STATS_COUNTERS = "stats.counters";
   private final MetricRegistry metrics = new MetricRegistry();
   private final PersistingReporter reporter;
 
@@ -26,8 +26,8 @@ public class DropwizardStatsService implements StatsService {
       countersMap
         .getMap()
         .forEach((key, value) -> metrics.counter(key).inc(value));
-    } catch (Exception ignore) {
-      LOGGER.error("Can't load metrics, will use empty one", ignore);
+    } catch (Exception ex) {
+      LOGGER.error("Can't load metrics, will use empty one", ex);
     }
 
     reporter = new PersistingReporter(metrics, persistService);
@@ -37,7 +37,8 @@ public class DropwizardStatsService implements StatsService {
 
   @Override
   public void actionExecuted(OtrosAction action) {
-    metrics.counter("action:" + action.getClass().getName() + ".executed").inc();
+    final String mode = action.actionModeForStats().map(m -> "." + m).orElse("");
+    metrics.counter("action:" + action.getClass().getName() + mode + ".executed").inc();
   }
 
   @Override
@@ -70,7 +71,7 @@ public class DropwizardStatsService implements StatsService {
     metrics.counter("io:importedLogEvents." + scheme).inc(count);
   }
 
-  public Map<String, Long> getStats(){
+  public Map<String, Long> getStats() {
     return reporter.countersMap(metrics.getCounters());
 
   }

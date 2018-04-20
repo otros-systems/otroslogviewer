@@ -9,4 +9,7 @@ public interface Services {
   PersistService getPersistService();
 
   StatsService getStatsService();
+
+  StatsReporterService getStatsReportService();
+
 }
