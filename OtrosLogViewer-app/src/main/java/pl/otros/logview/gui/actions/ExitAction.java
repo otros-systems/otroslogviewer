@@ -58,8 +58,13 @@ public class ExitAction extends OtrosAction implements WindowListener {
 
     if (!doConfirm || JOptionPane.showConfirmDialog(frame, panel, "Are you sure?", JOptionPane.YES_NO_OPTION)
       == JOptionPane.YES_OPTION) {
-      frame.setVisible(false);
-      frame.dispose();
+      try {
+        frame.setVisible(false);
+        frame.dispose();
+      } catch (Exception ignore){
+        //sometimes get java.lang.NullPointerException
+        //	at org.pushingpixels.substance.internal.ui.SubstanceProgressBarUI.stopAnimationTimer(SubstanceProgressBarUI.java:593)
+      }
       System.exit(0);
     }
   }

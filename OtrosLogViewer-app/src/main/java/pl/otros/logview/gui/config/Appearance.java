@@ -103,8 +103,8 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       ThemeKey.LOG_DETAILS_SOAP_ELEMENT_NAME,
       ThemeKey.LOG_DETAILS_SOAP_COMMENTS,
       ThemeKey.LOG_DETAILS_SOAP_CONTENT_BACKGROUND,
-      ThemeKey.LOG_DETAILS_SOAP_OPERATOR
-
+      ThemeKey.LOG_DETAILS_SOAP_OPERATOR,
+      ThemeKey.TEXT_FIELD_ERROR
     );
 
     panel = new JPanel(new MigLayout(new LC().fill()));

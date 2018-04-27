@@ -33,7 +33,6 @@ public class RegexFilter extends AbstractStringBasedFilter {
 
   public RegexFilter() {
     super(NAME, DESCRIPTION, LABEL_TEXT);
-
   }
 
   protected void performPreFiltering() {
