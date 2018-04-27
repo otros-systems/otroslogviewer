@@ -237,6 +237,8 @@ project(':ScenarioTests'){
         compile project(':OtrosLogViewer-app')
     }
     test {
+        forkEvery = 1
+        maxHeapSize = "300m"
         testLogging.showStandardStreams = true
         useTestNG()
         options.listeners << 'scenario.testng.ScenarioTestListener'
