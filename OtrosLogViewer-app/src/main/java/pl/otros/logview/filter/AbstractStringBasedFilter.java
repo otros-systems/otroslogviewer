@@ -18,6 +18,7 @@ package pl.otros.logview.filter;
 import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
+import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -30,7 +31,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
 
   protected JTextField textField;
   protected String filteringText;
-  protected Color editingColor = Color.YELLOW;
+  protected Color editingColor;
   protected Color normalColor;
   protected JPanel gui;
   protected JLabel label;
@@ -43,6 +44,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
     super(name, description);
     createGui(labelText);
     normalColor = textField.getBackground();
+    editingColor = OtrosSwingUtils.isLight(normalColor) ? normalColor.darker() : normalColor.brighter();
     deleyedSwingInvoke = new DelayedSwingInvoke() {
 
       @Override

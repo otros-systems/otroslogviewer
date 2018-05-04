@@ -17,7 +17,10 @@ package pl.otros.logview.gui.actions.search;
 
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
+import pl.otros.swing.OtrosSwingUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -27,20 +30,25 @@ import java.util.regex.Pattern;
 
 public class SearchModeValidatorDocumentListener implements DocumentListener {
 
-  protected static final int EDIT_FILTER_ACTION_DELAY = 1000;
-  protected long lastTextFieldEditTime = 0;
+  private static final int EDIT_FILTER_ACTION_DELAY = 1000;
+  private long lastTextFieldEditTime = 0;
   private final JTextField textField;
-  protected Color editingColor = new Color(255, 255, 143);
-  protected Color normalColor = null;
-  protected Color errorColor = Color.RED;
+  private final Color editingColor;
+  private final Color normalColor;
+  private final Color errorColor;
   private final StatusObserver statusObserver;
   private boolean enable = true;
   private SearchMode searchMode;
 
-  public SearchModeValidatorDocumentListener(JTextField textField, StatusObserver observer, SearchMode searchMode) {
+  public SearchModeValidatorDocumentListener(JTextField textField,
+                                             StatusObserver observer,
+                                             SearchMode searchMode,
+                                             Theme theme) {
     super();
     this.textField = textField;
     normalColor = textField.getBackground();
+    errorColor = theme.getColor(ThemeKey.TEXT_FIELD_ERROR);
+    editingColor = OtrosSwingUtils.isLight(normalColor) ? normalColor.darker() : normalColor.brighter();
     statusObserver = observer;
     this.searchMode = searchMode;
   }

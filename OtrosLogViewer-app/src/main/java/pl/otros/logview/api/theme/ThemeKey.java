@@ -148,6 +148,13 @@ public class ThemeKey {
     new Color(220, 220, 255)
   );
 
+  public static final ThemeKey TEXT_FIELD_ERROR = new ThemeKey(
+    "Text field -> error",
+    "theme.textfield.error",
+    Color.RED,
+    Color.RED
+  );
+
   private String name;
   private String baseKey;
   private Color defaultLightColor;

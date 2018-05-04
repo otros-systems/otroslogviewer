@@ -527,7 +527,7 @@ public class LogViewMainFrame extends JFrame {
     });
     final MarkAllFoundAction markAllFoundAction = new MarkAllFoundAction(otrosApplication);
     final SearchModeValidatorDocumentListener searchValidatorDocumentListener = new SearchModeValidatorDocumentListener(searchField, observer,
-      SearchMode.STRING_CONTAINS);
+      SearchMode.STRING_CONTAINS, otrosApplication.getTheme());
     SearchMode searchModeFromConfig = configuration.get(SearchMode.class, "gui.searchMode", SearchMode.STRING_CONTAINS);
     final String lastSearchString;
     int selectedSearchMode = 0;
@@ -782,7 +782,7 @@ public class LogViewMainFrame extends JFrame {
     menu.add(soapFormatterRemoveMultirefsCbx);
     menu.add(soapFormatterRemoveXsiForNilElementsCbx);
     getJMenuBar().add(menu);
-    QueryFilter queryFilter = new QueryFilter();
+    QueryFilter queryFilter = new QueryFilter(otrosApplication.getTheme());
     allPluginables.getLogFiltersContainer().addElement(queryFilter);
     JButton b = new JButton("Throw exception");
     b.addActionListener(e -> {

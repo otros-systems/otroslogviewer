@@ -32,4 +32,8 @@ public class OtrosSwingUtils {
 
     return component;
   }
+
+  public static boolean isLight(Color color) {
+    return Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3])[2] > 0.5f;
+  }
 }
