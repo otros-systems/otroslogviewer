@@ -11,7 +11,7 @@ Useful software for analysing applications logs and traces.
   * Java 6 for verions 1.3.x
 
 ## Download 
-  * You can download latest version from [Github releases](https://github.com/otros-systems/otroslogviewer/releases)
+  * You can download latest version from [Github releases](https://github.com/otros-systems/otroslogviewer/releases) ![Download count of latest releese](https://img.shields.io/github/downloads/otros-systems/otroslogviewer/latest/total.svg)
   * Older versions ara available on [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dm/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
 [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dt/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
   
