@@ -20,7 +20,7 @@ public class ShowStats extends OtrosAction {
   private final JScrollPane scrollPane;
 
   public ShowStats(OtrosApplication otrosApplication) {
-    super("Show statistics", Icons.DOCUMENT_NUMBER, otrosApplication);
+    super("Show my usage statistics", Icons.DOCUMENT_NUMBER, otrosApplication);
     message = new JTextArea("");
     message.setFont(new Font(Font.MONOSPACED, Font.PLAIN, message.getFont().getSize()));
     message.setEditable(false);
