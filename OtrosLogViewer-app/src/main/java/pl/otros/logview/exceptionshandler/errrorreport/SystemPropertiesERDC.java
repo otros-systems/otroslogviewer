@@ -6,8 +6,7 @@ import java.util.Properties;
 
 public class SystemPropertiesERDC implements ErrorReportDataCollector {
 
-  public static final String PREFIX = "SYSTEM_PROPERTIES:";
-  public static final String MASKED_PASSOWRD = "*****";
+  static final String PREFIX = "SYSTEM_PROPERTIES:";
 
   @Override
   public Map<String, String> collect(ErrorReportCollectingContext context) {
@@ -17,14 +16,13 @@ public class SystemPropertiesERDC implements ErrorReportDataCollector {
     return r;
   }
 
-  protected void fillValues(Map<String, String> map, Properties properties) {
+  void fillValues(Map<String, String> map, Properties properties) {
     for (Object keyObject : properties.keySet()) {
       String key = keyObject.toString();
       String property = properties.getProperty(key);
-      if (key.contains("pass")) {
-        property = MASKED_PASSOWRD;
+      if (!key.toLowerCase().matches(".*(user\\.|password).*")) {
+        map.put(PREFIX + key, property);
       }
-      map.put(PREFIX + key, property);
     }
 
   }
