@@ -38,7 +38,6 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
-import pl.otros.logview.api.services.Services;
 import pl.otros.logview.batch.BatchProcessor;
 import pl.otros.logview.exceptionshandler.*;
 import pl.otros.logview.filter.QueryFilter;
@@ -73,6 +72,7 @@ import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
 import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
+import pl.otros.logview.stats.StatsSender;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
@@ -254,7 +254,10 @@ public class LogViewMainFrame extends JFrame {
     if (configuration.getBoolean(FIRST_USE, true) && !runningForTests()) {
       new FirstTimeUseWizard().show(this, new InitialConfigurationProcessing(otrosApplication));
     }
-    scheduleMaybeStatsSend(configuration, otrosApplication.getServices(), runningVersion);
+
+    if (!runningForTests()){
+      new StatsSender().maybeSendStats(this, configuration, otrosApplication.getServices(), runningVersion);
+    }
   }
 
   private static boolean runningForTests() {
@@ -821,35 +824,6 @@ public class LogViewMainFrame extends JFrame {
     this.setExtendedState(state);
   }
 
-  private void scheduleMaybeStatsSend(Configuration configuration, Services services, String olvVersion) {
-    if (configuration.getBoolean(SEND_STATS, false)) {
-      final long now = System.currentTimeMillis();
-      final long interval = 10L * 24 * 60 * 60 * 1000;
 
-      if (!configuration.containsKey(NEXT_STATS_SEND_DATE)) {
-        configuration.setProperty(NEXT_STATS_SEND_DATE, now + interval);
-      }
-
-      final long nextSendDate = configuration.getLong(NEXT_STATS_SEND_DATE);
-      LOGGER.info("Next stats send will occur in: " + new Date(nextSendDate));
-
-      if (now > nextSendDate) {
-        configuration.setProperty(NEXT_STATS_SEND_DATE, (now + interval));
-        services
-          .getTaskSchedulerService()
-          .getListeningScheduledExecutorService()
-          .schedule(() -> {
-            LOGGER.info("Sending stats");
-            final Map<String, Long> stats = services.getStatsService().getStats();
-            services.getStatsReportService().sendStats(
-              stats,
-              configuration.getString(UUID, ""),
-              olvVersion,
-              System.getProperty("java.version", "")
-            );
-          }, 10L, TimeUnit.SECONDS);
-      }
-    }
-  }
 
 }

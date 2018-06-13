@@ -25,15 +25,14 @@ class InitialConfigurationProcessing implements Function<InitialConfiguration, V
     cfg.setProperty(ConfKeys.APPEARANCE_LOOK_AND_FEEL, initialConfig.getLookAndFeelClassname());
     cfg.setProperty(ConfKeys.VERSION_CHECK_ON_STARTUP, initialConfig.isCheckForNewVersion());
     cfg.setProperty(ConfKeys.SEND_STATS, initialConfig.isSendingStats());
+    cfg.setProperty(ConfKeys.SEND_STATS_NOTIFY, initialConfig.isNotifySendingStats());
     cfg.setProperty(ConfKeys.JUMP_TO_CODE_HOST, initialConfig.getIdeConfiguration().getIdeHost());
     cfg.setProperty(ConfKeys.JUMP_TO_CODE_PORT, initialConfig.getIdeConfiguration().getIdePort());
     final Collection<LogPattern> logPatterns = initialConfig.getLogPatterns();
     logPatterns
       .stream()
       .filter(LogPattern::isValid)
-      .forEach(lp -> {
-        LoggerConfigUtil.addLog4jParser(otrosApplication, java.util.UUID.randomUUID().toString(), lp.getPattern(), lp.getProperties());
-      });
+      .forEach(lp -> LoggerConfigUtil.addLog4jParser(otrosApplication, java.util.UUID.randomUUID().toString(), lp.getPattern(), lp.getProperties()));
     return null;
   }
 }
