@@ -40,7 +40,6 @@ public class ShowErrorDialogExceptionHandler extends
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowErrorDialogExceptionHandler.class.getName());
   private final OtrosApplication otrosApplication;
-  private JTextField emailTextField;
   private JTextArea commentTextArea;
   private JCheckBox checkBoxUseProxy;
   private JTextField proxyTf;
@@ -90,7 +89,6 @@ public class ShowErrorDialogExceptionHandler extends
       JOptionPane.QUESTION_MESSAGE,
       Icons.MEGAPHONE_24,
       options, options[0]);
-    errorReportData.put("USER:email", emailTextField.getText());
     errorReportData.put("USER:comment", commentTextArea.getText());
 
     if (sendReport == JOptionPane.YES_OPTION) {
@@ -134,8 +132,8 @@ public class ShowErrorDialogExceptionHandler extends
     new Thread(r, "Error sending thread").start();
   }
 
-  public Map<String, String> generateReportData(Thread thread,
-                                                Throwable throwable, OtrosApplication otrosApplication) {
+  private Map<String, String> generateReportData(Thread thread,
+                                                 Throwable throwable, OtrosApplication otrosApplication) {
     ErrorReportCollectingContext ctx = new ErrorReportCollectingContext();
     ctx.setThread(thread);
     ctx.setThrowable(throwable);
@@ -165,7 +163,7 @@ public class ShowErrorDialogExceptionHandler extends
     return new String(bout.toByteArray());
   }
 
-  protected JComponent createDialogView() {
+  private JComponent createDialogView() {
     JPanel jPanel = new JPanel(new MigLayout());
     JLabel label = new JLabel("Do you want to send error report?");
     label.setFont(label.getFont().deriveFont(Font.BOLD));
@@ -176,9 +174,6 @@ public class ShowErrorDialogExceptionHandler extends
     commentTextArea.setLineWrap(true);
     JScrollPane jScrollPane = new JScrollPane(commentTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     jPanel.add(jScrollPane, "span 3, wrap");
-    jPanel.add(new JLabel("Email (optional):"));
-    emailTextField = new JTextField(30);
-    jPanel.add(emailTextField, "span 3, wrap");
 
     jPanel.add(new JSeparator(), "span 4, wrap, grow");
     checkBoxUseProxy = new JCheckBox("Use HTTP proxy");
@@ -206,7 +201,7 @@ public class ShowErrorDialogExceptionHandler extends
     DataConfiguration c = otrosApplication.getConfiguration();
     proxyTf.setText(c.getString(ConfKeys.HTTP_PROXY_HOST, ""));
     proxyUser.setText(c.getString(ConfKeys.HTTP_PROXY_USER, ""));
-    proxyPortModel.setValue(Integer.valueOf(c.getInt(ConfKeys.HTTP_PROXY_PORT, 80)));
+    proxyPortModel.setValue(c.getInt(ConfKeys.HTTP_PROXY_PORT, 80));
     boolean useProxy = c.getBoolean(ConfKeys.HTTP_PROXY_USE, false);
     checkBoxUseProxy.setSelected(useProxy);
     setProxyEnabled(useProxy);
