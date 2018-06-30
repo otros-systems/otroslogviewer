@@ -1,0 +1,7 @@
+<providers>
+
+    <provider class-name="docker.DockerFileProvider">
+        <scheme name="docker"/>
+    </provider>
+
+</providers>

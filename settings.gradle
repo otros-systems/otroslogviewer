@@ -1,1 +1,1 @@
-include 'OtrosLogViewer-app', 'Common-libs', 'OtrosStarter', 'OtrosAppDist', 'OtrosSwing', 'OtrosLogViewer-api', 'ScalaFormatter', 'OtrosVfsBrowser', 'ScenarioTests', 'LoggerConfigParser'
+include 'OtrosLogViewer-app', 'Common-libs', 'OtrosStarter', 'OtrosAppDist', 'OtrosSwing', 'OtrosLogViewer-api', 'ScalaFormatter', 'OtrosVfsBrowser', 'ScenarioTests', 'LoggerConfigParser', 'DockerOutVfs'

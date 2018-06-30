@@ -134,6 +134,15 @@ project(':OtrosVfsBrowser') {
 
 }
 
+
+project(':DockerOutVfs') {
+    dependencies {
+        compile project(':Common-libs')
+        compile 'com.github.docker-java:docker-java:3.+'
+    }
+    version = sharedVersion
+}
+
 project(':OtrosLogViewer-api') {
     dependencies {
         compile project(':Common-libs')
