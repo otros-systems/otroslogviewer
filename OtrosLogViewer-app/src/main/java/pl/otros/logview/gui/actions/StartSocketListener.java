@@ -78,7 +78,7 @@ public class StartSocketListener extends OtrosAction {
     //TODO solve this warning
     SocketLogReader logReader = null;
     if (logReader == null || logReader.isClosed()) {
-      logReader = new SocketLogReader(chooseLogImporter.logImporter, logDataCollector, observer, chooseLogImporter.port);
+      logReader = new SocketLogReader(chooseLogImporter.logImporter, logDataCollector, observer, getOtrosApplication().getLogLoader(), chooseLogImporter.port);
 
       try {
         logReader.start();
@@ -100,8 +100,10 @@ public class StartSocketListener extends OtrosAction {
     }
 
     JComboBox box = new JComboBox(names);
+    box.setName("StartSocketListenerDialog.importer");
     SpinnerNumberModel numberModel = new SpinnerNumberModel(50505, 1025, 65000, 1);
     JSpinner jSpinner = new JSpinner(numberModel);
+    jSpinner.setName("StartSocketListenerDialog.port");
     MigLayout migLayout = new MigLayout();
     JPanel panel = new JPanel(migLayout);
     panel.add(new JLabel("Select log importer"));

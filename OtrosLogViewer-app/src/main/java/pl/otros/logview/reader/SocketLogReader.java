@@ -19,30 +19,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.StatusObserver;
 import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.loading.LogLoader;
+import pl.otros.logview.api.loading.LogLoadingSession;
+import pl.otros.logview.api.loading.SocketSource;
 import pl.otros.logview.api.model.LogDataCollector;
-import pl.otros.logview.api.parser.ParsingContext;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SocketLogReader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SocketLogReader.class.getName());
   private ServerSocket serverSocket;
   private final StatusObserver observer;
+  private final LogLoader logLoader;
   private final LogDataCollector logDataCollector;
   private final LogImporter logImporter;
   private final int port;
+  private Set<LogLoadingSession> loadingSessionSet;
 
-  public SocketLogReader(LogImporter logImporter, LogDataCollector logDataCollector, StatusObserver observer, int port) {
+  public SocketLogReader(LogImporter logImporter, LogDataCollector logDataCollector, StatusObserver observer, LogLoader logLoader,int port) {
     super();
     this.logImporter = logImporter;
     this.logDataCollector = logDataCollector;
     this.observer = observer;
+    this.logLoader = logLoader;
     this.port = port;
+    loadingSessionSet = new HashSet<>();
   }
 
   public void close() throws IOException {
@@ -50,6 +57,7 @@ public class SocketLogReader {
       serverSocket.close();
       serverSocket = null;
     }
+    loadingSessionSet.forEach(logLoader::close);
   }
 
   public void start() throws Exception {
@@ -58,10 +66,9 @@ public class SocketLogReader {
       try {
         while (true) {
           Socket s = serverSocket.accept();
-          SocketHandler handler = new SocketHandler(s);
-          Thread t = new Thread(handler, "Socket handler: " + s.getInetAddress() + ":" + s.getPort());
-          t.setDaemon(true);
-          t.start();
+          final SocketSource socketSource = new SocketSource(s);
+          final LogLoadingSession logLoadingSession = logLoader.startLoading(socketSource, logImporter, logDataCollector);
+          loadingSessionSet.add(logLoadingSession);
         }
       } catch (IOException e) {
         if (isClosed()) {
@@ -79,36 +86,6 @@ public class SocketLogReader {
 
   public boolean isClosed() {
     return serverSocket == null || serverSocket.isClosed();
-  }
-
-  private class SocketHandler implements Runnable {
-
-    public Socket socket;
-
-    public SocketHandler(Socket socket) {
-      super();
-      this.socket = socket;
-    }
-
-    @Override
-    public void run() {
-      String adress = socket.getInetAddress().toString() + ":" + socket.getPort();
-
-      try {
-        InputStream in = socket.getInputStream();
-        ParsingContext parsingContext = new ParsingContext(adress, adress);
-        logImporter.initParsingContext(parsingContext);
-        logImporter.importLogs(in, logDataCollector, parsingContext);
-        observer.updateStatus(adress + " - connection finished ");
-      } catch (IOException e) {
-        e.printStackTrace();
-        observer.updateStatus(adress + " - connection broken: " + e.getMessage(), StatusObserver.LEVEL_ERROR);
-      } catch (Exception e) {
-        e.printStackTrace();
-        observer.updateStatus("Can't initialize log parser", StatusObserver.LEVEL_ERROR);
-      }
-    }
-
   }
 
   public LogImporter getLogImporter() {

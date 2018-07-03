@@ -118,7 +118,9 @@ class EmptyViewPanel extends JPanel {
     this.add(OtrosSwingUtils.fontSize2(clipboardButton), bagConstraints);
     bagConstraints.gridy++;
 
-    this.add(OtrosSwingUtils.fontSize2(new JButton(new StartSocketListener(otrosApplication, logReaders))), bagConstraints);
+    final JButton startSocketButton = new JButton(new StartSocketListener(otrosApplication, logReaders));
+    startSocketButton.setName("Start socket listener");
+    this.add(OtrosSwingUtils.fontSize2(startSocketButton), bagConstraints);
     bagConstraints.gridy++;
 
     bagConstraints.insets = new Insets(20, 5, 20, 5);

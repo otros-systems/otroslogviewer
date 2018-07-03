@@ -1,5 +1,6 @@
 package scenario;
 
+import org.awaitility.Duration;
 import org.fest.util.Files;
 import org.testng.annotations.Test;
 import scenario.components.LogViewPanel;
@@ -68,7 +69,9 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
 
     final LogViewPanel logViewPanel = dialog.importLogs();
 
-    await().until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
+    await("waiting for 10 events in log table")
+      .atMost(Duration.ONE_MINUTE)
+      .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
     IntStream.range(0, 9)
       .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "msg " + i));
 
