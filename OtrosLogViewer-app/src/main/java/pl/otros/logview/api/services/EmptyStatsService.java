@@ -38,6 +38,16 @@ public class EmptyStatsService implements StatsService {
   }
 
   @Override
+  public void jumpToCodeExecuted() {
+    //No action
+  }
+
+  @Override
+  public void contentReadFromIde() {
+    //No action
+  }
+
+  @Override
   public Map<String, Long> getStats() {
     return Collections.emptyMap();
   }

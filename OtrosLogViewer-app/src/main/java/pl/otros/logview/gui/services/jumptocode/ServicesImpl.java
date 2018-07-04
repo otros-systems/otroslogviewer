@@ -15,11 +15,11 @@ public class ServicesImpl implements Services {
   private StatsReporterService statsReporterService;
 
   public ServicesImpl(OtrosApplication otrosApplication) {
-    jumpToCodeService = new JumpToCodeServiceImpl(otrosApplication.getConfiguration());
     taskSchedulerService = new TaskSchedulerServiceImpl();
     persistService = new SerializePersisService();
     statsService = new DropwizardStatsService(persistService);
     statsReporterService = new HttpStatsReporterService();
+    jumpToCodeService = new JumpToCodeServiceStatsWrapper(new JumpToCodeServiceImpl(otrosApplication.getConfiguration()),statsService);
   }
 
   @Override
