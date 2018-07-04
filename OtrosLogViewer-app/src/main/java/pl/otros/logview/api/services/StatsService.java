@@ -12,5 +12,7 @@ public interface StatsService {
   void logParserUsed(LogImporter logImporter);
   void bytesRead(String protocol, long bytes);
   void logEventsImported(String scheme, long count);
+  void jumpToCodeExecuted();
+  void contentReadFromIde();
   Map<String, Long> getStats();
 }

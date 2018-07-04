@@ -71,6 +71,16 @@ public class DropwizardStatsService implements StatsService {
     metrics.counter("io:importedLogEvents." + scheme).inc(count);
   }
 
+  @Override
+  public void jumpToCodeExecuted() {
+    metrics.counter("ide:jumps").inc();
+  }
+
+  @Override
+  public void contentReadFromIde() {
+    metrics.counter("ide:content").inc();
+  }
+
   public Map<String, Long> getStats() {
     return reporter.countersMap(metrics.getCounters());
 
