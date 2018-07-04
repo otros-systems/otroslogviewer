@@ -15,14 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.Note;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Properties;
 
 public class MarkNoteFilter extends AbstractLogFilter {
 
@@ -66,11 +64,6 @@ public class MarkNoteFilter extends AbstractLogFilter {
   @Override
   public Component getGUI() {
     return gui;
-  }
-
-  @Override
-  public void init(Properties properties, LogDataTableModel collector) {
-    this.collector = collector;
   }
 
   @Override

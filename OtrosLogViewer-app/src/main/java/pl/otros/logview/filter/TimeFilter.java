@@ -15,7 +15,6 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
@@ -24,7 +23,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Date;
-import java.util.Properties;
 
 public class TimeFilter extends AbstractLogFilter {
 
@@ -80,11 +78,6 @@ public class TimeFilter extends AbstractLogFilter {
   public Component getGUI() {
 
     return gui;
-  }
-
-  @Override
-  public void init(Properties properties, LogDataTableModel collector) {
-
   }
 
   private class MyChangeListener implements ChangeListener {

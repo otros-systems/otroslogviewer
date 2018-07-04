@@ -21,6 +21,7 @@ import org.jdesktop.swingx.JXHyperlink;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
+import pl.otros.logview.api.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +114,7 @@ public class ThreadFilter extends AbstractLogFilter {
   }
 
   @Override
-  public void init(Properties properties, LogDataTableModel collector) {
+  public void init(Properties properties, LogDataTableModel collector, Theme theme) {
     this.collector = collector;
   }
 

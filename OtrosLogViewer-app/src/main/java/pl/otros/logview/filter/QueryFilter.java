@@ -16,9 +16,12 @@
 package pl.otros.logview.filter;
 
 import pl.otros.logview.accept.query.QueryAcceptCondition;
+import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.api.theme.ThemeKey;
+
+import java.util.Properties;
 
 /**
  * Use query to filter log events
@@ -27,13 +30,17 @@ import pl.otros.logview.api.theme.ThemeKey;
 public class QueryFilter extends AbstractStringBasedFilter {
 
   private Theme theme;
+  private QueryAcceptCondition queryAcceptCondition = null;
 
-  public QueryFilter(Theme theme) {
+
+  public QueryFilter() {
     super("Query filter", "Query Filter - see manual", "Enter query");
-    this.theme = theme;
   }
 
-  private QueryAcceptCondition queryAcceptCondition = null;
+  @Override
+  public void init(Properties properties, LogDataTableModel logDataTableModel, Theme theme) {
+    this.theme = theme;
+  }
 
   @Override
   public boolean accept(LogData logData, int row) {

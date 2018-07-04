@@ -437,7 +437,7 @@ public class LogViewPanel extends LogViewPanelI {
     filtersPanel.add(filtersLabel, "wrap, growx, span");
     LogFilterValueChangeListener listener = new LogFilterValueChangeListener(table, sorter, filtersList, statusObserver);
     for (LogFilter filter : filtersList) {
-      filter.init(new Properties(), dataTableModel);
+      filter.init(new Properties(), dataTableModel, getOtrosApplication().getTheme());
       FilterPanel filterPanel = new FilterPanel(filter, listener);
       filtersPanel.add(filterPanel, "wrap, growx");
       if (filter instanceof ThreadFilter) {

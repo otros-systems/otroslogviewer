@@ -20,6 +20,7 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.PopupListener;
 
 import javax.swing.*;
@@ -81,7 +82,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
   }
 
   @Override
-  public void init(Properties properties, LogDataTableModel collector) {
+  public void init(Properties properties, LogDataTableModel collector, Theme theme) {
     this.collector = collector;
     initTree();
   }
