@@ -785,7 +785,7 @@ public class LogViewMainFrame extends JFrame {
     menu.add(soapFormatterRemoveMultirefsCbx);
     menu.add(soapFormatterRemoveXsiForNilElementsCbx);
     getJMenuBar().add(menu);
-    QueryFilter queryFilter = new QueryFilter(otrosApplication.getTheme());
+    QueryFilter queryFilter = new QueryFilter();
     allPluginables.getLogFiltersContainer().addElement(queryFilter);
     JButton b = new JButton("Throw exception");
     b.addActionListener(e -> {

@@ -18,10 +18,12 @@ package pl.otros.logview.filter;
 import org.testng.annotations.Test;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.theme.Theme;
 
 import java.util.Properties;
 import java.util.logging.Level;
 
+import static org.mockito.Mockito.mock;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -33,7 +35,7 @@ public class LevelFilterTest {
     ld.setLevel(Level.FINEST);
 
     LevelFilter filter = new LevelFilter();
-    filter.init(new Properties(), new LogDataTableModel());
+    filter.init(new Properties(), new LogDataTableModel(), mock(Theme.class));
     filter.setPassLevel(Level.ALL.intValue());
     assertTrue(filter.accept(ld, 0));
 
