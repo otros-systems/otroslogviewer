@@ -49,7 +49,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   }
 
   @Test(retryAnalyzer = RetryAnalyzer.class)
-  public void importLogsFromClipboard() throws IOException {
+  public void importLogsFromClipboard() throws Exception {
     final File tempFile = File.createTempFile("olv", "logs");
     logEvents(tempFile, 10, integer -> Level.INFO);
     final String logsInClipboard = Files.contentOf(tempFile, "UTF-8").trim();
@@ -63,17 +63,16 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
     dialog.waitForProcessedContent(logsInClipboard);
     assertThat(dialog.processedContent().text()).isEqualTo(logsInClipboard);
 
-    dialog.processingPattern().setText("sed s/Message/msg/g");
+    dialog.processingPattern().setText("sed s/Message/XXX/g");
 
-    dialog.waitForProcessedContent(logsInClipboard.replaceAll("msg", "msg"));
-
+    dialog.waitForProcessedContent(logsInClipboard.replaceAll("Message", "XXX"));
     final LogViewPanel logViewPanel = dialog.importLogs();
 
     await("waiting for 10 events in log table")
       .atMost(Duration.ONE_MINUTE)
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
     IntStream.range(0, 9)
-      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "msg " + i));
+      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "XXX " + i));
 
   }
 

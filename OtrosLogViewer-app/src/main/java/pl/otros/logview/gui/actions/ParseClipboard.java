@@ -37,6 +37,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -291,7 +292,10 @@ public class ParseClipboard extends OtrosAction {
   private void loadLogFileAsContent(String data, TabWithName target) throws IOException {
     final FileObject tempFileWithClipboard = VFS.getManager().resolveFile("clipboard://clipboard_"+System.currentTimeMillis());
     tempFileWithClipboard.createFile();
-    tempFileWithClipboard.getContent().getOutputStream().write(data.getBytes());
+    final OutputStream outputStream = tempFileWithClipboard.getContent().getOutputStream();
+    outputStream.write(data.getBytes());
+    outputStream.flush();
+    outputStream.close();
     final LogImporter logImporter = logParserComboBox.getItemAt(logParserComboBox.getSelectedIndex());
     if (target.getLogDataCollector().isPresent()){
       final LogViewPanelI logViewPanelI = target.getLogDataCollector().get();
