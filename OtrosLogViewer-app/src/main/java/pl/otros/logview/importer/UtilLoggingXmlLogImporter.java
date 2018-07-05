@@ -107,6 +107,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       LOGGER.error("Cant load codepage " + e.getMessage());
     } catch (IOException ignore) {
       LOGGER.debug("Logs can't be imported due to IOException, most probably stream was closed");
+      LOGGER.error("Exception:", ignore);
     } finally {
       decodeEvents(sb.toString(), collector, parsingContext);
       IOUtils.closeQuietly(in);

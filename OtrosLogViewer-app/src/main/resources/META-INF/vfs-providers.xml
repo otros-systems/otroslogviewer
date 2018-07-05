@@ -1,0 +1,7 @@
+<providers>
+
+    <provider class-name="org.apache.commons.vfs2.provider.temp.TemporaryFileProvider">
+        <scheme name="clipboard"/>
+    </provider>
+
+</providers>

@@ -4,6 +4,7 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.VFS;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXTextField;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -288,16 +290,20 @@ public class ParseClipboard extends OtrosAction {
   }
 
   private void loadLogFileAsContent(String data, TabWithName target) throws IOException {
-
-    final FileObject fileObject = Utils.createFileObjectWithContent(data);
+    final FileObject tempFileWithClipboard = VFS.getManager().resolveFile("clipboard://clipboard_"+System.currentTimeMillis());
+    tempFileWithClipboard.createFile();
+    final OutputStream outputStream = tempFileWithClipboard.getContent().getOutputStream();
+    outputStream.write(data.getBytes());
+    outputStream.flush();
+    outputStream.close();
     final LogImporter logImporter = logParserComboBox.getItemAt(logParserComboBox.getSelectedIndex());
     if (target.getLogDataCollector().isPresent()){
       final LogViewPanelI logViewPanelI = target.getLogDataCollector().get();
-      getOtrosApplication().getLogLoader().startLoading(new VfsSource(fileObject),logImporter,logViewPanelI);
+      getOtrosApplication().getLogLoader().startLoading(new VfsSource(tempFileWithClipboard),logImporter,logViewPanelI);
     } else {
       final String tabTitle = new SimpleDateFormat("HH:mm:ss").format(new Date());
       new TailLogActionListener(getOtrosApplication(), logImporter)
-        .openFileObjectInTailMode(fileObject, "Clipboard " + tabTitle);
+        .openFileObjectInTailMode(tempFileWithClipboard, "Clipboard " + tabTitle);
     }
 
 

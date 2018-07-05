@@ -31,9 +31,12 @@ import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelWrapper;
 import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.ObservableInputStreamImpl;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.gui.actions.TailLogActionListener.ParsingContextStopperForClosingTab;
 import pl.otros.logview.importer.Log4jSerilizedLogImporter;
+import pl.otros.logview.stats.StatsLogDataCollector;
 
 import javax.net.SocketFactory;
 import javax.swing.*;
@@ -41,11 +44,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -55,6 +58,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
   private static final int RECONNECT_TIME = 20 * 1000;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectToSocketHubAppenderAction.class.getName());
+  private static final String LOG_4_J_SOCKET_HUB = "log4jSocketHub";
 
   private String host = "127.0.0.1";
   private int port = 50000;
@@ -103,19 +107,26 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
       getOtrosApplication().addClosableTab(hostPort, hostPort, Icons.PLUGIN_CONNECT, logViewPanelWrapper, true);
 
       Runnable r = () -> {
+        final StatsService statsService = getOtrosApplication().getServices().getStatsService();
+        final StatsLogDataCollector statsLogDataCollector = new StatsLogDataCollector(LOG_4_J_SOCKET_HUB, logDataCollector, statsService);
+        statsService.importLogsFromScheme(LOG_4_J_SOCKET_HUB);
         InetAddress inetAddress = socket.getInetAddress();
         int port2 = socket.getPort();
-        InputStream inputStream = null;
+        ObservableInputStreamImpl inputStream = null;
         Socket s = socket;
         while (parsingContext.isParsingInProgress()) {
           try {
-            inputStream = s.getInputStream();
+            inputStream = new ObservableInputStreamImpl(s.getInputStream());
             BufferedInputStream bin = new BufferedInputStream(inputStream);
             LOGGER.info(String.format("Connect to SocketHubAppender to %s:%d", inetAddress.getHostAddress(), port2));
-            logImporter.importLogs(bin, logDataCollector, parsingContext);
+            logImporter.importLogs(bin, statsLogDataCollector, parsingContext);
             getOtrosApplication().getStatusObserver().updateStatus("Loading logs from Log4j SocketHubAppender finished", StatusObserver.LEVEL_WARNING);
           } catch (IOException e1) {
             LOGGER.warn(String.format("Problem with connecting to %s:%d: %s", inetAddress.getHostAddress(), port2, e1.getMessage()));
+          } finally {
+            Optional.ofNullable(inputStream)
+              .map(ObservableInputStreamImpl::getCurrentRead)
+              .ifPresent(read -> statsService.bytesRead(LOG_4_J_SOCKET_HUB, read));
           }
           try {
             LOGGER.debug("Reconnecting in " + RECONNECT_TIME + "ms");
@@ -188,7 +199,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
     return true;
   }
 
-  protected Socket tryToConnectToSocket(DataConfiguration configuration, String hostAndPortString, SocketFactory socketFactory) throws IOException {
+  Socket tryToConnectToSocket(DataConfiguration configuration, String hostAndPortString, SocketFactory socketFactory) throws IOException {
     List<Object> list1 = configuration.getList(ConfKeys.SOCKET_HUB_APPENDER_ADDRESSES);
     String[] hostPort = hostAndPortString.split(":");
     host = hostPort[0];
@@ -199,9 +210,7 @@ public class ConnectToSocketHubAppenderAction extends OtrosAction {
     }
 
     Socket socket = socketFactory.createSocket(host, port);
-    if (list1.contains(hostAndPortString)) {
-      list1.remove(hostAndPortString);
-    }
+    list1.remove(hostAndPortString);
     list1.add(0, hostAndPortString);
     if (list1.size() > 30) {
       list1.remove(list1.size() - 1);

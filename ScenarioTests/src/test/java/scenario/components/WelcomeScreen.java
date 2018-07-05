@@ -29,5 +29,10 @@ public class WelcomeScreen extends TestComponent<JPanelFixture, WelcomeScreen> {
     return new ParseClipboardDialog(robot);
   }
 
+  public StartSocketListenerDialog clickStartSocketListener() {
+    me().button("Start socket listener").click();
+    return new StartSocketListenerDialog(robot);
+  }
+
 
 }
