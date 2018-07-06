@@ -622,7 +622,7 @@ public class AdvanceOpenPanel extends JPanel {
   private void initToolbar(JToolBar toolBar) {
     final JButton addButton = new JButton(addMoreFilesAction);
     addButton.setMnemonic('A');
-    addButton.setName("OpenPanel.addMissing more files");
+    addButton.setName("OpenPanel.add more files");
     toolBar.add(addButton);
     final JButton deleteButton = new JButton(deleteSelectedAction);
     deleteButton.setMnemonic('D');
@@ -827,6 +827,7 @@ public class AdvanceOpenPanel extends JPanel {
       JLabel l = (JLabel) listCellRendererComponent;
       l.setIcon(advanceOpenPanel.openModeIcons.get(value));
       return listCellRendererComponent;
+    }
     }
   }
 
