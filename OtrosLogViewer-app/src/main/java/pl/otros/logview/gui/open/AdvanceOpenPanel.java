@@ -563,7 +563,8 @@ public class AdvanceOpenPanel extends JPanel {
               byte[] bytes = new byte[0];
 
 
-              final PossibleLogImporters loadedPossibleLogImporters = fileObjectAt.getPossibleLogImporters();;
+              final PossibleLogImporters loadedPossibleLogImporters = fileObjectAt.getPossibleLogImporters();
+              ;
 
 
               publish(new AddingDetail(CanParse.TESTING, loadedPossibleLogImporters, new ContentProbe(bytes)));
@@ -571,7 +572,7 @@ public class AdvanceOpenPanel extends JPanel {
                 bytes = logFileContent.getInputStreamBufferedStart();
                 PossibleLogImporters detectedLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
                 loadedPossibleLogImporters.addMissing(detectedLogImporters.getAvailableImporters());
-                if (!loadedPossibleLogImporters.getLogImporter().isPresent()){
+                if (!loadedPossibleLogImporters.getLogImporter().isPresent()) {
                   loadedPossibleLogImporters.setLogImporter(detectedLogImporters.getLogImporter());
                 }
                 if (loadedPossibleLogImporters.getLogImporter().isPresent()) {
@@ -828,7 +829,7 @@ public class AdvanceOpenPanel extends JPanel {
       l.setIcon(advanceOpenPanel.openModeIcons.get(value));
       return listCellRendererComponent;
     }
-    }
+
   }
 
 }
