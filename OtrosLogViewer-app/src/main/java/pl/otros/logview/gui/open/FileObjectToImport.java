@@ -19,13 +19,14 @@ public class FileObjectToImport {
   private ContentProbe content;
   private PossibleLogImporters possibleLogImporters;
 
-  FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, OpenMode openMode, CanParse canParse) {
+  FileObjectToImport(FileObject fileObject, FileName fileName, FileSize fileSize, Level level, OpenMode openMode, CanParse canParse,PossibleLogImporters possibleLogImporters) {
     this.fileObject = fileObject;
     this.fileName = fileName;
     this.fileSize = fileSize;
     this.level = level;
     this.openMode = openMode;
     this.canParse = canParse;
+    this.possibleLogImporters = possibleLogImporters;
   }
 
   PossibleLogImporters getPossibleLogImporters() {

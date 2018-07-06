@@ -129,8 +129,7 @@ public class AdvanceOpenPanel extends JPanel {
       @Override
       public void tableChanged(TableModelEvent e) {
         loadingProgressBar.setMaximum(tableModel.getColumnCount());
-        final boolean isEmpty = tableModel.getRowCount() > 0;
-        importAction.setEnabled(isEmpty);
+        importAction.setEnabled(tableModel.getRowCount() > 0);
       }
     });
 
@@ -177,13 +176,13 @@ public class AdvanceOpenPanel extends JPanel {
     });
 
     Level[] levels = {
-        RenamedLevel.FINEST_TRACE,
-        RenamedLevel.FINER,
-        RenamedLevel.FINE_DEBUG,
-        RenamedLevel.CONFIG,
-        RenamedLevel.INFO,
-        RenamedLevel.WARNING_WARN,
-        RenamedLevel.SEVERE_ERROR_FATAL
+      RenamedLevel.FINEST_TRACE,
+      RenamedLevel.FINER,
+      RenamedLevel.FINE_DEBUG,
+      RenamedLevel.CONFIG,
+      RenamedLevel.INFO,
+      RenamedLevel.WARNING_WARN,
+      RenamedLevel.SEVERE_ERROR_FATAL
     };
     table.setDefaultEditor(Level.class, new DefaultCellEditor(new JComboBox<>(levels)));
     table.setDefaultRenderer(CanParse.class, new NamedTableRenderer() {
@@ -226,8 +225,8 @@ public class AdvanceOpenPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         selectedRowsStream(table)
-            .mapToObj(tableModel::getFileObjectToImport)
-            .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_START));
+          .mapToObj(tableModel::getFileObjectToImport)
+          .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_START));
       }
     };
     selectedFromStart.setEnabled(false);
@@ -235,8 +234,8 @@ public class AdvanceOpenPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         selectedRowsStream(table)
-            .mapToObj(tableModel::getFileObjectToImport)
-            .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_END));
+          .mapToObj(tableModel::getFileObjectToImport)
+          .forEach(l -> tableModel.setOpenMode(l.getFileObject(), OpenMode.FROM_END));
       }
     };
     selectedFromEnd.setEnabled(false);
@@ -275,11 +274,10 @@ public class AdvanceOpenPanel extends JPanel {
 
           final SuggestionSource<String> suggestionSource = query -> sessionNames.stream().filter(s -> s.contains(query.getValue())).collect(Collectors.toList());
           SuggestDecorator.decorate(textField,
-              suggestionSource,
-              JLabel::new,
-              value -> textField.setText(value.getValue()),
-              true);
-
+            suggestionSource,
+            JLabel::new,
+            value -> textField.setText(value.getValue()),
+            true);
 
 
           final AbstractAction saveAction = new AbstractAction("Save") {
@@ -288,11 +286,11 @@ public class AdvanceOpenPanel extends JPanel {
               String sessionName = textField.getText();
               final List<FileObjectToImport> data = tableModel.getData();
               List<FileToOpen> files = data.stream()
-                      .map(f ->
-                              new FileToOpen(f.getFileName().getURI(),
-                                      f.getOpenMode(), f.getLevel(),
-                                      f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
-                      .collect(Collectors.toList());
+                .map(f ->
+                  new FileToOpen(f.getFileName().getURI(),
+                    f.getOpenMode(), f.getLevel(),
+                    f.getPossibleLogImporters().getLogImporter().map(PluginableElement::getPluginableId)))
+                .collect(Collectors.toList());
               final Session session = new Session(sessionName, files);
               dialog.setVisible(false);
               dialog.dispose();
@@ -337,9 +335,9 @@ public class AdvanceOpenPanel extends JPanel {
         } catch (Exception e1) {
           LOGGER.error("Can't load sessions from persist service", e1);
           JOptionPane.showMessageDialog(
-              AdvanceOpenPanel.this,
-              "Can't open saved sessions: " + e1.getMessage(),
-              "Error", JOptionPane.ERROR_MESSAGE);
+            AdvanceOpenPanel.this,
+            "Can't open saved sessions: " + e1.getMessage(),
+            "Error", JOptionPane.ERROR_MESSAGE);
         }
       }
     };
@@ -356,18 +354,18 @@ public class AdvanceOpenPanel extends JPanel {
         final List<String> sessionNames = sessionMap.keySet().stream().sorted().collect(Collectors.toList());
         JComboBox<String> sessionCbx = new JComboBox<>(new Vector<>(sessionNames));
         final int biggestSession = sessionMap
-            .values()
-            .stream()
-            .map(SessionUtil::toStringGroupedByServer)
-            .mapToInt(s->s.split("\n").length)
-            .max().orElse(1);
+          .values()
+          .stream()
+          .map(SessionUtil::toStringGroupedByServer)
+          .mapToInt(s -> s.split("\n").length)
+          .max().orElse(1);
         final int longestName = sessionMap
-            .values()
-            .stream()
-            .flatMap(s -> s.getFilesToOpen().stream())
-            .mapToInt(f -> f.getUri().length())
-            .max()
-            .orElse(20);
+          .values()
+          .stream()
+          .flatMap(s -> s.getFilesToOpen().stream())
+          .mapToInt(f -> f.getUri().length())
+          .max()
+          .orElse(20);
         final JTextArea jTextArea = new JTextArea(biggestSession + 1, longestName);
         jTextArea.setEditable(false);
         jTextArea.setBorder(BorderFactory.createTitledBorder("Files in session"));
@@ -389,7 +387,7 @@ public class AdvanceOpenPanel extends JPanel {
 
         contentPane.add(selectSessionLabel);
         contentPane.add(new JScrollPane(jTextArea), "wrap, span 1 2");
-        contentPane.add(sessionCbx,"wrap, aligny top");
+        contentPane.add(sessionCbx, "wrap, aligny top");
         Action loadAction = new AbstractAction("Load") {
           @Override
           public void actionPerformed(ActionEvent e) {
@@ -408,7 +406,12 @@ public class AdvanceOpenPanel extends JPanel {
                     final FileObject fileObject = VFSUtils.resolveFileObject(f.getUri());
                     final FileName name = fileObject.getName();
                     final FileSize fileSize = new FileSize(fileObject.getContent().getSize());
-                    final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED);
+                    final Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+                    final Optional<LogImporter> logImporter = f.getLogImporter().flatMap(s -> logImporters.stream().filter(p -> p.getPluginableId().equals(s)).findAny());
+
+                    final PossibleLogImporters possibleLogImporters = new PossibleLogImporters(logImporter);
+                    final FileObjectToImport toImport = new FileObjectToImport(fileObject, name, fileSize, f.getLevel(), f.getOpenMode(), CanParse.NOT_TESTED, possibleLogImporters);
+
                     successFullyLoaded.add(toImport);
                   } catch (FileSystemException e1) {
                     LOGGER.error("Can't load file to session: ", e1);
@@ -435,8 +438,8 @@ public class AdvanceOpenPanel extends JPanel {
                   final List<FileToOpen> fileToOpens = sessionLoadResult.getFailedToOpen();
                   if (fileToOpens.size() > 0) {
                     final String msg = fileToOpens.stream()
-                        .map(FileToOpen::getUri)
-                        .collect(Collectors.joining("\n", "Failed to open files:\n", ""));
+                      .map(FileToOpen::getUri)
+                      .collect(Collectors.joining("\n", "Failed to open files:\n", ""));
                     JOptionPane.showMessageDialog(AdvanceOpenPanel.this, new JTextArea(msg), "Error", JOptionPane.ERROR_MESSAGE);
                   } else {
                     otrosApplication.getStatusObserver().updateStatus("Session \"" + sessionLoadResult.getName() + "\" loaded");
@@ -462,7 +465,7 @@ public class AdvanceOpenPanel extends JPanel {
 
         final JButton loadButton = new JButton(loadAction);
         loadButton.setMnemonic('L');
-        loadButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"open");
+        loadButton.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "open");
 
         final JButton cancelButton = new JButton(cancelLoadAction);
         cancelButton.setMnemonic('C');
@@ -505,15 +508,15 @@ public class AdvanceOpenPanel extends JPanel {
         showLoadingPanel();
         final int rowCount = tableModel.getRowCount();
         final List<Optional<LogImporter>> logImporters = tableModel.getData()
-            .stream()
-            .map(l -> l.getPossibleLogImporters().getLogImporter())
-            .collect(toList());
-        
+          .stream()
+          .map(l -> l.getPossibleLogImporters().getLogImporter())
+          .collect(toList());
+
         final LogViewPanelWrapper logViewPanelWrapper = new LogViewPanelWrapper(
-            "Multiple log files " + rowCount,
-            null,
-            mergeColumns(logImporters),
-            otrosApplication);
+          "Multiple log files " + rowCount,
+          null,
+          mergeColumns(logImporters),
+          otrosApplication);
 
         final LogLoader logLoader = otrosApplication.getLogLoader();
 
@@ -558,12 +561,20 @@ public class AdvanceOpenPanel extends JPanel {
               final Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
               CanParse canParse = CanParse.NO;
               byte[] bytes = new byte[0];
-              PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
-              publish(new AddingDetail(CanParse.TESTING, possibleLogImporters, new ContentProbe(bytes)));
+
+
+              final PossibleLogImporters loadedPossibleLogImporters = fileObjectAt.getPossibleLogImporters();;
+
+
+              publish(new AddingDetail(CanParse.TESTING, loadedPossibleLogImporters, new ContentProbe(bytes)));
               try (LoadingInfo logFileContent = new LoadingInfo(fileObjectAt.getFileObject())) {
                 bytes = logFileContent.getInputStreamBufferedStart();
-                possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
-                if (possibleLogImporters.getLogImporter().isPresent()) {
+                PossibleLogImporters detectedLogImporters = Utils.detectPossibleLogImporter(logImporters, bytes);
+                loadedPossibleLogImporters.addMissing(detectedLogImporters.getAvailableImporters());
+                if (!loadedPossibleLogImporters.getLogImporter().isPresent()){
+                  loadedPossibleLogImporters.setLogImporter(detectedLogImporters.getLogImporter());
+                }
+                if (loadedPossibleLogImporters.getLogImporter().isPresent()) {
                   canParse = CanParse.YES;
                 } else if (bytes.length == 0) {
                   canParse = CanParse.FILE_TOO_SMALL;
@@ -571,7 +582,7 @@ public class AdvanceOpenPanel extends JPanel {
               } catch (IOException e) {
                 canParse = CanParse.TESTING_ERROR;
               }
-              publish(new AddingDetail(canParse, possibleLogImporters, new ContentProbe(bytes)));
+              publish(new AddingDetail(canParse, loadedPossibleLogImporters, new ContentProbe(bytes)));
               return null;
             }
           };
@@ -583,10 +594,10 @@ public class AdvanceOpenPanel extends JPanel {
     final JScrollPane scrollPane = new JScrollPane(table);
 
     JPanel emptyView = new JPanel(new MigLayout("fillx", "[center]", "[center]10[center]"));
-    emptyView.add(new JLabel(""),"wrap, pushy");
-    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(addMoreFilesAction)),"wrap");
-    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(loadSession)),"wrap");
-    emptyView.add(new JLabel(""),"wrap, pushy");
+    emptyView.add(new JLabel(""), "wrap, pushy");
+    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(addMoreFilesAction)), "wrap");
+    emptyView.add(OtrosSwingUtils.fontSize2(new JButton(loadSession)), "wrap");
+    emptyView.add(new JLabel(""), "wrap, pushy");
     final CardLayout cardLayoutTablePanel = new CardLayout();
     final JPanel tablePanel = new JPanel(cardLayoutTablePanel);
     tablePanel.add(scrollPane, CARD_TABLE);
@@ -611,7 +622,7 @@ public class AdvanceOpenPanel extends JPanel {
   private void initToolbar(JToolBar toolBar) {
     final JButton addButton = new JButton(addMoreFilesAction);
     addButton.setMnemonic('A');
-    addButton.setName("OpenPanel.add more files");
+    addButton.setName("OpenPanel.addMissing more files");
     toolBar.add(addButton);
     final JButton deleteButton = new JButton(deleteSelectedAction);
     deleteButton.setMnemonic('D');
@@ -673,12 +684,13 @@ public class AdvanceOpenPanel extends JPanel {
             continue;
           }
           final FileObjectToImport fileObjectToImport = new FileObjectToImport(
-              f,
-              f.getName(),
-              new FileSize(f.getContent().getSize()),
-              Level.FINEST,
-              OpenMode.FROM_START,
-              CanParse.NOT_TESTED);
+            f,
+            f.getName(),
+            new FileSize(f.getContent().getSize()),
+            Level.FINEST,
+            OpenMode.FROM_START,
+            CanParse.NOT_TESTED,
+            new PossibleLogImporters());
           publish(fileObjectToImport);
         }
         return null;
@@ -726,7 +738,7 @@ public class AdvanceOpenPanel extends JPanel {
         throw e1;
       }
       final List<FileObjectToImport> fileObjects = IntStream.range(0, tableModel.getRowCount()).mapToObj(tableModel::getFileObjectToImport).collect(
-          toList());
+        toList());
       ArrayList<LoadingBean> loadingBeans = new ArrayList<>();
       int progress = 0;
       for (final FileObjectToImport file : fileObjects) {
@@ -750,14 +762,14 @@ public class AdvanceOpenPanel extends JPanel {
       }
       loadingBeans.forEach(l -> {
         final LogLoadingSession session = logLoader.startLoading(
-            new VfsSource(
-                l.loadingInfo.getFileObject(),
-                l.fileObjectToImport.getOpenMode()
-            ),
-            l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
-            logDataCollector,
-            3000,
-            Optional.of(2000L));
+          new VfsSource(
+            l.loadingInfo.getFileObject(),
+            l.fileObjectToImport.getOpenMode()
+          ),
+          l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
+          logDataCollector,
+          3000,
+          Optional.of(2000L));
         logLoader.changeFilters(session, new LevelHigherOrEqualAcceptCondition(l.fileObjectToImport.getLevel()));
       });
       statsService.filesImportedIntoOneView(loadingBeans.size());
@@ -780,9 +792,9 @@ public class AdvanceOpenPanel extends JPanel {
       try {
         final List<LoadingBean> loadingBeans = get();
         String tooltip = loadingBeans.stream()
-            .map(l -> l.loadingInfo)
-            .map(LoadingInfo::getFriendlyUrl)
-            .collect(Collectors.joining("<br>", "<html>Multiple files:<br>", "</html>"));
+          .map(l -> l.loadingInfo)
+          .map(LoadingInfo::getFriendlyUrl)
+          .collect(Collectors.joining("<br>", "<html>Multiple files:<br>", "</html>"));
         otrosApplication.addClosableTab(String.format("Multiple logs [%d]", loadingBeans.size()), tooltip, Icons.ARROW_REPEAT, logViewPanelWrapper, true);
         otrosApplication.getjTabbedPane().remove(AdvanceOpenPanel.this);
       } catch (InterruptedException | ExecutionException e1) {
