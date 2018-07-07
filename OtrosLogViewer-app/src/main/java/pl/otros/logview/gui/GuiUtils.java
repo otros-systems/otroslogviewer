@@ -59,12 +59,13 @@ public class GuiUtils {
   }
 
   public static void centerOnScreen(Window target) {
-    final Toolkit toolkit = Toolkit.getDefaultToolkit();
-    final Dimension screenSize = toolkit.getScreenSize();
+    DisplayMode displayMode = target.getGraphicsConfiguration().getDevice().getDisplayMode();
+    int displayHeight = displayMode.getHeight();
+    int displayWidth = displayMode.getWidth();
 
     Dimension targetSize = target.getSize();
 
-    Point frameLocation = new Point(screenSize.width / 2 - targetSize.width / 2, screenSize.height / 2 - targetSize.height / 2);
+    Point frameLocation = new Point(displayWidth / 2 - targetSize.width / 2, displayHeight / 2 - targetSize.height / 2);
     target.setLocation(frameLocation);
   }
 

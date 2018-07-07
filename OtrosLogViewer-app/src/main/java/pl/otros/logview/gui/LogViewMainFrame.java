@@ -810,15 +810,23 @@ public class LogViewMainFrame extends JFrame {
     Dimension size = new Dimension(configuration.getInt("gui.width", 1280), configuration.getInt("gui.height", 780));
     Point location = new Point(configuration.getInt("gui.location.x", 100), configuration.getInt("gui.location.y", 100));
     int state = configuration.getInt("gui.state", Frame.NORMAL);
-    Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-    if (location.x > screensize.width) {
-      location.x = 0;
+
+    //Size of taskbar's
+    Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+    //Size of current display
+    DisplayMode displayMode = this.getGraphicsConfiguration().getDevice().getDisplayMode();
+    int displayHeight = displayMode.getHeight();
+    int displayWidth = displayMode.getWidth();
+
+    //if the location was on a other screen the location is relative to main screen and can be negative
+    if (location.x > displayWidth || location.x < 0) {
+      location.x = 0 + screenInsets.left;
     }
-    if (location.y > screensize.height) {
-      location.y = 0;
+    if (location.y > displayHeight || location.y < 0) {
+      location.y = 0 + screenInsets.top;
     }
-    size.width = Math.min(screensize.width, size.width);
-    size.height = Math.min(screensize.height, size.height);
+    size.width = Math.min(displayWidth - (screenInsets.left + screenInsets.right), size.width);
+    size.height = Math.min(displayHeight - (screenInsets.top + screenInsets.bottom), size.height);
     this.setSize(size);
     this.setLocation(location);
     this.setExtendedState(state);
