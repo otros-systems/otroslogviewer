@@ -72,6 +72,11 @@ public class DropwizardStatsService implements StatsService {
   }
 
   @Override
+  public void filterUsed(String filter) {
+    metrics.counter("filter:" + filter + ".used").inc();
+  }
+
+  @Override
   public void jumpToCodeExecuted() {
     metrics.counter("ide:jumps").inc();
   }
