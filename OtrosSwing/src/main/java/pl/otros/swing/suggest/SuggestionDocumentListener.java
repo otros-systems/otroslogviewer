@@ -310,7 +310,8 @@ class SuggestionDocumentListener<T> implements DocumentListener {
       suggestionWindow.pack();
       if (textComponent instanceof JTextField) {
         int width = Math.max(textComponent.getWidth(), suggestionWindow.getWidth());
-        suggestionWindow.setSize(width, (int) Math.min(suggestionWindow.getHeight(), Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
+        int screenHeight = suggestionWindow.getGraphicsConfiguration().getDevice().getDisplayMode().getHeight();
+        suggestionWindow.setSize(width, (int) Math.min(suggestionWindow.getHeight(), screenHeight / 2));
         int x = (int) textComponent.getLocationOnScreen().getX();
         int y = (int) (textComponent.getLocationOnScreen().getY() + textComponent.getHeight());
         suggestionWindow.setLocation(x, y);
