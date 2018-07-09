@@ -16,14 +16,24 @@
 
 package pl.otros.logview.exceptionshandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 
 public class EventQueueProxy extends EventQueue {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EventQueueProxy.class.getName());
 
   @Override
   protected void dispatchEvent(AWTEvent arg0) {
     try {
       super.dispatchEvent(arg0);
+    } catch (NullPointerException e) {
+      /* On multi monitor environment the java.awt.Component#findUnderMouseInWindow method can throw a NullPointerException.
+       * See https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6840067
+       */
+      LOGGER.warn("NullPointerException on dispatchEvent " + arg0 + ". Possible awt bug.", e);
     } catch (Exception e) {
       Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
     }
