@@ -561,12 +561,7 @@ public class AdvanceOpenPanel extends JPanel {
               final Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
               CanParse canParse = CanParse.NO;
               byte[] bytes = new byte[0];
-
-
               final PossibleLogImporters loadedPossibleLogImporters = fileObjectAt.getPossibleLogImporters();
-              ;
-
-
               publish(new AddingDetail(CanParse.TESTING, loadedPossibleLogImporters, new ContentProbe(bytes)));
               try (LoadingInfo logFileContent = new LoadingInfo(fileObjectAt.getFileObject())) {
                 bytes = logFileContent.getInputStreamBufferedStart();
