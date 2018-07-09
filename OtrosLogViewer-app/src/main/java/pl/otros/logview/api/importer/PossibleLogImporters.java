@@ -16,15 +16,28 @@
 
 package pl.otros.logview.api.importer;
 
+import pl.otros.logview.api.pluginable.PluginableElement;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  */
 public class PossibleLogImporters {
   private Optional<LogImporter> logImporter = Optional.empty();
   private List<LogImporter> availableImporters = new ArrayList<>();
+
+  public PossibleLogImporters() {
+  }
+
+  public PossibleLogImporters(Optional<LogImporter> logImporter) {
+    this.logImporter = logImporter;
+    logImporter.ifPresent(availableImporters::add);
+
+  }
 
   public List<LogImporter> getAvailableImporters() {
     return availableImporters;
@@ -40,5 +53,18 @@ public class PossibleLogImporters {
 
   public void setLogImporter(Optional<LogImporter> logImporter) {
     this.logImporter = logImporter;
+  }
+
+  public void addMissing(List<LogImporter> toAdd) {
+
+    final Map<String, LogImporter> availableMap = availableImporters
+      .stream()
+      .collect(Collectors.toMap(PluginableElement::getPluginableId, li -> li));
+
+    toAdd
+      .stream()
+      .filter(li -> !availableMap.containsKey(li.getPluginableId()))
+      .forEach(availableImporters::add);
+
   }
 }
