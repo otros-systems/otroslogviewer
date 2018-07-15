@@ -38,6 +38,11 @@ public class EmptyStatsService implements StatsService {
   }
 
   @Override
+  public void filterUsed(String filter) {
+    //No action
+  }
+
+  @Override
   public void jumpToCodeExecuted() {
     //No action
   }

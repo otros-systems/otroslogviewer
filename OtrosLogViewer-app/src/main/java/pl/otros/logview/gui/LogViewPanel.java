@@ -33,6 +33,7 @@ import pl.otros.logview.api.gui.NoteEvent.EventType;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.MenuActionProvider;
+import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
@@ -129,13 +130,13 @@ public class LogViewPanel extends LogViewPanelI {
     logsMarkersPanel = new JPanel();
     JPanel leftPanel = new JPanel(new MigLayout());
     logDetailTextArea = new FullWidthJTextPane();
-    logDetailTextArea.setFont(new Font("Courier New", 0, logDetailTextArea.getFont().getSize()));
+    logDetailTextArea.setFont(new Font("Courier New", Font.PLAIN, logDetailTextArea.getFont().getSize()));
     logDetailTextArea.setEditable(false);
     MouseAdapter locationInfo = new MessageDetailsMouseAdapter(otrosApplication, logDetailTextArea);
     logDetailTextArea.addMouseMotionListener(locationInfo);
     logDetailTextArea.addMouseListener(locationInfo);
     logDetailTextArea.setBorder(BorderFactory.createTitledBorder("Details"));
-    logDetailWithRulerScrollPane = RulerBarHelper.wrapTextComponent((JTextPane) logDetailTextArea);
+    logDetailWithRulerScrollPane = RulerBarHelper.wrapTextComponent(logDetailTextArea);
     FontResize.addFontResizeOnScroll(logDetailWithRulerScrollPane.getjScrollPane());
     table = new JTableWith2RowHighliting(dataTableModel);
     table.setName("LogViewPanel.log table");
@@ -422,12 +423,7 @@ public class LogViewPanel extends LogViewPanelI {
         LOGGER.error("Can't initialize filter: " + logFilter.getClass(), e);
       }
     }
-    Collections.sort(filtersList, new Comparator<LogFilter>() {
-      @Override
-      public int compare(LogFilter o1, LogFilter o2) {
-        return o1.getName().compareTo(o2.getName());
-      }
-    });
+    filtersList.sort(Comparator.comparing(LogFilter::getName));
     JLabel filtersLabel = new JLabel("Filters:");
     filtersLabel.setMinimumSize(new Dimension(200, 16));
     filtersLabel.setPreferredSize(new Dimension(200, 16));
@@ -435,8 +431,12 @@ public class LogViewPanel extends LogViewPanelI {
     Font f = filtersLabel.getFont().deriveFont(Font.BOLD);
     filtersLabel.setFont(f);
     filtersPanel.add(filtersLabel, "wrap, growx, span");
-    LogFilterValueChangeListener listener = new LogFilterValueChangeListener(table, sorter, filtersList, statusObserver);
+    LogFilterValueChangeListener listenerToWrap = new LogFilterValueChangeListenerImpl(table, sorter, filtersList, statusObserver);
+    final StatsService statsService = getOtrosApplication().getServices().getStatsService();
+
     for (LogFilter filter : filtersList) {
+      final LogFilterValueChangeListenerStatsWrapper listener =
+        new LogFilterValueChangeListenerStatsWrapper(listenerToWrap, statsService, filter.getPluginableId());
       filter.init(new Properties(), dataTableModel, getOtrosApplication().getTheme());
       FilterPanel filterPanel = new FilterPanel(filter, listener);
       filtersPanel.add(filterPanel, "wrap, growx");
