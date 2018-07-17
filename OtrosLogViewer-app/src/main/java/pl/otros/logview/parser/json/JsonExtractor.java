@@ -21,7 +21,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class JsonExtractor {
 
-  public static final String VALUES_SEPARATOR = ".";
+  private static final String VALUES_SEPARATOR = ".";
   public static final String LEVEL = "level";
   public static final String MESSAGE = "message";
   public static final String DATE = "date";
@@ -34,8 +34,8 @@ public class JsonExtractor {
   public static final String LOGGER = "logger";
   public static final String NDC = "ndc";
   public static final String NOTE = "note";
-  public static final String EXCEPTION = "exception";
-  public static final String MARKER_COLOR = "markerColor";
+  private static final String EXCEPTION = "exception";
+  private static final String MARKER_COLOR = "markerColor";
   public static final String MDC_KEYS = "mdcKeys";
   public static final String[] KEYS = {
     LEVEL,
@@ -139,7 +139,7 @@ public class JsonExtractor {
     return result;
   }
 
-  public boolean isJson(String s) {
+  private boolean isJson(String s) {
     try {
       Validator.validate(s);
       return true;
@@ -165,43 +165,47 @@ public class JsonExtractor {
    * @param dateParser date format
    * @return Optional of LogData in case of success or Optional.empty in case of error
    */
-  private Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
+  protected Optional<LogData> mapToLogData(Map<String, String> map, DateFormat dateParser) {
     LogDataBuilder builder = new LogDataBuilder();
 
     //TODO parsing level based on custom mapping
     builder.withLevel(i18nLevelParser.parse(map.get(propertyLevel).trim()));
-    final String dateString = map.get(propertyDate);
+    final Optional<String> dateString = Optional.ofNullable(map.get(propertyDate));
 
-    try {
-      String message = map.getOrDefault(propertyMessage, "");
-      if (map.containsKey(propertyException)) {
-        message = message + "\n" + map.get(propertyException);
-      }
+    String message = map.getOrDefault(propertyMessage, "");
+    if (map.containsKey(propertyException)) {
+      message = message + "\n" + map.get(propertyException);
+    }
 
+    builder = builder
+      .withDate(dateString.map(d -> parse(dateParser, d)).orElse(new Date()))
+      .withMessage(message)
+      .withThread(map.getOrDefault(propertyThread, ""))
+      .withLoggerName(map.getOrDefault(propertyLogger, ""))
+      .withClass(map.getOrDefault(propertyClass, ""))
+      .withMethod(map.getOrDefault(propertyMethod, ""))
+      .withLineNumber(map.getOrDefault(propertyLine, ""))
+      .withFile(map.getOrDefault(propertyFile, ""))
+      .withNote(new Note(map.getOrDefault(propertyNote, "")))
+      .withNdc(map.getOrDefault(propertyNdc, ""))
+    ;
+    final String color = map.getOrDefault(propertyMarkerColor, "");
+    if (isNotBlank(color)) {
       builder = builder
-        .withDate(dateParser.parse(dateString))
-        .withMessage(message)
-        .withThread(map.getOrDefault(propertyThread, ""))
-        .withLoggerName(map.getOrDefault(propertyLogger, ""))
-        .withClass(map.getOrDefault(propertyClass, ""))
-        .withMethod(map.getOrDefault(propertyMethod, ""))
-        .withLineNumber(map.getOrDefault(propertyLine, ""))
-        .withFile(map.getOrDefault(propertyFile, ""))
-        .withNote(new Note(map.getOrDefault(propertyNote, "")))
-        .withNdc(map.getOrDefault(propertyNdc, ""))
-      ;
-      final String color = map.getOrDefault(propertyMarkerColor, "");
-      if (isNotBlank(color)) {
-        builder = builder
-          .withMarkerColors(MarkerColors.fromString(color))
-          .withMarked(true);
-      }
-      //build mdc
-      final Map<String, String> mdc = extractMdc(map, this.propertyKeysToMdc);
-      builder = builder.withProperties(mdc);
-      return Optional.of(builder.build());
+        .withMarkerColors(MarkerColors.fromString(color))
+        .withMarked(true);
+    }
+    //build mdc
+    final Map<String, String> mdc = extractMdc(map, this.propertyKeysToMdc);
+    builder = builder.withProperties(mdc);
+    return Optional.of(builder.build());
+  }
+
+  private Date parse(DateFormat dateFormat, String date) {
+    try {
+      return dateFormat.parse(date);
     } catch (ParseException e) {
-      return Optional.empty();
+      throw new IllegalArgumentException(e);
     }
   }
 
@@ -224,7 +228,7 @@ public class JsonExtractor {
    *
    * @param j Json object t convert
    * @return map representation of json object
-   * @throws JSONException
+   * @throws JSONException if log can't be parsed into JSON
    */
   public static Map<String, String> toMap(JSONObject j) throws JSONException {
     return toMap(j, new HashMap<>(), StringUtils.EMPTY);
