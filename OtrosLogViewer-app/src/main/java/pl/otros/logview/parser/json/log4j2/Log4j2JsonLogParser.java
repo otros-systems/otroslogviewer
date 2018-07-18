@@ -96,9 +96,13 @@ public class Log4j2JsonLogParser extends AbstractPluginableElement implements Lo
         .ofNullable(log4j2JsonEvent.getThrown())
         .map(Thrown::getStacktrace);
 
+      final long timestamp = Optional.ofNullable(log4j2JsonEvent.getInstant())
+        .map(Log4j2JsonEvent.Instant::timestamp)
+        .orElse(log4j2JsonEvent.getTimeMillis());
+
       return new LogDataBuilder()
         .withLevel(levelMap.get(log4j2JsonEvent.getLevel()))
-        .withDate(new Date(log4j2JsonEvent.getTimeMillis()))
+        .withDate(new Date(timestamp))
         .withLoggerName(log4j2JsonEvent.getLoggerName())
         .withClass(log4j2JsonEvent.getLoggerName())
         .withMessage(log4j2JsonEvent.getMessage() + exception.map(e -> "\n" + e).orElse(""))
