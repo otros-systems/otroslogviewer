@@ -23,6 +23,7 @@ import pl.otros.vfs.browser.VfsBrowser;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -60,6 +61,7 @@ public abstract class BaseNavigateAction extends AbstractAction {
       return;
     }
 
+
     SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
       @Override
@@ -77,7 +79,6 @@ public abstract class BaseNavigateAction extends AbstractAction {
         return null;
       }
     };
-    LOGGER.info("Starting SwingWorker");
     executor.execute(worker);
 
   }
@@ -85,12 +86,8 @@ public abstract class BaseNavigateAction extends AbstractAction {
   protected abstract void performLongOperation(CheckBeforeActionResult checkBeforeActionResult);
 
   protected final void doInUiThreadAfter() {
-    LOGGER.debug("ShowLoadingStringWorker is "
-      + showLoadingAfterDelayWorker);
-    if (showLoadingAfterDelayWorker != null) {
-      LOGGER.debug("Canceling showLoadingAfterDelayWorker");
-      showLoadingAfterDelayWorker.cancel(false);
-    }
+    cancelScheduledLoading();
+
     updateGuiAfter();
     LOGGER.debug("Updating UI after base action");
     browser.showTable();
@@ -104,7 +101,7 @@ public abstract class BaseNavigateAction extends AbstractAction {
   }
 
   protected final CheckBeforeActionResult doInUiThreadBefore() {
-    CheckBeforeActionResult result = CheckBeforeActionResult.CAN_GO;
+    CheckBeforeActionResult result;
     if (!canGoUrl()) {
       if (canExecuteDefaultAction()) {
         result = CheckBeforeActionResult.CANT_GO_USE_DEFAULT_ACTION;
@@ -120,14 +117,16 @@ public abstract class BaseNavigateAction extends AbstractAction {
     }
 
     focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    cancelScheduledLoading();
     showLoadingAfterDelayWorker = new SwingWorker<Void, Void>() {
 
       @Override
       protected void done() {
         boolean cancelled = isCancelled();
-        LOGGER.debug("showLoadingAfterDelayWorker is cancelled={}", cancelled);
         if (!cancelled) {
           browser.showLoading();
+        } else {
+          browser.showTable();
         }
       }
 
@@ -136,6 +135,8 @@ public abstract class BaseNavigateAction extends AbstractAction {
         Thread.sleep(SWITCH_TO_LOADING_TIME);
         return null;
       }
+
+
     };
     executor.execute(showLoadingAfterDelayWorker);
     return result;
@@ -149,7 +150,11 @@ public abstract class BaseNavigateAction extends AbstractAction {
 
   }
 
+  public void cancelScheduledLoading() {
+    Optional.ofNullable(showLoadingAfterDelayWorker).ifPresent(t -> t.cancel(false));
+  }
+
   public enum CheckBeforeActionResult {
-    CAN_GO_OR_USE_DEFAULT_ACTION, CANT_GO, CANT_GO_USE_DEFAULT_ACTION, CAN_GO;
+    CAN_GO_OR_USE_DEFAULT_ACTION, CANT_GO, CANT_GO_USE_DEFAULT_ACTION, CAN_GO
   }
 }
