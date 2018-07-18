@@ -142,11 +142,26 @@ public class Log4j2JsonLogParserTest {
     assertThat(logData[2])
       .matches(ld -> ld.getMessage().equals(
         "Exception\n" +
-        "java.lang.RuntimeException: Runtime exception!\n" +
-        "\tat Log4j2Example.lambda$main$0(Log4j2Example.java:17) ~[classes/:?]\n" +
-        "\tat java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:110) [?:1.8.0_121]\n" +
-        "\tat java.util.stream.IntPipeline$Head.forEach(IntPipeline.java:557) [?:1.8.0_121]\n" +
-        "\tat Log4j2Example.main(Log4j2Example.java:11) [classes/:?]"));
+          "java.lang.RuntimeException: Runtime exception!\n" +
+          "\tat Log4j2Example.lambda$main$0(Log4j2Example.java:17) ~[classes/:?]\n" +
+          "\tat java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:110) [?:1.8.0_121]\n" +
+          "\tat java.util.stream.IntPipeline$Head.forEach(IntPipeline.java:557) [?:1.8.0_121]\n" +
+          "\tat Log4j2Example.main(Log4j2Example.java:11) [classes/:?]"));
 
+  }
+
+  @Test
+  public void testLog4j2JsonTimeAsInstant() {
+    //given
+    final InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("log4j2/log4j2-time-instant.json");
+
+    //when
+    logImporter.importLogs(inputStream, logDataCollector, parsingContext);
+
+    //then
+    final LogData[] logData = logDataCollector.getLogData();
+    assertThat(logData).hasSize(1);
+    assertThat(logData[0].getDate())
+      .hasTime(1493121664118L);
   }
 }
