@@ -1,0 +1,48 @@
+{
+  "instant" : {
+    "epochSecond" : 1493121664,
+    "nanoOfSecond" : 118000000
+  },
+  "thread" : "main",
+  "level" : "INFO",
+  "loggerName" : "HelloWorld",
+  "marker" : {
+    "name" : "child",
+    "parents" : [ {
+      "name" : "parent",
+      "parents" : [ {
+        "name" : "grandparent"
+      } ]
+    } ]
+  },
+  "message" : "Hello, world!",
+  "thrown" : {
+    "commonElementCount" : 0,
+    "message" : "error message",
+    "name" : "java.lang.RuntimeException",
+    "extendedStackTrace" : [ {
+      "class" : "logtest.Main",
+      "method" : "main",
+      "file" : "Main.java",
+      "line" : 29,
+      "exact" : true,
+      "location" : "classes/",
+      "version" : "?"
+    } ]
+  },
+  "contextStack" : [ "one", "two" ],
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "contextMap" : {
+    "bar" : "BAR",
+    "foo" : "FOO"
+  },
+  "threadId" : 1,
+  "threadPriority" : 5,
+  "source" : {
+    "class" : "logtest.Main",
+    "method" : "main",
+    "file" : "Main.java",
+    "line" : 29
+  }
+}

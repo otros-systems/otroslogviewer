@@ -10,12 +10,13 @@ public class Log4j2JsonEvent {
   private String message;
   private Thrown thrown;
   private Source source;
+  private Instant instant;
 
   public Map<String, String> getContextMap() {
     return contextMap;
   }
 
-  private Map<String,String> contextMap;
+  private Map<String, String> contextMap;
 
   public long getTimeMillis() {
     return timeMillis;
@@ -43,5 +44,18 @@ public class Log4j2JsonEvent {
 
   public Source getSource() {
     return source;
+  }
+
+  public Instant getInstant() {
+    return instant;
+  }
+
+  public static class Instant {
+    private long epochSecond;
+    private long nanoOfSecond;
+
+    public Long timestamp() {
+      return epochSecond * 1000 + nanoOfSecond / 1000000;
+    }
   }
 }
