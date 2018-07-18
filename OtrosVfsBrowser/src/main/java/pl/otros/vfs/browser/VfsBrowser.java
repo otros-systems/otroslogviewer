@@ -349,18 +349,15 @@ public class VfsBrowser extends JPanel {
     tableFiles.getColumnModel().getColumn(3).setMinWidth(120);
 
 
-    sorter = new TableRowSorter<VfsTableModel>(vfsTableModel);
+    sorter = new TableRowSorter<>(vfsTableModel);
     final FileNameWithTypeComparator fileNameWithTypeComparator = new FileNameWithTypeComparator();
-    sorter.addRowSorterListener(new RowSorterListener() {
-      @Override
-      public void sorterChanged(RowSorterEvent e) {
-        RowSorterEvent.Type type = e.getType();
-        if (type.equals(RowSorterEvent.Type.SORT_ORDER_CHANGED)) {
-          List<? extends RowSorter.SortKey> sortKeys = e.getSource().getSortKeys();
-          for (RowSorter.SortKey sortKey : sortKeys) {
-            if (sortKey.getColumn() == VfsTableModel.COLUMN_NAME) {
-              fileNameWithTypeComparator.setSortOrder(sortKey.getSortOrder());
-            }
+    sorter.addRowSorterListener(e -> {
+      RowSorterEvent.Type type = e.getType();
+      if (type.equals(RowSorterEvent.Type.SORT_ORDER_CHANGED)) {
+        List<? extends RowSorter.SortKey> sortKeys = e.getSource().getSortKeys();
+        for (RowSorter.SortKey sortKey : sortKeys) {
+          if (sortKey.getColumn() == VfsTableModel.COLUMN_NAME) {
+            fileNameWithTypeComparator.setSortOrder(sortKey.getSortOrder());
           }
         }
       }
@@ -839,7 +836,7 @@ public class VfsBrowser extends JPanel {
   }
 
   public void showTable() {
-    LOGGER.trace("Showing result table");
+    LOGGER.debug("Showing result table");
     tableScrollPane.getVerticalScrollBar().setValue(0);
     cardLayout.show(tablePanel, TABLE);
   }
@@ -886,18 +883,12 @@ public class VfsBrowser extends JPanel {
     actionApproveDelegate = action;
     actionApproveButton.setAction(actionApproveDelegate);
     actionApproveButton.setName("VfsBrowser.open");
-    if (action != null) {
-      actionApproveButton.setText(String.format("%s [Ctrl+Enter]", actionApproveDelegate.getValue(Action.NAME)));
-      if (targetFileSelected) {
-        actionApproveDelegate.actionPerformed(
-          // TODO:  Does actionResult provide an ID for 2nd param here,
-          // or should use a Random number?
-          new ActionEvent(action, (int) new java.util.Date().getTime(), "SELECTED_FILE"));
-      }
-    } else try {
-      selectionChanged();
-    } catch (FileSystemException e) {
-      LOGGER.warn("Problem with checking selection conditions", e);
+    actionApproveButton.setText(String.format("%s [Ctrl+Enter]", actionApproveDelegate.getValue(Action.NAME)));
+    if (targetFileSelected) {
+      actionApproveDelegate.actionPerformed(
+        // TODO:  Does actionResult provide an ID for 2nd param here,
+        // or should use a Random number?
+        new ActionEvent(action, (int) new Date().getTime(), "SELECTED_FILE"));
     }
   }
 
@@ -1037,7 +1028,8 @@ public class VfsBrowser extends JPanel {
       int selectedRow = tableFiles.getSelectedRow();
       FileObject fileObject = vfsTableModel.get(tableFiles.convertRowIndexToModel(selectedRow));
       if (canExecuteDefaultAction() && actionApproveButton.isEnabled()) {
-        actionApproveButton.doClick();
+        SwingUtilities.invokeLater(actionApproveButton::doClick);
+        cancelScheduledLoading();
       } else {
         goToFileObject(fileObject);
       }
