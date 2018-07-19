@@ -1,4 +1,4 @@
-/*
+c/*
  * Copyright 2012 Krzysztof Otrebski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@ plugins {
     id "com.github.maiflai.scalatest" version "0.15"
 }
 
-project.ext.set('sharedVersion', "1.4.10")
+project.ext.set('sharedVersion', "1.4.11")
 
 subprojects {
     apply plugin: 'java'
