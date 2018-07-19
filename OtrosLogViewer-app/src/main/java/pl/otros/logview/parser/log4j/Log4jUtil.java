@@ -1,18 +1,18 @@
-/*******************************************************************************
- * Copyright 2011 Krzysztof Otrebski
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ Copyright 2011 Krzysztof Otrebski
+ <p>
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ <p>
+ http://www.apache.org/licenses/LICENSE-2.0
+ <p>
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package pl.otros.logview.parser.log4j;
 
 import com.google.common.collect.ImmutableMap;
@@ -24,10 +24,7 @@ import pl.otros.logview.RenamedLevel;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.model.LogData;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +63,10 @@ public class Log4jUtil {
     if (properties != null) {
       Map<String, String> props = new HashMap<>(properties.size());
       for (Object key : properties.keySet()) {
-        String value = (String) properties.get(key);
+        String value = Optional
+          .ofNullable(properties.get(key))
+          .map(Object::toString)
+          .orElse("");
         if (StringUtils.isNotBlank(value)) {
           props.put(key.toString(), value);
         }
@@ -103,7 +103,7 @@ public class Log4jUtil {
       throw new InitializationException("Log " + CONVERSION_PATTERN + " is not set.");
     }
 
-    Matcher dateFormatMatcher = Pattern.compile("%-?\\d*(?:\\.\\d+)?d(?:\\{([^}]+)\\})?").matcher(conversionPattern);
+    Matcher dateFormatMatcher = Pattern.compile("%-?\\d*(?:\\.\\d+)?d(?:\\{([^}]+)})?").matcher(conversionPattern);
     String dateFormat = "yyyy-MM-dd HH:mm:ss,SSS"; //ISO8601
     if (dateFormatMatcher.find() && dateFormatMatcher.groupCount() >= 1) {
       if (dateFormatMatcher.group(1).equals("ABSOLUTE")) {
@@ -132,7 +132,7 @@ public class Log4jUtil {
     conversionCharacters.put('x', "NDC");
 
     for (Map.Entry<Character, String> conversion : conversionCharacters.entrySet()) {
-      parserPattern = parserPattern.replaceAll("%-?\\d*(?:\\.\\d+)?" + conversion.getKey() + "(?:\\{([^}]+)\\})?", conversion.getValue());
+      parserPattern = parserPattern.replaceAll("%-?\\d*(?:\\.\\d+)?" + conversion.getKey() + "(?:\\{([^}]+)})?", conversion.getValue());
     }
     p.setProperty("pattern", parserPattern);
   }
