@@ -56,6 +56,8 @@ Useful software for analysing applications logs and traces.
   * Highlighted
   * With note, marked
 
+## Documentation
+[Wiki page is here](https://github.com/otros-systems/otroslogviewer/wiki)
 
 ## Screenshots
 
