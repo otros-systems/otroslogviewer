@@ -8,9 +8,12 @@ import java.awt.*;
 
 public class ThemeConfig implements Theme {
   private DataConfiguration configuration;
+  private UIDefaults lookAndFeelDefaults;
 
   public ThemeConfig(Configuration configuration) {
     this.configuration = new DataConfiguration(configuration);
+    final LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    lookAndFeelDefaults = lookAndFeel.getDefaults();
   }
 
   @Override
@@ -34,9 +37,7 @@ public class ThemeConfig implements Theme {
 
   @Override
   public Theme.Type themeType() {
-
-    final LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-    final Color color = lookAndFeel.getDefaults().getColor("Label.background");
+    final Color color = lookAndFeelDefaults.getColor("Label.background");
     if (Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3])[2] > 0.5f) {
       return Type.Light;
     } else {
