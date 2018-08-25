@@ -17,10 +17,7 @@
 package pl.otros.starter;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -31,7 +28,7 @@ public class StartApp {
 
   private static final Logger LOGGER = Logger.getLogger(StartApp.class.getName());
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
 
     final String runningJava = System.getProperty("java.version");
@@ -43,41 +40,50 @@ public class StartApp {
       JOptionPane.showMessageDialog(null, "Java version have to at least 1.8, your version is " + runningJava, "Java is too old", JOptionPane.ERROR_MESSAGE);
     }
 
-    ClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
-    String olvHome = System.getProperty("OLV_HOME");
-    InputStream in = new FileInputStream(new File(olvHome, "classpath.txt"));
-
-    URL[] classPathUrls = flatFileClassLoaderResolver.getClassPathUrls(in);
-    LOGGER.info("Added " + classPathUrls.length + " jars to classpath");
-    for (URL url : classPathUrls) {
-      LOGGER.info("Using classpath: " + url.toExternalForm());
-    }
-
-    URLClassLoader urlClassLoader = new URLClassLoader(classPathUrls, StartApp.class.getClassLoader());
-    Thread.currentThread().setContextClassLoader(urlClassLoader);
     String classToStart = "pl.otros.logview.gui.LogViewMainFrame";
     int errorCode = 0;
     try {
+      ClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
+      String olvHome = System.getProperty("OLV_HOME");
+      InputStream in = new FileInputStream(new File(olvHome, "classpath.txt"));
+
+      URL[] classPathUrls = flatFileClassLoaderResolver.getClassPathUrls(in);
+      LOGGER.info("Added " + classPathUrls.length + " jars to classpath");
+      for (URL url : classPathUrls) {
+        LOGGER.info("Using classpath: " + url.toExternalForm());
+      }
+
+      URLClassLoader urlClassLoader = new URLClassLoader(classPathUrls, StartApp.class.getClassLoader());
+      Thread.currentThread().setContextClassLoader(urlClassLoader);
       Class<?> aClass = urlClassLoader.loadClass(classToStart);
       Method method = aClass.getMethod("main", String[].class);
       method.invoke(null, (Object) args); // static method doesn't have an instance
 
     } catch (ClassNotFoundException e) {
-      System.err.printf("Cant load class %s: %s", classToStart, e.getMessage());
+      System.err.printf("Can't load class %s: %s", classToStart, e.getMessage());
       e.printStackTrace();
+      showError(e);
       errorCode = 1;
     } catch (InvocationTargetException e) {
-      System.err.printf("Cant invoke method main on class %s: %s", classToStart, e.getMessage());
+      System.err.printf("Can't invoke method main on class %s: %s", classToStart, e.getMessage());
       e.printStackTrace();
+      showError(e);
       errorCode = 2;
     } catch (IllegalAccessException e) {
-      System.err.printf("Cant invoke method main on class %s: %s", classToStart, e.getMessage());
+      System.err.printf("Can't invoke method main on class %s: %s", classToStart, e.getMessage());
       e.printStackTrace();
+      showError(e);
       errorCode = 3;
     } catch (NoSuchMethodException e) {
-      System.err.printf("Cant find method main on class %s: %s", classToStart, e.getMessage());
+      System.err.printf("Can't find method main on class %s: %s", classToStart, e.getMessage());
       e.printStackTrace();
+      showError(e);
       errorCode = 4;
+    } catch (Exception e){
+      System.err.printf("Can't start application %s: %s", classToStart, e.getMessage());
+      e.printStackTrace();
+      showError(e);
+      errorCode = 5;
     }
     if (errorCode != 0) {
       System.exit(errorCode);
@@ -85,4 +91,12 @@ public class StartApp {
 
   }
 
+  private static void showError(Exception exception){
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    exception.printStackTrace(new PrintStream(outputStream));
+    JTextArea textArea = new JTextArea("Can't start OtrosLogViewer\n" + new String(outputStream.toByteArray()));
+    textArea.setEditable(false);
+    JOptionPane.showMessageDialog(null,new JScrollPane(textArea,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS));
+
+  }
 }

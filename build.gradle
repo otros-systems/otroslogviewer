@@ -59,8 +59,6 @@ project(':Common-libs') {
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
         compile 'com.beust:jcommander:1.29'
-        compile 'com.github.insubstantial:trident:7.3'
-        compile 'com.github.insubstantial:substance-swingx:7.3'
         compile 'com.google.guava:guava:23.0'
         compile 'com.google.code.gson:gson:2.8.2'
         compile 'com.jcraft:jsch:0.1.+'
@@ -87,7 +85,6 @@ project(':Common-libs') {
         compile 'org.swinglabs.swingx:swingx-all:1.+'
         compile 'org.swinglabs:jxlayer:3.0.4'
         compile 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
-        compile 'com.github.insubstantial:substance:7.3'
         compile 'org.apache.sling:org.apache.sling.commons.json:2.0.10'
         compile 'ch.qos.logback:logback-core:1.1.3'
         compile 'ch.qos.logback:logback-classic:1.1.3'
