@@ -21,11 +21,11 @@ import java.awt.*;
 public final class EmptyIcon implements Icon {
 
   public int getIconHeight() {
-    return 0;
+    return 1;
   }
 
   public int getIconWidth() {
-    return 0;
+    return 1;
   }
 
   public void paintIcon(Component c, Graphics g, int x, int y) {
