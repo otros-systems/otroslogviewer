@@ -35,6 +35,7 @@ public class EventQueueProxy extends EventQueue {
        */
       LOGGER.warn("NullPointerException on dispatchEvent " + arg0 + ". Possible awt bug.", e);
     } catch (Exception e) {
+      LOGGER.error("Uncaught exception was thrown", e);
       Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
     }
   }
