@@ -682,7 +682,7 @@ public class LogViewMainFrame extends JFrame {
     Font menuGroupFont = labelOpenLog.getFont().deriveFont(13f).deriveFont(Font.BOLD);
     labelOpenLog.setFont(menuGroupFont);
     fileMenu.add(labelOpenLog);
-    fileMenu.add(new JMenuItem(new TailLogWithAutoDetectActionListener(otrosApplication)));
+    fileMenu.add(new JMenuItem(new TailLogWithComboActionListener(otrosApplication)));
     fileMenu.add(new JMenuItem(new AdvanceOpenAction(otrosApplication)));
     fileMenu.add(new ConnectToSocketHubAppenderAction(otrosApplication));
     fileMenu.add(new JSeparator());
