@@ -37,6 +37,8 @@ public class JsonExtractor {
   private static final String EXCEPTION = "exception";
   private static final String MARKER_COLOR = "markerColor";
   public static final String MDC_KEYS = "mdcKeys";
+  public static final String MESSAGE_JSON = "messageJSON";
+  
   public static final String[] KEYS = {
     LEVEL,
     MESSAGE,
@@ -70,6 +72,8 @@ public class JsonExtractor {
   private String propertyLogger;
   private String propertyFile;
   private I18nLevelParser i18nLevelParser;
+  
+  private String propertyMessageJSON;
 
 
   public void init(Properties properties) {
@@ -88,6 +92,7 @@ public class JsonExtractor {
     propertyException = properties.getProperty(EXCEPTION, "exception");
     propertyMarkerColor = properties.getProperty(MARKER_COLOR, "markerColor");
     propertyKeysToMdc = Splitter.on(",").trimResults().splitToList(properties.getProperty(MDC_KEYS, ""));
+    propertyMessageJSON = properties.getProperty(MESSAGE_JSON, "");
 
     i18nLevelParser = new I18nLevelParser(Locale.ENGLISH);
   }
@@ -112,6 +117,23 @@ public class JsonExtractor {
       Validator.validate(s);
       final JSONObject jsonObject = new JSONObject(s);
       final Map<String, String> map = toMap(jsonObject);
+      if (isNotBlank(propertyMessageJSON)) {
+    	  JSONObject jsonMessageObject = jsonObject;
+    	  Object o = jsonMessageObject;
+    	  List<String> messageJSONkeys = Splitter.on(".").trimResults().splitToList(propertyMessageJSON);
+    	  for (String messageJSONKey : messageJSONkeys) {
+    		  if (jsonMessageObject != null) {
+    			  o = jsonMessageObject.get(messageJSONKey);
+    			  if (o instanceof JSONObject) {
+    				  jsonMessageObject = (JSONObject) o;
+    			  } else {
+    				  break;
+    			  }
+    			    
+    		  }
+    	  }
+    	  map.put(propertyMessage, o.toString());
+      }
       return mapToLogData(map, dateFormat);
     } catch (JSONException e) {
       return Optional.empty();
@@ -222,7 +244,7 @@ public class JsonExtractor {
       )
       .collect(Collectors.toMap(key -> key, map::get));
   }
-
+  
   /**
    * Convert Json object to map representation. Nested object are represented by keys like xpath (dot separated)
    *
@@ -241,7 +263,7 @@ public class JsonExtractor {
       final Object o = j.get(key);
       if (o instanceof JSONObject) {
         JSONObject jso = (JSONObject) o;
-        toMap(jso, map, prefix + key + VALUES_SEPARATOR);
+       	toMap(jso, map, prefix + key + VALUES_SEPARATOR);
       } else {
         map.put(prefix + key, j.getString(key));
       }

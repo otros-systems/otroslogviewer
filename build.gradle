@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     id "com.github.maiflai.scalatest" version "0.15"
 }
+
+apply plugin: "com.github.maiflai.scalatest"
+
 
 project.ext.set('sharedVersion', "1.4.13")
 
@@ -38,15 +42,17 @@ subprojects {
     }
 
     repositories {
-        mavenCentral()
+        //mavenCentral()
+		maven { url = "http://repo.maven.apache.org/maven2" }
+		//maven { url = "http://plugins.gradle.org/m2" }
         maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
+            url "http://oss.sonatype.org/content/repositories/snapshots/"
         }
         maven {
-            url "https://bintray.com/artifact/download/otros-systems/maven"
+            url "http://bintray.com/artifact/download/otros-systems/maven"
         }
         maven {
-            url "https://dl.bintray.com/cjwizard/CJWizard"
+            url "http://dl.bintray.com/cjwizard/CJWizard"
         }
         //https://oss.sonatype.org/content/repositories
 
@@ -170,6 +176,7 @@ project(':OtrosLogViewer-app') {
     }
 }
 
+
 project(':ScalaFormatter'){
     apply plugin: "com.github.maiflai.scalatest"
     apply plugin: 'scala'
@@ -184,6 +191,7 @@ project(':ScalaFormatter'){
     }
 
 }
+
 
 project(':LoggerConfigParser'){
     apply plugin: "com.github.maiflai.scalatest"
@@ -257,8 +265,10 @@ task upgradeWrapper(type: Wrapper) {
                 "You invoked Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
     }
 }
+/*
 upgradeWrapper << {
     gradleVersion = project['newVersion']
     println 'WARNING:  Merge our customizations into the newly-generated wrapper scripts'
 }
 upgradeWrapper.description = 'Upgrade Gradle version.  For SCM Administrators.'
+*/

@@ -44,11 +44,13 @@ public class AboutAction extends OtrosAction {
   public AboutAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
     this.putValue(SMALL_ICON, Icons.LOGO_OTROS_16);
-    try {
-      build = new VersionUtil().getRunningVersion();
-    } catch (IOException e) {
-      LOGGER.error("Problem with checking running version: " + e.getMessage());
-    }
+//    try {
+//      build = new VersionUtil().getRunningVersion();
+//    } catch (IOException e) {
+//      LOGGER.error("Problem with checking running version: " + e.getMessage());
+//    }
+
+    build = "";
 
     animatedLogo = new JAnimatedLogo();
     textArea = new JTextPane();
