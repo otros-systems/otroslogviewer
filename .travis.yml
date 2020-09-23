@@ -1,7 +1,8 @@
+dist: trusty
 language: java
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 cache:
   directories:

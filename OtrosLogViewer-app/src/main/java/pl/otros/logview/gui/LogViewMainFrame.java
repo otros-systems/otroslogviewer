@@ -684,6 +684,9 @@ public class LogViewMainFrame extends JFrame {
     fileMenu.add(labelOpenLog);
     fileMenu.add(new JMenuItem(new TailLogWithAutoDetectActionListener(otrosApplication)));
     fileMenu.add(new JMenuItem(new AdvanceOpenAction(otrosApplication)));
+    JMenu openWithMenu = new JMenu("Open with...");
+    fileMenu.add(openWithMenu);
+    addParserActions(openWithMenu);
     fileMenu.add(new ConnectToSocketHubAppenderAction(otrosApplication));
     fileMenu.add(new JSeparator());
     JLabel labelLogInvestigation = new JLabel("Log investigation", SwingConstants.LEFT);
@@ -740,7 +743,19 @@ public class LogViewMainFrame extends JFrame {
     menuBar.add(helpMenu);
   }
 
-  private void initExperimental() {
+    private void addParserActions(JMenu parentMenu) {
+        Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+        for (LogImporter li : logImporters) {
+            TailLogActionListener action = new TailLogActionListener(otrosApplication, li);
+            JMenuItem menuItem = new JMenuItem(action);
+            String text = li.getName();
+            menuItem.setText(text);
+            menuItem.setToolTipText(li.getDescription());
+            parentMenu.add(menuItem);
+        }
+    }
+
+    private void initExperimental() {
     JMenu menu = new JMenu("Experimental");
     menu.add(new JLabel("Experimental features, can have bugs", Icons.LEVEL_WARNING, SwingConstants.LEADING));
     menu.add(new JSeparator());

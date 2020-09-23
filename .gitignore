@@ -8,5 +8,7 @@
 /local*
 build
 /gradle-app.setting
-**/*.iml
+*.iml
 **/.idea
+**/out/
+classpath.txt
