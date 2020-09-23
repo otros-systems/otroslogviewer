@@ -38,7 +38,7 @@ import java.util.Collection;
 public class StartSocketListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StartSocketListener.class);
-  private Collection<SocketLogReader> logReaders = null;
+  private Collection<SocketLogReader> logReaders;
   private BufferingLogDataCollectorProxy logDataCollector;
 
   private LogViewPanelWrapper logViewPanelWrapper;
@@ -69,7 +69,8 @@ public class StartSocketListener extends OtrosAction {
       BaseConfiguration configuration = new BaseConfiguration();
       configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-      logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), 4000, configuration);
+      long sleepTime = this.getOtrosApplication().getConfiguration().getLong(ConfKeys.READER_SOCKET_BUFFER_TIME,4000L);
+      logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), sleepTime, configuration);
     }
 
 
