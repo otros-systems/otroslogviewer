@@ -20,6 +20,8 @@ public class ConfKeys {
 
   public static final String FORMATTER_SOAP_REMOVE_MULTIREFS = "gui.formatter.soap.removeMultirefs";
 
+  public static final String READER_SOCKET_BUFFER_TIME = "reader.socket.bufferTime";
+
   public static final String FORMATTER_SOAP_REMOVE_XSI_FOR_NIL = "gui.formatter.soap.removeXsiForNil";
   public static final String UUID = "uuid";
   public static final String HTTP_PROXY_USE = "http.proxy.use";
