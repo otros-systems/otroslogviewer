@@ -135,7 +135,7 @@ public class LogViewMainFrame extends JFrame {
     try {
       String iconPath = "img/otros/logo16.png";
       if (System.getProperty("os.name").contains("Linux")) {
-        iconPath = "img/otros/logo64.png";
+        iconPath = "img/otros/logo256.png";
       }
       BufferedImage icon = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(iconPath));
       this.setIconImage(icon);
