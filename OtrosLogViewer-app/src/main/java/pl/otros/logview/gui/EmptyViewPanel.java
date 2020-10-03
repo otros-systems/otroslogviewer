@@ -89,7 +89,7 @@ class EmptyViewPanel extends JPanel {
     bagConstraints.fill = GridBagConstraints.HORIZONTAL;
     bagConstraints.gridy++;
 
-    final Action tailAction = new TailLogWithAutoDetectActionListener(otrosApplication);
+    final Action tailAction = new TailLogWithComboActionListener(otrosApplication);
     final JButton tailButton = new JButton(tailAction);
     tailButton.setName("Open log files");
     OtrosSwingUtils.fontSize2(tailButton);
