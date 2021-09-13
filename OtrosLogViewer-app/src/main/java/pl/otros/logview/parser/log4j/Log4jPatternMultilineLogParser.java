@@ -185,7 +185,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   private static final String MULTIPLE_SPACES_REGEXP = "[ ]+";
   private final String newLine = System.getProperty("line.separator");
 
-  private static final String VALID_DATEFORMAT_CHARS = "GyMwWDdFEaHkKhmsSzZ";
+  private static final String VALID_DATEFORMAT_CHARS = "GyMwWDdFEaHkKhmsSzZX";
   private static final String VALID_DATEFORMAT_CHAR_PATTERN = "[" + VALID_DATEFORMAT_CHARS + "]";
 
   private String timestampFormat = "yyyy-MM-d HH:mm:ss,SSS";
