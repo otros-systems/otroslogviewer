@@ -181,7 +181,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
 
   def test(tree: Tree, expected: String) = {
     val printed: String = new SimpleTreePrinter().printTree(tree)
-    val expectedWithoutEmptyLines = expected.lines.filter(!_.trim.isEmpty).mkString("\n")
+    val expectedWithoutEmptyLines = expected.linesIterator.filter(!_.trim.isEmpty).mkString("\n")
     printed shouldBe expectedWithoutEmptyLines
   }
 
