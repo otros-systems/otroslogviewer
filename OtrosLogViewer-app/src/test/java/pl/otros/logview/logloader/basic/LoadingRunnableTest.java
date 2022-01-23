@@ -23,7 +23,6 @@ import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.logview.api.services.EmptyStatsService;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
-import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
@@ -32,6 +31,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +46,7 @@ public class LoadingRunnableTest {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoadingRunnableTest.class);
   private static final int SLEEP_TIME = 100;
-  private static final Charset UTF_8 = Charset.forName("UTF-8");
+  private static final Charset UTF_8 = StandardCharsets.UTF_8;
 
   private final List<String> julSimpleLogLines;
   private FileOutputStream outputStream;
@@ -148,19 +148,17 @@ public class LoadingRunnableTest {
       return new Object[][]{
         new Object[]{"Jul xml", new UtilLoggingXmlLogImporter(), "logloader/jul-xml.log", Range.closed(0, 25), 2, Range.closed(25, 48), 4},
         new Object[]{"Jul Simple", getJulLogParser(), "logloader/jul-simple.log", Range.closed(0, 10), 5, Range.closed(10, 20), 10},
-        new Object[]{"lo4j xml", new Log4jXmlLogImporter(), "logloader/log4j-xml.log", Range.closed(0, 8), 2, Range.closed(8, 12), 3},
         new Object[]{"lo4j pattern", getLog4jPattern(), "logloader/log4j-pattern.log", Range.closed(0, 3), 2, Range.closed(3, 8), 5},
         new Object[]{"Json", getJsonParser(), "logloader/json.log", Range.closed(0, 2), 2, Range.closed(2, 4), 4, },
         new Object[]{"autodetect-Jul xml", autoDetectLogImporter(), "logloader/jul-xml.log", Range.closed(0, 25), 2, Range.closed(25, 48), 4},
         new Object[]{"autodetect-Jul Simple", autoDetectLogImporter(), "logloader/jul-simple.log", Range.closed(0, 10), 5, Range.closed(10, 20), 10},
-        new Object[]{"autodetect-lo4j xml", autoDetectLogImporter(), "logloader/log4j-xml.log", Range.closed(0, 8), 2, Range.closed(8, 12), 3},
         new Object[]{"autodetect-lo4j pattern", autoDetectLogImporter(), "logloader/log4j-pattern.log", Range.closed(0, 8), 5, Range.closed(8, 12), 9},
         new Object[]{"autodetect-json", autoDetectLogImporter(), "logloader/json.log", Range.closed(0, 2), 2, Range.closed(2, 4), 4},
       };
     }
 
   private DetectOnTheFlyLogImporter autoDetectLogImporter() throws InitializationException {
-    final List<LogImporter> importers = Arrays.asList(new UtilLoggingXmlLogImporter(), getJulLogParser(), new Log4jXmlLogImporter(), getLog4jPattern(), getJsonParser());
+    final List<LogImporter> importers = Arrays.asList(new UtilLoggingXmlLogImporter(), getJulLogParser(), getLog4jPattern(), getJsonParser());
     return new DetectOnTheFlyLogImporter(importers);
   }
 

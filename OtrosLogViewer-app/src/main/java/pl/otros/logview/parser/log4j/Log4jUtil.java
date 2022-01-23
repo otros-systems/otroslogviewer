@@ -48,14 +48,16 @@ public class Log4jUtil {
     }
     ld.setMessage(sb.toString().trim());
 
-    ld.setLevel(parseLevel(event.getLevel().toString()));
-    ld.setClazz(event.getLocationInfo().getClassname());
-    ld.setMethod(event.getLocationInfo().getMethod());
-    ld.setFile(event.getLocationInfo().getFile());
-    ld.setLine(event.getLocationInfo().getLine());
-    ld.setNDC(event.getNdc());
-    ld.setThread(event.getThreadName());
-    ld.setLoggerName(event.getLogger());
+      ld.setLevel(parseLevel(event.getLevel().toString()));
+      if (event.getLocationInfo() != null) {
+          ld.setClazz(event.getLocationInfo().getClassname());
+          ld.setMethod(event.getLocationInfo().getMethod());
+          ld.setFile(event.getLocationInfo().getFile());
+          ld.setLine(event.getLocationInfo().getLine());
+      }
+      ld.setNDC(event.getNdc());
+      ld.setThread(event.getThreadName());
+      ld.setLoggerName(event.getLogger());
 
     ld.setProperties(IMMUTABLE_EMPTY_MAP);
     Map properties = event.getProperties();
