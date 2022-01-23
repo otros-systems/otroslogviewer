@@ -17,31 +17,29 @@
 
 package pl.otros.logview.importer.log4jxml;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
 
 public class SAXErrorHandler implements ErrorHandler {
-  private static final Logger LOGGER = LogManager.getLogger(SAXErrorHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SAXErrorHandler.class);
 
-  public void error(SAXParseException ex) {
-    LOGGER.error(
-      "Parsing error on line " + ex.getLineNumber() + " and column "
-        + ex.getColumnNumber());
-    LOGGER.error(ex.getMessage(), ex.getException());
-    //LogLog.error("pid="+ex.getPublicId()+" sid="+ex.getSystemId());
-  }
+    public void error(SAXParseException ex) {
+        LOGGER.error("Parsing error on line " + ex.getLineNumber() + " and column " + ex.getColumnNumber());
+        LOGGER.error(ex.getMessage(), ex.getException());
+        //LogLog.error("pid="+ex.getPublicId()+" sid="+ex.getSystemId());
+    }
 
-  public void fatalError(SAXParseException ex) {
-    error(ex);
-  }
+    public void fatalError(SAXParseException ex) {
+        error(ex);
+    }
 
-  public void warning(SAXParseException ex) {
-    LOGGER.warn(
-      "Parsing error on line " + ex.getLineNumber() + " and column "
-        + ex.getColumnNumber());
-    LOGGER.warn(ex.getMessage(), ex.getException());
-  }
+    public void warning(SAXParseException ex) {
+        LOGGER.warn(
+                "Parsing error on line " + ex.getLineNumber() + " and column "
+                        + ex.getColumnNumber());
+        LOGGER.warn(ex.getMessage(), ex.getException());
+    }
 }

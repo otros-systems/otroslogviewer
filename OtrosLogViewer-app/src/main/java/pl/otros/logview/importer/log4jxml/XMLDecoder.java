@@ -17,12 +17,7 @@
 
 package pl.otros.logview.importer.log4jxml;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LocationInfo;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
-import org.apache.log4j.xml.Log4jEntityResolver;
+import org.apache.logging.log4j.Level;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,6 +26,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import pl.otros.logview.parser.log4j.LocationInfo;
+import pl.otros.logview.parser.log4j.LoggingEvent;
 
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -126,7 +123,7 @@ public class XMLDecoder {
     try {
       docBuilder = dbf.newDocumentBuilder();
       docBuilder.setErrorHandler(new SAXErrorHandler());
-      docBuilder.setEntityResolver(new Log4jEntityResolver());
+//      docBuilder.setEntityResolver(new Log4jEntityResolver());
     } catch (ParserConfigurationException pce) {
       System.err.println("Unable to get document builder");
     }
@@ -334,7 +331,7 @@ public class XMLDecoder {
   private Vector<LoggingEvent> decodeEvents(final Document document) {
     Vector<LoggingEvent> events = new Vector<>();
 
-    Logger logger;
+    String logger;
     long timeStamp;
     String level;
     String threadName;
@@ -358,7 +355,7 @@ public class XMLDecoder {
       if (eventNode.getNodeType() != Node.ELEMENT_NODE) {
         continue;
       }
-      logger = Logger.getLogger(eventNode.getAttributes().getNamedItem("logger").getNodeValue());
+      logger = eventNode.getAttributes().getNamedItem("logger").getNodeValue();
       timeStamp = Long.parseLong(eventNode.getAttributes().getNamedItem("timestamp").getNodeValue());
       level = eventNode.getAttributes().getNamedItem("level").getNodeValue();
       threadName = eventNode.getAttributes().getNamedItem("thread").getNodeValue();
@@ -423,12 +420,10 @@ public class XMLDecoder {
       }
       Level levelImpl = Level.toLevel(level);
 
-      LocationInfo info;
+      LocationInfo info = LocationInfo.NA_LOCATION_INFO;
       if ((fileName != null) || (className != null) || (methodName != null) || (lineNumber != null)) {
         info = new LocationInfo(fileName, className, methodName, lineNumber);
-      } else {
-        info = LocationInfo.NA_LOCATION_INFO;
-      }
+
       if (exception == null) {
         exception = new String[]{""};
       }
