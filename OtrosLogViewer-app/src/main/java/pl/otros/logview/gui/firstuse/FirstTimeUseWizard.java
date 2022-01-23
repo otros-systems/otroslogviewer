@@ -48,6 +48,11 @@ public class FirstTimeUseWizard {
     wizardContainer.setCancelEnabled(false);
     wizardContainer.addWizardListener(new WizardListener() {
       @Override
+      public void onPageChanging(WizardPage newPage, List<WizardPage> path) {
+        //do nothing
+      }
+
+      @Override
       public void onPageChanged(WizardPage newPage, List<WizardPage> path) {
         boolean last = newPage instanceof CollectStatsPage;
         newPage.getController().setFinishEnabled(last);
@@ -61,9 +66,9 @@ public class FirstTimeUseWizard {
         final String lookAndFeelClassname = (String) settings.get(Config.LOOK_AND_FEEL);
         final String ideHost = (String) settings.get(Config.IDE_HOST);
         final Integer idePort = (Integer) settings.get(Config.IDE_PORT);
-        final Boolean collectStats = (Boolean) settings.getOrDefault(Config.COLLECT_STATS,Boolean.TRUE);
-        final Boolean notifySendingStats = (Boolean) settings.getOrDefault(Config.COLLECT_STATS_NOTIFY,Boolean.FALSE);
-        final Boolean checkForNewVersion = (Boolean) settings.getOrDefault(Config.CHECK_FOR_NEW_VERSION,Boolean.TRUE);
+        final Boolean collectStats = settings.getOrDefault(Config.COLLECT_STATS, Boolean.TRUE);
+        final Boolean notifySendingStats = settings.getOrDefault(Config.COLLECT_STATS_NOTIFY, Boolean.FALSE);
+        final Boolean checkForNewVersion = settings.getOrDefault(Config.CHECK_FOR_NEW_VERSION, Boolean.TRUE);
 
         final Collection<LogPattern> logPatterns = ((LogPatterns) settings.get(Config.LOG_PATTERNS)).getLogPatterns();
 
