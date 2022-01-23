@@ -16,14 +16,13 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.apache.logging.log4j.Level;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
+import pl.otros.logview.parser.log4j.LoggingEvent;
 
 import java.io.IOException;
 import java.util.Stack;
@@ -72,7 +71,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("nfo");
 	Rule rule = PartialTextMatchRule.getRule(stack);
 	AssertJUnit.assertEquals(0, stack.size());
-	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
+	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
 	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
@@ -87,7 +86,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("World");
 	Rule rule = PartialTextMatchRule.getRule(stack);
 	AssertJUnit.assertEquals(0, stack.size());
-	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
+	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
 	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
@@ -102,7 +101,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("Bonjour, Monde");
 	Rule rule = PartialTextMatchRule.getRule(stack);
 	AssertJUnit.assertEquals(0, stack.size());
-	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
+	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
 	AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }
@@ -117,7 +116,7 @@ public class PartialTextMatchRuleTest {
 	stack.push("World");
 	Rule rule = (Rule) SerializationTestHelper.serializeClone(PartialTextMatchRule.getRule(stack));
 	AssertJUnit.assertEquals(0, stack.size());
-	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO,
+	LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO,
 		"Hello, World", null);
 	AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
     }

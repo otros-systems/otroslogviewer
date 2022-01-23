@@ -44,7 +44,6 @@ public void initialize() throws InitializationException, IOException {
     logImporters = new ArrayList<>();
     logImporters.add(new LogImporterUsingParser(new JulSimpleFormatterParser()));
     logImporters.add(new UtilLoggingXmlLogImporter());
-    logImporters.add(new Log4jSerilizedLogImporter());
     logImporters.add(new Log4jXmlLogImporter());
     for (LogImporter logImporter : logImporters) {
       logImporter.init(new Properties());

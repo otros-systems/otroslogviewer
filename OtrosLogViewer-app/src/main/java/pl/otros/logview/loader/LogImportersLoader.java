@@ -22,7 +22,6 @@ import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.LogParser;
-import pl.otros.logview.importer.Log4jSerilizedLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
 import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
@@ -64,10 +63,6 @@ public class LogImportersLoader {
     Log4jXmlLogImporter log4jXmlLogImporter = new Log4jXmlLogImporter();
     log4jXmlLogImporter.init(new Properties());
     list.add(log4jXmlLogImporter);
-
-    Log4jSerilizedLogImporter log4jSerilizedLogImporter = new Log4jSerilizedLogImporter();
-    log4jSerilizedLogImporter.init(new Properties());
-    list.add(log4jSerilizedLogImporter);
 
     LogbackSocketLogImporter logbackSockeLogImporter = new LogbackSocketLogImporter();
     logbackSockeLogImporter.init(new Properties());

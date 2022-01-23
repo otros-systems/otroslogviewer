@@ -423,22 +423,12 @@ public class XMLDecoder {
       LocationInfo info = LocationInfo.NA_LOCATION_INFO;
       if ((fileName != null) || (className != null) || (methodName != null) || (lineNumber != null)) {
         info = new LocationInfo(fileName, className, methodName, lineNumber);
-
+      }
       if (exception == null) {
         exception = new String[]{""};
       }
 
-      LoggingEvent loggingEvent = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, new ThrowableInformation(exception), ndc, info,
-        properties);
-      // loggingEvent.setLogger(logger);
-      // loggingEvent.setTimeStamp(timeStamp);
-      // loggingEvent.setLevel(levelImpl);
-      // loggingEvent.setThreadName(threadName);
-      // loggingEvent.setMessage(message);
-      // loggingEvent.setNDC(ndc);
-      // loggingEvent.setThrowableInformation(new ThrowableInformation(exception));
-      // loggingEvent.setLocationInformation(info);
-      // loggingEvent.setProperties(properties);
+      LoggingEvent loggingEvent = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, exception, ndc, info, properties);
 
       events.add(loggingEvent);
 

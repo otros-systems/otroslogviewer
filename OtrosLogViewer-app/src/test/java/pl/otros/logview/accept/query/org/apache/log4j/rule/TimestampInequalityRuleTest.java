@@ -19,7 +19,6 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import org.apache.log4j.Logger;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
@@ -143,7 +142,7 @@ public class TimestampInequalityRuleTest {
   public void testRuleWithDateOnly() throws IOException, ClassNotFoundException {
     Rule rule = TimestampInequalityRule.getRule(">=", "2008-05-21");
     Calendar cal = new GregorianCalendar(2008, Calendar.MAY, 21, 23, 45, 44);
-    LogData logData = new LogDataBuilder().withClass("a.B").withLoggerName(Logger.getRootLogger().getName()).withDate(cal.getTime()).withMessage("Hi")
+    LogData logData = new LogDataBuilder().withClass("a.B").withLoggerName("root").withDate(cal.getTime()).withMessage("Hi")
         .withLevel(java.util.logging.Level.INFO).build();
     AssertJUnit.assertTrue(rule.evaluate(logData, null));
   }
@@ -325,7 +324,7 @@ public class TimestampInequalityRuleTest {
   }
 
   private LogData createLogData(Calendar cal) {
-    return new LogDataBuilder().withClass("").withLoggerName(Logger.getRootLogger().getName()).withDate(cal.getTime()).withMessage("Hi")
+    return new LogDataBuilder().withClass("").withLoggerName("root").withDate(cal.getTime()).withMessage("Hi")
         .withLevel(java.util.logging.Level.INFO).build();
   }
 

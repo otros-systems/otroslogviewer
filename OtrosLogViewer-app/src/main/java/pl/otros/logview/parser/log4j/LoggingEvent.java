@@ -6,76 +6,85 @@ import java.util.Map;
 
 public class LoggingEvent {
 
-      private final String fqnOfCategoryClass;
-      private final String logger;
-      private final long timeStamp;
-      private final Level level;
-      private final Object message;
-      private final String threadName;
-      private final String[] throwable;
-      private final String ndc;
-      private final LocationInfo locationInfo;
-      private final Map properties;
+    private final String fqnOfCategoryClass;
+    private final String logger;
+    private final long timeStamp;
+    private final Level level;
+    private final Object message;
+    private final String threadName;
+    private final String[] throwable;
+    private final String ndc;
+    private final LocationInfo locationInfo;
+    private final Map properties;
 
-      public LoggingEvent(final String fqnOfCategoryClass,
-                          final String logger,
-                          final long timeStamp,
-                          final Level level,
-                          final Object message,
-                          final String threadName,
-                          final String[] throwable,
-                          final String ndc,
-                          final LocationInfo locationInfo,
-                          final java.util.Map properties){
-            this.fqnOfCategoryClass = fqnOfCategoryClass;
-            this.logger = logger;
-            this.timeStamp = timeStamp;
-            this.level = level;
-            this.message = message;
-            this.threadName = threadName;
-            this.throwable = throwable;
-            this.ndc = ndc;
-            this.locationInfo = locationInfo;
-            this.properties = properties;
-      }
+    public LoggingEvent(final String fqnOfCategoryClass,
+                        final String logger,
+                        final long timeStamp,
+                        final Level level,
+                        final Object message,
+                        final String threadName) {
+        this(fqnOfCategoryClass, logger, timeStamp, level, message, threadName, null, null, null, null);
+    }
 
-      public String getFqnOfCategoryClass() {
-            return fqnOfCategoryClass;
-      }
+    public LoggingEvent(final String fqnOfCategoryClass,
+                        final String logger,
+                        final long timeStamp,
+                        final Level level,
+                        final Object message,
+                        final String threadName,
+                        final String[] throwable,
+                        final String ndc,
+                        final LocationInfo locationInfo,
+                        final java.util.Map properties) {
+        this.fqnOfCategoryClass = fqnOfCategoryClass;
+        this.logger = logger;
+        this.timeStamp = timeStamp;
+        this.level = level;
+        this.message = message;
+        this.threadName = threadName;
+        this.throwable = throwable;
+        this.ndc = ndc;
+        this.locationInfo = locationInfo;
+        this.properties = properties;
+    }
 
-      public String getLogger() {
-            return logger;
-      }
+    public String getFqnOfCategoryClass() {
+        return fqnOfCategoryClass;
+    }
 
-      public long getTimeStamp() {
-            return timeStamp;
-      }
+    public String getLogger() {
+        return logger;
+    }
 
-      public Level getLevel() {
-            return level;
-      }
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 
-      public Object getMessage() {
-            return message;
-      }
+    public Level getLevel() {
+        return level;
+    }
 
-      public String getThreadName() {
-            return threadName;
-      }
+    public Object getMessage() {
+        return message;
+    }
 
-      public String[] getThrowable() {
-            return throwable;
-      }
+    public String getThreadName() {
+        return threadName;
+    }
 
-      public String getNdc() {
-            return ndc;
-      }
+    public String[] getThrowable() {
+        return throwable;
+    }
 
-      public LocationInfo getLocationInfo() {
-            return locationInfo;
-      }
+    public String getNdc() {
+        return ndc;
+    }
 
-      public Map getProperties() {
-            return properties;
-      }
+    public LocationInfo getLocationInfo() {
+        return locationInfo;
+    }
+
+    public Map getProperties() {
+        return properties;
+    }
 }

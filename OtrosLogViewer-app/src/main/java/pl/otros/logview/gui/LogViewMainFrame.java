@@ -684,7 +684,6 @@ public class LogViewMainFrame extends JFrame {
     fileMenu.add(labelOpenLog);
     fileMenu.add(new JMenuItem(new TailLogWithAutoDetectActionListener(otrosApplication)));
     fileMenu.add(new JMenuItem(new AdvanceOpenAction(otrosApplication)));
-    fileMenu.add(new ConnectToSocketHubAppenderAction(otrosApplication));
     fileMenu.add(new JSeparator());
     JLabel labelLogInvestigation = new JLabel("Log investigation", SwingConstants.LEFT);
     labelLogInvestigation.setFont(menuGroupFont);
