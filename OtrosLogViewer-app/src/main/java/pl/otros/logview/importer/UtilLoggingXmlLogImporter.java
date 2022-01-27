@@ -29,8 +29,6 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.importer.log4jxml.SAXErrorHandler;
-import pl.otros.logview.importer.log4jxml.UtilLoggingEntityResolver;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.imageio.ImageIO;
@@ -41,6 +39,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -82,7 +82,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   @Override
   public void init(Properties properties) throws InitializationException {
     try {
-      icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(ICON_PATH)));
+      icon = new ImageIcon(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(ICON_PATH))));
       LOGGER.info("icon loaded");
     } catch (Exception e) {
       LOGGER.warn("Error loading icon: " + e.getMessage());
@@ -105,9 +105,9 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       }
     } catch (UnsupportedEncodingException e) {
       LOGGER.error("Cant load codepage " + e.getMessage());
-    } catch (IOException ignore) {
+    } catch (IOException doNotCare) {
       LOGGER.debug("Logs can't be imported due to IOException, most probably stream was closed");
-      LOGGER.error("Exception:", ignore);
+      LOGGER.error("Exception:", doNotCare);
     } finally {
       decodeEvents(sb.toString(), collector, parsingContext);
       IOUtils.closeQuietly(in);
@@ -164,7 +164,6 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    * Decodes a String representing a number of events into a Vector of LoggingEvents.
    *
    * @param document to decode events from
-   * @return Vector of LoggingEvents
    */
   public void decodeEvents(final String document, LogDataCollector collector, ParsingContext parsingContext) {
 
@@ -212,7 +211,6 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    * Given a Document, converts the XML into a Vector of LoggingEvents.
    *
    * @param document XML document
-   * @return Vector of LoggingEvents
    */
   private void decodeEvents(final Document document, LogDataCollector collector, ParsingContext parsingContext) {
 
@@ -274,7 +272,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       logData.setClazz(className);
       logData.setId(parsingContext.getGeneratedIdAndIncrease());
       logData.setDate(new Date(timeStamp));
-      logData.setLoggerName(logger.getName());
+      logData.setLoggerName(Optional.ofNullable(logger).map(Logger::getName).orElse(""));
       logData.setMessage(StringUtils.defaultString(message != null ? message.toString() : ""));
       logData.setThread(threadName);
       logData.setMethod(methodName);

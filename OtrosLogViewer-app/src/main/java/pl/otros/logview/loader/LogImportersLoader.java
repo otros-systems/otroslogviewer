@@ -22,9 +22,7 @@ import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.LogParser;
-import pl.otros.logview.importer.Log4jSerilizedLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
-import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.importer.logback.LogbackSocketLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
@@ -60,14 +58,6 @@ public class LogImportersLoader {
     final LogImporterUsingParser log4j2JsonImporter = new LogImporterUsingParser(new Log4j2JsonLogParser());
     log4j2JsonImporter.init(new Properties());
     list.add(log4j2JsonImporter);
-
-    Log4jXmlLogImporter log4jXmlLogImporter = new Log4jXmlLogImporter();
-    log4jXmlLogImporter.init(new Properties());
-    list.add(log4jXmlLogImporter);
-
-    Log4jSerilizedLogImporter log4jSerilizedLogImporter = new Log4jSerilizedLogImporter();
-    log4jSerilizedLogImporter.init(new Properties());
-    list.add(log4jSerilizedLogImporter);
 
     LogbackSocketLogImporter logbackSockeLogImporter = new LogbackSocketLogImporter();
     logbackSockeLogImporter.init(new Properties());
@@ -106,9 +96,8 @@ public class LogImportersLoader {
   }
 
   private Collection<LogImporter> loadFromJar(File file) throws IOException, ClassNotFoundException {
-    ArrayList<LogImporter> importers = new ArrayList<>();
     Collection<LogImporter> implementationClasses = baseLoader.loadFromJar(file, LogImporter.class);
-    importers.addAll(implementationClasses.stream().collect(Collectors.toList()));
+    ArrayList<LogImporter> importers = new ArrayList<>(new ArrayList<>(implementationClasses));
 
     Collection<LogParser> logParsers = baseLoader.loadFromJar(file, LogParser.class);
     for (LogParser logParser : logParsers) {

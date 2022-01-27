@@ -22,7 +22,6 @@ import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.importer.log4jxml.Log4jXmlLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
@@ -40,12 +39,10 @@ public class DetectOnTheFlyLogImporterTest {
   private ArrayList<LogImporter> logImporters;
 
   @BeforeMethod
-public void initialize() throws InitializationException, IOException {
+public void initialize() throws InitializationException {
     logImporters = new ArrayList<>();
     logImporters.add(new LogImporterUsingParser(new JulSimpleFormatterParser()));
     logImporters.add(new UtilLoggingXmlLogImporter());
-    logImporters.add(new Log4jSerilizedLogImporter());
-    logImporters.add(new Log4jXmlLogImporter());
     for (LogImporter logImporter : logImporters) {
       logImporter.init(new Properties());
     }
@@ -65,7 +62,7 @@ public void initialize() throws InitializationException, IOException {
   }
 
   @Test
-  public void testImportLogsStopAddingIfMaxSizeIsReached() throws InitializationException {
+  public void testImportLogsStopAddingIfMaxSizeIsReached() {
     // given
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);
     ParsingContext context = new ParsingContext();
@@ -74,11 +71,8 @@ public void initialize() throws InitializationException, IOException {
     importer.initParsingContext(context);
 
     byte[] buff = new byte[importer.detectTryMaximum];
-    for (int i = 0; i < buff.length; i++) {
-      buff[i] = (byte) 0;
-    }
 
-    // when
+      // when
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     // then
@@ -89,28 +83,23 @@ public void initialize() throws InitializationException, IOException {
   }
 
   @Test
-  public void testImportUtilXml() throws IOException, InitializationException {
+  public void testImportUtilXml() {
     testImport("julxml/olv0.log", 83);
   }
 
   @Test
-  public void testImportJulSimpleFormatter() throws IOException, InitializationException {
+  public void testImportJulSimpleFormatter() {
     testImport("jul_log.txt", 200);
 
   }
 
   @Test
-  public void testImportLog4jXml() throws IOException, InitializationException {
-    testImport("log4j/log4j_default.xml", 6);
-  }
-
-  @Test
-  public void testImportLog4jPattern() throws IOException, InitializationException {
+  public void testImportLog4jPattern() {
     testImport("log4j.txt", 13);
   }
 
   @Test
-  public void testImportEmptyFile() throws IOException, InitializationException {
+  public void testImportEmptyFile() {
     // given
     InputStream inputStream = new ByteArrayInputStream(new byte[0]);
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);
@@ -128,7 +117,7 @@ public void initialize() throws InitializationException, IOException {
   }
 
 
- public void testImport(String resourceName, int logDataCount) throws IOException, InitializationException {
+ public void testImport(String resourceName, int logDataCount) {
     // given
     InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);

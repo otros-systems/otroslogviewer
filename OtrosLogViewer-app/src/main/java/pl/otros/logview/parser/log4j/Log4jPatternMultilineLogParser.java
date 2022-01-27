@@ -33,11 +33,7 @@ package pl.otros.logview.parser.log4j;
  */
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LocationInfo;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
+import org.apache.logging.log4j.Level;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
@@ -548,7 +544,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       exception = emptyException;
     }
 
-    Logger logger = null;
+    String logger = "";
     long timeStamp = 0L;
     String level = null;
     String threadName = null;
@@ -560,7 +556,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     String lineNumber = null;
     Hashtable properties = new Hashtable();
 
-    logger = Logger.getLogger(StringUtils.trim((String) fieldMap.remove(LOGGER)));
+    logger = StringUtils.trim((String) fieldMap.remove(LOGGER));
 
     if ((dateFormat != null) && fieldMap.containsKey(TIMESTAMP)) {
       String dateString = (String) fieldMap.remove(TIMESTAMP);
@@ -596,7 +592,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
         if (!level.equals(levelImpl.toString())) {
           // check custom level map
           levelImpl = Level.DEBUG;
-          LOG.fine("found unexpected level: " + level + ", logger: " + logger.getName() + ", msg: " + message);
+          LOG.fine("found unexpected level: " + level + ", logger: " + logger + ", msg: " + message);
           // make sure the text that couldn't match a level is
           // added to the message
           message = level + " " + message;
@@ -633,24 +629,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     } else {
       info = LocationInfo.NA_LOCATION_INFO;
     }
-    // LoggingEvent event = new LoggingEvent(null,
-    // logger, timeStamp, levelImpl, message,
-    // threadName,
-    // new ThrowableInformation(exception),
-    // ndc,
-    // info,
-    // properties);
-    // LoggingEvent event = new LoggingEvent();
-    LoggingEvent event = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, new ThrowableInformation(exception), ndc, info, properties);
-    // event.setLogger(logger);
-    // event.setTimeStamp(timeStamp);
-    // event.setLevel(levelImpl);
-    // event.setMessage(message);
-    // event.setThreadName(threadName);
-    // event.setThrowableInformation(new ThrowableInformation(exception));
-    // event.setNDC(ndc);
-    // event.setLocationInformation(info);
-    // event.setProperties(properties);
+    LoggingEvent event = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, exception, ndc, info, properties);
     return event;
   }
 

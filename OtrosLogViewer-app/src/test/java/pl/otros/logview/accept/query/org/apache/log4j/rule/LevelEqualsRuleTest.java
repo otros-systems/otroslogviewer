@@ -18,12 +18,12 @@ package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
+
+import org.apache.logging.log4j.Level;
 import org.testng.annotations.Test;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
+import pl.otros.logview.parser.log4j.LoggingEvent;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public class LevelEqualsRuleTest {
   @Test
   public void test1() {
     LevelEqualsRule rule = (LevelEqualsRule) LevelEqualsRule.getRule("info");
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO, "Hello, World", null);
     assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
@@ -48,7 +48,7 @@ public class LevelEqualsRuleTest {
   @Test
   public void test2() {
     LevelEqualsRule rule = (LevelEqualsRule) LevelEqualsRule.getRule("info");
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.WARN, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.WARN, "Hello, World", null);
     assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
@@ -58,7 +58,7 @@ public class LevelEqualsRuleTest {
   @Test
   public void test3() throws IOException, ClassNotFoundException {
     LevelEqualsRule rule = (LevelEqualsRule) SerializationTestHelper.serializeClone(LevelEqualsRule.getRule("info"));
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO, "Hello, World", null);
     assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
@@ -68,7 +68,7 @@ public class LevelEqualsRuleTest {
   @Test
   public void test4() throws IOException, ClassNotFoundException {
     LevelEqualsRule rule = (LevelEqualsRule) SerializationTestHelper.serializeClone(LevelEqualsRule.getRule("info"));
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.WARN, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.WARN, "Hello, World", null);
     assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 

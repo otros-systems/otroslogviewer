@@ -17,7 +17,6 @@ package pl.otros.logview.parser.log4j;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.spi.LoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.RenamedLevel;
@@ -40,8 +39,8 @@ public class Log4jUtil {
     ld.setDate(new Date(event.getTimeStamp()));
     StringBuilder sb = new StringBuilder();
     sb.append(event.getMessage());
-    if (event.getThrowableInformation() != null) {
-      String[] throwableStrRep = event.getThrowableInformation().getThrowableStrRep();
+    if (event.getThrowable() != null) {
+      String[] throwableStrRep = event.getThrowable();
       for (String string : throwableStrRep) {
         sb.append('\n');
         sb.append(string);
@@ -49,14 +48,16 @@ public class Log4jUtil {
     }
     ld.setMessage(sb.toString().trim());
 
-    ld.setLevel(parseLevel(event.getLevel().toString()));
-    ld.setClazz(event.getLocationInformation().getClassName());
-    ld.setMethod(event.getLocationInformation().getMethodName());
-    ld.setFile(event.getLocationInformation().getFileName());
-    ld.setLine(event.getLocationInformation().getLineNumber());
-    ld.setNDC(event.getNDC());
-    ld.setThread(event.getThreadName());
-    ld.setLoggerName(event.getLoggerName());
+      ld.setLevel(parseLevel(event.getLevel().toString()));
+      if (event.getLocationInfo() != null) {
+          ld.setClazz(event.getLocationInfo().getClassname());
+          ld.setMethod(event.getLocationInfo().getMethod());
+          ld.setFile(event.getLocationInfo().getFile());
+          ld.setLine(event.getLocationInfo().getLine());
+      }
+      ld.setNDC(event.getNdc());
+      ld.setThread(event.getThreadName());
+      ld.setLoggerName(event.getLogger());
 
     ld.setProperties(IMMUTABLE_EMPTY_MAP);
     Map properties = event.getProperties();

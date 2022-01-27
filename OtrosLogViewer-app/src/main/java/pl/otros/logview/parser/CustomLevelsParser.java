@@ -1,6 +1,7 @@
 package pl.otros.logview.parser;
 
-import org.apache.log4j.Level;
+
+import org.apache.logging.log4j.Level;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -16,14 +16,13 @@
  */
 package pl.otros.logview.accept.query.org.apache.log4j.rule;
 
+import org.apache.logging.log4j.Level;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 import pl.otros.logview.accept.query.org.apache.log4j.util.SerializationTestHelper;
 import pl.otros.logview.parser.log4j.Log4jUtil;
+import pl.otros.logview.parser.log4j.LoggingEvent;
 
 import java.io.IOException;
 
@@ -59,7 +58,7 @@ public class LevelInequalityRuleTest {
   @Test
   public void test3() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(LevelInequalityRule.getRule(">=", "info"));
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO, "Hello, World", null);
     AssertJUnit.assertTrue(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
@@ -69,7 +68,7 @@ public class LevelInequalityRuleTest {
   @Test
   public void test4() throws IOException, ClassNotFoundException {
     Rule rule = (Rule) SerializationTestHelper.serializeClone(LevelInequalityRule.getRule("<", "info"));
-    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", Logger.getRootLogger(), System.currentTimeMillis(), Level.INFO, "Hello, World", null);
+    LoggingEvent event = new LoggingEvent("org.apache.log4j.Logger", "root", System.currentTimeMillis(), Level.INFO, "Hello, World", null);
     AssertJUnit.assertFalse(rule.evaluate(Log4jUtil.translateLog4j(event), null));
   }
 
