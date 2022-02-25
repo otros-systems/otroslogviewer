@@ -1,7 +1,6 @@
 package pl.otros.vfs.browser.actions;
 
 import javax.swing.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The common SwingWorker is marked as cancelled if you run cancel() while the doInBackground() method is running.
@@ -11,14 +10,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * The isCancelledBeforeDoneEnded() method returns independently true if the Worker canceled before doInBackground() or after.
  */
 public abstract class CancelableSwingWorker extends SwingWorker<Void, Void> {
-  private final AtomicBoolean cancel = new AtomicBoolean(false);
+  private boolean cancel = false;
 
   public void doCancel() {
-    this.cancel.set(true);
+    this.cancel = true;
     super.cancel(false);
   }
 
   public boolean isCancelledBeforeDoneEnded() {
-    return cancel.get();
+    return cancel;
   }
 }
