@@ -35,7 +35,7 @@ public abstract class BaseNavigateAction extends AbstractAction {
 
   public VfsBrowser browser;
   private static Executor executor = Executors.newCachedThreadPool();
-  private volatile SwingWorker<Void, Void> showLoadingAfterDelayWorker;
+  private volatile CancelableSwingWorker showLoadingAfterDelayWorker;
   private Component focusOwner;
 
   public BaseNavigateAction(VfsBrowser browser) {
@@ -118,11 +118,11 @@ public abstract class BaseNavigateAction extends AbstractAction {
 
     focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     cancelScheduledLoading();
-    showLoadingAfterDelayWorker = new SwingWorker<Void, Void>() {
+    showLoadingAfterDelayWorker = new CancelableSwingWorker() {
 
       @Override
       protected void done() {
-        boolean cancelled = isCancelled();
+        boolean cancelled = isCancelledBeforeDoneEnded();
         if (!cancelled) {
           browser.showLoading();
         } else {
@@ -151,7 +151,7 @@ public abstract class BaseNavigateAction extends AbstractAction {
   }
 
   public void cancelScheduledLoading() {
-    Optional.ofNullable(showLoadingAfterDelayWorker).ifPresent(t -> t.cancel(false));
+    Optional.ofNullable(showLoadingAfterDelayWorker).ifPresent(CancelableSwingWorker::doCancel);
   }
 
   public enum CheckBeforeActionResult {
