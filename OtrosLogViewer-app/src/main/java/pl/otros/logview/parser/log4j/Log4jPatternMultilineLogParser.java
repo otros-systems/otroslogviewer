@@ -842,6 +842,9 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     if (matchingKeywords.contains(Log4jPatternMultilineLogParser.NDC))
       list.add(TableColumns.NDC);
 
+    if (matchingKeywords.contains(Log4jPatternMultilineLogParser.LOGGER))
+      list.add(TableColumns.LOGGER_NAME);
+
     if (!keywords.containsAll(matchingKeywords))
       list.add(TableColumns.PROPERTIES);
 
