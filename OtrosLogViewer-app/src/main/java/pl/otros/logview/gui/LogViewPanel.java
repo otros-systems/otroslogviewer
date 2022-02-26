@@ -451,8 +451,8 @@ public class LogViewPanel extends LogViewPanelI {
     }
     filtersList.sort(Comparator.comparing(LogFilter::getName));
     JLabel filtersLabel = new JLabel("Filters:");
-    filtersLabel.setMinimumSize(new Dimension(200, LEVEL_ICON_WIDTH));
-    filtersLabel.setPreferredSize(new Dimension(200, LEVEL_ICON_WIDTH));
+    filtersLabel.setMinimumSize(new Dimension(200, 16));
+    filtersLabel.setPreferredSize(new Dimension(200, 16));
     filtersLabel.setIcon(Icons.FILTER);
     Font f = filtersLabel.getFont().deriveFont(Font.BOLD);
     filtersLabel.setFont(f);
@@ -635,7 +635,7 @@ public class LogViewPanel extends LogViewPanelI {
     for (String g : groups) {
       JMenuItem markerMenuItem = new JMenuItem(automaticMarker.getName());
 
-      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), LEVEL_ICON_WIDTH, LEVEL_ICON_WIDTH, "Ab");
+      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), 16, 16, "Ab");
       markerMenuItem.setIcon(icon);
       markerMenuItem.setToolTipText(automaticMarker.getDescription());
       markerMenuItem.addActionListener(new AutomaticMarkUnamrkActionListener(dataTableModel, automaticMarker, mode, statusObserver));
