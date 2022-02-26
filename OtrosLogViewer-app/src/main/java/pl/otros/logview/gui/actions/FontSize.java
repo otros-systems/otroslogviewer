@@ -32,7 +32,8 @@ public class FontSize extends OtrosAction {
       .forEach(key -> {
         Font font = UIManager.getDefaults().getFont(key);
         if (font != null) {
-          font = font.deriveFont((float) size);
+          //the defaults are bold, but plain needed.
+          font = font.deriveFont((float) size).deriveFont(Font.PLAIN);
           UIManager.put(key, font);
         }
       });

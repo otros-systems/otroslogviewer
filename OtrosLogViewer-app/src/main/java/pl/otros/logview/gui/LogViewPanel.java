@@ -359,7 +359,7 @@ public class LogViewPanel extends LogViewPanelI {
   private void updateTimeColumnSize() {
     //The time column is bold and bold fond is wider
     String dateExample = new SimpleDateFormat(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")).format(new Date());
-    int dateWidth = calculateTextWidth(dateExample, table, table.getFont().deriveFont(Font.BOLD));
+    int dateWidth = calculateTextWidth(dateExample, table);
     updateColumnSizeIfVisible(TableColumns.TIME, dateWidth + 1, dateWidth + 1);
   }
 
@@ -400,11 +400,7 @@ public class LogViewPanel extends LogViewPanelI {
   }
 
   private int calculateTextWidth(String text, JComponent component) {
-    return calculateTextWidth(text, component, null);
-  }
-
-  private int calculateTextWidth(String text, JComponent component, Font font) {
-    FontMetrics fontMetrics = component.getFontMetrics(font != null ? font : component.getFont());
+    FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
     return fontMetrics.stringWidth(text);
   }
 
