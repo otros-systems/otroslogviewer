@@ -349,7 +349,7 @@ public class LogViewPanel extends LogViewPanelI {
     updateLevelColumnSize();
     updateColumnSizeIfVisible(TableColumns.CLASS, 100, 500);
     updateColumnSizeIfVisible(TableColumns.THREAD, 100, 300);
-    updateColumnSizeIfVisible(TableColumns.METHOD, 100, 200);
+    updateColumnSizeIfVisible(TableColumns.METHOD, 100, 400);
     updateColumnSizeIfVisible(TableColumns.LINE, fm.stringWidth("0000"), fm.stringWidth("000000"));
     updateMarkColumnSize();
     updateColumnSizeIfVisible(TableColumns.NOTE, 100, 1500);
