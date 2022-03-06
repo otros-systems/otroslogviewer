@@ -16,17 +16,18 @@
 
 package pl.otros.vfs.browser.auth;
 
-import pl.otros.vfs.browser.i18n.Messages;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.UserAuthenticationData;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
+import pl.otros.vfs.browser.i18n.Messages;
+import pl.otros.vfs.browser.util.PageantIdentityRepositoryFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.OptionalInt;
 
 public class SftpUserAuthenticator extends UserPassUserAuthenticator {
 
@@ -44,12 +45,8 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
     authenticationData.setData(UserAuthenticationDataWrapper.SSH_KEY, sshKeyFileField.getText().trim().toCharArray());
 
     if (StringUtils.isNotBlank(sshKeyFileField.getText())) {
-      try {
         SftpFileSystemConfigBuilder.getInstance().setIdentities(getFileSystemOptions(), new File[]{new File(sshKeyFileField.getText())});
         //TODO set user auth data file path
-      } catch (FileSystemException e) {
-        e.printStackTrace();
-      }
     }
 
   }
@@ -79,10 +76,24 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
         }
       }
     });
-    panel.add(browseButton,"wrap");
-    panel.add(new JLabel(Messages.getMessage("authenticator.sshKeyFileDescription")),"span");
+    panel.add(browseButton, "wrap");
+    panel.add(new JLabel(Messages.getMessage("authenticator.sshKeyFileDescription")), "span");
+
+    OptionalInt pageantActive = this.isPageantActive();
+    String pageantInfo;
+    if (pageantActive.isPresent()) {
+      pageantInfo = Messages.getMessage("authenticator.pageantActiveCount", pageantActive.getAsInt());
+    } else {
+      pageantInfo = Messages.getMessage("authenticator.pageantInactive");
+    }
+
+    panel.add(new JLabel(pageantInfo), "span");
 
     return panel;
+  }
+
+  private OptionalInt isPageantActive() {
+    return PageantIdentityRepositoryFactory.getIdentitiesCount();
   }
 
 
