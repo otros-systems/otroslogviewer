@@ -19,6 +19,8 @@ package pl.otros.vfs.browser.auth;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.UserAuthenticationData;
+import org.apache.commons.vfs2.provider.sftp.IdentityInfo;
+import org.apache.commons.vfs2.provider.sftp.IdentityProvider;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import pl.otros.vfs.browser.i18n.Messages;
 import pl.otros.vfs.browser.util.PageantIdentityRepositoryFactory;
@@ -41,12 +43,22 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
 
   @Override
   protected void getAuthenticationData(UserAuthenticationData authenticationData) {
-    super.getAuthenticationData(authenticationData);
-    authenticationData.setData(UserAuthenticationDataWrapper.SSH_KEY, sshKeyFileField.getText().trim().toCharArray());
+    authenticationData.setData(UserAuthenticationData.USERNAME, nameTf.getSelectedItem().toString().toCharArray());
 
     if (StringUtils.isNotBlank(sshKeyFileField.getText())) {
-        SftpFileSystemConfigBuilder.getInstance().setIdentities(getFileSystemOptions(), new File[]{new File(sshKeyFileField.getText())});
-        //TODO set user auth data file path
+      //use SSH KEY
+      authenticationData.setData(UserAuthenticationDataWrapper.SSH_KEY, sshKeyFileField.getText().trim().toCharArray());
+      IdentityProvider sshKeyAuth;
+      if (passTx.getPassword() != null && passTx.getPassword().length > 0) {
+        //SSH KEY secured with password
+        String stringPass = new String(passTx.getPassword());
+        sshKeyAuth = new IdentityInfo(new File(sshKeyFileField.getText()), stringPass.getBytes());
+      } else {
+        sshKeyAuth = new IdentityInfo(new File(sshKeyFileField.getText()));
+      }
+      SftpFileSystemConfigBuilder.getInstance().setIdentityProvider(getFileSystemOptions(), sshKeyAuth);
+    } else {
+      authenticationData.setData(UserAuthenticationData.PASSWORD, passTx.getPassword());
     }
 
   }
@@ -77,7 +89,6 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
       }
     });
     panel.add(browseButton, "wrap");
-    panel.add(new JLabel(Messages.getMessage("authenticator.sshKeyFileDescription")), "span");
 
     OptionalInt pageantActive = this.isPageantActive();
     String pageantInfo;
