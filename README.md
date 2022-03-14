@@ -90,6 +90,9 @@ Filter level WARNING or higher and highlighting:
   * [Vigilog](http://vigilog.sourceforge.net/index.html)
   * [JLogViewer](http://sourceforge.net/projects/jlogviewer/)
 
+##Contributions
+Please take a look at the dev-resources folder for development conventions and guidelines.
+
 ## Contact
 If you have any questions please write to otros.systems at gmail.com
 
@@ -97,8 +100,8 @@ Follow us on [Twitter](https://twitter.com/OtrosSystems)
 Created with: [Intellij IDEA](http://www.jetbrains.com/idea/)
 
 
-## Do you want help
-Do you want to help? You can donate to OtrosLogViewer
+## Do you want to help?
+If you'd like to help, you can donate to OtrosLogViewer
 
 Using **PayPal**:
 [![](https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_76x48.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GJUQP3X5FMUQU&lc=US&item_name=OtrosLogViewer%20%2d%20donate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
