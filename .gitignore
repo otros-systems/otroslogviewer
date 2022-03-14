@@ -8,13 +8,20 @@
 /local*
 build
 /gradle-app.setting
+
+#ignoring intellij idea auto-generated files
 **/*.iml
 **/.idea
-.classpath
-.project
-.settings/
-bin/
+
+#ignoring eclipse auto-generated files/folders
+**/.classpath
+**/.project
+**/.settings/
+**/bin/
+
+#document why this file needs to be ignored? should we ignore this file in any other location as well?
 /OtrosAppDist/classpath.txt
+
 # Eclipse Scala IDE files
 .cache-main
 .cache-tests
