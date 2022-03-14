@@ -10,14 +10,17 @@ build
 /gradle-app.setting
 
 #ignoring intellij idea auto-generated files
-**/*.iml
-**/.idea
+*.iml
+.idea
 
 #ignoring eclipse auto-generated files/folders
 **/.classpath
 **/.project
 **/.settings/
 **/bin/
+
+#ignoring logs folder auto-generated when user_home env variable is not defined
+/USER_HOME_IS_UNDEFINED/
 
 #document why this file needs to be ignored? should we ignore this file in any other location as well?
 /OtrosAppDist/classpath.txt
