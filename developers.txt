@@ -1,5 +1,0 @@
-Conventions for Developers
-
-Gradle
-------
-You do not need to install Gradle.  Just execute "gradlew" from this directory.
