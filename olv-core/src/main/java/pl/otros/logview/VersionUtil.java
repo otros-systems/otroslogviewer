@@ -16,12 +16,12 @@
 package pl.otros.logview;
 
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.OtrosApplication;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +80,7 @@ public class VersionUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   private String buildRequestUrl(String running, String instanceUuid) throws UnsupportedEncodingException {
     StringBuilder sb = new StringBuilder();
     sb.append("runningVersion=").append(running);

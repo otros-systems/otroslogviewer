@@ -66,9 +66,9 @@ public class FirstTimeUseWizard {
         final String lookAndFeelClassname = (String) settings.get(Config.LOOK_AND_FEEL);
         final String ideHost = (String) settings.get(Config.IDE_HOST);
         final Integer idePort = (Integer) settings.get(Config.IDE_PORT);
-        final Boolean collectStats = settings.getOrDefault(Config.COLLECT_STATS, Boolean.TRUE);
-        final Boolean notifySendingStats = settings.getOrDefault(Config.COLLECT_STATS_NOTIFY, Boolean.FALSE);
-        final Boolean checkForNewVersion = settings.getOrDefault(Config.CHECK_FOR_NEW_VERSION, Boolean.TRUE);
+        final Boolean collectStats = settings.containsKey(Config.COLLECT_STATS)?(Boolean) settings.get(Config.COLLECT_STATS):Boolean.TRUE;
+        final Boolean notifySendingStats = settings.containsKey(Config.COLLECT_STATS_NOTIFY)?(Boolean) settings.get(Config.COLLECT_STATS_NOTIFY):Boolean.FALSE;
+        final Boolean checkForNewVersion = settings.containsKey(Config.CHECK_FOR_NEW_VERSION)?(Boolean) settings.get(Config.CHECK_FOR_NEW_VERSION):Boolean.TRUE;
 
         final Collection<LogPattern> logPatterns = ((LogPatterns) settings.get(Config.LOG_PATTERNS)).getLogPatterns();
 

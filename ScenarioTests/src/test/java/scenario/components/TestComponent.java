@@ -4,9 +4,9 @@ import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.AbstractComponentFixture;
 import org.assertj.swing.fixture.JButtonFixture;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
     return (U) this;
   }
 
-  @NotNull
+  @Nonnull
   public final Boolean isVisible() {
     try {
       me().focus();

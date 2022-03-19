@@ -5,7 +5,6 @@ import com.google.common.io.Files;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXTextArea;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.LayoutEncoderConverter;
@@ -23,6 +22,7 @@ import pl.otros.swing.OtrosSwingUtils;
 import pl.otros.swing.TableColumnModelListenerAdapter;
 import pl.otros.swing.functional.MultilineStringTableCellRenderer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
@@ -269,7 +269,7 @@ public class ConvertLogFormatPanel extends JPanel {
     updateRowHeights();
   }
 
-  @NotNull
+  @Nonnull
   private Function<String, LogPatternsTableModelEntry> convertToTableModel(Collection<LogImporter> logImporters) {
     return pattern -> {
       try {

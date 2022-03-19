@@ -3,7 +3,6 @@ package pl.otros.logview.logloader.basic;
 import com.google.common.collect.Range;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.VFS;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -27,6 +26,7 @@ import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -318,7 +318,7 @@ public class LoadingRunnableTest {
     }
   }
 
-  @NotNull
+  @Nonnull
   private LoadingRunnable createLoadingRunnable(LogImporter logImporter) {
     return new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), new EmptyStatsService());
   }

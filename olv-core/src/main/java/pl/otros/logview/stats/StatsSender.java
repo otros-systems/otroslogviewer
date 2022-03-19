@@ -5,12 +5,12 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.jdesktop.swingx.JXHyperlink;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.services.Services;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +61,7 @@ public class StatsSender {
     }
   }
 
-  @NotNull
+  @Nonnull
   private ListenableScheduledFuture<?> scheduleSend(Services services, String olvVersion, Map<String, Long> stats, String uuid, String javaVersion) {
     return services
       .getTaskSchedulerService()

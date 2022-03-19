@@ -1,7 +1,6 @@
 package pl.otros.logview.util;
 
 import com.google.common.base.Splitter;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -12,6 +11,7 @@ import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -22,7 +22,7 @@ public class LoggerConfigUtil {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoggerConfigUtil.class.getName());
 
-  @NotNull
+  @Nonnull
   public static Set<String> extractLayoutPatterns(String content) {
     final LayoutEncoderConverter logbackLayoutEncoderConverter = new LogbackLayoutEncoderConverter();
 
