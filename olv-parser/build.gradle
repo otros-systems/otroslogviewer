@@ -20,7 +20,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(':olv-libs')
     implementation project(':olv-api')
     testImplementation 'org.scalatest:scalatest_2.12:3.0.4'
     testRuntimeOnly 'org.pegdown:pegdown:1.1.0'

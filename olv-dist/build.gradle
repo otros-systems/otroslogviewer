@@ -19,7 +19,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(':olv-libs')
     implementation project(':olv-starter')
     implementation project(':olv-core')
     implementation project(':olv-api')
@@ -27,13 +26,13 @@ dependencies {
 }
 
 distributions {
-    main {
+     main{
         contents {
             from(file('src/dist/otherFiles'))
             from(file('src/dist/scriptsWin'))
             from(file("src/dist/scriptsUnix").toString()) { fileMode = 0755 }
-            from(file('../olv-libs/lib')) {
-                into("lib")
+            from{configurations.runtimeClasspath.findAll { it.name.endsWith('.jar') }.collect { it }} {
+                into('lib')
             }
         }
     }

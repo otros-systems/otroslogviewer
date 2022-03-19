@@ -18,6 +18,5 @@ plugins {
 }
 
 dependencies {
-   implementation project(':olv-libs')
    implementation 'com.intellij:annotations:9.0.4'
 }

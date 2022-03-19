@@ -254,7 +254,7 @@ public class LoadingRunnableTest {
 
   @Test(invocationCount = 5, timeOut = 4000L)
   public void readingSocket() throws Exception {
-    try (final ServerSocket serverSocket = new ServerSocket(60000);
+    try (final ServerSocket serverSocket = new ServerSocket(50000);
          final Socket readingSocket = new Socket("127.0.0.1", serverSocket.getLocalPort());
          final Socket writingSocket = serverSocket.accept()
     ) {

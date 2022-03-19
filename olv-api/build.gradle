@@ -16,7 +16,3 @@
 plugins {
     id 'olv.java-conventions'
 }
-
-dependencies {
-    implementation project(':olv-libs')
-}

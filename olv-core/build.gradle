@@ -19,13 +19,11 @@ plugins {
 
     def today = new Date().format("yyyy-MM-dd")
     dependencies {
-        implementation project(':olv-libs')
         implementation project(':olv-gui')
         implementation project(':olv-vfs')
         implementation project(':olv-api')
         implementation project(':olv-formatter')
         implementation project(':olv-parser')
-//        implementation project(':cjwizard')
         testImplementation 'com.github.tomakehurst:wiremock:1.58'
     }
 
