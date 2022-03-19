@@ -1,1 +1,1 @@
-include 'OtrosLogViewer-app', 'Common-libs', 'OtrosStarter', 'OtrosAppDist', 'OtrosSwing', 'OtrosLogViewer-api', 'ScalaFormatter', 'OtrosVfsBrowser', 'ScenarioTests', 'LoggerConfigParser', 'cjwizard'
+include 'olv-core', 'olv-libs', 'olv-starter', 'olv-dist', 'olv-swing', 'olv-api', 'olv-formatter', 'ovl-vfs', 'ScenarioTests', 'olv-parser', 'cjwizard'
