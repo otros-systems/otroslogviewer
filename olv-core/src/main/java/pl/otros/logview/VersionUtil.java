@@ -37,6 +37,7 @@ import java.util.jar.Manifest;
 public class VersionUtil {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(VersionUtil.class.getName());
+  private static final String IMPLEMENTATION_TITLE="Implementation-Title";
   private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
   private String currentVersionPageUrl;
@@ -106,17 +107,18 @@ public class VersionUtil {
   }
 
   private Optional<String> readRunningVersionFromManifest() throws IOException {
-    Enumeration<URL> resources = VersionUtil.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+    Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
     while (resources.hasMoreElements()) {
       URL url = resources.nextElement();
-      if (url.toString().contains("OtrosLogViewer-app")) {
         try (InputStream inputStream = url.openStream()) {
           Manifest manifest = new Manifest(inputStream);
-          String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
-          LOGGER.debug("Running version is " + result);
-          return Optional.of(result);
+          String implementationTitle = manifest.getMainAttributes().getValue(IMPLEMENTATION_TITLE);
+          if(implementationTitle != null && implementationTitle.equals("OtrosLogViewer-app")) {
+            String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
+            LOGGER.debug("Running version is " + result);
+            return Optional.of(result);
+          }
         }
-      }
     }
     return Optional.empty();
   }

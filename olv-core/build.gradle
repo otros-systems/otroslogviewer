@@ -30,7 +30,7 @@ dependencies {
 
 jar {
     manifest.mainAttributes(
-            'Implementation-Title': 'OtrosLogViewer',
+            'Implementation-Title': 'OtrosLogViewer-app',
             'Implementation-Version': project.version,
             'Main-Class': "pl.otros.logview.gui.LogViewMainFrame",
             'Build-day': today,
