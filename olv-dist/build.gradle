@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     id 'olv.java-conventions'
     id 'distribution'
+}
+
+//Enabling the instrumentedClasspath configuration
+configurations {
+    instrumentedClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+    }
 }
 
 dependencies {
@@ -23,6 +32,8 @@ dependencies {
     implementation project(':olv-core')
     implementation project(':olv-api')
     implementation project(':olv-formatter')
+    //the dependency below allows this module to access the shadowJar from the olv-core module (see distribution section)
+    instrumentedClasspath project(path: ":olv-core", configuration: 'instrumentedJars')
 }
 
 distributions {
@@ -31,7 +42,7 @@ distributions {
             from(file('src/dist/otherFiles'))
             from(file('src/dist/scriptsWin'))
             from(file("src/dist/scriptsUnix").toString()) { fileMode = 0755 }
-            from{configurations.runtimeClasspath.findAll { it.name.endsWith('.jar') }.collect { it }} {
+            from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-bin.jar') }.collect { it }} {
                 into('lib')
             }
         }

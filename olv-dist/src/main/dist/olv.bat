@@ -51,7 +51,7 @@ if exist "%JAVA_HOME%\bin\javaw.exe" (
 ) else (
   set LOCAL_JAVA=javaw.exe
 )
-start "OtrosLogViewer" /B %LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY%  -DsingleInstance.startPort= -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\OtrosStarter.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
+start "OtrosLogViewer" /B %LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY%  -DsingleInstance.startPort= -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\olv-bin.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
 goto finish
 
 :batchMode
@@ -60,7 +60,8 @@ if exist "%JAVA_HOME%\bin\java.exe" (
 ) else (
   set LOCAL_JAVA=java.exe
 )
+
 echo on
-%LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY% %SFTP_KEY% -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\OtrosStarter.jar" %*
+%LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY% %SFTP_KEY% -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\olv-bin.jar" %*
 
 :finish

@@ -16,71 +16,34 @@
 
 package pl.otros.starter;
 
+import pl.otros.logview.gui.LogViewMainFrame;
+
 import javax.swing.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.logging.Logger;
+import java.nio.charset.StandardCharsets;
 
 public class StartApp {
 
-  private static final Logger LOGGER = Logger.getLogger(StartApp.class.getName());
+//  private static final Logger LOGGER = Logger.getLogger(StartApp.class.getName());
 
   public static void main(String[] args) {
 
+//NOTE: I don't think this code will ever execute, since an app compiled with a java version newer than the installed in the system, would not be able to run and would throw a version error
+//    final String runningJava = System.getProperty("java.version");
+//    final JavaVersion javaVersion = JavaVersion.fromString(runningJava);
+//
+//    final int compareTo = javaVersion.compareTo(new JavaVersion(1, 8, 0));
+//    if (compareTo < 0) {
+//      System.err.println("Java version have to be at least 1.8, you version is " + runningJava);
+//      JOptionPane.showMessageDialog(null, "Java version have to at least 1.8, your version is " + runningJava, "Java is too old", JOptionPane.ERROR_MESSAGE);
+//    }
 
-    final String runningJava = System.getProperty("java.version");
-    final JavaVersion javaVersion = JavaVersion.fromString(runningJava);
-
-    final int compareTo = javaVersion.compareTo(new JavaVersion(1, 8, 0));
-    if (compareTo < 0) {
-      System.err.println("Java version have to be at least 1.8, you version is " + runningJava);
-      JOptionPane.showMessageDialog(null, "Java version have to at least 1.8, your version is " + runningJava, "Java is too old", JOptionPane.ERROR_MESSAGE);
-    }
-
-    String classToStart = "pl.otros.logview.gui.LogViewMainFrame";
     int errorCode = 0;
     try {
-      ClassLoaderResolver flatFileClassLoaderResolver = new FlatFileClassLoaderResolver();
-      String olvHome = System.getProperty("OLV_HOME");
-      InputStream in = new FileInputStream(new File(olvHome, "classpath.txt"));
+      LogViewMainFrame.main(args);
 
-      URL[] classPathUrls = flatFileClassLoaderResolver.getClassPathUrls(in);
-      LOGGER.info("Added " + classPathUrls.length + " jars to classpath");
-      for (URL url : classPathUrls) {
-        LOGGER.info("Using classpath: " + url.toExternalForm());
-      }
-
-      URLClassLoader urlClassLoader = new URLClassLoader(classPathUrls, StartApp.class.getClassLoader());
-      Thread.currentThread().setContextClassLoader(urlClassLoader);
-      Class<?> aClass = urlClassLoader.loadClass(classToStart);
-      Method method = aClass.getMethod("main", String[].class);
-      method.invoke(null, (Object) args); // static method doesn't have an instance
-
-    } catch (ClassNotFoundException e) {
-      System.err.printf("Can't load class %s: %s", classToStart, e.getMessage());
-      e.printStackTrace();
-      showError(e);
-      errorCode = 1;
-    } catch (InvocationTargetException e) {
-      System.err.printf("Can't invoke method main on class %s: %s", classToStart, e.getMessage());
-      e.printStackTrace();
-      showError(e);
-      errorCode = 2;
-    } catch (IllegalAccessException e) {
-      System.err.printf("Can't invoke method main on class %s: %s", classToStart, e.getMessage());
-      e.printStackTrace();
-      showError(e);
-      errorCode = 3;
-    } catch (NoSuchMethodException e) {
-      System.err.printf("Can't find method main on class %s: %s", classToStart, e.getMessage());
-      e.printStackTrace();
-      showError(e);
-      errorCode = 4;
     } catch (Exception e){
-      System.err.printf("Can't start application %s: %s", classToStart, e.getMessage());
+      System.err.printf("Can't start application: %s", e.getMessage());
       e.printStackTrace();
       showError(e);
       errorCode = 5;
@@ -94,7 +57,7 @@ public class StartApp {
   private static void showError(Exception exception){
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     exception.printStackTrace(new PrintStream(outputStream));
-    JTextArea textArea = new JTextArea("Can't start OtrosLogViewer\n" + new String(outputStream.toByteArray()));
+    JTextArea textArea = new JTextArea("Can't start OtrosLogViewer\n" + new String(outputStream.toByteArray(), StandardCharsets.UTF_8));
     textArea.setEditable(false);
     JOptionPane.showMessageDialog(null,new JScrollPane(textArea,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS));
 

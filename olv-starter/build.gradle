@@ -17,6 +17,10 @@ plugins {
     id 'olv.java-conventions'
 }
 
+dependencies {
+    implementation project(':olv-core')
+}
+
 def today = new Date().format("yyyy-MM-dd")
 jar {
     manifest {

@@ -48,8 +48,8 @@ fi
 # Exec is simpler as it eliminates the intervening, useless shell.
 # (Makes for easier process troubleshooting).
 [  "-batch" = "$1" ] &&
-exec $JAVA $LOG_PROPERTIES $MEMORY $SFTP_KEY -DOLV_HOME="$OLV_HOME" -DCURRENT_DIR="$CURRENT_DIR" -jar "$OLV_HOME/lib/OtrosStarter.jar" $@
+exec $JAVA $LOG_PROPERTIES $MEMORY $SFTP_KEY -DOLV_HOME="$OLV_HOME" -DCURRENT_DIR="$CURRENT_DIR" -jar "$OLV_HOME/lib/olv-bin.jar" $@
 # we need to be sure we are writing to a directory where we have write access, /tmp is one of them but app directory is clearly not
 # If we want more than one user on a shared system to be able to run OLV, then make log file user-specific (at least)
-exec $JAVA $LOG_PROPERTIES $MEMORY $SFTP_KEY  -DsingleInstance.startPort= -DOLV_HOME="$OLV_HOME" -DCURRENT_DIR="$CURRENT_DIR" -jar "$OLV_HOME/lib/OtrosStarter.jar" $@ > "${TMPDIR}/olv-${LOGNAME}.log" 2>&1 &
+exec $JAVA $LOG_PROPERTIES $MEMORY $SFTP_KEY  -DsingleInstance.startPort= -DOLV_HOME="$OLV_HOME" -DCURRENT_DIR="$CURRENT_DIR" -jar "$OLV_HOME/lib/olv-bin.jar" $@ > "${TMPDIR}/olv-${LOGNAME}.log" 2>&1 &
 

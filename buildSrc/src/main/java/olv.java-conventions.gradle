@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'pl.otros.logviewer'
-version = '1.4.15'
+version = '1.4.15-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.cjwizard:cjwizard:1.0.9.1'
-    implementation 'org.pushing-pixels:radiance-substance:1.0.2' //last compatible version just Java 8
+    implementation 'org.pushing-pixels:radiance-substance:1.0.2' //latest compatible version for Java 8
     implementation 'org.pushing-pixels:trident:1.2'
     implementation ':OtrosSingleInstance:1.3'
     implementation 'commons-net:commons-net:3.3'
