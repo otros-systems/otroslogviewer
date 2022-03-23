@@ -15,6 +15,7 @@
  */
 package pl.otros.logview.gui;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.negusoft.singleinstance.SingleInstance;
@@ -96,7 +97,12 @@ import java.util.logging.Level;
 import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogViewMainFrame extends JFrame {
-  private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class.getName());
+  static{
+    //initializes the logback configuration file location
+    File logbackConfigFile = new File(System.getProperty("user.dir"), "logback.xml");
+    System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logbackConfigFile.getAbsolutePath());
+  }
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class);
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
   public static final String RUN_FOR_SCENARIO_TEST = "runForScenarioTest";

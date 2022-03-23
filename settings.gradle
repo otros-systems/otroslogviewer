@@ -1,7 +1,6 @@
 rootProject.name = 'olv'
 include 'olv-api'
 include 'olv-core'
-include 'olv-starter'
 include 'olv-dist'
 include 'olv-gui'
 include 'olv-formatter'

@@ -46,7 +46,7 @@ test {
 
 shadowJar {
     archiveBaseName.set('olv')
-    archiveClassifier.set('bin')
+    archiveClassifier.set('exec')
     archiveVersion.set('')
 }
 
