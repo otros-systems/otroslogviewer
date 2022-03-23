@@ -1,6 +1,6 @@
 <configuration>
 
-    <property scope="context" name="logdir" value="${user.home}" />
+    <property scope="context" name="logdir" value="${user.home}/.otroslogviewer/logs" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logdir}/olv.log</file>
