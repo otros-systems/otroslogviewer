@@ -22,7 +22,6 @@ IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
 set MEMORY=-Xmx1024m
-set LOG_PROPERTIES=-Dlogback.configurationFile=logback.xml
 cd "%OLV_HOME%"
 
 if "%1"=="-batch" goto batchMode
@@ -38,12 +37,12 @@ if "%1"=="-batch" goto batchMode
 :: these conditionals (with defaults set above) break it for all other users.
 ::del /Q %OUT_FILE% 2>nul 1>nul
 ::if exist %OUT_FILE% (  
-  set OUT_FILE=%TEMP%\olv.out.%random%.txt
+  set OUT_FILE=%TEMP%\olv.out.txt
 ::)
 
 ::del /Q %ERR_FILE% 2>nul 1>nul
 ::if exist %ERR_FILE% (
-  set ERR_FILE=%TEMP%\olv.err.%random%.txt  
+  set ERR_FILE=%TEMP%\olv.err.txt
 ::)
 
 if exist "%JAVA_HOME%\bin\javaw.exe" (
@@ -51,7 +50,7 @@ if exist "%JAVA_HOME%\bin\javaw.exe" (
 ) else (
   set LOCAL_JAVA=javaw.exe
 )
-start "OtrosLogViewer" /B %LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY%  -DsingleInstance.startPort= -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\olv-bin.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
+start "OtrosLogViewer" /B %LOCAL_JAVA% -DsingleInstance.startPort= -jar "%OLV_HOME%\lib\olv-exec.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
 goto finish
 
 :batchMode
@@ -62,6 +61,6 @@ if exist "%JAVA_HOME%\bin\java.exe" (
 )
 
 echo on
-%LOCAL_JAVA% %LOG_PROPERTIES% %MEMORY% %SFTP_KEY% -DOLV_HOME="%OLV_HOME%" -DCURRENT_DIR="%CURRENT_DIR%" -jar "%OLV_HOME%\lib\olv-bin.jar" %*
+%LOCAL_JAVA% %MEMORY% %SFTP_KEY% -jar "%OLV_HOME%\lib\olv-exec.jar" %*
 
 :finish

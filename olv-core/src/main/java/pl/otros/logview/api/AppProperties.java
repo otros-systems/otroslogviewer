@@ -1,17 +1,13 @@
 package pl.otros.logview.api;
 
 public class AppProperties {
-  private String currentDir;
+  private final String currentDir;
 
   public AppProperties() {
-    currentDir = System.getProperty("CURRENT_DIR", "");
+    currentDir = System.getProperty("user.dir", "");
   }
 
   public String getCurrentDir() {
     return currentDir;
-  }
-
-  public void setCurrentDir(String currentDir) {
-    this.currentDir = currentDir;
   }
 }
