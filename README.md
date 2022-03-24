@@ -90,7 +90,7 @@ Filter level WARNING or higher and highlighting:
   * [Vigilog](http://vigilog.sourceforge.net/index.html)
   * [JLogViewer](http://sourceforge.net/projects/jlogviewer/)
 
-##Contributions
+## Project Contributions
 Please take a look at the dev-resources folder for development conventions and guidelines.
 
 ## Contact
