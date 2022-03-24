@@ -38,16 +38,22 @@ dependencies {
 distributions {
      main{
         contents {
-            from(file("src/main/dist/*.sh").toString()) { fileMode = 0755 }
             from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it }}
+            eachFile {if(it.name.endsWith('.sh')) {fileMode 0755}}
         }
     }
     dev{
         contents {
-            from(file('src/main/dist'))
-            from(file("src/main/dist/*.sh")) { fileMode = 0755 }
+            from(file('src/main/dist')) // include everything from 'main' distribution
             from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it }}
+            eachFile {if(it.name.endsWith('.sh')) {fileMode 0755}}
         }
+    }
+}
+
+tasks.register('prepareLinuxScripts'){
+    doLast{
+        foreach
     }
 }
 
@@ -55,6 +61,6 @@ distributions {
 distTar.enabled(false)
 devDistTar.enabled(false)
 
-//enable dependency on external files for correct optimization of the distribution file (compliance with future releases)
+//enable dependency on external files for correct optimization of the distribution file (compliance with future gradle releases)
 distZip.dependsOn(configurations.instrumentedClasspath)
 devDistZip.dependsOn(configurations.instrumentedClasspath)
