@@ -23,6 +23,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.parser.TableColumnNameSelfDescribable;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.swing.*;
@@ -43,6 +44,8 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
 
   protected static final String PROPERTY_BYTE_BUFFER = "DetectInTheFlyLogImporter.byteBuffer";
   protected static final String PROPERTY_LOG_IMPORTER = "DetectInTheFlyLogImporter.logImporter";
+  public static final TableColumns[] ALL_TABLE_COLUMNS = { ID, TIME, LEVEL, MESSAGE, CLASS, METHOD, THREAD, MARK, FILE, LINE, NDC, PROPERTIES, LOGGER_NAME,
+    LOG_SOURCE };
   private int detectTryMinimum = 128;
   protected int detectTryMaximum = 200 * 1024;
   private final Collection<LogImporter> logImporters;
@@ -123,8 +126,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
 
   @Override
   public TableColumns[] getTableColumnsToUse() {
-    return new TableColumns[] { ID, TIME, LEVEL, MESSAGE, CLASS, METHOD, THREAD, MARK, FILE, LINE, NDC, PROPERTIES, LOGGER_NAME,
-        LOG_SOURCE };
+    return ALL_TABLE_COLUMNS;
   }
 
   @Override
@@ -142,4 +144,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
     return null;
   }
 
+  public Collection<LogImporter> getLogImporters() {
+    return logImporters;
+  }
 }
