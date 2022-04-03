@@ -50,7 +50,7 @@ project(':Common-libs') {
         compile 'com.beust:jcommander:1.29'
         compile 'com.google.guava:guava:23.0'
         compile 'com.google.code.gson:gson:2.8.2'
-        compile 'com.jcraft:jsch:0.1.+'
+        compile 'com.github.mwiede:jsch:0.2.0'
         compile 'com.jcraft:jzlib:1.+'
         compile 'com.miglayout:miglayout-swing:4.2'
         compile 'com.fifesoft:rsyntaxtextarea:2.6.1'
