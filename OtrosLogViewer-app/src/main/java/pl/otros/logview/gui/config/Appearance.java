@@ -5,7 +5,8 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.jdesktop.swingx.JXHyperlink;
-import org.pushingpixels.substance.api.skin.*;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
+import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
@@ -33,8 +34,8 @@ import javax.swing.plaf.basic.BasicLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Appearance extends AbstractConfigView implements InMainConfig {
@@ -235,12 +236,12 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
   @Override
   public void loadConfiguration(Configuration c) {
     final int defaultValue = fontSize.getFont().getSize();
-    model.setValue(c.getInt("appearance.fontSize", defaultValue));
-    customFontSize.setSelected(c.getBoolean("appearance.customFontSize", false));
+    model.setValue(c.getInt(ConfKeys.APPEARANCE_FONT_SIZE, defaultValue));
+    customFontSize.setSelected(c.getBoolean(ConfKeys.APPEARANCE_CUSTOM_FONT_SIZE, false));
     fontSize.setEnabled(customFontSize.isSelected());
 
     final String currentLf = UIManager.getLookAndFeel().getClass().getName();
-    final String lookAndFeel = c.getString("appearance.lookAndFeel", currentLf);
+    final String lookAndFeel = c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, currentLf);
     for (int i = 0; i < lookAndFeelInfoJComboBox.getItemCount(); i++) {
       if (lookAndFeelInfoJComboBox.getItemAt(i).getClassName().equals(lookAndFeel)) {
         lookAndFeelInfoJComboBox.setSelectedIndex(i);
