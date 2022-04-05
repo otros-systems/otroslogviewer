@@ -60,13 +60,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 public class LogViewPanel extends LogViewPanelI {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanel.class.getName());
+  public static final int CHECK_BOX_WIDTH = (int) Math.ceil(new JCheckBox().getPreferredSize().getWidth());
+  public static final int LEVEL_ICON_WIDTH = 16;
   private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
   private final MessageDetailListener messageDetailListener;
   private final Font menuLabelFont;
@@ -347,28 +349,43 @@ public class LogViewPanel extends LogViewPanelI {
     updateLevelColumnSize();
     updateColumnSizeIfVisible(TableColumns.CLASS, 100, 500);
     updateColumnSizeIfVisible(TableColumns.THREAD, 100, 300);
-    updateColumnSizeIfVisible(TableColumns.METHOD, 100, 200);
+    updateColumnSizeIfVisible(TableColumns.METHOD, 100, 400);
     updateColumnSizeIfVisible(TableColumns.LINE, fm.stringWidth("0000"), fm.stringWidth("000000"));
-    updateColumnSizeIfVisible(TableColumns.MARK, 16, 16);
+    updateMarkColumnSize();
     updateColumnSizeIfVisible(TableColumns.NOTE, 100, 1500);
   }
 
+
   private void updateTimeColumnSize() {
-    FontMetrics fm = table.getFontMetrics(table.getFont());
-    int dateWidth = fm.stringWidth(new SimpleDateFormat(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")).format(new Date()));
+    //The time column is bold and bold fond is wider
+    String dateExample = new SimpleDateFormat(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")).format(new Date());
+    int dateWidth = calculateTextWidth(dateExample, table);
     updateColumnSizeIfVisible(TableColumns.TIME, dateWidth + 1, dateWidth + 1);
   }
 
+  private void updateMarkColumnSize() {
+    String tableHeader = TableColumns.MARK.getName() + "  ";//Space before and after will be rendered
+    int headerWidth = calculateTextWidth(tableHeader, table);
+    int maxHeaderOrContentWidth = Math.max(headerWidth, CHECK_BOX_WIDTH);
+    updateColumnSizeIfVisible(TableColumns.MARK, maxHeaderOrContentWidth + 1, maxHeaderOrContentWidth + 1);
+  }
+
+  /**
+   * Set column size depending on configured display text/icon.
+   * If the header is wider than contend, the width of header will be used.
+   */
   private void updateLevelColumnSize() {
-    FontMetrics fm = table.getFontMetrics(table.getFont());
-    int levelWidth = fm.stringWidth(Level.WARNING.getName());
+    int levelWidth = calculateTextWidth(Level.WARNING.getName(), table);
+    String tableHeader = TableColumns.LEVEL.getName() + "  ";//Space before and after will be rendered
+    int headerWidth = calculateTextWidth(tableHeader, table);
+    int maxIconOrHeaderWidth = Math.max(headerWidth, LEVEL_ICON_WIDTH);
 
     switch (configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly)) {
       case IconsOnly:
-        updateColumnSizeIfVisible(TableColumns.LEVEL, 16 + 1, 16 + 1);
+        updateColumnSizeIfVisible(TableColumns.LEVEL, maxIconOrHeaderWidth + 1, maxIconOrHeaderWidth + 1);
         break;
       case IconsAndText:
-        updateColumnSizeIfVisible(TableColumns.LEVEL, 16 + levelWidth + 5, 16 + levelWidth + 5);
+        updateColumnSizeIfVisible(TableColumns.LEVEL, maxIconOrHeaderWidth + levelWidth + 5, maxIconOrHeaderWidth + levelWidth + 5);
         break;
       case TextOnly:
       default:
@@ -380,6 +397,11 @@ public class LogViewPanel extends LogViewPanelI {
   private void updateColumnSizeIfVisible(TableColumns column, int width, int maxWidth) {
     table.getColumns(true).get(column.getColumn()).setMaxWidth(maxWidth);
     table.getColumns(true).get(column.getColumn()).setPreferredWidth(width);
+  }
+
+  private int calculateTextWidth(String text, JComponent component) {
+    FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
+    return fontMetrics.stringWidth(text);
   }
 
   @Override
@@ -609,7 +631,7 @@ public class LogViewPanel extends LogViewPanelI {
     for (String g : groups) {
       JMenuItem markerMenuItem = new JMenuItem(automaticMarker.getName());
 
-      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), 16, 16,"Ab");
+      Icon icon = new ColorIcon(automaticMarker.getColors().getBackground(), automaticMarker.getColors().getForeground(), 16, 16, "Ab");
       markerMenuItem.setIcon(icon);
       markerMenuItem.setToolTipText(automaticMarker.getDescription());
       markerMenuItem.addActionListener(new AutomaticMarkUnamrkActionListener(dataTableModel, automaticMarker, mode, statusObserver));

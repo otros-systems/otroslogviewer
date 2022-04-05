@@ -131,7 +131,7 @@ public class LogImportersLoader {
             logImporter.init(p);
             logImporters.add(logImporter);
           } else if (p.getProperty(Log4jPatternMultilineLogParser.PROPERTY_TYPE, "").equals("json")) {
-            final JsonLogParser jsonLogParser = new JsonLogParser();
+            final JsonLogParser jsonLogParser = new JsonLogParser(parser);
             jsonLogParser.init(p);
             logImporters.add(new LogImporterUsingParser(jsonLogParser));
           } else {

@@ -22,13 +22,18 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
   private final ParserDescription parserDescription;
   private final JsonExtractor jsonExtractor;
 
-
   public JsonLogParser() {
     super("Json parser", "Json log parser");
     parserDescription = new ParserDescription();
     parserDescription.setDisplayName(name);
     parserDescription.setDescription(description);
     jsonExtractor = new JsonExtractor();
+  }
+  
+  public JsonLogParser(LogParser parser) {
+	  super("Json parser", "Json log parser");
+	  parserDescription = parser.getParserDescription();
+	  jsonExtractor = new JsonExtractor();
   }
 
   @Override

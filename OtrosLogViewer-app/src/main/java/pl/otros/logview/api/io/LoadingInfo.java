@@ -15,22 +15,19 @@
  ******************************************************************************/
 package pl.otros.logview.api.io;
 
-import static org.apache.commons.io.IOUtils.copy;
-import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
-import static pl.otros.logview.api.io.Utils.closeQuietly;
-import static pl.otros.logview.gui.session.OpenMode.FROM_START;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.RandomAccessContent;
+import pl.otros.logview.gui.session.OpenMode;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.RandomAccessContent;
-
-import pl.otros.logview.gui.session.OpenMode;
+import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
+import static pl.otros.logview.api.io.Utils.closeQuietly;
+import static pl.otros.logview.gui.session.OpenMode.FROM_START;
 
 public final class LoadingInfo implements AutoCloseable {
 
@@ -57,15 +54,17 @@ public final class LoadingInfo implements AutoCloseable {
     friendlyUrl = fileObject.getName().getFriendlyURI();
 
     fileObject.refresh();
-    InputStream inputStream = fileObject.getContent().getInputStream();
-    byte[] probe = loadProbe(inputStream, 10000);
-    gzipped = checkIfIsGzipped(probe, probe.length);
-    inputStreamBufferedStart = gzipped ? ungzip(probe) : probe;
+    InputStream inputStream = new BufferedInputStream(fileObject.getContent().getInputStream(), 2);
+    //maximum limit of reset(). Only read 2 bytes
+    inputStream.mark(2);
+    gzipped = checkIfIsGzipped(inputStream);
+    inputStream.reset();
+
+    inputStreamBufferedStart = gzipped ? ungzip(inputStream, 10_000) : loadProbe(inputStream, 10_000);
 
     if (openMode == FROM_START || gzipped) {
-      PushbackInputStream pushBackInputStream = new PushbackInputStream(inputStream, probe.length + 1); // +1 to support empty files
-      pushBackInputStream.unread(probe);
-      observableInputStreamImpl = new ObservableInputStreamImpl(pushBackInputStream);
+      fileObject.refresh();//Reload file
+      observableInputStreamImpl = new ObservableInputStreamImpl(fileObject.getContent().getInputStream());
       contentInputStream = gzipped ? new GZIPInputStream(observableInputStreamImpl) : observableInputStreamImpl;
     } else {
       RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
@@ -155,22 +154,33 @@ public final class LoadingInfo implements AutoCloseable {
     return bout.toByteArray();
   }
 
-  private static boolean checkIfIsGzipped(byte[] buffer, int lenght) throws IOException {
-    boolean gziped;
+  /**
+   * Check the first two bytes of a InputStream. If the bytes equals {@link GZIPInputStream#GZIP_MAGIC} the file is
+   * compressed by gzip
+   */
+  private static boolean checkIfIsGzipped(InputStream inputStream) {
+    byte[] header = new byte[2];
     try {
-      ByteArrayInputStream bin = new ByteArrayInputStream(buffer, 0, lenght);
-      GZIPInputStream gzipInputStream = new GZIPInputStream(bin);
-      gzipInputStream.read(new byte[buffer.length], 0, bin.available());
-      gziped = true;
+      int length = inputStream.read(header);
+      return length == 2
+        && (header[0] == (byte) (GZIPInputStream.GZIP_MAGIC))
+        && (header[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8));
     } catch (IOException e) {
-      gziped = false;
+      return false;
     }
-    return gziped;
+
   }
 
-  private static byte[] ungzip(byte[] buff) throws IOException {
-    try (InputStream in = new GZIPInputStream(new ByteArrayInputStream(buff)); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      copy(in, out);
+  /**
+   * Unzip only the number of bytes set in size parameter
+   */
+  private static byte[] ungzip(InputStream inputStream, int size) throws IOException {
+    try (GZIPInputStream in = new GZIPInputStream(inputStream, size); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      byte[] buffer = new byte[size];
+      int len;
+      if ((len = in.read(buffer)) > 0) {
+        out.write(buffer, 0, len);
+      }
       return out.toByteArray();
     }
   }
