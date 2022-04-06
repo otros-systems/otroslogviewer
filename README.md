@@ -1,11 +1,6 @@
 # OtrosLogViewer
 Useful software for analysing applications logs and traces.
 
-![Build status](https://api.travis-ci.org/otros-systems/otroslogviewer.svg?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a6c121e140b4493911e064621e0e635)](https://www.codacy.com/app/Otros-systems/otroslogviewer)
-
-
-
 ## Requirements
   * Java 8 since version 1.4.0
   * Java 6 for verions 1.3.x
@@ -61,9 +56,8 @@ Useful software for analysing applications logs and traces.
 
 ## Screenshots
 
-Filter level WARNING or higher and highlighting:
-
-![http://lh5.ggpht.com/_qGxhLPhk4wE/TTixTV-fyNI/AAAAAAAAA18/ILCMZ_siOIE/olv-2011-01-20.png](http://lh5.ggpht.com/_qGxhLPhk4wE/TTixTV-fyNI/AAAAAAAAA18/ILCMZ_siOIE/olv-2011-01-20.png)
+Filter level INFO or higher and highlighting:
+![Filter level INFO or higher and highlighting](https://raw.githubusercontent.com/wiki/otros-systems/otroslogviewer/screenshots/1.4.16/log-table-filter-level-info.png)
 
 [Click here to see more screenshots](https://github.com/otros-systems/otroslogviewer/wiki/Screenshots)
 
