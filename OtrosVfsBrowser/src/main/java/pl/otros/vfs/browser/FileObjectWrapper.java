@@ -18,8 +18,10 @@ package pl.otros.vfs.browser;
 
 import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.operations.FileOperations;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 public class FileObjectWrapper implements FileObject {
@@ -62,6 +64,11 @@ public class FileObjectWrapper implements FileObject {
     return parent.getParent();
   }
 
+  @Override
+  public String getPublicURIString() {
+    return parent.getPublicURIString();
+  }
+
   public FileSystem getFileSystem() {
     return parent.getFileSystem();
   }
@@ -75,8 +82,23 @@ public class FileObjectWrapper implements FileObject {
   }
 
   public FileObject resolveFile(String name, NameScope scope)
-      throws FileSystemException {
+    throws FileSystemException {
     return parent.resolveFile(name, scope);
+  }
+
+  @Override
+  public boolean setExecutable(boolean executable, boolean ownerOnly) throws FileSystemException {
+    return parent.setExecutable(executable, ownerOnly);
+  }
+
+  @Override
+  public boolean setReadable(boolean readable, boolean ownerOnly) throws FileSystemException {
+    return parent.setReadable(readable, ownerOnly);
+  }
+
+  @Override
+  public boolean setWritable(boolean writable, boolean ownerOnly) throws FileSystemException {
+    return parent.setWritable(writable, ownerOnly);
   }
 
   public FileObject resolveFile(String path) throws FileSystemException {
@@ -84,7 +106,7 @@ public class FileObjectWrapper implements FileObject {
   }
 
   public FileObject[] findFiles(FileSelector selector)
-      throws FileSystemException {
+    throws FileSystemException {
     return parent.findFiles(selector);
   }
 
@@ -101,6 +123,11 @@ public class FileObjectWrapper implements FileObject {
     return parent.delete(selector);
   }
 
+  @Override
+  public int deleteAll() throws FileSystemException {
+    return parent.deleteAll();
+  }
+
   public void createFolder() throws FileSystemException {
     parent.createFolder();
   }
@@ -110,7 +137,7 @@ public class FileObjectWrapper implements FileObject {
   }
 
   public void copyFrom(FileObject srcFile, FileSelector selector)
-      throws FileSystemException {
+    throws FileSystemException {
     parent.copyFrom(srcFile, selector);
   }
 
@@ -142,7 +169,33 @@ public class FileObjectWrapper implements FileObject {
     return parent.isContentOpen();
   }
 
+  @Override
+  public boolean isExecutable() throws FileSystemException {
+    return parent.isExecutable();
+  }
+
+  @Override
+  public boolean isFile() throws FileSystemException {
+    return parent.isFile();
+  }
+
+  @Override
+  public boolean isFolder() throws FileSystemException {
+    return parent.isFolder();
+  }
+
   public FileOperations getFileOperations() throws FileSystemException {
     return parent.getFileOperations();
+  }
+
+  @Override
+  public int compareTo(@NotNull FileObject o) {
+    return parent.compareTo(o);
+  }
+
+  @NotNull
+  @Override
+  public Iterator<FileObject> iterator() {
+    return parent.iterator();
   }
 }

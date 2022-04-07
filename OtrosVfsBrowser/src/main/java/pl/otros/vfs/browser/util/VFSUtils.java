@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -294,6 +295,7 @@ public final class VFSUtils {
       builder.setStrictHostKeyChecking(opts, "no");
       builder.setUserDirIsRoot(opts, false);
       builder.setCompression(opts, "zlib,none");
+      builder.setIdentityRepositoryFactory(opts, new PageantIdentityRepositoryFactory());
 
     } else if (filePath.startsWith("smb://")) {
 
@@ -333,7 +335,7 @@ public final class VFSUtils {
       builder.setStrictHostKeyChecking(opts, "no");
       builder.setUserDirIsRoot(opts, false);
       builder.setCompression(opts, "zlib,none");
-      builder.setTimeout(opts,5000);
+      builder.setSessionTimeout(opts, Duration.ofSeconds(5));
     }
 
     DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
