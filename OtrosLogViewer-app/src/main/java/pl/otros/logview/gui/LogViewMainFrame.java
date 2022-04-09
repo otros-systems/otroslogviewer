@@ -55,7 +55,6 @@ import pl.otros.logview.gui.firstuse.FirstTimeUseWizard;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
-import pl.otros.logview.gui.open.LogVfsBrowserDialog;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
 import pl.otros.logview.gui.services.jumptocode.ServicesImpl;
 import pl.otros.logview.gui.suggestion.PersistedSuggestionSource;
@@ -78,6 +77,7 @@ import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.swing.suggest.SuggestDecorator;
+import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -89,10 +89,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -181,7 +178,7 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setjTabbedPane(logsTabbedPane);
     otrosApplication.setStatusObserver(observer);
     final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
-    otrosApplication.setOtrosVfsBrowserDialog(new LogVfsBrowserDialog(logParsableListener, getVfsFavoritesConfiguration()));
+    otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
     otrosApplication.setServices(new ServicesImpl(otrosApplication));
     otrosApplication.setLogLoader(new BasicLogLoader(otrosApplication.getServices().getStatsService()));
     if (!runningForTests()) {

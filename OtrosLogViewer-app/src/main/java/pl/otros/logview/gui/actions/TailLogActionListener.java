@@ -32,8 +32,6 @@ import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.gui.open.LogVfsBrowserDialog;
-import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -60,7 +58,7 @@ public class TailLogActionListener extends OtrosAction {
 
   @Override
   protected void actionPerformedHook(ActionEvent e) {
-    LogVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
+    JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser);
 
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), "Tail " + importer.getName() + " log");
@@ -69,22 +67,11 @@ public class TailLogActionListener extends OtrosAction {
     }
     final FileObject[] files = chooser.getSelectedFiles();
     for (FileObject file : files) {
-      List<LogImporter> parsableLogImporters = chooser.getParsableLogImporters();
-      LogImporter logImporter;
-      if (parsableLogImporters.isEmpty()) {
-        logImporter = importer;
-      } else {
-        logImporter = new DetectOnTheFlyLogImporter(parsableLogImporters);
-      }
-      openFileObjectInTailMode(file, Utils.getFileObjectShortName(file), logImporter);
+      openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
     }
   }
 
   public void openFileObjectInTailMode(final FileObject file, String tabName) {
-    openFileObjectInTailMode(file, tabName, importer);
-  }
-
-  public void openFileObjectInTailMode(final FileObject file, String tabName, LogImporter logImporter) {
     final LoadingInfo loadingInfo;
     try {
       loadingInfo = new LoadingInfo(file, true);
@@ -95,7 +82,7 @@ public class TailLogActionListener extends OtrosAction {
       return;
     }
 
-    TableColumns[] tableColumnsToUse = determineTableColumnsToUse(loadingInfo, logImporter);
+    TableColumns[] tableColumnsToUse = determineTableColumnsToUse(loadingInfo, importer);
 
     final LogViewPanelWrapper panel = new LogViewPanelWrapper(file.getName().getBaseName(), loadingInfo.getObservableInputStreamImpl(),
       tableColumnsToUse, getOtrosApplication());
@@ -105,6 +92,7 @@ public class TailLogActionListener extends OtrosAction {
 
     final LogLoader logLoader = getOtrosApplication().getLogLoader();
     final VfsSource source = new VfsSource(file);
+    final LogImporter logImporter = this.importer;
     final LogLoadingSession session = logLoader.startLoading(
       source,
       logImporter,

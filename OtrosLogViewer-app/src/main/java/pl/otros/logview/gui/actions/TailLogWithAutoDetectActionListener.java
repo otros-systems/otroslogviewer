@@ -27,23 +27,22 @@ import java.util.Optional;
 
 public class TailLogWithAutoDetectActionListener extends TailLogActionListener {
 
+//  private final
+
   public TailLogWithAutoDetectActionListener(OtrosApplication otrosApplication) {
     super(otrosApplication, new DetectOnTheFlyLogImporter(otrosApplication.getAllPluginables().getLogImportersContainer().getElements()));
   }
 
   @Override
   protected TableColumns[] determineTableColumnsToUse(LoadingInfo loadingInfo, LogImporter importer) {
+    Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
     byte[] inputStreamBufferedStart = loadingInfo.getInputStreamBufferedStart();
-
-    if(importer instanceof DetectOnTheFlyLogImporter) {
-      Collection<LogImporter> logImporters = ((DetectOnTheFlyLogImporter) importer).getLogImporters();
-      Optional<LogImporter> detectLogImporter = Utils.detectLogImporter(logImporters, inputStreamBufferedStart);
-      if (detectLogImporter.isPresent()) {
-        return super.determineTableColumnsToUse(loadingInfo, detectLogImporter.get());
-      }
+    Optional<LogImporter> detectLogImporter = Utils.detectLogImporter(logImporters, inputStreamBufferedStart);
+    TableColumns[] determineTableColumnsToUse = super.determineTableColumnsToUse(loadingInfo, importer);
+    if (detectLogImporter.isPresent()) {
+      determineTableColumnsToUse = super.determineTableColumnsToUse(loadingInfo, detectLogImporter.get());
     }
-
-    return super.determineTableColumnsToUse(loadingInfo, importer);
+    return determineTableColumnsToUse;
   }
 
 }

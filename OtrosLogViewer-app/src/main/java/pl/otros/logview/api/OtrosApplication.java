@@ -25,7 +25,7 @@ import pl.otros.logview.api.plugins.MenuActionProvider;
 import pl.otros.logview.api.services.Services;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.api.theme.ThemeConfig;
-import pl.otros.logview.gui.open.LogVfsBrowserDialog;
+import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class OtrosApplication {
   private JTextField searchField;
   private MarkerColors selectedMarkColors;
   private JMenu pluginsMenu;
-  private LogVfsBrowserDialog otrosVfsBrowserDialog;
+  private JOtrosVfsBrowserDialog otrosVfsBrowserDialog;
   private AppProperties appProperties;
   private final List<MenuActionProvider> menuActionProviders;
   private LogLoader logLoader;
@@ -71,11 +71,11 @@ public class OtrosApplication {
     return jTabbedPane;
   }
 
-  public LogVfsBrowserDialog getOtrosVfsBrowserDialog() {
+  public JOtrosVfsBrowserDialog getOtrosVfsBrowserDialog() {
     return otrosVfsBrowserDialog;
   }
 
-  public void setOtrosVfsBrowserDialog(LogVfsBrowserDialog otrosVfsBrowserDialog) {
+  public void setOtrosVfsBrowserDialog(JOtrosVfsBrowserDialog otrosVfsBrowserDialog) {
     this.otrosVfsBrowserDialog = otrosVfsBrowserDialog;
   }
 
