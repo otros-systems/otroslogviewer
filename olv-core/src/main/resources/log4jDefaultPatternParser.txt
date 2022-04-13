@@ -1,0 +1,24 @@
+#check wiki on https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout
+
+type=log4j
+pattern=TIMESTAMP LEVEL [THREAD]  MESSAGE
+dateFormat=yyyy-MM-dd HH:mm:ss,SSS
+name=Lo4j-pattern: %d{ISO8601} %-5p [%t] %m%n [windows-1252]
+charset=windows-1252
+
+#    Specify the description (used as tooltip) by adding the 'description ' property.
+#    Specify the log pattern by adding the 'pattern' property. The supplied keywords in value field are:
+#        TIMESTAMP
+#        LOGGER
+#        LEVEL
+#        THREAD
+#        CLASS
+#        FILE
+#        LINE
+#        METHOD
+#        RELATIVETIME
+#        MESSAGE
+#        NDC
+#        PROP(key)
+#    Specify the date format by adding the property 'dateFormat', using patterns from java.text.SimpleDateFormat
+#    For custom level mapping, add the property 'customLevels' providing values in the format CustomLevel1=Log4jLevel,CustomLevel2=Log4jLevel

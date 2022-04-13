@@ -1,0 +1,66 @@
+/*
+ * Copyright 2012 Krzysztof Otrebski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'olv.java-conventions'
+    id 'distribution'
+}
+
+//Enabling the instrumentedClasspath configuration
+configurations  {
+    instrumentedClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    implementation project(':olv-core')
+    implementation project(':olv-api')
+    implementation project(':olv-formatter')
+    //the dependency below allows this module to access the shadowJar from the olv-core module (see distribution section)
+    instrumentedClasspath project(path: ":olv-core", configuration: 'instrumentedJars')
+}
+
+distributions {
+     main{
+        contents {
+            from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it }}
+            eachFile {if(it.name.endsWith('.sh')) {fileMode 0755}}
+        }
+    }
+    dev{
+        contents {
+            from(file('src/main/dist')) // include everything from 'main' distribution
+            from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it }}
+            eachFile {if(it.name.endsWith('.sh')) {fileMode 0755}}
+        }
+    }
+}
+
+tasks.register('prepareLinuxScripts'){
+    doLast{
+        foreach
+    }
+}
+
+//disable tar files
+distTar.enabled(false)
+devDistTar.enabled(false)
+
+//enable dependency on external files for correct optimization of the distribution file (compliance with future gradle releases)
+distZip.dependsOn(configurations.instrumentedClasspath)
+devDistZip.dependsOn(configurations.instrumentedClasspath)
