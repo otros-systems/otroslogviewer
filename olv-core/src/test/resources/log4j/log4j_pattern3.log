@@ -1,0 +1,54 @@
+DEBUG [main] 2011-04-20 16:30:01,333 (org.apache.log4j.PropertyConfigurator) Parsing for [root] with value=[debug, stdout, R].
+DEBUG [main] 2011-04-20 16:30:01,348 (org.apache.log4j.PropertyConfigurator) Level token is [debug].
+DEBUG [main] 2011-04-20 16:30:01,348 (org.apache.log4j.PropertyConfigurator) Category root set to DEBUG.
+DEBUG [main] 2011-04-20 16:30:01,348 (org.apache.log4j.PropertyConfigurator) Parsing appender named "stdout".
+DEBUG [main] 2011-04-20 16:30:01,364 (org.apache.log4j.PropertyConfigurator) Parsing layout options for "stdout".
+DEBUG [main] 2011-04-20 16:30:01,364 (org.apache.log4j.config.PropertySetter) Setting property [conversionPattern] to [%d %5p (%c) [%t] %m%n].
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.PropertyConfigurator) End of parsing for "stdout".
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.PropertyConfigurator) Parsed "stdout" options.
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.PropertyConfigurator) Parsing appender named "R".
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.PropertyConfigurator) Parsing layout options for "R".
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.config.PropertySetter) Setting property [conversionPattern] to [%5p [%t] %d (%c) %m%n].
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.PropertyConfigurator) End of parsing for "R".
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.config.PropertySetter) Setting property [file] to [example.log].
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.config.PropertySetter) Setting property [maxFileSize] to [100KB].
+DEBUG [main] 2011-04-20 16:30:01,380 (org.apache.log4j.config.PropertySetter) Setting property [maxBackupIndex] to [1].
+DEBUG [main] 2011-04-20 16:30:01,395 (org.apache.log4j.rolling.RollingFileAppender) setFile called: example.log, true
+DEBUG [main] 2011-04-20 16:30:01,395 (org.apache.log4j.rolling.RollingFileAppender) setFile ended
+DEBUG [main] 2011-04-20 16:30:01,395 (org.apache.log4j.PropertyConfigurator) Parsed "R" options.
+DEBUG [main] 2011-04-20 16:30:01,395 (org.apache.log4j.PropertyConfigurator) Finished configuring.
+ERROR [main] 2011-04-20 16:30:01,395 (org.apache.log4j.PropertyConfigurator) Could not read configuration file [log4j.properties].
+java.io.FileNotFoundException: log4j.properties (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:308)
+	at org.apache.log4j.PropertyConfigurator.configure(PropertyConfigurator.java:326)
+	at test.log4j.Main.main(Main.java:21)
+ INFO [main] 2011-04-20 16:30:01,395 (test.log4j.Main) Info!
+ INFO [main] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) Creating
+ INFO [main] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) Creating
+ INFO [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) started
+ INFO [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) executing
+ INFO [main] 2011-04-20 16:30:01,395 (test.log4j.Main) finished main thread
+ INFO [MyThread 1] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) started
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 0
+ INFO [MyThread 1] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) Wow!! I will do something
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 1
+ INFO [MyThread 1] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) Doing...
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 2
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 3
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 4
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 5
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 6
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 7
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 8
+DEBUG [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) debugging something 9
+ERROR [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.p1.Class2) ERROR!
+ INFO [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) Result: false
+ INFO [MyThread 0] 2011-04-20 16:30:01,395 (test.log4j.Main$MyRunnable) finished
+ INFO [MyThread 1] 2011-04-20 16:30:02,395 (test.log4j.p1.Class2) have number: 414
+ INFO [MyThread 1] 2011-04-20 16:30:02,395 (test.log4j.p1.Class2) Done!
+ INFO [MyThread 1] 2011-04-20 16:30:02,395 (test.log4j.p1.Class2) have number: 905
+ INFO [MyThread 1] 2011-04-20 16:30:02,395 (test.log4j.Main$MyRunnable) Result: false
+ INFO [MyThread 1] 2011-04-20 16:30:02,395 (test.log4j.Main$MyRunnable) finished

@@ -1,0 +1,67 @@
+/*
+ * Copyright 2012 Krzysztof Otrebski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+plugins {
+    id 'olv.java-conventions'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+def today = new Date().format("yyyy-MM-dd")
+dependencies {
+    implementation project(':olv-gui')
+    implementation project(':olv-vfs')
+    implementation project(':olv-api')
+    implementation project(':olv-formatter')
+    implementation project(':olv-parser')
+    testImplementation 'com.github.tomakehurst:wiremock:1.58'
+}
+
+jar {
+    manifest.mainAttributes(
+            'Implementation-Title': 'OtrosLogViewer-app',
+            'Implementation-Version': project.version,
+            'Main-Class': "pl.otros.logview.gui.LogViewMainFrame",
+            'Build-day': today,
+            'Build-date': new Date(),
+            'SplashScreen-Image': "img/otros/splash.png"
+    )
+}
+
+test {
+    useTestNG()
+    maxParallelForks = 2
+}
+
+shadowJar {
+    archiveBaseName.set('olv')
+    archiveClassifier.set('exec')
+    archiveVersion.set('')
+}
+
+//This configuration shares the output from the shadowJar task for other modules to consume it
+configurations {
+    instrumentedJars {
+        canBeConsumed = true
+        canBeResolved = false
+        // If you want this configuration to share the same dependencies, otherwise omit this line
+        extendsFrom implementation, runtimeOnly
+    }
+    artifacts {
+        instrumentedJars(shadowJar)
+    }
+}
+
+//The line below ensures the uber-jar is generated when 'gradle build' is executed
+project.tasks.build.dependsOn shadowJar

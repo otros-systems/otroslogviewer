@@ -1,0 +1,54 @@
+log4j:ERROR setFile(null,true) call failed.
+java.io.FileNotFoundException: /opt/t.log (No such file or directory)
+	at java.io.FileOutputStream.openAppend(Native Method)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:177)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:102)
+	at org.apache.log4j.FileAppender.setFile(FileAppender.java:290)
+	at org.apache.log4j.FileAppender.activateOptions(FileAppender.java:164)
+	at org.apache.log4j.DailyRollingFileAppender.activateOptions(DailyRollingFileAppender.java:216)
+	at org.apache.log4j.config.PropertySetter.activate(PropertySetter.java:257)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:133)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:97)
+	at org.apache.log4j.PropertyConfigurator.parseAppender(PropertyConfigurator.java:689)
+	at org.apache.log4j.PropertyConfigurator.parseCategory(PropertyConfigurator.java:647)
+	at org.apache.log4j.PropertyConfigurator.configureRootCategory(PropertyConfigurator.java:544)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:440)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:476)
+	at org.apache.log4j.helpers.OptionConverter.selectAndConfigure(OptionConverter.java:471)
+	at org.apache.log4j.LogManager.<clinit>(LogManager.java:125)
+	at org.apache.log4j.Logger.getLogger(Logger.java:105)
+	at org.apache.commons.logging.impl.Log4JLogger.getLogger(Log4JLogger.java:283)
+	at org.apache.commons.logging.impl.Log4JLogger.<init>(Log4JLogger.java:108)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at org.apache.commons.logging.impl.LogFactoryImpl.createLogFromClass(LogFactoryImpl.java:1116)
+	at org.apache.commons.logging.impl.LogFactoryImpl.discoverLogImplementation(LogFactoryImpl.java:914)
+	at org.apache.commons.logging.impl.LogFactoryImpl.newInstance(LogFactoryImpl.java:604)
+	at org.apache.commons.logging.impl.LogFactoryImpl.getInstance(LogFactoryImpl.java:336)
+	at org.apache.commons.logging.impl.LogFactoryImpl.getInstance(LogFactoryImpl.java:310)
+	at org.apache.commons.logging.LogFactory.getLog(LogFactory.java:685)
+	at org.apache.catalina.core.StandardService.<clinit>(StandardService.java:54)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at java.lang.Class.newInstance0(Class.java:355)
+	at java.lang.Class.newInstance(Class.java:308)
+	at org.apache.catalina.startup.Bootstrap.init(Bootstrap.java:225)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:410)
+sdfsfsdf
+sdfsfs
+sdfs
+df
+
+something
+java.io.FileNotFoundException: fred.txt
+        at java.io.FileInputStream.<init>(FileInputStream.java)
+        at java.io.FileInputStream.<init>(FileInputStream.java)
+        at ExTest.readMyFile(ExTest.java:19)
+        at ExTest.main(ExTest.java:7)
+sfasfds
+
+sfd

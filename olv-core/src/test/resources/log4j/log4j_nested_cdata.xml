@@ -1,0 +1,77 @@
+<log4j:event logger="Classname" timestamp="1483646202027" level="TRACE" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
+
+<log4j:event logger="Classname" timestamp="1483646202027" level="DEBUG" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
+
+<log4j:event logger="Classname" timestamp="1483646202027" level="INFO" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
+
+<log4j:event logger="Classname" timestamp="1483646202027" level="WARN" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
+
+<log4j:event logger="Classname" timestamp="1483646202027" level="ERROR" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
+
+<log4j:event logger="Classname" timestamp="1483646202027" level="FATAL" thread="main">
+<log4j:message><![CDATA[A <![CDATA[descriptive]]> message�]]></log4j:message>
+<log4j:NDC><![CDATA[Outer <![CDATA[section Inner]]> section]]></log4j:NDC>
+<log4j:throwable><![CDATA[java.lang.Exception: A <![CDATA[nice]]> exception
+	at Classname.main(Classname.java:18)
+]]></log4j:throwable>
+<log4j:locationInfo class="Classname" method="main" file="Classname.java" line="18"/>
+<log4j:properties>
+<log4j:data name="correlationID" value="0050569c-5ef2-11e5-e246-876af0931fc5"/>
+<log4j:data name="username" value="cn=Directory Manager�,o=mycompany.com"/>
+</log4j:properties>
+</log4j:event>
