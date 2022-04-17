@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.VersionUtil;
+import pl.otros.logview.updater.VersionUtil;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.InitializationException;

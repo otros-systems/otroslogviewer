@@ -19,12 +19,13 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.VersionUtil;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.OtrosAction;
+import pl.otros.logview.updater.VersionUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Optional;
@@ -32,8 +33,8 @@ import java.util.Optional;
 import static pl.otros.logview.api.ConfKeys.*;
 
 public abstract class CheckForNewVersionAbstract extends OtrosAction {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAction.class.getName());
-  private VersionUtil versionUtil = new VersionUtil();
+  private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAbstract.class.getName());
+  private final VersionUtil versionUtil = new VersionUtil();
 
   private SwingWorker<Optional<String>, Void> versionChecker = new SwingWorker<Optional<String>, Void>() {
     @Override
@@ -49,9 +50,10 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
         proxy = new Proxy(proxyType, proxySocketAddress);
       }
       try {
-        LOGGER.info("Checking current and running versionss");
-        running = versionUtil.getRunningVersion();
-        current = versionUtil.getCurrentVersion(running, proxy, getOtrosApplication());
+        LOGGER.info("Checking current and running versions");
+        current = versionUtil.getCurrentVersion(proxy);
+      } catch (FileNotFoundException e) {
+        LOGGER.error("No version Info added to release page! Cannot check version.");
       } catch (Exception e) {
         LOGGER.error("Error checking version: " + e.getMessage());
       }

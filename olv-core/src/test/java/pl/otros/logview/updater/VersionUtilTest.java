@@ -1,19 +1,13 @@
-package pl.otros.logview;
+package pl.otros.logview.updater;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.DataConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.OtrosApplication;
 
 import java.net.Proxy;
 import java.util.Optional;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.testng.Assert.assertEquals;
 
 public class VersionUtilTest {
@@ -21,24 +15,28 @@ public class VersionUtilTest {
   @Test
   public void testGetCurrentVersion() throws Exception {
     //given
+    String versionJson = "{\n" +
+      "    \"currentVersion\": {\n" +
+      "        \"major\":1,\n" +
+      "        \"minor\":2,\n" +
+      "        \"patch\":3\n" +
+      "    }\n" +
+      "}";
     final WireMockServer wireMockServer = new WireMockServer();
     wireMockServer
       .stubFor(
         get(urlMatching("/currentVersion.*"))
-        .willReturn(aResponse()
-        .withStatus(200)
-        .withBody("currentVersion=1.2.3\n".getBytes()))
+          .willReturn(aResponse()
+            .withStatus(200)
+            .withBody(versionJson.getBytes()))
       );
     wireMockServer.start();
 
     final int port = wireMockServer.port();
     final VersionUtil versionUtil = new VersionUtil("http://localhost:" + port+"/currentVersion");
-    final OtrosApplication otrosApplication = new OtrosApplication();
-    otrosApplication.setConfiguration(new DataConfiguration(new BaseConfiguration()));
-    otrosApplication.getConfiguration().setProperty(ConfKeys.UUID,"C9457787-AF59-4B9F-B4E8-FB75334EBEF8");
 
     //when
-    final Optional<String> currentVersion = versionUtil.getCurrentVersion("1.2.3", Proxy.NO_PROXY, otrosApplication);
+    final Optional<String> currentVersion = versionUtil.getCurrentVersion(Proxy.NO_PROXY);
     wireMockServer.stop();
 
     //then
@@ -63,7 +61,7 @@ public class VersionUtilTest {
   }
 
   @Test(dataProvider = "testValidateResponse")
-  public void testValidateResponse(String response, Optional<String> expected) throws Exception {
+  public void testValidateResponse(String response, Optional<String> expected) {
     final VersionUtil versionUtil = new VersionUtil();
     final Optional<String> actual = versionUtil.validateResponse(response);
     assertEquals(actual, expected);
