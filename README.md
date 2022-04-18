@@ -8,6 +8,9 @@ Useful software for analysing applications logs and traces.
   * Older versions ara available on [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dm/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
 [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dt/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
   
+## Support OtrosLogViewer
+
+[Developing on OtrosLogViewer](https://github.com/otros-systems/otroslogviewer/wiki/DevelopingOnOtrosLogViewer)
 
 ## Features
   * Loading logs from remote servers using ftp, sftp, ssh, samba and others ([supported file systems](http://commons.apache.org/vfs/filesystems.html))
