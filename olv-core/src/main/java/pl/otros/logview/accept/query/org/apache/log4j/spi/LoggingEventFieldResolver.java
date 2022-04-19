@@ -199,9 +199,9 @@ public final class LoggingEventFieldResolver {
       String ndcValue = event.getNDC();
       return ((ndcValue == null) ? EMPTY_STRING : ndcValue);
     } else if (TIMESTAMP_FIELD.equals(upperField)) {
-      return new Long(event.getDate().getTime());
+      return event.getDate().getTime();
     } else if (DATE_FIELD.equals(upperField)) {
-      return new Long(event.getDate().getTime());
+      return event.getDate().getTime();
     } else if (THREAD_FIELD.equals(upperField)) {
       return event.getThread();
     } else if (upperField.startsWith(PROP_FIELD)) {
