@@ -4,10 +4,12 @@ Useful software for analysing applications logs and traces.
 ## Installation
 [Installation documentation](https://github.com/otros-systems/otroslogviewer/wiki/Installation)
 
-  * You can download the latest version from [Github releases ![Download count of latest releese](https://img.shields.io/github/downloads/otros-systems/otroslogviewer/latest/total.svg)](https://github.com/otros-systems/otroslogviewer/releases) 
-  * Older versions ara available on [Sourceforge page](https://sourceforge.net/projects/otroslogviewer/files/latest/download?source=directory) [![Download OtrosLogViewer](https://img.shields.io/sourceforge/dm/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
-[![Download OtrosLogViewer](https://img.shields.io/sourceforge/dt/otroslogviewer.svg)](https://sourceforge.net/projects/otroslogviewer/files/latest/download)
-  
+ You can download the latest version from [Github releases ![Download count of latest releese](https://img.shields.io/github/downloads/otros-systems/otroslogviewer/latest/total.svg)](https://github.com/otros-systems/otroslogviewer/releases) 
+ 
+ Overall Downloads on github: ![All downloads of github releases](https://img.shields.io/github/downloads/otros-systems/otroslogviewer/total)
+ 
+ Overall Downloads on sourceforge for older versions: ![Download OtrosLogViewer](https://img.shields.io/sourceforge/dt/otroslogviewer.svg)
+ 
 ## Support OtrosLogViewer
 
 [Developing on OtrosLogViewer](https://github.com/otros-systems/otroslogviewer/wiki/DevelopingOnOtrosLogViewer)
