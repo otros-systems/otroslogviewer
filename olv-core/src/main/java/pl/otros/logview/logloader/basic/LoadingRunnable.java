@@ -167,7 +167,7 @@ public class LoadingRunnable implements Runnable {
             importer.importLogs(loadingInfo.getContentInputStream(), collector, parsingContext);
             Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             statsService.bytesRead(loadingInfo.getFileObject().getName().getScheme(), afterRead - beforeRead);
-            if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
+            if (!loadingInfo.isTailing() || loadingInfo.getCompression().isCompressed()) {
               break;
             }
           }

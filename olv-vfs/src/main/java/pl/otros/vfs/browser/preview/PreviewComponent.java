@@ -17,29 +17,24 @@
 package pl.otros.vfs.browser.preview;
 
 
-import java.awt.Font;
+import net.miginfocom.swing.MigLayout;
+import pl.otros.vfs.browser.i18n.Messages;
+import pl.otros.vfs.browser.preview.PreviewStatus.State;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
-
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.TitledBorder;
-
-import net.miginfocom.swing.MigLayout;
-import pl.otros.vfs.browser.i18n.Messages;
-import pl.otros.vfs.browser.preview.PreviewStatus.State;
+import java.util.zip.ZipInputStream;
 
 public class PreviewComponent extends JPanel {
 
   private static final String EMPTY_STRING = "";
+  private final TitledBorder border;
   private JLabel titleLabel;
   private JLabel nameLabel;
   private JTextArea contentArea;
@@ -47,7 +42,6 @@ public class PreviewComponent extends JPanel {
   private JCheckBox enabledCheckBox;
   private PreviewStatus previewStatus;
   private JScrollPane contentScrollPane;
-  private final TitledBorder border;
 
   public PreviewComponent() {
     super(new MigLayout());
@@ -135,20 +129,21 @@ public class PreviewComponent extends JPanel {
     return enabledCheckBox.isSelected();
   }
 
-  private String tryToUngzip(byte[] bytes){	  
-	  int bytesLength = bytes.length;
-	  try {
-		  GZIPInputStream gzis = new GZIPInputStream(new ByteArrayInputStream(bytes));
-		  try {
-			  bytesLength = gzis.read(bytes,0,bytes.length);
-		  } catch (IOException e){
-			  //can't read
-		  }
-		  
-	  } catch (IOException e) {
-      //ignore this
-	  }
-	  return new String(bytes,0,bytesLength);
+  private String tryToUngzip(byte[] bytes) {
+    int bytesLength = bytes.length;
+    try (GZIPInputStream gzis = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
+      bytesLength = gzis.read(bytes, 0, bytes.length);
+    } catch (IOException e) {
+      try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(bytes))) {
+        if (zipInputStream.getNextEntry() != null) {
+          bytesLength = zipInputStream.read(bytes);
+        }
+      } catch (IOException e2) {
+        //can't read
+      }
+    }
+
+    return new String(bytes, 0, bytesLength);
   }
-  
+
 }

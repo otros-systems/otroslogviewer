@@ -118,7 +118,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       while (parsingContext.isParsingInProgress()) {
         try {
           importer.importLogs(loadingInfo.getContentInputStream(), logDataCollector, parsingContext);
-          if (!loadingInfo.isTailing() || loadingInfo.isGzipped()) {
+          if (!loadingInfo.isTailing() || loadingInfo.getCompression().isCompressed()) {
             break;
           }
           Thread.sleep(1000);
