@@ -83,32 +83,27 @@ import pl.otros.vfs.browser.auth.UserAuthenticatorFactory;
  */
 public final class VFSUtils {
   private static final int SYMBOLIC_LINK_MAX_SIZE = 128;
-
-
-  // private static members
-  private static FileSystemManager fileSystemManager;
-  private static FileSystemOptions opts = new FileSystemOptions();
   private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
   private static final String PROTO_PREFIX = "://";
   private static final String FILE_PREFIX = OS_NAME.startsWith("windows") ? "file:///" : "file://";
   private static final int FILE_PREFIX_LEN = FILE_PREFIX.length();
   private static final File HOME_DIRECTORY = new File(System.getProperty("user.home"));
-
   //  public static final File CONFIG_DIRECTORY = new File(HOME_DIRECTORY, ".vfsjfilechooser");
   public static final File CONFIG_DIRECTORY = new File(HOME_DIRECTORY, ".otrosvfsbrowser");
   public static final File USER_AUTH_FILE = new File(CONFIG_DIRECTORY, "auth.xml");
   public static final File USER_AUTH_FILE_BAK = new File(CONFIG_DIRECTORY, "auth.xml.bak");
-  private static ReadWriteLock aLock = new ReentrantReadWriteLock(true);
-
-  // File size localized strings
-
   private static final Logger LOGGER = LoggerFactory.getLogger(VFSUtils.class);
   private static final Map<String, Icon> schemeIconMap = new HashMap<String, Icon>();
   private static final Set<String> archivesSuffixes = new HashSet<String>();
-  private static AuthStore sessionAuthStore = new MemoryAuthStore();
-
+  private static final FileSystemOptions opts = new FileSystemOptions();
+  private static final ReadWriteLock aLock = new ReentrantReadWriteLock(true);
+  private static final AuthStore sessionAuthStore = new MemoryAuthStore();
   //TODO change to persistent auth store
-  private static AuthStore persistentAuthStore = new MemoryAuthStore();
+  private static final AuthStore persistentAuthStore = new MemoryAuthStore();
+  private static final URIUtils URI_UTILS = new URIUtils();
+  // File size localized strings
+  // private static members
+  private static FileSystemManager fileSystemManager;
   private static AuthStoreUtils authStoreUtils;
   private static boolean authStoreLoaded = false;
 
@@ -216,7 +211,7 @@ public final class VFSUtils {
       } else {
         String protocol = fileName.substring(0, pos2);
 
-        filePath.append(protocol).append(PROTO_PREFIX).append(fileName.substring(pos + 1, fileName.length()));
+        filePath.append(protocol).append(PROTO_PREFIX).append(fileName.substring(pos + 1));
       }
     }
 
@@ -308,7 +303,7 @@ public final class VFSUtils {
    * @throws FileSystemException
    */
   public static FileObject resolveFileObject(String filePath) throws FileSystemException {
-    LOGGER.info("Resolving file: {}", filePath);
+    LOGGER.info("Resolving file: {}", URI_UTILS.getFriendlyURI(filePath));
     if (filePath.startsWith("sftp://")) {
       SftpFileSystemConfigBuilder builder = SftpFileSystemConfigBuilder.getInstance();
       builder.setStrictHostKeyChecking(opts, "no");
@@ -369,7 +364,7 @@ public final class VFSUtils {
       resolveFile = getFileSystemManager().resolveFile(filePath, options);
       resolveFile.getType();
     } catch (FileSystemException e) {
-      LOGGER.error("Error resolving file " + filePath, e);
+      LOGGER.error("Error resolving file " + URI_UTILS.getFriendlyURI(filePath), e);
       Throwable rootCause = Throwables.getRootCause(e);
       boolean authorizationFailed = checkForWrongCredentials(rootCause);
       if (authorizationFailed) {
@@ -384,8 +379,7 @@ public final class VFSUtils {
               UserAuthenticationInfo auInfo = new UserAuthenticationInfo(parser.getProtocol().getName(), parser.getHostname(), user);
               sessionAuthStore.remove(auInfo);
               sessionAuthStore.add(auInfo, lastUserAuthenticationData);
-              LOGGER.info("Removing password for {} on {}", new Object[]{
-                new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME)), filePath});
+              LOGGER.info("Removing password for {} on {}", new String(lastUserAuthenticationData.getData(UserAuthenticationData.USERNAME)), filePath);
             }
           );
         }
@@ -555,9 +549,7 @@ public final class VFSUtils {
         if (child.getContent().getSize() != child.getContent().getSize()) {
           return false;
         }
-        if (child.getName().getBaseName().equals(fileObject.getName().getBaseName())) {
-          return true;
-        }
+        return child.getName().getBaseName().equals(fileObject.getName().getBaseName());
       }
     }
     return false;
@@ -597,7 +589,7 @@ public final class VFSUtils {
     HttpFileObject fo = (HttpFileObject) fileObject;
     FileContent content = fo.getContent();
     String contentType = content.getContentInfo().getContentType();
-    result = new FileObject[]{fileObject};
+    result = new FileObject[]{ fileObject };
     if (contentType.equalsIgnoreCase("text/html")) {
       try {
         String html = IOUtils.toString(content.getInputStream());
@@ -717,10 +709,7 @@ public final class VFSUtils {
     }
 
     //Local files
-    if (VFSUtils.isLocalFile(fileObject)) {
-      return false;
-    }
-    return true;
+    return !VFSUtils.isLocalFile(fileObject);
 
   }
 }
