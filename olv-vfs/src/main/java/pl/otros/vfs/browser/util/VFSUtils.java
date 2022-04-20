@@ -315,6 +315,7 @@ public final class VFSUtils {
       builder.setUserDirIsRoot(opts, false);
       builder.setCompression(opts, "zlib,none");
       builder.setIdentityRepositoryFactory(opts, new PageantIdentityRepositoryFactory());
+      builder.setDisableDetectExecChannel(opts, true); // see https://issues.apache.org/jira/browse/VFS-818
 
     } else if (filePath.startsWith("smb://")) {
 
