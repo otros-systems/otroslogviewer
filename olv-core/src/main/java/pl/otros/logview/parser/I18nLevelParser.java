@@ -27,7 +27,7 @@ public class I18nLevelParser {
   private final HashMap<String, Level> levels;
 
   public I18nLevelParser(Locale locale) {
-    levels = new HashMap<>(8);
+    levels = new HashMap<>();
     ResourceBundle rb = ResourceBundle.getBundle("pl.otros.logview.parser.Levels", locale);
     levels.put(rb.getString("FINEST"), Level.FINEST);
     levels.put(rb.getString("FINER"), Level.FINER);
