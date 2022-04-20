@@ -1,6 +1,10 @@
 package pl.otros.vfs.browser.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class URIUtils {
+  private static final Logger LOGGER = LoggerFactory.getLogger(URIUtils.class);
 
   /**
    * Turns the string representation of a URI into a "friendly URI" by masking the password if the credentials were specified in the URI. The masked password shows as 3 asterisks (***)
@@ -31,7 +35,12 @@ public class URIUtils {
   }
 
   private String getCredentials(String uri) {
-    return uri.substring(uri.indexOf("//"), uri.indexOf("@"));
+    int initialIndex = uri.indexOf("//");
+    if (initialIndex == -1) {
+      LOGGER.warn("URI does not contain protocol separator (//), which is unusual. Assuming credentials start at index 0 in the URI.");
+      initialIndex = 0;
+    }
+    return uri.substring(initialIndex, uri.indexOf("@"));
   }
 
   private boolean credentialsContainPassword(String credentials) {

@@ -343,7 +343,7 @@ public final class VFSUtils {
       resolveFile = getFileSystemManager().resolveFile(filePath, options);
       resolveFile.getType();
     } catch (FileSystemException e) {
-      LOGGER.error("Error resolving file " + filePath, e);
+      LOGGER.error("Error resolving file " + URI_UTILS.getFriendlyURI(filePath), e);
       Throwable rootCause = Throwables.getRootCause(e);
       boolean authorizationFailed = checkForWrongCredentials(rootCause);
       if (authorizationFailed) {
