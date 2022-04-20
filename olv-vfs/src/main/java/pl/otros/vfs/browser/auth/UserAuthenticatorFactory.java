@@ -19,15 +19,17 @@ package pl.otros.vfs.browser.auth;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.vfs.browser.util.URIUtils;
 
 import java.util.Optional;
 
 public class UserAuthenticatorFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserAuthenticatorFactory.class);
+  private final URIUtils uriUtils = new URIUtils();
 
   public OtrosUserAuthenticator getUiUserAuthenticator(AuthStore authStore, AuthStore sessionAuthStore, String url,
                                                        FileSystemOptions fileSystemOptions) {
-    LOGGER.info("Getting authenticator for {}", url);
+    LOGGER.info("Getting authenticator for {}", uriUtils.getFriendlyURI(url));
     AbstractUiUserAuthenticator authenticator = null;
     if (url.startsWith("sftp://")) {
       authenticator = new SftpUserAuthenticator(authStore, url, fileSystemOptions);
@@ -36,7 +38,7 @@ public class UserAuthenticatorFactory {
     } else if (url.startsWith("ftp://")) {
       authenticator = new UserPassUserAuthenticator(authStore, url, fileSystemOptions);
     }
-    LOGGER.info("Returning authenticator {}", Optional.ofNullable(authenticator).map(a ->a.getClass().getName()).orElse("?"));
+    LOGGER.info("Returning authenticator {}", Optional.ofNullable(authenticator).map(a -> a.getClass().getName()).orElse("?"));
     return new UseCentralsFromSessionUserAuthenticator(authStore, sessionAuthStore, url, fileSystemOptions, authenticator);
 
   }

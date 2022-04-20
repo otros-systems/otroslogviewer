@@ -40,6 +40,7 @@ import pl.otros.vfs.browser.preview.PreviewListener;
 import pl.otros.vfs.browser.table.*;
 import pl.otros.vfs.browser.util.GuiUtils;
 import pl.otros.vfs.browser.util.SwingUtils;
+import pl.otros.vfs.browser.util.URIUtils;
 import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
@@ -74,6 +75,9 @@ public class VfsBrowser extends JPanel {
   private static final String ACTION_REFRESH = "REFRESH";
   private static final String TABLE = "TABLE";
   private static final String LOADING = "LOADING";
+  private final DataConfiguration configuration;
+  private final SelectionListener[] listeners;
+  private final URIUtils uriUtils;
   private JTextField pathField;
   private JTable tableFiles;
   private JScrollPane tableScrollPane;
@@ -93,7 +97,6 @@ public class VfsBrowser extends JPanel {
   private boolean multiSelectionEnabled = false;
   private JButton actionApproveButton;
   private JButton actionCancelButton;
-  private DataConfiguration configuration;
   private JProgressBar loadingProgressBar;
   private JLabel loadingIconLabel;
   private TaskContext taskContext;
@@ -103,7 +106,6 @@ public class VfsBrowser extends JPanel {
   private boolean showHidden = false;
   private AbstractAction actionFocusOnTable;
   private boolean targetFileSelected;
-  private SelectionListener[] listeners;
 
   public VfsBrowser(SelectionListener... listeners) {
     this(new BaseConfiguration(), listeners);
@@ -119,19 +121,20 @@ public class VfsBrowser extends JPanel {
     this.listeners = listeners;
     initGui(initialPath);
     VFSUtils.loadAuthStore();
+    uriUtils = new URIUtils();
   }
 
   public void goToUrl(String url) {
-    LOGGER.info("Going to URL by string: " + url);
+    LOGGER.info("Going to URL by string: " + uriUtils.getFriendlyURI(url));
     FileObject resolveFile;
     try {
       resolveFile = VFSUtils.resolveFileObject(url);
       if (resolveFile != null) {
-        LOGGER.info("URL: " + url + " is resolved ");
+        LOGGER.info("URL: " + uriUtils.getFriendlyURI(url) + " is resolved ");
         goToFileObject(resolveFile);
       }
     } catch (FileSystemException e) {
-      LOGGER.error("Can't go to URL " + url, e);
+      LOGGER.error("Can't go to URL " + uriUtils.getFriendlyURI(url), e);
       final String message = ExceptionsUtils.getRootCause(e).getClass().getName() + ": " + ExceptionsUtils.getRootCause(e).getLocalizedMessage();
       Runnable runnable = () -> JOptionPane.showMessageDialog(VfsBrowser.this, message,
         Messages.getMessage("browser.badlocation"),
@@ -157,12 +160,12 @@ public class VfsBrowser extends JPanel {
       taskContext = new TaskContext(Messages.getMessage("browser.checkingSFtpLinksTask"), files.length);
       taskContext.setIndeterminate(false);
       SwingWorker<Void, Void> refreshWorker = new SwingWorker<Void, Void>() {
-        int icon = 0;
-        Icon[] icons = new Icon[]{
+        final Icon[] icons = new Icon[]{
           Icons.getInstance().getNetworkStatusOnline(),
           Icons.getInstance().getNetworkStatusAway(),
           Icons.getInstance().getNetworkStatusOffline()
         };
+        int icon = 0;
 
         @Override
         protected void process(List<Void> chunks) {
@@ -209,7 +212,11 @@ public class VfsBrowser extends JPanel {
       SwingUtils.runInEdt(r);
 
     } catch (Exception e) {
-      LOGGER.error("Can't go to URL for " + fileObject, e);
+      String url = null;
+      if (fileObject != null && fileObject.getName() != null) {
+        url = fileObject.getName().getFriendlyURI();
+      }
+      LOGGER.error("Can't go to URL for " + url, e);
       final String message = ExceptionsUtils.getRootCause(e).getClass().getName() + ": " + ExceptionsUtils.getRootCause(e).getLocalizedMessage();
 
       Runnable runnable = () -> JOptionPane.showMessageDialog(VfsBrowser.this, message,
@@ -267,12 +274,12 @@ public class VfsBrowser extends JPanel {
       @Override
       protected void performLongOperation(CheckBeforeActionResult actionResult) {
         try {
-          LOGGER.info("Open path {}", pathField.getText());
+          LOGGER.info("Open path {}", uriUtils.getFriendlyURI(pathField.getText()));
           SwingUtilities.invokeLater(() -> loadingProgressBar.setString("Resolving path"));
           final long start = System.currentTimeMillis();
           FileObject resolveFile = VFSUtils.resolveFileObject(pathField.getText().trim());
           LOGGER.info("Path resolved in " + (System.currentTimeMillis() - start) + "ms");
-          LOGGER.info("Path {} resolved", pathField.getText());
+          LOGGER.info("Path {} resolved", uriUtils.getFriendlyURI(pathField.getText()));
           if (resolveFile != null && resolveFile.getType() == FileType.FILE) {
             LOGGER.info("Resolved path is a file");
             loadAndSelSingleFile(resolveFile);
@@ -961,9 +968,9 @@ public class VfsBrowser extends JPanel {
     private static final String DIGITS = "0123456789";
     private static final String OTHER_CHARS = "!@#$%^&*()()-_=+[];:'\",./ ";
     private static final String ALLOWED_CHARS = LETTERS + DIGITS + OTHER_CHARS;
+    private final long typeTimeout = 500;
+    private final StringBuilder sb;
     private long lastTimeTyped = 0;
-    private long typeTimeout = 500;
-    private StringBuilder sb;
 
     public QuickSearchKeyAdapter() {
       sb = new StringBuilder();

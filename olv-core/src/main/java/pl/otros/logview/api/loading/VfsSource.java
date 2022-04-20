@@ -1,11 +1,10 @@
 package pl.otros.logview.api.loading;
 
 
-import static pl.otros.logview.gui.session.OpenMode.FROM_START;
-
 import org.apache.commons.vfs2.FileObject;
-
 import pl.otros.logview.gui.session.OpenMode;
+
+import static pl.otros.logview.gui.session.OpenMode.FROM_START;
 
 public class VfsSource extends Source {
 
@@ -35,12 +34,19 @@ public class VfsSource extends Source {
   }
 
 
-
   @Override
   public String toString() {
-    return "VfsSource{" +
-        "fileObject=" + fileObject +
-        ", openMode=" + openMode +
-        '}';
+    StringBuilder builder = new StringBuilder();
+    builder.append("VfsSource{");
+    if (fileObject != null && fileObject.getName() != null) {
+      builder.append("fileObject=").append(fileObject.getName().getFriendlyURI());
+    } else {
+      builder.append("fileObject=null");
+    }
+    builder.append(", openMode=").append(openMode);
+    builder.append('}');
+
+    return builder.toString();
   }
+
 }
