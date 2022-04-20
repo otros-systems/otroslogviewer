@@ -71,8 +71,9 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
         await().ignoreExceptions().until(() -> {
           if (dir.equalsIgnoreCase("appdata") && System.getProperty("os.name").toLowerCase().contains("win")) {
             //AppData folder is not visible when listing files in user home :(
-            vfsBrowserDialog.textBox("VfsBrowser.path").enterText("/" + dir);
-            vfsBrowserDialog.textBox("VfsBrowser.path").pressAndReleaseKey(KeyPressInfo.keyCode('\n'));
+            JTextComponentFixture pathTextBox = vfsBrowserDialog.textBox("VfsBrowser.path");
+            pathTextBox.setText(pathTextBox.text() + "/" + dir);
+            pathTextBox.pressAndReleaseKey(KeyPressInfo.keyCode('\n'));
           } else {
             LOGGER.info(" clicking on " + dir);
             final JTableCellFixture cell = table.cell(dir);

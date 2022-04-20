@@ -53,7 +53,7 @@ public class SearchTest extends OtrosLogViewerBaseTest {
     final MainFrame mainFrame = new MainFrame(robot());
     mainFrame
       .setSearchModeByRegex()
-      .enterSearchText("Message.*3")
+      .setSearchText("Message.*3")
       .searchNext();
     final LogsTable logsTable = logViewPanel.logsTable();
     logsTable.waitForSelectedRow(3);

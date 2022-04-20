@@ -57,6 +57,12 @@ public class MainFrame extends TestComponent<FrameFixture, MainFrame> {
     return this;
   }
 
+  public MainFrame setSearchText(String query) {
+    LOGGER.info("Set search query: " + query);
+    me().textBox("MainFrame.searchField").setText(query);
+    return this;
+  }
+
   public MainFrame searchNext() {
     LOGGER.info("Searching next");
     clickButton(me().button("MainFrame.searchNext"));
