@@ -19,11 +19,9 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.RandomAccessContent;
 import pl.otros.logview.gui.session.OpenMode;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 
 import static org.apache.commons.vfs2.util.RandomAccessMode.READ;
 import static pl.otros.logview.api.io.Utils.closeQuietly;
@@ -36,9 +34,12 @@ public final class LoadingInfo implements AutoCloseable {
   private ObservableInputStreamImpl observableInputStreamImpl;
   private InputStream contentInputStream;
   private final boolean tailing;
-  private final boolean gzipped;
+  private final CompressType compression;
   private final byte[] inputStreamBufferedStart;
   private long lastFileSize = 0;
+
+  private static final byte MAGIC_ZIP_BYTE_1 = 0x50;
+  private static final byte MAGIC_ZIP_BYTE_2 = 0x4B;
 
   public LoadingInfo(FileObject fileObject) throws IOException {
     this(fileObject, false, FROM_START);
@@ -57,15 +58,23 @@ public final class LoadingInfo implements AutoCloseable {
     InputStream inputStream = new BufferedInputStream(fileObject.getContent().getInputStream(), 2);
     //maximum limit of reset(). Only read 2 bytes
     inputStream.mark(2);
-    gzipped = checkIfIsGzipped(inputStream);
+    compression = checkCompressType(inputStream);
     inputStream.reset();
 
-    inputStreamBufferedStart = gzipped ? ungzip(inputStream, 10_000) : loadProbe(inputStream, 10_000);
+    if(compression == CompressType.GZIP) {
+      inputStreamBufferedStart = ungzip(inputStream, 10_000);
+    } else if(compression == CompressType.ZIP) {
+      inputStreamBufferedStart = unzip(inputStream, 10_000);
+    } else if(compression == CompressType.NONE) {
+      inputStreamBufferedStart = loadProbe(inputStream, 10_000);
+    } else {
+      throw new UnsupportedEncodingException("The compression type " + compression + " is unknown.");
+    }
 
-    if (openMode == FROM_START || gzipped) {
+    if (openMode == FROM_START || compression.isCompressed()) {
       fileObject.refresh();//Reload file
       observableInputStreamImpl = new ObservableInputStreamImpl(fileObject.getContent().getInputStream());
-      contentInputStream = gzipped ? new GZIPInputStream(observableInputStreamImpl) : observableInputStreamImpl;
+      contentInputStream = compression.createInputStream(observableInputStreamImpl);
     } else {
       RandomAccessContent randomAccessContent = fileObject.getContent().getRandomAccessContent(READ);
       randomAccessContent.seek(randomAccessContent.length());
@@ -86,8 +95,8 @@ public final class LoadingInfo implements AutoCloseable {
     return tailing;
   }
 
-  public boolean isGzipped() {
-    return gzipped;
+  public CompressType getCompression() {
+    return compression;
   }
 
   public String getFriendlyUrl() {
@@ -121,20 +130,12 @@ public final class LoadingInfo implements AutoCloseable {
       randomAccessContent.seek(lastFileSize);
       this.lastFileSize = currentSize;
       observableInputStreamImpl = new ObservableInputStreamImpl(randomAccessContent.getInputStream(), lastFileSize);
-      if (gzipped) {
-        contentInputStream = new GZIPInputStream(observableInputStreamImpl);
-      } else {
-        contentInputStream = observableInputStreamImpl;
-      }
+      contentInputStream = compression.createInputStream(observableInputStreamImpl);
     } else if (currentSize < lastFileSize) {
       observableInputStreamImpl.close();
       InputStream inputStream = fileObject.getContent().getInputStream();
       observableInputStreamImpl = new ObservableInputStreamImpl(inputStream, 0);
-      if (gzipped) {
-        contentInputStream = new GZIPInputStream(observableInputStreamImpl);
-      } else {
-        contentInputStream = observableInputStreamImpl;
-      }
+      contentInputStream = compression.createInputStream(observableInputStreamImpl);
       this.lastFileSize = fileObject.getContent().getSize();
     }
   }
@@ -155,24 +156,34 @@ public final class LoadingInfo implements AutoCloseable {
   }
 
   /**
-   * Check the first two bytes of a InputStream. If the bytes equals {@link GZIPInputStream#GZIP_MAGIC} the file is
+   * Check the first two bytes of a InputStream.
+   * If the bytes equals {@link GZIPInputStream#GZIP_MAGIC} the file is
    * compressed by gzip
+   * If the bytes equals {@link #MAGIC_ZIP_BYTE_1} and {@link #MAGIC_ZIP_BYTE_2} the file is compressed by ZIP
    */
-  private static boolean checkIfIsGzipped(InputStream inputStream) {
+  private static CompressType checkCompressType(InputStream inputStream) {
+    CompressType compressType = CompressType.NONE;
     byte[] header = new byte[2];
     try {
       int length = inputStream.read(header);
-      return length == 2
-        && (header[0] == (byte) (GZIPInputStream.GZIP_MAGIC))
-        && (header[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8));
+      if(length == 2) {
+
+        if (header[0] == MAGIC_ZIP_BYTE_1 && header[1] == MAGIC_ZIP_BYTE_2) {
+          compressType = CompressType.ZIP;
+        } else if ((header[0] == (byte) (GZIPInputStream.GZIP_MAGIC))
+          && (header[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8))) {
+          compressType = CompressType.GZIP;
+        }
+      }
     } catch (IOException e) {
-      return false;
+      //No Action
     }
+    return compressType;
 
   }
 
   /**
-   * Unzip only the number of bytes set in size parameter
+   * Unzip with {@link GZIPInputStream} only the number of bytes set in size parameter
    */
   private static byte[] ungzip(InputStream inputStream, int size) throws IOException {
     try (GZIPInputStream in = new GZIPInputStream(inputStream, size); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -184,4 +195,19 @@ public final class LoadingInfo implements AutoCloseable {
       return out.toByteArray();
     }
   }
+
+  /**
+   * Unzip with {@link ZipInputStream} only the number of bytes set in size parameter
+   */
+  private static byte[] unzip(InputStream inputStream, int size) throws IOException {
+    try (ZipInputStream in = new ZipInputStream(inputStream); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      byte[] buffer = new byte[size];
+      int len;
+      if (in.getNextEntry() != null && (len = in.read(buffer)) > 0) {
+        out.write(buffer, 0, len);
+      }
+      return out.toByteArray();
+    }
+  }
+
 }
