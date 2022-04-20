@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package pl.otros.logview;
+package pl.otros.logview.updater;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.OtrosApplication;
 
 import javax.annotation.Nonnull;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.jar.Manifest;
 
 public class VersionUtil {
@@ -40,11 +37,11 @@ public class VersionUtil {
   private static final String IMPLEMENTATION_TITLE="Implementation-Title";
   private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
-  private String currentVersionPageUrl;
+  private final String currentVersionPageUrl;
   private Optional<String> runningVersion = Optional.empty();
 
   public VersionUtil() {
-    this("http://otroslogviewer.appspot.com/services/currentVersion");
+    this("https://github.com/otros-systems/otroslogviewer/releases/latest/download/versionInfo.json");
   }
 
   public VersionUtil(String currentVersionPageUrl) {
@@ -54,21 +51,23 @@ public class VersionUtil {
   /**
    * Check latest released version.
    *
-   * @param running currently running version
    * @return Latest released version
    * @throws IOException
    */
-  public Optional<String> getCurrentVersion(String running, Proxy proxy, OtrosApplication otrosApplication) throws IOException {
-    final String instanceUuid = otrosApplication.getConfiguration().getString(ConfKeys.UUID, "");
-    final String requestUrl = buildRequestUrl(running, instanceUuid);
+  public Optional<String> getCurrentVersion(Proxy proxy) throws IOException {
+    final String requestUrl = buildRequestUrl();
     LOGGER.debug("Will use URL: {}", requestUrl);
     URL url = new URL(requestUrl);
-    String page = IOUtils.toString(url.openConnection(proxy).getInputStream());
+    String page = IOUtils.toString(url.openConnection(proxy).getInputStream(), StandardCharsets.UTF_8);
     LOGGER.debug("Response from version server is:\n{}", page);
-    ByteArrayInputStream bin = new ByteArrayInputStream(page.getBytes());
-    Properties p = new Properties();
-    p.load(bin);
-    final Optional<String> s = validateResponse(p.getProperty("currentVersion"));
+    VersionInformationBean versionInformation = null;
+    try {
+      versionInformation = JSON.parseObject(page, VersionInformationBean.class);
+    } catch (JSONException e) {
+      LOGGER.error("Cannot parse version info: '" + page + "'");
+    }
+    String version = Optional.ofNullable(versionInformation).map(VersionInformationBean::getCurrentVersion).map(VersionBean::toString).orElse(null);
+    final Optional<String> s = validateResponse(version);
     LOGGER.info("Current version is: {}", s);
     return s;
   }
@@ -82,15 +81,8 @@ public class VersionUtil {
   }
 
   @Nonnull
-  private String buildRequestUrl(String running, String instanceUuid) throws UnsupportedEncodingException {
-    StringBuilder sb = new StringBuilder();
-    sb.append("runningVersion=").append(running);
-    sb.append("&java.version=").append(URLEncoder.encode(System.getProperty("java.version"), "ISO-8859-1"));
-    sb.append("&os.name=").append(URLEncoder.encode(System.getProperty("os.name"), "ISO-8859-1"));
-    sb.append("&vm.vendor=").append(URLEncoder.encode(System.getProperty("java.vm.vendor"), "ISO-8859-1"));
-    String uuid = URLEncoder.encode(instanceUuid, "ISO-8859-1");
-    sb.append("&uuid=").append(uuid);
-    return currentVersionPageUrl + "?" + sb.toString();
+  private String buildRequestUrl() {
+    return currentVersionPageUrl;
   }
 
   /**
@@ -103,7 +95,7 @@ public class VersionUtil {
     if (!runningVersion.isPresent()) {
       runningVersion = readRunningVersionFromManifest();
     }
-    return runningVersion.orElse("");
+    return runningVersion.orElse("1.4.16");
   }
 
   private Optional<String> readRunningVersionFromManifest() throws IOException {
