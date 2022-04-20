@@ -258,13 +258,8 @@ public class LogViewPanel extends LogViewPanelI {
     table.setDefaultEditor(Note.class, new NoteTableEditor());
     table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
     table.setDefaultRenderer(ClassWrapper.class, new TableMarkDecoratorRenderer(renderers.getClassWrapperRenderer()));
-    sorter = new TableRowSorter<>(dataTableModel);
-    for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
-      sorter.setSortable(i, false);
-    }
-    sorter.setSortable(TableColumns.ID.getColumn(), true);
-    sorter.setSortable(TableColumns.TIME.getColumn(), true);
-    table.setRowSorter(sorter);
+    //All columns are sortable
+    table.setAutoCreateRowSorter(true);
 
     messageDetailListener = new MessageDetailListener(this, dateFormat,
       selectedMessageFormattersContainer, selectedMessageColorizersContainer);
