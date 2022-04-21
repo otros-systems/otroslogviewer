@@ -37,12 +37,12 @@ if "%1"=="-batch" goto batchMode
 :: these conditionals (with defaults set above) break it for all other users.
 ::del /Q %OUT_FILE% 2>nul 1>nul
 ::if exist %OUT_FILE% (  
-  set OUT_FILE=%TEMP%\olv.out.txt
+  set OUT_FILE=%TEMP%\olv.out.%random%.txt
 ::)
 
 ::del /Q %ERR_FILE% 2>nul 1>nul
 ::if exist %ERR_FILE% (
-  set ERR_FILE=%TEMP%\olv.err.txt
+  set ERR_FILE=%TEMP%\olv.err.%random%.txt
 ::)
 
 if exist "%JAVA_HOME%\bin\javaw.exe" (
