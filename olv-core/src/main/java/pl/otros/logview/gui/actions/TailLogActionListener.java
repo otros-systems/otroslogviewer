@@ -16,9 +16,23 @@
 
 package pl.otros.logview.gui.actions;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.swing.Action;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.TableColumns;
@@ -35,16 +49,6 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class TailLogActionListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailLogActionListener.class.getName());
@@ -58,10 +62,14 @@ public class TailLogActionListener extends OtrosAction {
 
   @Override
   protected void actionPerformedHook(ActionEvent e) {
-    JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
-    initFileChooser(chooser);
+    doOpenChooseFileDialog((Component) e.getSource(), null);
+  }
 
-    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog((Component) e.getSource(), "Tail " + importer.getName() + " log");
+  private void doOpenChooseFileDialog(Component parent, FileObject initialFile) {
+    JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
+    initFileChooser(chooser, initialFile);
+
+    JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog(parent, "Tail " + importer.getName() + " log");
     if (result != JOtrosVfsBrowserDialog.ReturnValue.Approve) {
       return;
     }
@@ -69,6 +77,10 @@ public class TailLogActionListener extends OtrosAction {
     for (FileObject file : files) {
       openFileObjectInTailMode(file, Utils.getFileObjectShortName(file));
     }
+  }
+
+  public void openFileChooser(Component parent, final FileObject dir) {
+    doOpenChooseFileDialog(parent, dir);
   }
 
   public void openFileObjectInTailMode(final FileObject file, String tabName) {
@@ -109,9 +121,12 @@ public class TailLogActionListener extends OtrosAction {
   }
 
 
-  private void initFileChooser(JOtrosVfsBrowserDialog chooser) {
+  private void initFileChooser(JOtrosVfsBrowserDialog chooser, FileObject initialFile) {
     chooser.setSelectionMode(SelectionMode.FILES_ONLY);
     chooser.setMultiSelectionEnabled(true);
+    if (initialFile != null) {
+      chooser.goToFileObject(initialFile);
+    }
   }
 
   public LogImporter getImporter() {

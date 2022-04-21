@@ -16,19 +16,26 @@
 
 package pl.otros.vfs.browser;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+
 import pl.otros.vfs.browser.i18n.Messages;
 import pl.otros.vfs.browser.listener.SelectionListener;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  */
@@ -67,6 +74,10 @@ public class JOtrosVfsBrowserDialog {
 
   public void setSelectionMode(SelectionMode selectionMode) {
     vfsBrowser.setSelectionMode(selectionMode);
+  }
+
+  public void goToFileObject(FileObject initialFile) {
+    vfsBrowser.goToFileObject(initialFile);
   }
 
   public SelectionMode getSelectionMode() {
@@ -108,6 +119,7 @@ public class JOtrosVfsBrowserDialog {
 
     dialog.getContentPane().add(vfsBrowser);
     dialog.addWindowListener(new WindowAdapter() {
+      @Override
       public void windowClosing(WindowEvent e) {
         cancelSelection();
       }
@@ -137,9 +149,10 @@ public class JOtrosVfsBrowserDialog {
   }
 
   public static void main(String[] args) throws FileSystemException {
-    if (args.length > 1)
+    if (args.length > 1) {
       throw new IllegalArgumentException("SYNTAX:  java... "
           + JOtrosVfsBrowserDialog.class.getName() + " [initialPath]");
+    }
     JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog =
         new JOtrosVfsBrowserDialog((args.length < 1) ? null : args[0]);
     jOtrosVfsBrowserDialog.setMultiSelectionEnabled(true);
