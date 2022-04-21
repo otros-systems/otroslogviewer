@@ -16,37 +16,25 @@
 
 package pl.otros.vfs.browser.table;
 
+import java.awt.Component;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.ParentFileObject;
 import pl.otros.vfs.browser.util.VFSUtils;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
-
 public class FileNameWithTypeTableCellRenderer extends DefaultTableCellRenderer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FileNameWithTypeTableCellRenderer.class.getName());
-
-  private Set<String> archivesSuffixes;
-
-  public FileNameWithTypeTableCellRenderer() {
-    archivesSuffixes = new HashSet<String>();
-    archivesSuffixes.add("zip");
-    archivesSuffixes.add("tar");
-    archivesSuffixes.add("jar");
-    archivesSuffixes.add("tgz");
-    archivesSuffixes.add("gz");
-    archivesSuffixes.add("tar");
-    archivesSuffixes.add("tbz");
-    archivesSuffixes.add("tgz");
-  }
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

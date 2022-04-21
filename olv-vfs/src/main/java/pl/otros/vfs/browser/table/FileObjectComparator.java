@@ -16,13 +16,12 @@
 
 package pl.otros.vfs.browser.table;
 
+import java.util.Comparator;
+
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Comparator;
 
 public class FileObjectComparator implements Comparator<FileObject> {
 
@@ -38,15 +37,6 @@ public class FileObjectComparator implements Comparator<FileObject> {
       } catch (FileSystemException e) {
         return 0;
       }
-    }
-    return 0;
-  }
-
-  private int compareTypes(FileType type1, FileType type2) {
-    if (type1.equals(FileType.FILE) && !type2.equals(FileType.FILE)) {
-      return 1;
-    } else if (!type1.equals(FileType.FILE) && type2.equals(FileType.FILE)) {
-      return -1;
     }
     return 0;
   }
