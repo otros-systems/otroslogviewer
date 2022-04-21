@@ -1,25 +1,35 @@
 package pl.otros.logview.singleinstance;
 
-import com.negusoft.singleinstance.RequestDelegate;
-import com.negusoft.singleinstance.ResponseDelegate;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.negusoft.singleinstance.RequestDelegate;
+import com.negusoft.singleinstance.ResponseDelegate;
+
 import pl.otros.logview.api.AppProperties;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.gui.actions.TailLogWithAutoDetectActionListener;
 import pl.otros.logview.gui.actions.TailMultipleFilesIntoOneView;
 import pl.otros.swing.OtrosSwingUtils;
-
-import javax.swing.*;
-import java.io.*;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import pl.otros.vfs.browser.util.VFSUtils;
 
 public class SingleInstanceRequestResponseDelegate implements RequestDelegate, ResponseDelegate {
 
@@ -111,7 +121,12 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
     ArrayList<FileObject> fileObjects = new ArrayList<>();
     for (String file : filesList) {
       try {
-        FileObject fo = VFS.getManager().resolveFile(new File(path), file);
+        FileObject fo;
+        if (file.contains("://")) { // URI provided
+          fo = VFSUtils.resolveFileObject(file);
+        } else { // local file
+          fo = VFS.getManager().resolveFile(new File(path), file);
+        }
         fileObjects.add(fo);
       } catch (FileSystemException e) {
         LOGGER.error("Cant resolve " + file + " in path " + path, e);
@@ -127,9 +142,21 @@ public class SingleInstanceRequestResponseDelegate implements RequestDelegate, R
       if (files.length > 1) {
         new TailMultipleFilesIntoOneView(otrosApplication).openFileObjectsIntoOneView(files, applicationJFrame);
       } else if (files.length == 1) {
-        //open log as one file
-        LOGGER.debug("WIll open {}", files[0]);
-        new TailLogWithAutoDetectActionListener(otrosApplication).openFileObjectInTailMode(files[0], Utils.getFileObjectShortName(files[0]));
+        // open log as one file (or dir)
+        FileObject singleFile = files[0];
+        FileType ft;
+        try {
+          ft = singleFile.getType();
+        } catch (FileSystemException e) {
+          ft = FileType.FILE_OR_FOLDER;
+        }
+        if (ft == FileType.FOLDER) {
+          LOGGER.debug("Will open dir {}", singleFile.getName().getFriendlyURI());
+          new TailLogWithAutoDetectActionListener(otrosApplication).openFileChooser(applicationJFrame, singleFile);
+        } else {
+          LOGGER.debug("Will open {}", singleFile.getName().getFriendlyURI());
+          new TailLogWithAutoDetectActionListener(otrosApplication).openFileObjectInTailMode(files[0], Utils.getFileObjectShortName(files[0]));
+        }
       }
     });
   }
