@@ -95,7 +95,7 @@ public class VersionUtil {
     if (!runningVersion.isPresent()) {
       runningVersion = readRunningVersionFromManifest();
     }
-    return runningVersion.orElse("1.4.16");
+    return runningVersion.orElse("");
   }
 
   private Optional<String> readRunningVersionFromManifest() throws IOException {
