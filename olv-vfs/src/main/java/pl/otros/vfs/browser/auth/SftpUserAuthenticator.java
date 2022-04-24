@@ -47,7 +47,7 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
 
     if (StringUtils.isNotBlank(sshKeyFileField.getText())) {
       //use SSH KEY
-      authenticationData.setData(UserAuthenticationDataWrapper.SSH_KEY, sshKeyFileField.getText().trim().toCharArray());
+//      authenticationData.setData(UserAuthenticationDataWrapper.SSH_KEY, sshKeyFileField.getText().trim().toCharArray());
       IdentityProvider sshKeyAuth;
       if (passTx.getPassword() != null && passTx.getPassword().length > 0) {
         //SSH KEY secured with password
@@ -57,6 +57,8 @@ public class SftpUserAuthenticator extends UserPassUserAuthenticator {
         sshKeyAuth = new IdentityInfo(new File(sshKeyFileField.getText()));
       }
       SftpFileSystemConfigBuilder.getInstance().setIdentityProvider(getFileSystemOptions(), sshKeyAuth);
+    } else if (PageantIdentityRepositoryFactory.getIdentitiesCount().orElse(0) > 0) {
+      SftpFileSystemConfigBuilder.getInstance().setIdentityRepositoryFactory(getFileSystemOptions(), new PageantIdentityRepositoryFactory());
     } else {
       authenticationData.setData(UserAuthenticationData.PASSWORD, passTx.getPassword());
     }
