@@ -327,7 +327,7 @@ public class ParseClipboard extends OtrosAction {
       LOGGER.error("Memory limit reached while reading from Clipboard");
       JPanel message = new JPanel();
       String recommended = (getMemoryInGb() * 2L) + "G";
-      message.add(new JLabel("The Clipboard is too big to to parse. " +
+      message.add(new JLabel("The Clipboard is too big to parse. " +
         "Increase the memory configuration in olv.bat/olv.sh for example to MEMORY=-Xmx" + recommended));
       JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
