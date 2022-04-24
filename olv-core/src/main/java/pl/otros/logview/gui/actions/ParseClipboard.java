@@ -39,12 +39,8 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ParseClipboard extends OtrosAction {
 
@@ -114,7 +110,7 @@ public class ParseClipboard extends OtrosAction {
       processingPattern,
       suggestionSource,
       new SearchSuggestionRenderer(),
-      s->processingPattern.setText(s.getValue().getFullContent()));
+      s -> processingPattern.setText(s.getValue().getFullContent()));
 
     final JTextArea textAreaProceed = new JTextArea("");
     textAreaProceed.setName("importClipboard.processedContent");
@@ -154,7 +150,7 @@ public class ParseClipboard extends OtrosAction {
     viewCombobox.setRenderer(new StringListCellRenderer<>(TabWithName::getTitle));
 
     statusLabel = new JLabel(" ");
-    importAction = new LambdaAction("Import" ,
+    importAction = new LambdaAction("Import",
       x -> {
         try {
           final String processingPatternText = processingPattern.getText();
@@ -230,12 +226,12 @@ public class ParseClipboard extends OtrosAction {
 
 
     contentPanel.getActionMap().put("refresh", refreshAction);
-    contentPanel.getActionMap().put("cancel", new LambdaAction(x->dialog.dispose()));
+    contentPanel.getActionMap().put("cancel", new LambdaAction(x -> dialog.dispose()));
     contentPanel.getActionMap().put("import", importAction);
 
     contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, mask), "refresh");
-    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0), "cancel");
-    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,mask), "import");
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+    contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, mask), "import");
 
 
     contentPanel.add(contentView, "wmin 500, hmin 200, span, wrap");
@@ -250,7 +246,6 @@ public class ParseClipboard extends OtrosAction {
     contentPanel.add(new JLabel("Detecting log format"));
     contentPanel.add(progressBar, "wrap, growx");
     contentPanel.add(statusLabel, "wrap, growx, span");
-
 
 
     delayedSwingInvoke.performAction();
@@ -268,14 +263,14 @@ public class ParseClipboard extends OtrosAction {
 
   private List<TabWithName> getTabsWithName(JTabbedPane jTabbedPane) {
     final ArrayList<TabWithName> tabs = new ArrayList<>();
-    tabs.add(0,new TabWithName("New view",Optional.empty(), false));
+    tabs.add(0, new TabWithName("New view", Optional.empty(), false));
     final int selectedIndex = jTabbedPane.getSelectedIndex();
-    for (int i=0; i< jTabbedPane.getTabCount(); i++){
+    for (int i = 0; i < jTabbedPane.getTabCount(); i++) {
       final JComponent tabComponentAt = (JComponent) jTabbedPane.getComponentAt(i);
-      if (tabComponentAt instanceof LogViewPanelWrapper){
+      if (tabComponentAt instanceof LogViewPanelWrapper) {
         final LogViewPanelWrapper logViewPanelWrapper = (LogViewPanelWrapper) tabComponentAt;
         final LogViewPanelI collector = logViewPanelWrapper.getLogViewPanel();
-        tabs.add(new TabWithName(jTabbedPane.getTitleAt(i),Optional.of(collector), i==selectedIndex));
+        tabs.add(new TabWithName(jTabbedPane.getTitleAt(i), Optional.of(collector), i == selectedIndex));
       }
     }
     return tabs;
@@ -290,16 +285,16 @@ public class ParseClipboard extends OtrosAction {
   }
 
   private void loadLogFileAsContent(String data, TabWithName target) throws IOException {
-    final FileObject tempFileWithClipboard = VFS.getManager().resolveFile("clipboard://clipboard_"+System.currentTimeMillis());
+    final FileObject tempFileWithClipboard = VFS.getManager().resolveFile("clipboard://clipboard_" + System.currentTimeMillis());
     tempFileWithClipboard.createFile();
     final OutputStream outputStream = tempFileWithClipboard.getContent().getOutputStream();
     outputStream.write(data.getBytes());
     outputStream.flush();
     outputStream.close();
     final LogImporter logImporter = logParserComboBox.getItemAt(logParserComboBox.getSelectedIndex());
-    if (target.getLogDataCollector().isPresent()){
+    if (target.getLogDataCollector().isPresent()) {
       final LogViewPanelI logViewPanelI = target.getLogDataCollector().get();
-      getOtrosApplication().getLogLoader().startLoading(new VfsSource(tempFileWithClipboard),logImporter,logViewPanelI);
+      getOtrosApplication().getLogLoader().startLoading(new VfsSource(tempFileWithClipboard), logImporter, logViewPanelI);
     } else {
       final String tabTitle = new SimpleDateFormat("HH:mm:ss").format(new Date());
       new TailLogActionListener(getOtrosApplication(), logImporter)
@@ -322,13 +317,29 @@ public class ParseClipboard extends OtrosAction {
   }
 
   private Optional<String> getStringFromClipboard(Clipboard systemClipboard) {
-    Optional<String> data;
+    Optional<String> data = Optional.empty();
     try {
       data = Optional.of((String) systemClipboard.getData(DataFlavor.stringFlavor));
     } catch (UnsupportedFlavorException | IOException e1) {
-      data = Optional.empty();
+      LOGGER.trace("No String found in Clipboard.");
+    } catch (OutOfMemoryError | IllegalStateException e) {
+      //the getData() Method can use a lot of memory. Try to display a hint for the user.
+      LOGGER.error("Memory limit reached while reading from Clipboard");
+      JPanel message = new JPanel();
+      String recommended = (getMemoryInGb() * 2L) + "G";
+      message.add(new JLabel("The Clipboard is too big to to parse. " +
+        "Increase the memory configuration in olv.bat/olv.sh for example to MEMORY=-Xmx" + recommended));
+      JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
     return data;
+  }
+
+  /**
+   * Get the maximal heap memory in GB. If it is less than 1GB it will be return 1GB.
+   */
+  private long getMemoryInGb() {
+    long maxMemory = Runtime.getRuntime().maxMemory() / 1024L / 1024L / 1024L;
+    return maxMemory <= 0L ? 1L : maxMemory;
   }
 
 
@@ -355,12 +366,12 @@ public class ParseClipboard extends OtrosAction {
     @Override
     protected PossibleLogImporters doInBackground() throws Exception {
       publish(Boolean.TRUE);
-      String text = StringUtils.substring(textArea.getText(),0,20000);
+      String text = StringUtils.substring(textArea.getText(), 0, 20000);
       LOGGER.info("Will process " + text.length() + " chars from clipboard");
       final long start = System.currentTimeMillis();
       final Collection<LogImporter> logImporters = getOtrosApplication().getAllPluginables().getLogImportersContainer().getElements();
 
-      final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters,text.getBytes());
+      final PossibleLogImporters possibleLogImporters = Utils.detectPossibleLogImporter(logImporters, text.getBytes());
       long duration = System.currentTimeMillis() - start;
       LOGGER.debug("Finished log format detection, it took " + duration + "ms, have found " + possibleLogImporters.getLogImporter());
 
@@ -404,6 +415,7 @@ public class ParseClipboard extends OtrosAction {
   }
 
 }
+
 final class TabWithName {
   private final String title;
   private final Optional<LogViewPanelI> logDataCollector;
