@@ -15,38 +15,15 @@
  */
 package pl.otros.vfs.browser.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.Icon;
+import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
+import com.jcraft.jsch.JSchException;
+import jcifs.smb.SmbAuthException;
+import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.vfs2.CacheStrategy;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileName;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.UserAuthenticationData;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.UserAuthenticationData.Type;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.impl.StandardFileSystemManager;
@@ -56,22 +33,25 @@ import org.apache.commons.vfs2.provider.sftp.SftpFileObject;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.base.Joiner;
-import com.google.common.base.Throwables;
-import com.jcraft.jsch.JSchException;
-import jcifs.smb.SmbAuthException;
-import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.LinkFileObject;
 import pl.otros.vfs.browser.TaskContext;
-import pl.otros.vfs.browser.auth.AuthStore;
-import pl.otros.vfs.browser.auth.AuthStoreUtils;
-import pl.otros.vfs.browser.auth.MemoryAuthStore;
-import pl.otros.vfs.browser.auth.OtrosUserAuthenticator;
-import pl.otros.vfs.browser.auth.StaticPasswordProvider;
-import pl.otros.vfs.browser.auth.UserAuthenticationDataWrapper;
-import pl.otros.vfs.browser.auth.UserAuthenticationInfo;
-import pl.otros.vfs.browser.auth.UserAuthenticatorFactory;
+import pl.otros.vfs.browser.auth.*;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A helper class to deal with commons-vfs file abstractions
@@ -95,7 +75,6 @@ public final class VFSUtils {
   private static final Logger LOGGER = LoggerFactory.getLogger(VFSUtils.class);
   private static final Map<String, Icon> schemeIconMap = new HashMap<String, Icon>();
   private static final Set<String> archivesSuffixes = new HashSet<String>();
-  private static final FileSystemOptions opts = new FileSystemOptions();
   private static final ReadWriteLock aLock = new ReentrantReadWriteLock(true);
   private static final AuthStore sessionAuthStore = new MemoryAuthStore();
   //TODO change to persistent auth store
@@ -166,21 +145,7 @@ public final class VFSUtils {
   }
 
   // -----------------------------------------------------------------------
-
-
-  /**
-   * Returns a file representation
-   *
-   * @param filePath The file path
-   * @return a file representation
-   */
-  public static FileObject createFileObject(String filePath) {
-    try {
-      return getFileSystemManager().resolveFile(filePath, opts);
-    } catch (FileSystemException ex) {
-      return null;
-    }
-  }
+  
 
   /**
    * Remove user credentials information
@@ -304,27 +269,30 @@ public final class VFSUtils {
    */
   public static FileObject resolveFileObject(String filePath) throws FileSystemException {
     LOGGER.info("Resolving file: {}", URI_UTILS.getFriendlyURI(filePath));
+
+    FileSystemOptions options = new FileSystemOptions();
     if (filePath.startsWith("sftp://")) {
       SftpFileSystemConfigBuilder builder = SftpFileSystemConfigBuilder.getInstance();
-      builder.setStrictHostKeyChecking(opts, "no");
-      builder.setUserDirIsRoot(opts, false);
-      builder.setCompression(opts, "zlib,none");
-      builder.setIdentityRepositoryFactory(opts, new PageantIdentityRepositoryFactory());
-      builder.setDisableDetectExecChannel(opts, true); // see https://issues.apache.org/jira/browse/VFS-818
+      builder.setStrictHostKeyChecking(options, "no");
+      builder.setUserDirIsRoot(options, false);
+      builder.setCompression(options, "zlib,none");
+      builder.setDisableDetectExecChannel(options, true); // see https://issues.apache.org/jira/browse/VFS-818
 
     } else if (filePath.startsWith("smb://")) {
 
     } else if (filePath.startsWith("ftp://")) {
-      FtpFileSystemConfigBuilder.getInstance().setPassiveMode(opts, true);
+      FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
     }
+
+    //Getting user, password, keyfile or pageant auth information and set it.
     UserAuthenticatorFactory factory = new UserAuthenticatorFactory();
-
-    OtrosUserAuthenticator authenticator = factory.getUiUserAuthenticator(persistentAuthStore, sessionAuthStore, filePath, opts);
-
+    OtrosUserAuthenticator authenticator = factory.getUiUserAuthenticator(persistentAuthStore, sessionAuthStore, filePath, options);
     if (pathContainsCredentials(filePath)) {
       authenticator = null;
     }
-    return resolveFileObject(filePath, opts, authenticator, persistentAuthStore, sessionAuthStore);
+    DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
+
+    return resolveFileObject(filePath, options, null, persistentAuthStore, sessionAuthStore);
   }
 
   private static boolean pathContainsCredentials(String filePath) {
@@ -344,21 +312,12 @@ public final class VFSUtils {
    * @return a file representation
    * @throws FileSystemException
    */
-  public static FileObject resolveFileObject(String filePath, FileSystemOptions options, OtrosUserAuthenticator authenticator, AuthStore persistentAuthStore, AuthStore sessionAuthStore) throws FileSystemException {
-    if (filePath.startsWith("sftp://")) {
-      SftpFileSystemConfigBuilder builder = SftpFileSystemConfigBuilder.getInstance();
-      builder.setStrictHostKeyChecking(opts, "no");
-      builder.setUserDirIsRoot(opts, false);
-      builder.setCompression(opts, "zlib,none");
-      builder.setSessionTimeout(opts, Duration.ofSeconds(5));
-      builder.setDisableDetectExecChannel(opts, true); // see https://issues.apache.org/jira/browse/VFS-818
-    }
+  private static FileObject resolveFileObject(String filePath, FileSystemOptions options, OtrosUserAuthenticator authenticator, AuthStore persistentAuthStore, AuthStore sessionAuthStore) throws FileSystemException {
 
-    DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
     FileObject resolveFile;
 
-
     VFSURIParser parser = new VFSURIParser(filePath);
+
     //Get file type to force authentication
     try {
       resolveFile = getFileSystemManager().resolveFile(filePath, options);

@@ -34,8 +34,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.mwiede:jsch:0.2.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-    implementation 'net.java.dev.jna:jna-jpms:5.10.0'
-    implementation 'net.java.dev.jna:jna-platform-jpms:5.10.0'
+    implementation 'net.java.dev.jna:jna-jpms:5.10.0'//newer version 5.11.0 exists
+    implementation 'net.java.dev.jna:jna-platform-jpms:5.10.0'//newer version 5.11.0 exists
     implementation 'com.jcraft:jzlib:1.+'
     implementation 'com.miglayout:miglayout-swing:4.2'
     implementation 'com.fifesoft:rsyntaxtextarea:2.6.1'
