@@ -235,7 +235,7 @@ public class LogViewPanel extends LogViewPanelI {
         final long date1 = dataTableModel.getLogData(sorter.convertRowIndexToModel(first)).getDate().getTime();
         final long date2 = dataTableModel.getLogData(sorter.convertRowIndexToModel(last)).getDate().getTime();
         long duration = date2 - date1;
-        otrosApplication.getStatusObserver().updateStatus("Duration between selected log events is " + DateUtil.formatDelta (duration));
+        otrosApplication.getStatusObserver().updateStatus("Duration between selected log events is " + DateUtil.formatDelta(duration));
       }
     });
     table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
@@ -259,7 +259,11 @@ public class LogViewPanel extends LogViewPanelI {
     table.setDefaultEditor(MarkerColors.class, new MarkTableEditor(otrosApplication));
     table.setDefaultRenderer(ClassWrapper.class, new TableMarkDecoratorRenderer(renderers.getClassWrapperRenderer()));
     //All columns are sortable
-    table.setAutoCreateRowSorter(true);
+    sorter = new TableRowSorter<>(dataTableModel);
+    for (int i = 0; i < dataTableModel.getColumnCount(); i++) {
+      sorter.setSortable(i, true);
+    }
+    table.setRowSorter(sorter);
 
     messageDetailListener = new MessageDetailListener(this, dateFormat,
       selectedMessageFormattersContainer, selectedMessageColorizersContainer);
@@ -615,13 +619,13 @@ public class LogViewPanel extends LogViewPanelI {
     automaticUnmarkersMenu = new JMenu("Unmark rows automatically");
     automaticUnmarkersMenu.setIcon(Icons.AUTOMATIC_UNMARKERS);
     updateMarkerMenu(markersContainer.getElements());
-    return new JMenu[]{automaticMarkersMenu, automaticUnmarkersMenu};
+    return new JMenu[]{ automaticMarkersMenu, automaticUnmarkersMenu };
   }
 
   private void addMarkerToMenu(JMenu menu, AutomaticMarker automaticMarker, HashMap<String, JMenu> marksGroups, boolean mode) {
     String[] groups = automaticMarker.getMarkerGroups();
     if (groups == null || groups.length == 0) {
-      groups = new String[]{""};
+      groups = new String[]{ "" };
     }
     for (String g : groups) {
       JMenuItem markerMenuItem = new JMenuItem(automaticMarker.getName());
@@ -718,7 +722,7 @@ public class LogViewPanel extends LogViewPanelI {
     final JCheckBox wrapText = new JCheckBox(Icons.SCROLL_HORIZONTAL);
     wrapText.addActionListener(e -> {
       logDetailTextArea.setFullWidth(wrapText.isSelected());
-      final Icon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon)Icons.SCROLL_HORIZONTAL).getImage())) : Icons.SCROLL_HORIZONTAL;
+      final Icon imageIcon = wrapText.isSelected() ? new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon) Icons.SCROLL_HORIZONTAL).getImage())) : Icons.SCROLL_HORIZONTAL;
       wrapText.setIcon(imageIcon);
     });
     wrapText.setToolTipText("Enable/disable line wrapping");
