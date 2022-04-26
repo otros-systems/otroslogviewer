@@ -3,6 +3,7 @@ package scenario.components;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JPanelFixture;
+import scenario.components.filter.FilterPanel;
 
 public class LogViewPanel extends TestComponent<JPanelFixture, LogViewPanel> {
 
@@ -20,6 +21,10 @@ public class LogViewPanel extends TestComponent<JPanelFixture, LogViewPanel> {
 
   public LogsTable logsTable() {
     return new LogsTable(me(), robot);
+  }
+
+  public FilterPanel filterPanel() {
+    return new FilterPanel(me(), robot);
   }
 
 }

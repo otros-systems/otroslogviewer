@@ -5,7 +5,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
  <p>
- http://www.apache.org/licenses/LICENSE-2.0
+ <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  <p>
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,6 +28,7 @@ import java.awt.event.ItemListener;
 import java.util.logging.Level;
 
 public class LevelFilter extends AbstractLogFilter {
+  public static final String NAME_LEVEL_FILTER_LEVEL_COMBO = "Level Filter Level Combo";
   private int passLevel = Level.ALL.intValue();
   //  private final JComboBox levelJCombo;
   private static final String NAME = "Level filter";
@@ -64,19 +65,23 @@ public class LevelFilter extends AbstractLogFilter {
       RenamedLevel.SEVERE_ERROR_FATAL
     };
     JComboBox<Level> levelJCombo = new JComboBox<>(levels);
+    levelJCombo.setName(NAME_LEVEL_FILTER_LEVEL_COMBO);
     levelJCombo.setRenderer(renderer);
     levelJCombo.setOpaque(true);
     levelJCombo.setEditable(false);
 
-    JComboBox modeJCombo = new JComboBox(new FilterMode[]{FilterMode.LOWER_OR_EQUAL, FilterMode.EQUAL, FilterMode.HIGHER_OR_EQUAL});
+    JComboBox<FilterMode> modeJCombo = new JComboBox<>(new FilterMode[]{ FilterMode.LOWER_OR_EQUAL, FilterMode.EQUAL, FilterMode.HIGHER_OR_EQUAL });
     modeJCombo.setSelectedItem(filterMode);
     modeJCombo.setEditable(false);
 
     ItemListener itemListener = e -> {
-      System.out.println(e.getStateChange());
       if ((e.getStateChange() == ItemEvent.SELECTED)) {
-        levelJCombo.setBackground(renderer.getListCellRendererComponent(null, levelJCombo.getSelectedItem(), 0, false, false).getBackground());
-        passLevel = ((Level) levelJCombo.getSelectedItem()).intValue();
+        levelJCombo.setBackground(renderer.getListCellRendererComponent(null, (Level) levelJCombo.getSelectedItem(), 0, false, false).getBackground());
+        if (levelJCombo.getSelectedItem() != null) {
+          passLevel = ((Level) levelJCombo.getSelectedItem()).intValue();
+        } else {
+          passLevel = Level.ALL.intValue();
+        }
         filterMode = (FilterMode) modeJCombo.getSelectedItem();
         listener.ifPresent(LogFilterValueChangeListener::valueChanged);
       }
@@ -102,9 +107,7 @@ public class LevelFilter extends AbstractLogFilter {
 
   public void setPassLevel(int passLevel) {
     this.passLevel = passLevel;
-    if (listener != null) {
-      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
-    }
+    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
   }
 
   @Override

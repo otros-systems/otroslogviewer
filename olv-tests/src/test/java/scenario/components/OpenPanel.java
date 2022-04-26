@@ -13,19 +13,20 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.io.File;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
 public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenPanel.class);
-  private FrameFixture frame;
+  private final FrameFixture frame;
 
   public OpenPanel(FrameFixture frameFixture, Robot robot) {
     super(robot);
     this.frame = frameFixture;
   }
 
-  public OpenPanel addFile(File file) throws InterruptedException {
+  public OpenPanel addFile(File file) {
     me().button("OpenPanel.add more files").click();
     final DialogFixture vfsBrowserDialog = WindowFinder.findDialog("VfsBrowserDialog").using(robot);
     openFile(file, vfsBrowserDialog);
@@ -39,7 +40,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
     return new LogViewPanel(frame, robot);
   }
 
-  private static void openFile(File file, DialogFixture vfsBrowserDialog) throws InterruptedException {
+  private static void openFile(File file, DialogFixture vfsBrowserDialog) {
     LOGGER.info("Open file " + file.getAbsolutePath()
     );
     LinkedList<File> paths = new LinkedList<>();
@@ -62,7 +63,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
       LOGGER.info("Clicking on [..]");
       table.cell("[..]").click();
       table.pressAndReleaseKey(KeyPressInfo.keyCode('\n'));
-      Thread.sleep(250);
+      await().atLeast(250L, TimeUnit.MILLISECONDS);
     }
     while (paths.size() > 0) {
       final String dir = paths.removeLast().getName();

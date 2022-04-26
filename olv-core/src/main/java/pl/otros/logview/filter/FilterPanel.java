@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,6 +30,7 @@ public class FilterPanel extends JPanel {
 
   public FilterPanel(LogFilter logFilter, LogFilterValueChangeListener listener) {
     super();
+    this.setName(logFilter.getName());
     this.setMinimumSize(new Dimension(200, 20));
     this.logFilter = logFilter;
     this.listener = listener;
@@ -37,6 +38,7 @@ public class FilterPanel extends JPanel {
     this.setOpaque(true);
     logFilter.setValueChangeListener(listener);
     box = new JCheckBox(logFilter.getName());
+    box.setName(logFilter.getName());
     box.setSelected(logFilter.isEnable());
     box.addChangeListener(e -> {
       boolean selected = box.isSelected();

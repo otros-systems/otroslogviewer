@@ -69,6 +69,7 @@ public class LogViewPanel extends LogViewPanelI {
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewPanel.class.getName());
   public static final int CHECK_BOX_WIDTH = (int) Math.ceil(new JCheckBox().getPreferredSize().getWidth());
   public static final int LEVEL_ICON_WIDTH = 16;
+  public static final String NAME_SEARCH_FILTER_PANEL = "search filter panel";
   private final OtrosJTextWithRulerScrollPane<JTextPane> logDetailWithRulerScrollPane;
   private final MessageDetailListener messageDetailListener;
   private final Font menuLabelFont;
@@ -128,6 +129,7 @@ public class LogViewPanel extends LogViewPanelI {
 
     menuLabelFont = new JLabel().getFont().deriveFont(Font.BOLD);
     JPanel filtersPanel = new JPanel();
+    filtersPanel.setName(NAME_SEARCH_FILTER_PANEL);
     JPanel logsTablePanel = new JPanel();
     logsMarkersPanel = new JPanel();
     JPanel leftPanel = new JPanel(new MigLayout());
@@ -694,7 +696,7 @@ public class LogViewPanel extends LogViewPanelI {
     messageDetailToolbar.add(new JLabel("Maximum message size for format"));
 
 
-    final DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(new String[]{});
+    final DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>(new String[]{});
     String[] values = {
       "10kB", "100kB", "200kB", "300kB", "400kB", "500kB", "600kB", "700kB", "800kB", "900kB", "1MB", "2MB", "3MB", "4MB", "5MB"
     };
@@ -703,7 +705,7 @@ public class LogViewPanel extends LogViewPanelI {
     }
     final JXComboBox messageMaximumSize = new JXComboBox(defaultComboBoxModel);
     messageMaximumSize.addActionListener(e -> {
-      String max = (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
+      String max = defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex());
       configuration.setProperty(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, max);
       messageDetailListener.setMaximumMessageSize((int) new FileSize(max).getBytes());
 
@@ -714,7 +716,7 @@ public class LogViewPanel extends LogViewPanelI {
     AutoCompleteDecorator.decorate(messageMaximumSize);
     messageMaximumSize.setMaximumSize(new Dimension(100, 50));
     messageDetailToolbar.add(messageMaximumSize);
-    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, (String) defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
+    String messageMaxSize = configuration.getString(ConfKeys.MESSAGE_FORMATTER_MAX_SIZE, defaultComboBoxModel.getElementAt(messageMaximumSize.getSelectedIndex()));
     if (defaultComboBoxModel.getIndexOf(messageMaxSize) >= 0) {
       messageMaximumSize.setSelectedItem(messageMaxSize);
     }
@@ -742,7 +744,7 @@ public class LogViewPanel extends LogViewPanelI {
     final JPopupMenu popupMenu = new JPopupMenu(menuTitle);
     popupMenu.add(new JLabel(menuTitle));
     ArrayList<PluginableElement> elements = new ArrayList<>(pluginableElementsContainer.getElements());
-    Collections.sort(elements, new PluginableElementNameComparator());
+    elements.sort(new PluginableElementNameComparator());
     for (final PluginableElement pluginableElement : elements) {
       addMessageFormatterOrColorizerToMenu(popupMenu, pluginableElement, selectedPluginableElementsContainer);
     }
@@ -817,7 +819,7 @@ public class LogViewPanel extends LogViewPanelI {
 
   private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {
 
-    private PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
+    private final PluginableElementsContainer<AutomaticMarker> markersContainer = AllPluginables.getInstance().getMarkersContainser();
 
     @Override
     public void elementAdded(AutomaticMarker element) {

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@ import java.util.logging.Level;
 
 import static pl.otros.logview.api.gui.Icons.*;
 
-public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
+public class LevelRenderer implements TableCellRenderer, ListCellRenderer<Level> {
 
   private static final Dimension ICON_DIMENSION = new Dimension(16, 16);
   private static final Color colorSevere = Color.RED;
@@ -100,10 +100,9 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
   }
 
   @Override
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+  public Component getListCellRendererComponent(JList<? extends Level> list, Level level, int index, boolean isSelected, boolean cellHasFocus) {
     label.setForeground(Color.BLACK);
-    if (value instanceof Level) {
-      Level level = (Level) value;
+    if (level != null) {
       label.setBackground(getColorByLevel(level));
       label.setText(level.getName());
       label.setIcon(getIconByLevel(level));
@@ -127,7 +126,7 @@ public class LevelRenderer implements TableCellRenderer, ListCellRenderer {
 
   public enum Mode {
     IconsOnly("Icons only"), TextOnly("Text"), IconsAndText("Icon and text");
-    String text;
+    private final String text;
 
     Mode(String text) {
       this.text = text;

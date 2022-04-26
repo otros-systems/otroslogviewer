@@ -14,17 +14,22 @@ public class WelcomeScreen extends TestComponent<JPanelFixture, WelcomeScreen> {
     this.frame = frame;
   }
 
-  public JPanelFixture me(){
+  public JPanelFixture me() {
     return frame.panel("WelcomeScreen");
   }
 
-  public OpenPanel clickMergeLogs(){
-    final JButtonFixture mergeLogs = me().button("Merge log files");
-    mergeLogs.click();
-    return new OpenPanel(frame,robot).waitFor();
+  public OpenLogFileDialog clickOpenFile() {
+    me().button("Open log files").click();
+    return new OpenLogFileDialog(frame, robot).waitFor();
   }
 
-  public ParseClipboardDialog clickParseClipboard(){
+  public OpenPanel clickMergeLogs() {
+    final JButtonFixture mergeLogs = me().button("Merge log files");
+    mergeLogs.click();
+    return new OpenPanel(frame, robot).waitFor();
+  }
+
+  public ParseClipboardDialog clickParseClipboard() {
     me().button("Parse clipboard").click();
     return new ParseClipboardDialog(robot);
   }

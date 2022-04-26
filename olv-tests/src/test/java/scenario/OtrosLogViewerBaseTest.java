@@ -28,12 +28,15 @@ public class OtrosLogViewerBaseTest extends AssertJSwingTestngTestCase {
   }
 
   public void logEvents(File file, int count, Function<Integer, Level> levelGenerator) throws IOException {
+
     final Logger logger = Logger.getLogger("some logger");
     logger.setUseParentHandlers(false);
     logger.addHandler(new FileHandler(file.getAbsolutePath()));
+    logger.setLevel(Level.FINEST);
     IntStream
       .range(0, count)
       .forEach(i -> logger.log(levelGenerator.apply(i), "Message " + i));
+
   }
 
 }
