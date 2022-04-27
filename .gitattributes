@@ -1,1 +1,5 @@
-smallFile.txt text eol=lf
+* text eol=lf
+
+# These files are binary and should be left untouched
+*.png binary
+*.gif binary
