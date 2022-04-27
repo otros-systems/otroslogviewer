@@ -15,40 +15,40 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
-import org.apache.commons.io.IOUtils;
+import org.testng.annotations.Test;
+import pl.otros.logview.TestUtils;
+
 import java.util.SortedSet;
 
 public class SoapFinderTest {
 
   @Test
   public void testFindSoapTag() throws Exception {
-    ClassLoader classLoader = this.getClass().getClassLoader();
-    String soap1Formatted = IOUtils.toString(classLoader.getResourceAsStream("soap/1-soapMessageFormmated.txt"));
-    String soap1UnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/1-soapMessage.txt"));
-    String soap2Formatted = IOUtils.toString(classLoader.getResourceAsStream("soap/2-soapMessageFormmated.txt"));
-    String soap2UnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/2-soapMessage.txt"));
+    String soap1Formatted = TestUtils.getResourceFile("soap/1-soapMessageFormmated.txt");
+    String soap1UnFormatted = TestUtils.getResourceFile("soap/1-soapMessage.txt");
+    String soap2Formatted = TestUtils.getResourceFile("soap/2-soapMessageFormmated.txt");
+    String soap2UnFormatted = TestUtils.getResourceFile("soap/2-soapMessage.txt");
 
-    String soap1xRequestUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.1.request.xml"));
-    String soap2xRequestUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.2.request.xml"));
-    String soap3xRequestUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.3.request.xml"));
-    String soap4xRequestUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.4.request.xml"));
+    String soap1xRequestUnFormatted = TestUtils.getResourceFile("soap/soap.1.request.xml");
+    String soap2xRequestUnFormatted = TestUtils.getResourceFile("soap/soap.2.request.xml");
+    String soap3xRequestUnFormatted = TestUtils.getResourceFile("soap/soap.3.request.xml");
+    String soap4xRequestUnFormatted = TestUtils.getResourceFile("soap/soap.4.request.xml");
 
-    String soap1xRequestFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.1.request.formatted.xml"));
-    String soap2xRequestFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.2.request.formatted.xml"));
-    String soap3xRequestFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.3.request.formatted.xml"));
-    String soap4xRequestFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.4.request.formatted.xml"));
+    String soap1xRequestFormatted = TestUtils.getResourceFile("soap/soap.1.request.formatted.xml");
+    String soap2xRequestFormatted = TestUtils.getResourceFile("soap/soap.2.request.formatted.xml");
+    String soap3xRequestFormatted = TestUtils.getResourceFile("soap/soap.3.request.formatted.xml");
+    String soap4xRequestFormatted = TestUtils.getResourceFile("soap/soap.4.request.formatted.xml");
 
-    String soap1xResponseUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.1.response.xml"));
-    String soap2xResponseUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.2.response.xml"));
-    String soap3xResponseUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.3.response.xml"));
-    String soap4xResponseUnFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.4.response.xml"));
+    String soap1xResponseUnFormatted = TestUtils.getResourceFile("soap/soap.1.response.xml");
+    String soap2xResponseUnFormatted = TestUtils.getResourceFile("soap/soap.2.response.xml");
+    String soap3xResponseUnFormatted = TestUtils.getResourceFile("soap/soap.3.response.xml");
+    String soap4xResponseUnFormatted = TestUtils.getResourceFile("soap/soap.4.response.xml");
 
-    String soap1xResponseFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.1.response.formatted.xml"));
-    String soap2xResponseFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.2.response.formatted.xml"));
-    String soap3xResponseFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.3.response.formatted.xml"));
-    String soap4xResponseFormatted = IOUtils.toString(classLoader.getResourceAsStream("soap/soap.4.response.formatted.xml"));
+    String soap1xResponseFormatted = TestUtils.getResourceFile("soap/soap.1.response.formatted.xml");
+    String soap2xResponseFormatted = TestUtils.getResourceFile("soap/soap.2.response.formatted.xml");
+    String soap3xResponseFormatted = TestUtils.getResourceFile("soap/soap.3.response.formatted.xml");
+    String soap4xResponseFormatted = TestUtils.getResourceFile("soap/soap.4.response.formatted.xml");
 
     SoapFinder soapFinder = new SoapFinder();
     AssertJUnit.assertEquals("SoAp", soapFinder.findSoapTag(soap1Formatted));
@@ -81,7 +81,8 @@ public class SoapFinderTest {
   @Test
   public void testFindSoap() throws Exception {
 
-    String stringWithSoaps = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("soap/stringWithSoap.txt"));
+    String stringWithSoaps = TestUtils.getResourceFile("soap/stringWithSoap.txt");
+    AssertJUnit.assertFalse("The test expected file 'soap/stringWithSoap.txt' in unix format.", stringWithSoaps.contains("\r"));
     SoapFinder finder = new SoapFinder();
     SortedSet<SubText> findSoaps = finder.findSoaps(stringWithSoaps);
     // 60,300
@@ -90,8 +91,8 @@ public class SoapFinderTest {
     AssertJUnit.assertEquals(38, first.getStart());
     AssertJUnit.assertEquals(299, first.getEnd());
     SubText last = findSoaps.last();
-    AssertJUnit.assertEquals(369, last.getStart());
-    AssertJUnit.assertEquals(645, last.getEnd());
+    AssertJUnit.assertEquals(366, last.getStart());
+    AssertJUnit.assertEquals(634, last.getEnd());
 
   }
 }

@@ -15,8 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-import org.apache.commons.io.IOUtils;
+import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
+import pl.otros.logview.TestUtils;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -31,7 +32,8 @@ public class StackTraceFinderTest {
   @Test
   public void testFindStackTraces() throws IOException {
     // given
-    String stacktraceFile = IOUtils.toString(StackTraceColorizer.class.getClassLoader().getResourceAsStream("stacktrace/stacktrace.txt"));
+    String stacktraceFile = TestUtils.getResourceFile("stacktrace/stacktrace.txt");
+    AssertJUnit.assertFalse("The test expected file 'stacktrace/stacktrace.txt' in unix format.", stacktraceFile.contains("\r"));
 
     // when
     SortedSet<SubText> findStackTraces = finder.findStackTraces(stacktraceFile);
@@ -40,14 +42,15 @@ public class StackTraceFinderTest {
     assertEquals(1, findStackTraces.size());
 
     SubText subtext = findStackTraces.iterator().next();
-    assertEquals(10, subtext.getStart());
-    assertEquals(241, subtext.getEnd());
+    assertEquals(9, subtext.getStart());
+    assertEquals(235, subtext.getEnd());
   }
 
   @Test
   public void testFindInOnlyStackTrace() throws IOException {
     // given
-    String stacktraceFile = IOUtils.toString(StackTraceColorizer.class.getClassLoader().getResourceAsStream("stacktrace/stacktTraceOnly.txt"));
+    String stacktraceFile = TestUtils.getResourceFile("stacktrace/stacktTraceOnly.txt");
+    AssertJUnit.assertFalse("The test expected file 'stacktrace/stacktTraceOnly.txt' in unix format.", stacktraceFile.contains("\r"));
 
     // when
     SortedSet<SubText> findStackTraces = finder.findStackTraces(stacktraceFile);
@@ -55,16 +58,16 @@ public class StackTraceFinderTest {
     // then
     assertEquals(1, findStackTraces.size());
     SubText subtext = findStackTraces.iterator().next();
-    // TODO check range
     assertEquals(0, subtext.getStart());
-    assertEquals(234, subtext.getEnd());
+    assertEquals(229, subtext.getEnd());
 
   }
 
   @Test
   public void testFindForEmptyPackage() throws IOException {
     // given
-    String stacktraceFile = IOUtils.toString(StackTraceColorizer.class.getClassLoader().getResourceAsStream("stacktrace/stacktTraceWtihEmptyPackage.txt"));
+    String stacktraceFile = TestUtils.getResourceFile("stacktrace/stacktTraceWtihEmptyPackage.txt");
+    AssertJUnit.assertFalse("The test expected file 'stacktrace/stacktTraceWtihEmptyPackage.txt' in unix format.", stacktraceFile.contains("\r"));
 
     // when
     SortedSet<SubText> findStackTraces = finder.findStackTraces(stacktraceFile);
@@ -73,13 +76,14 @@ public class StackTraceFinderTest {
     assertEquals(1, findStackTraces.size());
     SubText subtext = findStackTraces.iterator().next();
     assertEquals(0, subtext.getStart());
-    assertEquals(213, subtext.getEnd());
+    assertEquals(209, subtext.getEnd());
   }
 
   @Test
   public void testFind2StackTraces() throws IOException {
     // given
-    String stacktraceFile = IOUtils.toString(StackTraceColorizer.class.getClassLoader().getResourceAsStream("stacktrace/stacktrace2.txt"));
+    String stacktraceFile = TestUtils.getResourceFile("stacktrace/stacktrace2.txt");
+    AssertJUnit.assertFalse("The test expected file 'stacktrace/stacktrace2.txt' in unix format.", stacktraceFile.contains("\r"));
 
     // when
     SortedSet<SubText> findStackTraces = finder.findStackTraces(stacktraceFile);
@@ -88,10 +92,10 @@ public class StackTraceFinderTest {
     assertEquals(2, findStackTraces.size());
     Iterator<SubText> iterator = findStackTraces.iterator();
     SubText subtext = iterator.next();
-    assertEquals(44, subtext.getStart());
-    assertEquals(3142, subtext.getEnd());
+    assertEquals(43, subtext.getStart());
+    assertEquals(3102, subtext.getEnd());
     subtext = iterator.next();
-    assertEquals(3183, subtext.getStart());
-    assertEquals(3439, subtext.getEnd());
+    assertEquals(3137, subtext.getStart());
+    assertEquals(3388, subtext.getEnd());
   }
 }
