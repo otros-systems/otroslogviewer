@@ -55,7 +55,7 @@ task runWithJavaExec(type: JavaExec) {
         group = "Execution"
         description = "Run the main class with JavaExecTask"
         classpath = sourceSets.main.runtimeClasspath
-        main = "pl.otros.logview.gui.LogViewMainFrame"
+        mainClass.set("pl.otros.logview.gui.LogViewMainFrame")
 }
 
 //This configuration shares the output from the shadowJar task for other modules to consume it
