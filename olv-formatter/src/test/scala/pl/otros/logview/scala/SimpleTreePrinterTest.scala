@@ -2,7 +2,7 @@ package pl.otros.logview.scala
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpecLike}
+import org.scalatest.{Assertion, Matchers, WordSpecLike}
 
 @RunWith(classOf[JUnitRunner])
 class SimpleTreePrinterTest extends WordSpecLike with Matchers {
@@ -10,7 +10,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
   "SimpleTreePrinter" should {
     "print empty list" in {
       val tree: Tree = ListValue(List.empty[Tree])
-      val expected =""" *── List: <EMPTY>"""
+      val expected = """ *── List: <EMPTY>"""
       test(tree, expected)
     }
 
@@ -35,7 +35,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
 
     "print empty set" in {
       val tree: Tree = SetValue(List.empty[Tree])
-      val expected =""" *── Set: <EMPTY>"""
+      val expected = """ *── Set: <EMPTY>"""
       test(tree, expected)
     }
 
@@ -60,7 +60,7 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
 
     "print empty Map" in {
       val tree: Tree = MapValue(Map.empty)
-      val expected =""" *── Map: <EMPTY>"""
+      val expected = """ *── Map: <EMPTY>"""
       test(tree, expected)
     }
 
@@ -179,9 +179,9 @@ class SimpleTreePrinterTest extends WordSpecLike with Matchers {
     test(tree, expected)
   }
 
-  def test(tree: Tree, expected: String) = {
+  def test(tree: Tree, expected: String): Assertion = {
     val printed: String = new SimpleTreePrinter().printTree(tree)
-    val expectedWithoutEmptyLines = expected.lines.filter(_.trim.nonEmpty).mkString("\n")
+    val expectedWithoutEmptyLines = expected.linesIterator.filter(_.trim.nonEmpty).mkString("\n")
     printed shouldBe expectedWithoutEmptyLines
   }
 
