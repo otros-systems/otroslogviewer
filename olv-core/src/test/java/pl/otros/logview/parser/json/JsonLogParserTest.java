@@ -2,10 +2,10 @@ package pl.otros.logview.parser.json;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.store.MemoryLogDataStore;
 
@@ -21,17 +21,17 @@ public class JsonLogParserTest {
   @DataProvider(name = "testParse")
   public Object[][] dataProvider() {
     return new Object[][]{
-      new Object[]{"json.log", "Single line per log event",getProperties()},
-      new Object[]{"json-formatted.log", "Human readable format",getProperties()},
-      new Object[]{"json-formatted-withJunk.log", "Human readable format with junk lines",getProperties()},
-      new Object[]{"json-withJunk.log", "Single line per log event with junk lines",getProperties()},
-      new Object[]{"json.-timestamp.log", "With date formatted as timestamp",getPropertiesTimestamp()},
+      new Object[]{ "json.log", "Single line per log event", getProperties() },
+      new Object[]{ "json-formatted.log", "Human readable format", getProperties() },
+      new Object[]{ "json-formatted-withJunk.log", "Human readable format with junk lines", getProperties() },
+      new Object[]{ "json-withJunk.log", "Single line per log event with junk lines", getProperties() },
+      new Object[]{ "json.-timestamp.log", "With date formatted as timestamp", getPropertiesTimestamp() },
     };
   }
 
   private Properties getPropertiesTimestamp() {
     final Properties properties = getProperties();
-    properties.put("dateFormat","timestamp");
+    properties.put("dateFormat", "timestamp");
     return properties;
   }
 
@@ -46,7 +46,7 @@ public class JsonLogParserTest {
 
     //when
     LogDataCollector ld = new MemoryLogDataStore();
-    importerUsingParser.importLogs(this.getClass().getClass().getResourceAsStream("/jsonLog/" + fileName), ld, parsingContext);
+    importerUsingParser.importLogs(this.getClass().getResourceAsStream("/jsonLog/" + fileName), ld, parsingContext);
     //then
     final LogData[] logDatas = ld.getLogData();
     assertEquals(logDatas.length, 5);

@@ -15,7 +15,6 @@ import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.api.model.MarkerColors;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,6 @@ public class LogbackUtilTest {
   @BeforeMethod
   public void beforeMethod() {
     builder = new LogDataBuilder();
-    System.setProperty("line.separator","\n");
   }
 
   @Test
@@ -40,22 +38,22 @@ public class LogbackUtilTest {
     //Given
     LoggerContext context = new LoggerContext();
     Logger logger = context.getLogger("SomeLogger");
-    LoggingEvent le = new LoggingEvent("a.b.C",logger, ch.qos.logback.classic.Level.INFO,"message",null,null);
+    LoggingEvent le = new LoggingEvent("a.b.C", logger, ch.qos.logback.classic.Level.INFO, "message", null, null);
     final Map<String, String> split = Splitter.on(",").withKeyValueSeparator("=").split("a=b,b=as");
     le.setMDCPropertyMap(split);
-    le.setCallerData(new StackTraceElement[]{new StackTraceElement("a.b.C","someMethod","C.java",120)});
+    le.setCallerData(new StackTraceElement[]{ new StackTraceElement("a.b.C", "someMethod", "C.java", 120) });
 
     //when
     final LogData logData = LogbackUtil.translate(le).build();
 
     //then
-    assertEquals(logData.getMessage(),"message");
-    assertEquals(logData.getLevel(),Level.INFO);
-    assertEquals(logData.getLoggerName(),"SomeLogger");
-    assertEquals(logData.getClazz(),"a.b.C");
-    assertEquals(logData.getMethod(),"someMethod");
-    assertEquals(logData.getLine(),"120");
-    assertEquals(logData.getProperties(),split);
+    assertEquals(logData.getMessage(), "message");
+    assertEquals(logData.getLevel(), Level.INFO);
+    assertEquals(logData.getLoggerName(), "SomeLogger");
+    assertEquals(logData.getClazz(), "a.b.C");
+    assertEquals(logData.getMethod(), "someMethod");
+    assertEquals(logData.getLine(), "120");
+    assertEquals(logData.getProperties(), split);
   }
 
   @Test
@@ -71,8 +69,9 @@ public class LogbackUtilTest {
 
     //then
     assertEquals(builder.build().getMethod(), "testAddCallerData");
-    assertEquals(builder.build().getClazz(),getClass().getName());
+    assertEquals(builder.build().getClazz(), getClass().getName());
   }
+
   @Test
   public void testAddCallerDataWithoutData() throws Exception {
     //given
@@ -85,7 +84,7 @@ public class LogbackUtilTest {
 
     //then
     assertEquals(builder.build().getMethod(), "");
-    assertEquals(builder.build().getClazz(),"");
+    assertEquals(builder.build().getClazz(), "");
   }
 
   @Test
@@ -93,13 +92,11 @@ public class LogbackUtilTest {
     //given
     final Exception throwable = new Exception("Some exception");
     final StringWriter stringWriter = new StringWriter();
-    throwable.printStackTrace(new PrintWriter(stringWriter));
+    throwable.printStackTrace(new UnixNewLinePrintWriter(stringWriter));
     ThrowableProxy throwableProxy = new ThrowableProxy(throwable);
 
-
     //when
-    LogbackUtil.addException(throwableProxy,"Message!", builder);
-
+    LogbackUtil.addException(throwableProxy, "Message!", builder);
 
     //then
     final LogData logData = builder.build();
@@ -135,12 +132,12 @@ public class LogbackUtilTest {
   @DataProvider(name = "levels")
   public Object[][] levels() {
     return new Object[][]{
-      new Object[]{ch.qos.logback.classic.Level.DEBUG, Level.FINE},
-      new Object[]{ch.qos.logback.classic.Level.TRACE, Level.FINEST},
-      new Object[]{ch.qos.logback.classic.Level.INFO, Level.INFO},
-      new Object[]{ch.qos.logback.classic.Level.WARN, Level.WARNING},
-      new Object[]{ch.qos.logback.classic.Level.ERROR, Level.SEVERE},
-      new Object[]{ch.qos.logback.classic.Level.OFF, Level.INFO},
+      new Object[]{ ch.qos.logback.classic.Level.DEBUG, Level.FINE },
+      new Object[]{ ch.qos.logback.classic.Level.TRACE, Level.FINEST },
+      new Object[]{ ch.qos.logback.classic.Level.INFO, Level.INFO },
+      new Object[]{ ch.qos.logback.classic.Level.WARN, Level.WARNING },
+      new Object[]{ ch.qos.logback.classic.Level.ERROR, Level.SEVERE },
+      new Object[]{ ch.qos.logback.classic.Level.OFF, Level.INFO },
     };
   }
 
