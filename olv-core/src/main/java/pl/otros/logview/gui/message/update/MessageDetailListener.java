@@ -32,11 +32,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class MessageDetailListener implements ListSelectionListener, NoteObserver {
 
   public static final int FORMAT_IN_SEPARATE_THREAD_THRESHOLD = 4 * 1024;
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageDetailListener.class.getName());
+  public static final long MAXIMUM_MESSAGE_RENDERING_TIME = 300L;
   private final PluginableElementsContainer<MessageColorizer> colorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> formattersContainer;
   private final LogViewPanel logViewPanel;
@@ -110,7 +112,15 @@ public class MessageDetailListener implements ListSelectionListener, NoteObserve
           logDetailTextArea.setText("Updating log event details...");
           messageFormatSwingWorker.execute();
         } else {
-          messageFormatSwingWorker.updateChanges(messageFormatSwingWorker.doInBackground());
+          long start = System.currentTimeMillis();
+          List<TextChunkWithStyle> chunks = messageFormatSwingWorker.doInBackground();
+          long formatDuration = (System.currentTimeMillis() - start);
+          start = System.currentTimeMillis();
+          messageFormatSwingWorker.updateChanges(chunks);
+          long updateDuration = (System.currentTimeMillis() - start);
+          if (formatDuration + updateDuration > MAXIMUM_MESSAGE_RENDERING_TIME) {
+            LOGGER.warn("Rendering of message took long time! Message formatting: {}ms Update message: {}ms", formatDuration, updateDuration);
+          }
         }
 
       } else {
