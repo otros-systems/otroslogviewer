@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.model.Note;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -54,11 +55,11 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.api.LogDataListPersistance#saveLogsList(java.io.OutputStream, java.util.List)
    */
   public void saveLogsList(OutputStream out, List<LogData> list) throws IOException {
-    BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+    BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
 
     ArrayList<String> saveMapOrder = getSaveMapOrder();
     for (String string : saveMapOrder) {
@@ -112,7 +113,7 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
       }
       try {
         p.store(bout, null);
-        mdc = bout.toString();
+        mdc = bout.toString().replace("\r", "");//Convert to unix line separator format
         mdc = mdc.substring(mdc.indexOf("\n") + 1);
       } catch (IOException e) {
         LOGGER.error(String.format("Can't save LogData (id=%d) properties: %s", logData.getId(), e.getMessage()));
@@ -148,17 +149,17 @@ public class LogDataListPersistanceVer2 implements LogDataListPersistance {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.api.LogDataListPersistance#loadLogsList(java.io.InputStream)
    */
   public List<LogData> loadLogsList(InputStream in) throws IOException {
-    BufferedReader bin = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+    BufferedReader bin = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     String line = bin.readLine();
     String[] split = line.split(FIELD_SEPERATOR_TO_SPLIT);
     HashMap<String, Integer> fieldMapping = new HashMap<>();
     for (int i = 0; i < split.length; i++) {
       String string = split[i];
-      fieldMapping.put(string, Integer.valueOf(i));
+      fieldMapping.put(string, i);
     }
 
     ArrayList<LogData> list = new ArrayList<>();

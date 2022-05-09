@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import pl.otros.logview.api.model.Note;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,26 +33,29 @@ import java.util.List;
 import java.util.logging.Level;
 
 import static org.testng.AssertJUnit.assertEquals;
+
 //TODO check assert order
 public class PersistanceVer2Test {
 
   private ArrayList<LogData> list;
-  private final String result = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n"
-      + "0|0|message\\nno \\P0\\P|class|method|INFO|LN|Thread|a=l0\\n|ndc|File|123|file:/a.txt|Note|true|Red|\n" //
-      + "1|1|message\\nno \\P1\\P|class|method|INFO|LN|Thread|a=l1\\n|ndc|File|123|file:/a.txt|Note|false||\n" //
-      + "2|2|message\\nno \\P2\\P|class|method|INFO|LN|Thread|a=l2\\n|ndc|File|123|file:/a.txt|Note|true|Black|\n" //
-      + "3|3|message\\nno \\P3\\P|class|method|INFO|LN|Thread|a=l3\\n|ndc|File|123|file:/a.txt|Note|false||\n" //
-      + "4|4|message\\nno \\P4\\P|class|method|INFO|LN|Thread|a=l4\\n|ndc|File|123|file:/a.txt|Note|true|Green|\n";
+
+  private final String result = """
+    ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|
+    0|0|message\\nno \\P0\\P|class|method|INFO|LN|Thread|a=l0\\n|ndc|File|123|file:/a.txt|Note|true|Red|
+    1|1|message\\nno \\P1\\P|class|method|INFO|LN|Thread|a=l1\\n|ndc|File|123|file:/a.txt|Note|false||
+    2|2|message\\nno \\P2\\P|class|method|INFO|LN|Thread|a=l2\\n|ndc|File|123|file:/a.txt|Note|true|Black|
+    3|3|message\\nno \\P3\\P|class|method|INFO|LN|Thread|a=l3\\n|ndc|File|123|file:/a.txt|Note|false||
+    4|4|message\\nno \\P4\\P|class|method|INFO|LN|Thread|a=l4\\n|ndc|File|123|file:/a.txt|Note|true|Green|
+    """;
 
   private static final String EMPTY_RESULT = "ID|TIMESTAMP|MESSAGE|CLASS|METHOD|LEVEL|LOGGER|THREAD|MDC|NDC|FILE|LINE|LOG_SOURCE|NOTE|MARKED|MARKED_COLOR|\n";
   private LogDataListPersistanceVer2 p;
 
   @BeforeMethod
-public void prepare() {
+  public void prepare() {
     p = new LogDataListPersistanceVer2();
-    LogData[] datas = new LogData[5];
     list = new ArrayList<>();
-    for (int i = 0; i < datas.length; i++) {
+    for (int i = 0; i < 5; i++) {
       LogData ld = new LogData();
       ld.setLevel(Level.INFO);
       ld.setId(i);
@@ -75,18 +79,16 @@ public void prepare() {
       properties.put("a", "l" + i);
       ld.setProperties(properties);
 
-      datas[i] = ld;
       list.add(ld);
     }
   }
 
   @Test
   public void testSaveLogsListVer2() throws IOException {
-	System.setProperty("line.separator", "\n");
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     p.saveLogsList(bout, list);
-    String s = new String(bout.toByteArray(), "UTF-8");
-    Assert.assertEquals(result,s);
+    String s = bout.toString(StandardCharsets.UTF_8);
+    Assert.assertEquals(result, s);
 
   }
 
@@ -95,14 +97,14 @@ public void prepare() {
     list.clear();
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     p.saveLogsList(bout, list);
-    String s = new String(bout.toByteArray(), "UTF-8");
+    String s = bout.toString(StandardCharsets.UTF_8);
     Assert.assertEquals(EMPTY_RESULT, s);
   }
 
   @Test
   public void testLoadLogsListVer2() throws IOException {
 
-    ByteArrayInputStream bin = new ByteArrayInputStream(result.getBytes("UTF-8"));
+    ByteArrayInputStream bin = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
     List<LogData> loadLogsListVer2 = p.loadLogsList(bin);
     Assert.assertEquals(5, loadLogsListVer2.size());
     for (int i = 0; i < list.size(); i++) {
@@ -123,7 +125,7 @@ public void prepare() {
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_MESSAGE, i++);
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_METHOD, i++);
     fieldMapping.put(LogDataListPersistanceVer2.HEADER_THREAD, i++);
-    fieldMapping.put(LogDataListPersistanceVer2.HEADER_TIMESTAMP, i++);
+    fieldMapping.put(LogDataListPersistanceVer2.HEADER_TIMESTAMP, i);
 
     String[] line = { "3", "a.b.Class", "SEVERE", "logger", "message!\\n\\P\\S", "myMethod", "thread-1", "1000" };
     LogData ld = p.parseLogData(line, fieldMapping);
@@ -145,6 +147,7 @@ public void prepare() {
 
     assertEquals(expected, result);
   }
+
   @Test
   public void testUnEsape() {
     String s = "ala ma kota \\nkot ma \\Sal\\Pe";
