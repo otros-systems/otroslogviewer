@@ -57,3 +57,8 @@ distZip {
     archiveBaseName.set("olv")
     dependsOn(configurations.instrumentedClasspath)
 }
+
+test {
+    useTestNG()
+    maxParallelForks = 2
+}
