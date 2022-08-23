@@ -55,20 +55,21 @@ public final class LoadingInfo implements AutoCloseable {
     friendlyUrl = fileObject.getName().getFriendlyURI();
 
     fileObject.refresh();
-    InputStream inputStream = new BufferedInputStream(fileObject.getContent().getInputStream(), 2);
-    //maximum limit of reset(). Only read 2 bytes
-    inputStream.mark(2);
-    compression = checkCompressType(inputStream);
-    inputStream.reset();
+    try(InputStream inputStream = new BufferedInputStream(fileObject.getContent().getInputStream(), 2)) {
+      //maximum limit of reset(). Only read 2 bytes
+      inputStream.mark(2);
+      compression = checkCompressType(inputStream);
+      inputStream.reset();
 
-    if(compression == CompressType.GZIP) {
-      inputStreamBufferedStart = ungzip(inputStream, 10_000);
-    } else if(compression == CompressType.ZIP) {
-      inputStreamBufferedStart = unzip(inputStream, 10_000);
-    } else if(compression == CompressType.NONE) {
-      inputStreamBufferedStart = loadProbe(inputStream, 10_000);
-    } else {
-      throw new UnsupportedEncodingException("The compression type " + compression + " is unknown.");
+      if (compression == CompressType.GZIP) {
+        inputStreamBufferedStart = ungzip(inputStream, 10_000);
+      } else if (compression == CompressType.ZIP) {
+        inputStreamBufferedStart = unzip(inputStream, 10_000);
+      } else if (compression == CompressType.NONE) {
+        inputStreamBufferedStart = loadProbe(inputStream, 10_000);
+      } else {
+        throw new UnsupportedEncodingException("The compression type " + compression + " is unknown.");
+      }
     }
 
     if (openMode == FROM_START || compression.isCompressed()) {
@@ -142,6 +143,11 @@ public final class LoadingInfo implements AutoCloseable {
 
   @Override
   public void close() {
+    try {
+      observableInputStreamImpl.close();
+    } catch (IOException e) {
+      //TODO: This class doesn't have a logger.
+    }
     closeQuietly(fileObject);
   }
 
