@@ -112,7 +112,10 @@ public class TailLogActionListener extends OtrosAction {
       3000,
       Optional.of(2000L)
     );
-    panel.onClose(()->logLoader.close(session));
+    panel.onClose(()-> {
+      logLoader.close(session);
+      loadingInfo.close();
+    });
     SwingUtilities.invokeLater(panel::switchToContentView);
   }
 
