@@ -16,13 +16,14 @@
 
 package pl.otros.vfs.browser.table;
 
-import pl.otros.vfs.browser.util.VFSUtils;
 import pl.otros.vfs.browser.favorit.Favorite;
+import pl.otros.vfs.browser.util.VFSUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
+ *
  */
 public class FavoriteListCellRenderer extends DefaultListCellRenderer {
   @Override
@@ -30,10 +31,20 @@ public class FavoriteListCellRenderer extends DefaultListCellRenderer {
     Component component = super.getListCellRendererComponent(list, value, index, isSelected & cellHasFocus, cellHasFocus);
     if (component instanceof JLabel) {
       JLabel label = (JLabel) component;
-      Favorite f = (Favorite) value;
-      label.setText(f.getName());
-      label.setIcon(VFSUtils.getIconForFileSystem(f.getUrl()));
-      label.setToolTipText(VFSUtils.getFriendlyName(f.getUrl()));
+      Favorite favorite = (Favorite) value;
+      label.setText(favorite.getName());
+      label.setIcon(VFSUtils.getIconForFileSystem(favorite.getUrl()));
+      label.setToolTipText(VFSUtils.getFriendlyName(favorite.getUrl()));
+      if (isSelected) {
+        setBackground(list.getSelectionBackground());
+        setForeground(list.getSelectionForeground());
+      } else {
+        setBackground(list.getBackground());
+        setForeground(list.getForeground());
+      }
+      setEnabled(list.isEnabled());
+      setFont(list.getFont());
+      setOpaque(true);
     }
 
     return component;

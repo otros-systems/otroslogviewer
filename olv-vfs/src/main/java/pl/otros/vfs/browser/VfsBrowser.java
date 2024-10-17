@@ -433,7 +433,7 @@ public class VfsBrowser extends JPanel {
     favoritesUserList.setTransferHandler(new MutableListDropHandler(favoritesUserList));
     new MutableListDragListener(favoritesUserList);
     favoritesUserList.setCellRenderer(new FavoriteListCellRenderer());
-    favoritesUserList.addFocusListener(new SelectFirstElementFocusAdapter());
+//    favoritesUserList.addFocusListener(new SelectFirstElementFocusAdapter());
 
     addOpenActionToList(favoritesUserList);
     addEditActionToList(favoritesUserList, favoritesUserListModel);
@@ -459,6 +459,30 @@ public class VfsBrowser extends JPanel {
     InputMap favoritesListInputMap = favoritesUserList.getInputMap(JComponent.WHEN_FOCUSED);
     favoritesListInputMap.put(KeyStroke.getKeyStroke("DELETE"), ACTION_DELETE);
 
+    JPopupMenu favoritesPopupMenu = new JPopupMenu();
+    String[] actions = new String[]{ ACTION_OPEN, ACTION_EDIT, ACTION_DELETE };
+    for (String action : actions) {
+      favoritesPopupMenu.add(favoritesUserList.getActionMap().get(action));
+    }
+//    favoritesUserList.addKeyListener(new PopupListener(favoritesPopupMenu));
+
+    favoritesUserList.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+          JList<Favorite> list = (JList<Favorite>) e.getSource();
+          int selectedIndex = list.locationToIndex(e.getPoint());
+          list.setSelectedIndex(selectedIndex);
+          favoritesPopupMenu.getSelectionModel().clearSelection();
+          favoritesPopupMenu.updateUI();
+          show((Component) e.getSource(), e.getX(), e.getY());
+        }
+      }
+
+      public void show(Component invoker, int x, int y) {
+        favoritesPopupMenu.show(invoker, x, y);
+      }
+    });
 
     ActionMap actionMap = tableFiles.getActionMap();
     actionMap.put(ACTION_OPEN, new BaseNavigateActionOpen(this));
@@ -478,7 +502,7 @@ public class VfsBrowser extends JPanel {
 
     inputMap.put(KeyStroke.getKeyStroke("BACK_SPACE"), ACTION_GO_UP);
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_GO_UP);
-    addPopupMenu(favoritesUserList, ACTION_OPEN, ACTION_EDIT, ACTION_DELETE);
+//    addPopupMenu(favoritesUserList, ACTION_OPEN, ACTION_EDIT, ACTION_DELETE);
 
     JList favoriteSystemList = new JList(new Vector<Object>(favSystemLocations));
     favoriteSystemList.setCellRenderer(new FavoriteListCellRenderer());
