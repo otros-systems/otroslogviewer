@@ -89,7 +89,7 @@ public class PreviewListener implements ListSelectionListener {
   }
 
   private void clearPreview() {
-    previewComponent.setPreviewStatus(new PreviewStatus(State.NA, 0, 0, "b", "N/A", EMPTY_BYTE_ARRAY));
+    previewComponent.setPreviewStatus(new PreviewStatus(PreviewStatus.State.NA, 0, 0, "b", "N/A", EMPTY_BYTE_ARRAY));
   }
 
   private void makePreview(final FileObject fileObjectToPreview) {
@@ -102,11 +102,11 @@ public class PreviewListener implements ListSelectionListener {
 
       @Override
       protected PreviewStatus doInBackground() throws Exception {
-        publish(new PreviewStatus(State.NOT_STARTED, 0, 1, KB, name, EMPTY_BYTE_ARRAY));
+        publish(new PreviewStatus(PreviewStatus.State.NOT_STARTED, 0, 1, KB, name, EMPTY_BYTE_ARRAY));
         for (int i = 0; i < 5; i++) {
           Thread.sleep(100);
           if (isCancelled()) {
-            return new PreviewStatus(State.CANCELLED, 0, previewLimit / 1024, KB, name, EMPTY_BYTE_ARRAY);
+            return new PreviewStatus(PreviewStatus.State.CANCELLED, 0, previewLimit / 1024, KB, name, EMPTY_BYTE_ARRAY);
           }
         }
         ByteArrayOutputStream outputStreamRef = null;
@@ -122,18 +122,18 @@ public class PreviewListener implements ListSelectionListener {
             max = max == 0 ? previewLimit : Math.min(max, previewLimit);
             while ((read = inputStream.read(buff)) > 0 && outputStream.size() < previewLimit) {
               if (isCancelled()) {
-                return new PreviewStatus(State.CANCELLED, 0, max / 1024, KB, name, EMPTY_BYTE_ARRAY);
+                return new PreviewStatus(PreviewStatus.State.CANCELLED, 0, max / 1024, KB, name, EMPTY_BYTE_ARRAY);
               }
               outputStream.write(buff, 0, read);
-              publish(new PreviewStatus(State.LOADING, outputStream.size() / 1024, max / 1024, KB, name, outputStream.toByteArray()));
+              publish(new PreviewStatus(PreviewStatus.State.LOADING, outputStream.size() / 1024, max / 1024, KB, name, outputStream.toByteArray()));
             }
           }
         } catch (Exception e) {
           LOGGER.error("Exception when downloading preview", e);
-          return new PreviewStatus(State.ERROR, outputStreamRef.size() / 1024, outputStreamRef.size() / 1024, KB, name, outputStreamRef.toByteArray());
+          return new PreviewStatus(PreviewStatus.State.ERROR, outputStreamRef.size() / 1024, outputStreamRef.size() / 1024, KB, name, outputStreamRef.toByteArray());
         }
 
-        return new PreviewStatus(State.FINISHED, outputStreamRef.size() / 1024, outputStreamRef.size() / 1024, KB, name, outputStreamRef.toByteArray());
+        return new PreviewStatus(PreviewStatus.State.FINISHED, outputStreamRef.size() / 1024, outputStreamRef.size() / 1024, KB, name, outputStreamRef.toByteArray());
       }
 
 
