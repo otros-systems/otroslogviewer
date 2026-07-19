@@ -13,8 +13,8 @@ targetCompatibility = JavaVersion.VERSION_21
 repositories {
     mavenCentral()
     maven {
-        //Repo for cjwizard library
-        url "https://mvnrepository.com/"
+        //Repo for cjwizard library. https://mvnrepository.com/ not working
+        url "https://jitpack.io/"
     }
     flatDir {
         //embedded repo for custom libraries
