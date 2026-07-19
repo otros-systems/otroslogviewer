@@ -103,7 +103,9 @@ public class LogbackUtilTest {
 
     //then
     final LogData logData = builder.build();
-    assertEquals(logData.getMessage(), "Message!\n" + stringWriter.getBuffer().toString());
+    //If test run on Windows, replace \r\n with \n. The implementation always uses \n.
+    String expected = "Message!\n" + stringWriter.getBuffer().toString().replaceAll("\r\n", "\n");
+    assertEquals(logData.getMessage(), expected);
   }
 
   @Test
