@@ -61,20 +61,20 @@ public class InFixToPostFix {
     operators.add(">");
 
     // boolean precedence
-    precedenceMap.put("<", new Integer(3));
-    precedenceMap.put(">", new Integer(3));
-    precedenceMap.put("<=", new Integer(3));
-    precedenceMap.put(">=", new Integer(3));
+    precedenceMap.put("<", 3);
+    precedenceMap.put(">", 3);
+    precedenceMap.put("<=", 3);
+    precedenceMap.put(">=", 3);
 
-    precedenceMap.put("!", new Integer(3));
-    precedenceMap.put("!=", new Integer(3));
-    precedenceMap.put("==", new Integer(3));
-    precedenceMap.put("~=", new Integer(3));
-    precedenceMap.put("like", new Integer(3));
-    precedenceMap.put("exists", new Integer(3));
+    precedenceMap.put("!", 3);
+    precedenceMap.put("!=", 3);
+    precedenceMap.put("==", 3);
+    precedenceMap.put("~=", 3);
+    precedenceMap.put("like", 3);
+    precedenceMap.put("exists", 3);
 
-    precedenceMap.put("||", new Integer(2));
-    precedenceMap.put("&&", new Integer(2));
+    precedenceMap.put("||", 2);
+    precedenceMap.put("&&", 2);
   }
 
   /**

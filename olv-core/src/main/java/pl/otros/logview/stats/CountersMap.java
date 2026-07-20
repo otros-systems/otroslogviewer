@@ -36,7 +36,7 @@ public class CountersMap {
       final Map<String, Long> collect = split
         .entrySet()
         .stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, entry -> new Long(entry.getValue())));
+        .collect(Collectors.toMap(Map.Entry::getKey, entry -> Long.getLong(entry.getValue())));
       return Optional.of(new CountersMap(collect));
     };
   }

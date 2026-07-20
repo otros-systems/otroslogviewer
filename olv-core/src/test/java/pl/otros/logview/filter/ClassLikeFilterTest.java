@@ -75,7 +75,10 @@ public class ClassLikeFilterTest {
     filter.addClassesLeafs(classesSet, root, clazzNodeMap);
 
     //then
-    final List<DefaultMutableTreeNode> level1Nodes = Collections.list(root.children());
+    Enumeration<TreeNode> children = root.children();
+    final List<DefaultMutableTreeNode> level1Nodes = Collections.list(children)
+            .stream().map(n -> (DefaultMutableTreeNode)n)
+            .collect(Collectors.toList());
     assertEquals(level1Nodes.size(),4);
     final List<ClassLikeFilter.Clazz> clazzesLevel1 = level1Nodes.stream()
       .map(n -> (ClassLikeFilter.Clazz) n.getUserObject())
