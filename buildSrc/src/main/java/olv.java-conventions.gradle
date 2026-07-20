@@ -7,18 +7,22 @@ plugins {
 
 group = 'pl.otros.logviewer'
 version = '1.4.19-SNAPSHOT'
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 
 repositories {
     mavenCentral()
     maven {
         //Repo for cjwizard library. https://mvnrepository.com/ not working
-        url "https://jitpack.io/"
+        url = "https://jitpack.io/"
     }
     flatDir {
         //embedded repo for custom libraries
-        dirs '../libs'
+        dirs = ['../libs']
     }
 }
 
