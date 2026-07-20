@@ -5,6 +5,16 @@ plugins {
 //    id 'idea' // uncomment when using IntelliJ IDEA IDE
 }
 
+// Add compiler option to show more details for deprecations
+/*tasks.withType(JavaCompile).configureEach {
+    doFirst {
+        println "Compiler args: ${options.compilerArgs}"
+    }
+
+    options.compilerArgs.add("-Xlint:deprecation")
+    //options.compilerArgs.add("-Xlint:unchecked")
+}*/
+
 group = 'pl.otros.logviewer'
 version = '1.4.19-SNAPSHOT'
 
