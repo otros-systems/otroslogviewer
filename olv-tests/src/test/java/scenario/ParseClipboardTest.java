@@ -1,7 +1,6 @@
 package scenario;
 
 import org.awaitility.Duration;
-import org.fest.util.Files;
 import org.testng.annotations.Test;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
@@ -15,6 +14,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -28,7 +28,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   public void pasteClipboardOnOpen() throws IOException {
     final File file1 = File.createTempFile("otrosTest", "");
     logEvents(file1, 10);
-    final String clipboardContent = Files.contentOf(file1, "UTF-8");
+    final String clipboardContent = Files.readString(file1.toPath());
     setClipboard(clipboardContent);
     final MainFrame mainFrame = new MainFrame(robot());
     final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
@@ -52,7 +52,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   public void importLogsFromClipboard() throws Exception {
     final File tempFile = File.createTempFile("olv", "logs");
     logEvents(tempFile, 10, integer -> Level.INFO);
-    final String logsInClipboard = Files.contentOf(tempFile, "UTF-8").trim();
+    final String logsInClipboard = Files.readString(tempFile.toPath()).trim();
 
     final MainFrame mainFrame = new MainFrame(robot());
     final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
