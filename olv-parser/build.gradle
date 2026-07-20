@@ -15,13 +15,15 @@
  */
 plugins {
     id 'olv.java-conventions'
-    id 'com.github.maiflai.scalatest' version '0.32'
-    id 'scala'
+//    id 'com.github.maiflai.scalatest' version '0.32'
+//    id 'scala'
 }
 
 dependencies {
     implementation project(':olv-api')
-    testImplementation 'org.scalatest:scalatest_2.12:3.0.4'
-    testRuntimeOnly 'org.pegdown:pegdown:1.1.0'
-    testImplementation 'junit:junit:4.12'
+//    implementation "org.scala-lang:scala-library:2.13.13"
+    implementation project(':olv-api')
+//    testImplementation "org.scalatest:scalatest_2.13:3.2.19"
+//    testRuntimeOnly "org.pegdown:pegdown:1.1.0"
+//    testImplementation "junit:junit:4.12"
 }

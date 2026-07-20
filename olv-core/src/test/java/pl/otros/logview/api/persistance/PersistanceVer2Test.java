@@ -25,6 +25,7 @@ import pl.otros.logview.api.model.Note;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public void prepare() {
 	System.setProperty("line.separator", "\n");
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     p.saveLogsList(bout, list);
-    String s = new String(bout.toByteArray(), "UTF-8");
+    String s = bout.toString(StandardCharsets.UTF_8).replaceAll("\\\\r", "");
     Assert.assertEquals(result,s);
 
   }

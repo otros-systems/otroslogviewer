@@ -15,7 +15,7 @@
  */
 plugins {
     id 'olv.java-conventions'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.gradleup.shadow' version '8.3.6'
 }
 
 def today = new Date().format("yyyy-MM-dd")
@@ -66,9 +66,10 @@ configurations {
         // If you want this configuration to share the same dependencies, otherwise omit this line
         extendsFrom implementation, runtimeOnly
     }
-    artifacts {
-        instrumentedJars(shadowJar)
-    }
+}
+
+artifacts {
+    instrumentedJars shadowJar
 }
 
 //The line below ensures the uber-jar is generated when 'gradle build' is executed

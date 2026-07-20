@@ -19,7 +19,10 @@ import org.testng.annotations.Test;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeConfig;
+import pl.otros.logview.api.theme.ThemeKey;
 
+import java.awt.*;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -35,7 +38,27 @@ public class LevelFilterTest {
     ld.setLevel(Level.FINEST);
 
     LevelFilter filter = new LevelFilter();
-    filter.init(new Properties(), new LogDataTableModel(), mock(Theme.class));
+    filter.init(new Properties(), new LogDataTableModel(), new Theme() {
+      @Override
+      public Type themeType() {
+        return null;
+      }
+
+      @Override
+      public Color getColor(ThemeKey themeKey) {
+        return null;
+      }
+
+      @Override
+      public void setColor(ThemeKey themeKey, Color color) {
+
+      }
+
+      @Override
+      public void clear(ThemeKey themeKey) {
+
+      }
+    });
     filter.setPassLevel(Level.ALL.intValue());
     assertTrue(filter.accept(ld, 0));
 
