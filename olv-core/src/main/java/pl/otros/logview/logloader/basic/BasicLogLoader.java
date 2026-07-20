@@ -6,7 +6,6 @@ import pl.otros.logview.api.AcceptCondition;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.loading.*;
 import pl.otros.logview.api.model.LogDataCollector;
-import pl.otros.logview.api.services.StatsService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,15 +15,12 @@ public class BasicLogLoader implements LogLoader {
   private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
   public static final int DEFAULT_SLEEP_TIME = 3000;
 
-  private StatsService statsService;
-
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new HashMap<>();
   private final Map<LogDataCollector, FilteringLogDataCollector> ldCollectorsMap = new HashMap<>();
   private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new HashMap<>();
   private Source source;
 
-  public BasicLogLoader(StatsService statsService) {
-    this.statsService = statsService;
+  public BasicLogLoader() {
   }
 
   @Override
@@ -38,7 +34,7 @@ public class BasicLogLoader implements LogLoader {
     ldCollectorsMap.putIfAbsent(logDataCollector, new FilteringLogDataCollector(logDataCollector, Optional.empty()));
     final FilteringLogDataCollector filteringLogDataCollector = ldCollectorsMap.get(logDataCollector);
 
-    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, filteringLogDataCollector, sleepTime, bufferingTime, statsService);
+    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, filteringLogDataCollector, sleepTime, bufferingTime);
     final Thread thread = new Thread(loadingRunnable);
     thread.setDaemon(true);
     thread.start();

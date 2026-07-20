@@ -25,7 +25,6 @@ import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
-import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.gui.actions.TailLogActionListener;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
@@ -55,12 +54,10 @@ public class DragAndDropFilesHandler extends TransferHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropFilesHandler.class.getName());
   private final OtrosApplication otrosApplication;
-  private final StatsService statsService;
 
 
   public DragAndDropFilesHandler(OtrosApplication otrosApplication) {
     this.otrosApplication = otrosApplication;
-    statsService = this.otrosApplication.getServices().getStatsService();
   }
 
   @Override

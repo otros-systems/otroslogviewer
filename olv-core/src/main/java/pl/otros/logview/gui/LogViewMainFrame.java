@@ -182,8 +182,8 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setStatusObserver(observer);
     final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
-    otrosApplication.setServices(new ServicesImpl(otrosApplication));
-    otrosApplication.setLogLoader(new BasicLogLoader(otrosApplication.getServices().getStatsService()));
+    otrosApplication.setServices(new ServicesImpl());
+    otrosApplication.setLogLoader(new BasicLogLoader());
     if (!runningForTests()) {
       SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
     }

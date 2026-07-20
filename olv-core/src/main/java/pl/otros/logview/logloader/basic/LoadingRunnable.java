@@ -16,7 +16,6 @@ import pl.otros.logview.api.loading.Source;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.api.services.StatsService;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -40,11 +39,11 @@ public class LoadingRunnable implements Runnable {
 
   private enum SleepAction {Sleep, Break, Import}
 
-  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, StatsService statsService) {
-    this(source, logImporter, logDataCollector, sleepTime, bufferingTime, Optional.empty(), statsService);
+  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime) {
+    this(source, logImporter, logDataCollector, sleepTime, bufferingTime, Optional.empty());
   }
 
-  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, Optional<AcceptCondition> withAcceptCondition, StatsService statsService) {
+  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, Optional<AcceptCondition> withAcceptCondition) {
     this.source = source;
     filteringLogDataCollector = new FilteringLogDataCollector(logDataCollector, withAcceptCondition);
     this.bufferingTime = bufferingTime;
