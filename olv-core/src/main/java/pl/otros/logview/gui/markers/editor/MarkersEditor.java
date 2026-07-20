@@ -40,7 +40,7 @@ public class MarkersEditor extends JPanel {
   private static final String CARD_LAYOUT_PROPERTIES_BASED = "PROP_BASED";
   private static final String CARD_LAYOUT_NO_SELECTION = "EMPTY";
 
-  private final JList markersList;
+  private final JList<AutomaticMarker> markersList;
   private final MarkerEditor editor;
   private final CardLayout cardLayout;
   private JPanel southPanel;
@@ -54,7 +54,7 @@ public class MarkersEditor extends JPanel {
 
     PluginableElementsContainer<AutomaticMarker> markersContainser = AllPluginables.getInstance().getMarkersContainser();
     markersListModel = new MarkersListModel(markersContainser.getElements());
-    markersList = new JList(markersListModel);
+    markersList = new JList<>(markersListModel);
     markersList.setCellRenderer(new AutomaticMarkerRenderer());
     markersList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     markersList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -62,9 +62,8 @@ public class MarkersEditor extends JPanel {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         if (markersList.getSelectedIndex() > -1) {
-          AutomaticMarker automaticMarker = (AutomaticMarker) markersList.getSelectedValue();
-          if (automaticMarker instanceof PropertyFileAbstractMarker) {
-            PropertyFileAbstractMarker pmark = (PropertyFileAbstractMarker) automaticMarker;
+          AutomaticMarker automaticMarker = markersList.getSelectedValue();
+          if (automaticMarker instanceof PropertyFileAbstractMarker pmark) {
             editor.setViewFromProperties(pmark.toProperties());
 
             cardLayout.show(editorPanel, CARD_LAYOUT_PROPERTIES_BASED);
@@ -114,7 +113,7 @@ public class MarkersEditor extends JPanel {
   protected void setSaveButtonEnable() {
     boolean b = false;
     if (markersListModel.getSize() > 0 && markersList.getSelectedIndex() > -1) {
-      AutomaticMarker selectedValue = (AutomaticMarker) markersList.getSelectedValue();
+      AutomaticMarker selectedValue = markersList.getSelectedValue();
       if (selectedValue instanceof PropertyFileAbstractMarker) {
         b = editor.isChanged();
       }

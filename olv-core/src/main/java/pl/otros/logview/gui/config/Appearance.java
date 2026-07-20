@@ -34,8 +34,8 @@ import javax.swing.plaf.basic.BasicLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Appearance extends AbstractConfigView implements InMainConfig {
@@ -273,7 +273,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       final UIManager.LookAndFeelInfo feelInfo = (UIManager.LookAndFeelInfo) value;
       ((JLabel) component).setText(feelInfo.getName());
       try {
-        final LookAndFeel lf = (LookAndFeel) Class.forName(feelInfo.getClassName()).newInstance();
+        final LookAndFeel lf = (LookAndFeel) Class.forName(feelInfo.getClassName()).getDeclaredConstructor().newInstance();
         component.setBackground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionBackground" : "Label.background"));
         component.setForeground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionForeground" : "Label.foreground"));
         component.setFont(lf.getDefaults().getFont("Label.font"));

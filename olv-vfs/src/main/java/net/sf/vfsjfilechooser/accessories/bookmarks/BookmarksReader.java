@@ -18,10 +18,11 @@ package net.sf.vfsjfilechooser.accessories.bookmarks;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.*;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,9 @@ public final class BookmarksReader {
     entries = new ArrayList<TitledURLEntry>();
     Reader reader = null;
     try {
-      XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser saxParser = factory.newSAXParser();
+      XMLReader xmlReader = saxParser.getXMLReader();
       xmlReader.setContentHandler(new BookmarksHandler());
 
       reader = new BufferedReader(new InputStreamReader(

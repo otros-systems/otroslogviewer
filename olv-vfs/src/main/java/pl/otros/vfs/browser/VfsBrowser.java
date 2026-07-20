@@ -81,7 +81,7 @@ public class VfsBrowser extends JPanel {
   private JTextField pathField;
   private JTable tableFiles;
   private JScrollPane tableScrollPane;
-  private JList favoritesUserList;
+  private JList<Favorite> favoritesUserList;
   private VfsTableModel vfsTableModel;
   private JPanel tablePanel;
   private PreviewComponent previewComponent;
@@ -429,7 +429,7 @@ public class VfsBrowser extends JPanel {
     });
 
 
-    favoritesUserList = new JList(favoritesUserListModel);
+    favoritesUserList = new JList<>(favoritesUserListModel);
     favoritesUserList.setTransferHandler(new MutableListDropHandler(favoritesUserList));
     new MutableListDragListener(favoritesUserList);
     favoritesUserList.setCellRenderer(new FavoriteListCellRenderer());
@@ -474,19 +474,19 @@ public class VfsBrowser extends JPanel {
 
     InputMap inputMap = tableFiles.getInputMap(JComponent.WHEN_FOCUSED);
     inputMap.put(KeyStroke.getKeyStroke("ENTER"), ACTION_OPEN);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), ACTION_APPROVE);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), ACTION_APPROVE);
 
     inputMap.put(KeyStroke.getKeyStroke("BACK_SPACE"), ACTION_GO_UP);
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_GO_UP);
     addPopupMenu(favoritesUserList, ACTION_OPEN, ACTION_EDIT, ACTION_DELETE);
 
-    JList favoriteSystemList = new JList(new Vector<Object>(favSystemLocations));
+    JList<Favorite> favoriteSystemList = new JList<>(new Vector<>(favSystemLocations));
     favoriteSystemList.setCellRenderer(new FavoriteListCellRenderer());
     addOpenActionToList(favoriteSystemList);
     addPopupMenu(favoriteSystemList, ACTION_OPEN);
     favoriteSystemList.addFocusListener(new SelectFirstElementFocusAdapter());
 
-    JList favoriteJVfsList = new JList(new Vector<Object>(favJVfsFileChooser));
+    JList<Favorite> favoriteJVfsList = new JList<>(new Vector<>(favJVfsFileChooser));
     addOpenActionToList(favoriteJVfsList);
     favoriteJVfsList.setCellRenderer(new FavoriteListCellRenderer());
     addPopupMenu(favoriteJVfsList, ACTION_OPEN);
@@ -830,7 +830,7 @@ public class VfsBrowser extends JPanel {
     return currentLocation;
   }
 
-  public MutableListModel getFavoritesUserListModel() {
+  public MutableListModel<Favorite> getFavoritesUserListModel() {
     return favoritesUserListModel;
   }
 

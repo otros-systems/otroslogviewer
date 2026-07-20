@@ -30,6 +30,7 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -237,7 +238,7 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
       FileOutputStream output = null;
       try {
         output = new FileOutputStream(selectedFile);
-        IOUtils.write(text, output);
+        IOUtils.write(text, output, StandardCharsets.UTF_8);
         LogImporterUsingParser log4jImporter = craeteLogImporter(text);
         otrosApplication.getAllPluginables().getLogImportersContainer().addElement(log4jImporter);
       } catch (Exception e) {

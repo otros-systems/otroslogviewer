@@ -27,6 +27,7 @@ import pl.otros.logview.gui.markers.StringMarker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -46,9 +47,10 @@ public class AutomaticMarkerLoader {
     for (String line : defaultMarkers) {
       try {
         Class<?> c = AutomaticMarkerLoader.class.getClassLoader().loadClass(line);
-        AutomaticMarker am = (AutomaticMarker) c.newInstance();
+        AutomaticMarker am = (AutomaticMarker) c.getDeclaredConstructor().newInstance();
         markers.add(am);
-      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException |
+               InvocationTargetException e) {
         LOGGER.error("Error loading class " + line, e);
       }
     }

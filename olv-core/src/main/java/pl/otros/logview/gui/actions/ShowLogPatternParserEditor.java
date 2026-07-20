@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 public class ShowLogPatternParserEditor extends OtrosAction {
@@ -60,7 +61,7 @@ public class ShowLogPatternParserEditor extends OtrosAction {
 
   private String loadDefaultText(String resources) {
     try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources)) {
-      logPatternText = IOUtils.toString(resourceAsStream);
+      logPatternText = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
     } catch (IOException ex) {
       LOGGER.error("Can't load default value of property editor");
     }

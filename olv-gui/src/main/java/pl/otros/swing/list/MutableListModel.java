@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  */
-public class MutableListModel<T> extends AbstractListModel {
+public class MutableListModel<T> extends AbstractListModel<T> {
 
   private final ArrayList<T> list;
 
