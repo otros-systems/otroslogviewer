@@ -23,6 +23,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+tasks.withType(Test).configureEach {
+    jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
+}
+
 
 repositories {
     mavenCentral()
