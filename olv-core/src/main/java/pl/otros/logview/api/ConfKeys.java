@@ -47,7 +47,4 @@ public class ConfKeys {
   public static final String APPEARANCE_LOOK_AND_FEEL = "appearance.lookAndFeel";
   public static final String APPEARANCE_CUSTOM_FONT_SIZE = "appearance.customFontSize";
   public static final String FIRST_USE = "firstUse";
-  public static final String SEND_STATS = "sendStats";
-  public static final String SEND_STATS_NOTIFY = "sendStatsNotify";
-  public static final String NEXT_STATS_SEND_DATE = "nextStatsSendDate";
 }

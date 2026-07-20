@@ -17,7 +17,6 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.services.StatsService;
-import pl.otros.logview.stats.StatsLogDataCollector;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -28,8 +27,6 @@ public class LoadingRunnable implements Runnable {
 
   private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(LoadingRunnable.class);
   private final Source source;
-  private StatsService statsService;
-  private final LogDataCollector logDataCollector;
   private final Optional<Long> bufferingTime;
   private final long sleepTime;
 
@@ -49,18 +46,10 @@ public class LoadingRunnable implements Runnable {
 
   public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime, Optional<AcceptCondition> withAcceptCondition, StatsService statsService) {
     this.source = source;
-    this.statsService = statsService;
     filteringLogDataCollector = new FilteringLogDataCollector(logDataCollector, withAcceptCondition);
     this.bufferingTime = bufferingTime;
     this.sleepTime = sleepTime;
     this.importer = logImporter;
-    String scheme = "";
-    if (source instanceof VfsSource) {
-      scheme = ((VfsSource)source).getFileObject().getName().getScheme();
-    } else if (source instanceof SocketSource) {
-      scheme = "socket";
-    }
-    this.logDataCollector = new StatsLogDataCollector(scheme, filteringLogDataCollector, statsService);
   }
 
   @Override
@@ -75,8 +64,6 @@ public class LoadingRunnable implements Runnable {
   }
 
   private void runWithSocket(SocketSource source) {
-    statsService.importLogsFromScheme("socket");
-    statsService.logParserUsed(importer);
     final ParsingContext parsingContext = new ParsingContext("Socket", "Socket " + source.getSocket().getRemoteSocketAddress());
     importer.initParsingContext(parsingContext);
     try {
@@ -85,7 +72,7 @@ public class LoadingRunnable implements Runnable {
 
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
-      final LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElseGet(() -> logDataCollector);
+      final LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(filteringLogDataCollector, t, configuration)).orElseGet(() -> filteringLogDataCollector);
       LOGGER.debug("Starting main loop");
       while (parsingContext.isParsingInProgress()) {
         try {
@@ -104,10 +91,7 @@ public class LoadingRunnable implements Runnable {
           } else if (SleepAction.Break == action) {
             break;
           } else {
-            Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             importer.importLogs(observableInputStream, collector, parsingContext);
-            Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
-            statsService.bytesRead("socket", afterRead - beforeRead);
           }
 
         } catch (Exception e) {
@@ -124,12 +108,10 @@ public class LoadingRunnable implements Runnable {
 
   private void runWithVfs(VfsSource vfs) {
     try {
-      statsService.importLogsFromScheme(vfs.getFileObject().getName().getScheme());
-      statsService.logParserUsed(importer);
       final LoadingInfo loadingInfo = new LoadingInfo(vfs.getFileObject(), true, vfs.getOpenMode());
       final BaseConfiguration configuration = new BaseConfiguration();
       configuration.setProperty(ConfKeys.TAILING_PANEL_PLAY, true);
-      LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(logDataCollector, t, configuration)).orElse(logDataCollector);
+      LogDataCollector collector = bufferingTime.map(t -> (LogDataCollector) new BufferingLogDataCollectorProxy(filteringLogDataCollector, t, configuration)).orElse(filteringLogDataCollector);
       ParsingContext parsingContext = new ParsingContext(
         loadingInfo.getFileObject().getName().getFriendlyURI(),
         loadingInfo.getFileObject().getName().getBaseName());
@@ -163,10 +145,7 @@ public class LoadingRunnable implements Runnable {
             LOGGER.debug("Log import stopped");
             break;
           } else {
-            Long beforeRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
             importer.importLogs(loadingInfo.getContentInputStream(), collector, parsingContext);
-            Long afterRead = obserableInputStreamImpl.map(ObservableInputStreamImpl::getCurrentRead).orElse(0L);
-            statsService.bytesRead(loadingInfo.getFileObject().getName().getScheme(), afterRead - beforeRead);
             if (!loadingInfo.isTailing() || loadingInfo.getCompression().isCompressed()) {
               break;
             }

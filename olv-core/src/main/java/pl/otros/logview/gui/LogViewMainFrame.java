@@ -72,7 +72,6 @@ import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
 import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
-import pl.otros.logview.stats.StatsSender;
 import pl.otros.logview.updater.VersionUtil;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
@@ -262,10 +261,6 @@ public class LogViewMainFrame extends JFrame {
 
     if (configuration.getBoolean(FIRST_USE, true) && !runningForTests()) {
       new FirstTimeUseWizard().show(this, new InitialConfigurationProcessing(otrosApplication));
-    }
-
-    if (!runningForTests()){
-      new StatsSender().maybeSendStats(this, configuration, otrosApplication.getServices(), runningVersion);
     }
   }
 
@@ -741,7 +736,6 @@ public class LogViewMainFrame extends JFrame {
     helpMenu.add(checkForNewVersion);
     helpMenu.add(new GettingStartedAction(otrosApplication));
     helpMenu.add(new FontSize(otrosApplication, 12));
-    helpMenu.add(new ShowStats(otrosApplication));
     menuBar.add(fileMenu);
     menuBar.add(toolsMenu);
     menuBar.add(pluginsMenu);

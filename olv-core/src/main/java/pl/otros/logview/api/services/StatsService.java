@@ -3,6 +3,7 @@ package pl.otros.logview.api.services;
 import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.importer.LogImporter;
 
+import java.util.Collections;
 import java.util.Map;
 
 public interface StatsService {
@@ -16,4 +17,17 @@ public interface StatsService {
   void jumpToCodeExecuted();
   void contentReadFromIde();
   Map<String, Long> getStats();
+
+  class NoOpStatsService implements StatsService {
+    @Override public void actionExecuted(OtrosAction action) {}
+    @Override public void importLogsFromScheme(String protocol) {}
+    @Override public void filesImportedIntoOneView(int count) {}
+    @Override public void logParserUsed(LogImporter logImporter) {}
+    @Override public void bytesRead(String protocol, long bytes) {}
+    @Override public void logEventsImported(String scheme, long count) {}
+    @Override public void filterUsed(String filter) {}
+    @Override public void jumpToCodeExecuted() {}
+    @Override public void contentReadFromIde() {}
+    @Override public Map<String, Long> getStats() { return Collections.emptyMap(); }
+  }
 }

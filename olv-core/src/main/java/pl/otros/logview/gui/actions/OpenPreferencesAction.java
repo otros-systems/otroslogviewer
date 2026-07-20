@@ -35,8 +35,7 @@ public class OpenPreferencesAction extends OtrosAction {
       new IdeIntegrationConfigView(getOtrosApplication()),
       new SessionsConfig(getOtrosApplication()),
       new SocketReaderConfigView(),
-      new VersionCheckConfigView(),
-      new SendStatsConfigView(getOtrosApplication())
+      new VersionCheckConfigView()
     };
     Action actionAfterSave = new AbstractAction() {
       @Override
