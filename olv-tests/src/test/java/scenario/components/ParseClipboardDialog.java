@@ -6,8 +6,6 @@ import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 
-import static org.awaitility.Awaitility.await;
-
 public class ParseClipboardDialog extends TestComponent<DialogFixture, ParseClipboardDialog> {
 
   public ParseClipboardDialog(Robot robot) {
@@ -19,20 +17,12 @@ public class ParseClipboardDialog extends TestComponent<DialogFixture, ParseClip
     return WindowFinder.findDialog("Import logs from clipboard").using(robot);
   }
 
-  public JTextComponentFixture processedContent() {
-    return me().textBox("importClipboard.processedContent");
-  }
-
-  public JTextComponentFixture processingPattern() {
-    return me().textBox("importClipboard.processingPattern");
-  }
-
   public JTextComponentFixture clipboardTextAreaContent() {
     return me().textBox("importClipboard.content");
   }
 
-  public JButtonFixture refresh() {
-    return me().button("importClipboard.refresh");
+  public boolean isImportEnabled() {
+    return me().button(matcherForButtonWithText("Import")).target().isEnabled();
   }
 
   public LogViewPanel importLogs() {
@@ -40,11 +30,12 @@ public class ParseClipboardDialog extends TestComponent<DialogFixture, ParseClip
     return new LogViewPanel(new MainFrame(robot).me(),robot);
   }
 
+  public void pasteClipboard() {
+    me().button("importClipboard.refresh").click();
+  }
+
   public JButtonFixture cancel() {
     return me().button(matcherForButtonWithText("Cancel"));
   }
 
-  public void waitForProcessedContent(String content) {
-    await().until(() -> processedContent().text().equals(content));
-  }
 }

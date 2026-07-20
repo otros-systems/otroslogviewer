@@ -37,18 +37,6 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   }
 
   @Test(retryAnalyzer = RetryAnalyzer.class)
-  public void processClipboardWithUnixCommand() {
-    setClipboard("line1\nline2\nline3");
-    final MainFrame mainFrame = new MainFrame(robot());
-    final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
-
-    dialog.processingPattern().setText("sed s/line/entry/g | grep 1 | cut -c 5-6");
-
-    await().ignoreExceptions().until(() -> dialog.processedContent().text().equals("y1"));
-
-  }
-
-  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void importLogsFromClipboard() throws Exception {
     final File tempFile = File.createTempFile("olv", "logs");
     logEvents(tempFile, 10, integer -> Level.INFO);
@@ -58,21 +46,23 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
     final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
 
     setClipboard(logsInClipboard);
-    dialog.refresh().click();
+    dialog.pasteClipboard();
 
-    dialog.waitForProcessedContent(logsInClipboard);
-    assertThat(dialog.processedContent().text()).isEqualTo(logsInClipboard);
+    await("waiting for log importer detection")
+      .atMost(Duration.TEN_SECONDS)
+      .until(() -> dialog.clipboardTextAreaContent().text().equals(logsInClipboard));
 
-    dialog.processingPattern().setText("sed s/Message/XXX/g");
+    await("waiting for import button to be enabled")
+      .atMost(Duration.TEN_SECONDS)
+      .until(dialog::isImportEnabled);
 
-    dialog.waitForProcessedContent(logsInClipboard.replaceAll("Message", "XXX"));
     final LogViewPanel logViewPanel = dialog.importLogs();
 
     await("waiting for 10 events in log table")
       .atMost(Duration.ONE_MINUTE)
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
     IntStream.range(0, 9)
-      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "XXX " + i));
+      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "Message " + i));
 
   }
 
