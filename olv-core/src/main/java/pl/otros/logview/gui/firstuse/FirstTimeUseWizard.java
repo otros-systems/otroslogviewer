@@ -26,8 +26,6 @@ public class FirstTimeUseWizard {
             case 0:
               return new LookAndFeelPage();
             case 1:
-              return new IdeIntegrationPage();
-            case 2:
               return new LogPatternsPage();
             default:
               throw new IllegalArgumentException("No page found, size = " + path.size());
@@ -62,8 +60,6 @@ public class FirstTimeUseWizard {
         wizard.setVisible(false);
         wizard.dispose();
         final String lookAndFeelClassname = (String) settings.get(Config.LOOK_AND_FEEL);
-        final String ideHost = (String) settings.get(Config.IDE_HOST);
-        final Integer idePort = (Integer) settings.get(Config.IDE_PORT);
         final Boolean checkForNewVersion = settings.containsKey(Config.CHECK_FOR_NEW_VERSION)?(Boolean) settings.get(Config.CHECK_FOR_NEW_VERSION):Boolean.TRUE;
 
         final Collection<LogPattern> logPatterns = ((LogPatterns) settings.get(Config.LOG_PATTERNS)).getLogPatterns();
@@ -71,7 +67,6 @@ public class FirstTimeUseWizard {
         callback.apply(
           new InitialConfiguration(lookAndFeelClassname,
             logPatterns,
-            new IdeConfiguration(ideHost, idePort),
             checkForNewVersion
           )
         );

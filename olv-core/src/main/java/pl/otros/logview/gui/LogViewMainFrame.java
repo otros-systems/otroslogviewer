@@ -17,7 +17,6 @@ package pl.otros.logview.gui;
 
 import ch.qos.logback.classic.util.ContextInitializer;
 import com.google.common.base.Throwables;
-import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.negusoft.singleinstance.SingleInstance;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
@@ -29,7 +28,6 @@ import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
@@ -56,7 +54,7 @@ import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.update.MessageUpdateUtils;
 import pl.otros.logview.gui.renderers.MarkerColorsComboBoxRenderer;
-import pl.otros.logview.gui.services.jumptocode.ServicesImpl;
+import pl.otros.logview.gui.services.ServicesImpl;
 import pl.otros.logview.gui.suggestion.PersistedSuggestionSource;
 import pl.otros.logview.gui.suggestion.SearchSuggestionRenderer;
 import pl.otros.logview.gui.suggestion.SearchSuggestionSource;
@@ -64,8 +62,6 @@ import pl.otros.logview.gui.tip.TipOfTheDay;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.gui.util.LookAndFeelUtil;
-import pl.otros.logview.ide.IdeAvailabilityCheck;
-import pl.otros.logview.ide.IdeIntegrationConfigAction;
 import pl.otros.logview.loader.IconsLoader;
 import pl.otros.logview.loader.LvDynamicLoader;
 import pl.otros.logview.logloader.basic.BasicLogLoader;
@@ -93,7 +89,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import static pl.otros.logview.api.ConfKeys.*;
@@ -201,9 +196,6 @@ public class LogViewMainFrame extends JFrame {
     memoryUsedUpdater.start();
     JPanel statusPanel = new JPanel(new MigLayout("fill", "[fill, push, grow][right][right]", "[]"));
     statusPanel.add(statusLabel);
-    final JButton ideConnectedLabel = new JButton(Ide.IDEA.getIconDiscounted());
-    statusPanel.add(ideConnectedLabel);
-    statusPanel.add(new JButton(new SwitchAutoJump(otrosApplication)));
     statusPanel.add(heapBar);
 
     initMenu();
@@ -253,11 +245,6 @@ public class LogViewMainFrame extends JFrame {
       new StatusObserverExceptionHandler(observer)
     );
     Thread.setDefaultUncaughtExceptionHandler(listUncaughtExceptionHandlers);
-    ListeningScheduledExecutorService listeningScheduledExecutorService = otrosApplication.getServices().getTaskSchedulerService().getListeningScheduledExecutorService();
-    listeningScheduledExecutorService.scheduleAtFixedRate(
-      new IdeAvailabilityCheck(ideConnectedLabel, otrosApplication.getServices().getJumpToCodeService()),
-      25, 25, TimeUnit.SECONDS);
-    ideConnectedLabel.addActionListener(new IdeIntegrationConfigAction(otrosApplication));
 
     if (configuration.getBoolean(FIRST_USE, true) && !runningForTests()) {
       new FirstTimeUseWizard().show(this, new InitialConfigurationProcessing(otrosApplication));

@@ -26,7 +26,6 @@ import pl.otros.logview.api.plugins.Plugin;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.message.SoapMessageFormatter;
 import pl.otros.logview.gui.message.json.JsonMessageFormatter;
-import pl.otros.logview.gui.message.stacktracecode.StackTraceFormatterPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -109,7 +108,6 @@ public class LvDynamicLoader {
   }
 
   private void loadPlugins() {
-    pluginInfos.add(new StackTraceFormatterPlugin());
     pluginInfos.addAll(baseLoader.load(AllPluginables.USER_PLUGINS, Plugin.class));
     pluginInfos.addAll(baseLoader.load(AllPluginables.SYSTEM_PLUGINS, Plugin.class));
     ArrayList<PluginablePluginAdapter> pluList = pluginInfos.stream().map(PluginablePluginAdapter::new).collect(Collectors.toCollection(ArrayList::new));

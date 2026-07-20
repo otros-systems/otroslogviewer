@@ -2,13 +2,8 @@ package pl.otros.logview.gui.firstuse;
 
 import com.github.cjwizard.WizardPage;
 import com.github.cjwizard.WizardSettings;
-import com.google.common.base.Joiner;
 import com.google.common.io.Files;
-import org.apache.commons.configuration.BaseConfiguration;
-import pl.otros.logview.api.ConfKeys;
-import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.gui.Icons;
-import pl.otros.logview.gui.services.jumptocode.JumpToCodeServiceImpl;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.util.LoggerConfigUtil;
 import pl.otros.swing.functional.DocumentChangeListener;
@@ -24,10 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 class LogPatternsPage extends WizardPage {
@@ -36,7 +29,6 @@ class LogPatternsPage extends WizardPage {
   private final DefaultStyledDocument styledDocument;
   private final JTextPane resultTextPane;
   private final Style defaultStyle;
-  private final JButton importFromIdeButton;
   private JFileChooser jFileChooser;
 
   LogPatternsPage() {
@@ -56,13 +48,6 @@ class LogPatternsPage extends WizardPage {
         importFile();
       }
     }));
-    importFromIdeButton = new JButton(new AbstractAction("Import from IDE") {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        importFromIde();
-      }
-    });
-    toolbar.add(importFromIdeButton);
 
     loggerConfigTextPane = new JTextPane();
     loggerConfigTextPane.setText("Paste logback, log4j configuration files of just list of log patterns");
@@ -86,32 +71,6 @@ class LogPatternsPage extends WizardPage {
     panel.add(scrollPaneForResult);
     add(toolbar, BorderLayout.NORTH);
     add(panel);
-  }
-
-
-  private void importFromIde() {
-    final BaseConfiguration configuration = new BaseConfiguration();
-    final WizardSettings settings = this.getController().getSettings();
-    configuration.setProperty(ConfKeys.JUMP_TO_CODE_HOST, settings.get(Config.IDE_HOST));
-    configuration.setProperty(ConfKeys.JUMP_TO_CODE_PORT, settings.get(Config.IDE_PORT));
-    loggerConfigTextPane.setEditable(false);
-    loggerConfigTextPane.setText("Importing log patterns from IDE");
-    new SwingWorker<Set<String>, Void>() {
-      @Override
-      protected Set<String> doInBackground() throws Exception {
-        return new JumpToCodeServiceImpl(configuration).loggerPatterns();
-      }
-
-      @Override
-      protected void done() {
-        try {
-          loggerConfigTextPane.setEditable(true);
-          loggerConfigTextPane.setText(Joiner.on("\n").join(get()));
-        } catch (InterruptedException | ExecutionException e) {
-          e.printStackTrace();
-        }
-      }
-    }.execute();
   }
 
   private void initFileChooser() {
@@ -171,7 +130,7 @@ class LogPatternsPage extends WizardPage {
     } catch (BadLocationException ignore) {
     }
     if (resultList.isEmpty()) {
-      resultTextPane.setText("No logger patterns detected in project opened in IDE.");
+      resultTextPane.setText("No logger patterns detected.");
     }
 
   }
@@ -194,14 +153,6 @@ class LogPatternsPage extends WizardPage {
   @Override
   public void rendering(List<WizardPage> path, WizardSettings settings) {
     super.rendering(path, settings);
-    final Optional<Ide> ide = Optional.ofNullable((Ide) settings.get("ide"));
-    ide.ifPresent(i -> {
-      if (i != Ide.DISCONNECTED) {
-        importFromIde();
-      }
-      importFromIdeButton.setIcon(i.getIconConnected());
-    });
-    importFromIdeButton.setEnabled(ide.map(i -> i != Ide.DISCONNECTED).orElse(false));
   }
 
   @Override

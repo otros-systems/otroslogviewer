@@ -32,7 +32,6 @@ public class OpenPreferencesAction extends OtrosAction {
       new GeneralConfigView(),
       new Appearance(getOtrosApplication()),
       new LogTableFormatConfigView(getOtrosApplication()),
-      new IdeIntegrationConfigView(getOtrosApplication()),
       new SessionsConfig(getOtrosApplication()),
       new SocketReaderConfigView(),
       new VersionCheckConfigView()

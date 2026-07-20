@@ -14,8 +14,6 @@ public interface StatsService {
   void bytesRead(String protocol, long bytes);
   void logEventsImported(String scheme, long count);
   void filterUsed(String filter);
-  void jumpToCodeExecuted();
-  void contentReadFromIde();
   Map<String, Long> getStats();
 
   class NoOpStatsService implements StatsService {
@@ -26,8 +24,6 @@ public interface StatsService {
     @Override public void bytesRead(String protocol, long bytes) {}
     @Override public void logEventsImported(String scheme, long count) {}
     @Override public void filterUsed(String filter) {}
-    @Override public void jumpToCodeExecuted() {}
-    @Override public void contentReadFromIde() {}
     @Override public Map<String, Long> getStats() { return Collections.emptyMap(); }
   }
 }

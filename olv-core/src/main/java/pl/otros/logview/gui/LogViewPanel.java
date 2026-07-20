@@ -41,7 +41,6 @@ import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.renderers.*;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
-import pl.otros.logview.gui.util.JumpToCodeSelectionListener;
 import pl.otros.logview.pluginable.PluginableElementNameComparator;
 import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.logview.util.DateUtil;
@@ -272,7 +271,6 @@ public class LogViewPanel extends LogViewPanelI {
     table.getSelectionModel().addListSelectionListener(messageDetailListener);
     dataTableModel.addNoteObserver(messageDetailListener);
 
-    table.getSelectionModel().addListSelectionListener(new JumpToCodeSelectionListener(otrosApplication, dataTableModel, table, 100));
 
     JTextArea notes = new JTextArea();
     notes.setEditable(false);
