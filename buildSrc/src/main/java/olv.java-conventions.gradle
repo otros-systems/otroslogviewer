@@ -62,7 +62,6 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.+'
     implementation 'commons-collections:commons-collections:3.2.1'
     implementation 'commons-configuration:commons-configuration:1.+'
-    implementation 'commons-digester:commons-digester:2.1'
     implementation 'commons-httpclient:commons-httpclient:3.1'
     implementation 'commons-io:commons-io:2.+'
     implementation 'commons-lang:commons-lang:2.+'
