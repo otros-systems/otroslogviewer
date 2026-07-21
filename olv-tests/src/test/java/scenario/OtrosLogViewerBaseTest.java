@@ -16,7 +16,7 @@ public class OtrosLogViewerBaseTest extends AssertJSwingTestngTestCase {
 
   @Override
   protected void onSetUp() {
-    System.setProperty("runForScenarioTest", "true");
+    System.setProperty(LogViewMainFrame.RUN_FOR_SCENARIO_TEST, "true");
 
     ApplicationLauncher.application(LogViewMainFrame.class).start();
   }

@@ -2,6 +2,7 @@ package pl.otros.logview.gui.firstuse;
 
 import com.github.cjwizard.*;
 import pl.otros.logview.gui.GuiUtils;
+import pl.otros.logview.gui.util.LookAndFeelUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,8 @@ public class FirstTimeUseWizard {
       public void onFinished(List<WizardPage> path, WizardSettings settings) {
         wizard.setVisible(false);
         wizard.dispose();
-        final String lookAndFeelClassname = (String) settings.get(Config.LOOK_AND_FEEL);
+        String lookAndFeelClassname = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault((String) settings.get(Config.LOOK_AND_FEEL));
+
         final Boolean checkForNewVersion = settings.containsKey(Config.CHECK_FOR_NEW_VERSION)?(Boolean) settings.get(Config.CHECK_FOR_NEW_VERSION):Boolean.TRUE;
 
         final Collection<LogPattern> logPatterns = ((LogPatterns) settings.get(Config.LOG_PATTERNS)).getLogPatterns();

@@ -3,10 +3,9 @@ package pl.otros.logview.gui.firstuse;
 import com.github.cjwizard.WizardPage;
 import com.github.cjwizard.WizardSettings;
 import net.miginfocom.swing.MigLayout;
-import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
-import org.pushingpixels.radiance.theming.api.skin.RadianceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.gui.util.LookAndFeelUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -66,9 +65,9 @@ public class LookAndFeelPage extends WizardPage {
   public boolean onNext(WizardSettings settings) {
     LookAndFeel lookAndFeel;
     if (light.isSelected()) {
-      lookAndFeel = new RadianceBusinessLookAndFeel();
+      lookAndFeel = LookAndFeelUtil.getLightLookAndFeel();
     } else if (dark.isSelected()) {
-      lookAndFeel = new RadianceGraphiteAquaLookAndFeel();
+      lookAndFeel = LookAndFeelUtil.getDarkLookAndFeel();
     } else {
       return true;
     }

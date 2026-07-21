@@ -24,7 +24,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.lang.StringUtils;
-import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessBlackSteelLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
@@ -304,7 +303,8 @@ public class LogViewMainFrame extends JFrame {
         FontSize.setDefaultSize(fontSize);
       }
 
-      LookAndFeelUtil.initLf(c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, RadianceBusinessBlackSteelLookAndFeel.class.getName()));
+      String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()));
+      LookAndFeelUtil.initLf(lookAndFeelName);
       final OtrosConfiguration c1 = new OtrosConfiguration(c);
       final LogViewMainFrame mf = new LogViewMainFrame(c1);
       mf.addComponentListener(new ComponentAdapter() {
