@@ -55,6 +55,10 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
 
+    //jna is needed for the PageantConnector to use the Pageant with sftp connections
+    implementation 'net.java.dev.jna:jna-jpms:5.19.1'
+    implementation 'net.java.dev.jna:jna-platform-jpms:5.19.1'
+
     //Not used anymore?
 //    implementation 'org.apache.commons:commons-compress:1.28.0'
 
