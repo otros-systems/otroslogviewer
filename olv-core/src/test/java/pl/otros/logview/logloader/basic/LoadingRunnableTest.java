@@ -25,7 +25,6 @@ import pl.otros.logview.parser.JulSimpleFormatterParser;
 import pl.otros.logview.parser.json.JsonLogParser;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
-import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -317,7 +316,6 @@ public class LoadingRunnableTest {
     }
   }
 
-  @Nonnull
   private LoadingRunnable createLoadingRunnable(LogImporter logImporter) {
     return new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
   }

@@ -6,7 +6,6 @@ import org.assertj.swing.fixture.AbstractComponentFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +37,6 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
     return (U) this;
   }
 
-  @Nonnull
   public final Boolean isVisible() {
     try {
       me().focus();
