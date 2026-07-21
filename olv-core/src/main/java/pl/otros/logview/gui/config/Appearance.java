@@ -5,8 +5,8 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.jdesktop.swingx.JXHyperlink;
-import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
-import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
@@ -137,8 +137,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
     listOfColorsInSchme.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
       final Component component = new DefaultListCellRenderer()
         .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      if (component instanceof JLabel) {
-        JLabel jl = (JLabel) component;
+      if (component instanceof JLabel jl) {
         jl.setText(value.getName());
         jl.setIcon(new ColorIcon(otrosApplication.getTheme().getColor(value)));
       }
@@ -205,19 +204,18 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
     final List<UIManager.LookAndFeelInfo> installed = Arrays
       .stream(UIManager.getInstalledLookAndFeels())
       .filter(ui -> !ui.getName().toLowerCase().matches("cde/motif|metal|windows classic|nimbus"))
-      .collect(Collectors.toList());
+      .toList();
 
     final List<BasicLookAndFeel> substance = Arrays.asList(
-      new SubstanceBusinessLookAndFeel(),
-      new SubstanceGraphiteAquaLookAndFeel()
+      new RadianceBusinessLookAndFeel(),
+      new RadianceGraphiteAquaLookAndFeel()
     );
 
     final List<UIManager.LookAndFeelInfo> extraLf =
       substance.stream()
         .map(l -> new UIManager.LookAndFeelInfo(l.getName(), l.getClass().getName()))
-        .collect(Collectors.toList());
-    final ArrayList<UIManager.LookAndFeelInfo> result = new ArrayList<>();
-    result.addAll(installed);
+        .toList();
+    final List<UIManager.LookAndFeelInfo> result = new ArrayList<>(installed);
     result.addAll(extraLf);
     return result.toArray(new UIManager.LookAndFeelInfo[0]);
   }

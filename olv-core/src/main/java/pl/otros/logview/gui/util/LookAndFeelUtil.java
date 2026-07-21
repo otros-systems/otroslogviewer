@@ -18,11 +18,12 @@ public class LookAndFeelUtil {
   public static void initLf(String lookAndFeel) {
     try {
       OtrosSplash.setMessage("Loading L&F " + lookAndFeel);
-      LOGGER.debug("Initializing look and feel: " + lookAndFeel);
+      LOGGER.debug("Initializing look and feel: {}", lookAndFeel);
       LookAndFeelAddons.contribute(new Addon());
       UIManager.setLookAndFeel(lookAndFeel);
-    } catch (Throwable e1) {
-      LOGGER.warn("Cannot initialize LookAndFeel: " + e1.getMessage());
+    } catch (RuntimeException | ClassNotFoundException | InstantiationException | IllegalAccessException |
+             UnsupportedLookAndFeelException e1) {
+      LOGGER.warn("Cannot initialize LookAndFeel: {}", e1.getMessage());
     }
   }
 

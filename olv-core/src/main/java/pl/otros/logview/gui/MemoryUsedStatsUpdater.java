@@ -15,8 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import org.pushingpixels.trident.Timeline;
-import org.pushingpixels.trident.ease.Sine;
+
+import org.pushingpixels.radiance.animation.api.Timeline;
+import org.pushingpixels.radiance.animation.api.ease.Sine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,12 +69,13 @@ public class MemoryUsedStatsUpdater implements Runnable {
       final String message = String.format("Used %sMB of %sMB", nf.format((percentUsed * heapSize / (100 * 1024 * 1024))), nf.format(heapSize / (1024 * 1024)));
       final String toolTip = message
         + String.format(". Total available for VM %sMB. Double click to invoke System.gc()", nf.format(heapMaxSize / (1024 * 1024)));
-      Timeline timeline = new Timeline(bar);
-      timeline.addPropertyToInterpolate("value", bar.getValue(), (int) percentUsed);
-      timeline.addPropertyToInterpolate("foreground", bar.getForeground(), newColor);
-      timeline.setEase(new Sine());
-      timeline.setDuration(1200);
-      timeline.play();
+      Timeline.builder(bar)
+        .addPropertyToInterpolate("value", bar.getValue(), (int) percentUsed)
+        .addPropertyToInterpolate("foreground", bar.getForeground(), newColor)
+        .setEase(new Sine())
+        .setDuration(1200)
+        .build()
+        .play();
       SwingUtilities.invokeLater(() -> {
         bar.setString(message);
         bar.setToolTipText(toolTip);

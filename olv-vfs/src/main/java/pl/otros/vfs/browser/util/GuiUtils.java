@@ -16,7 +16,8 @@
 
 package pl.otros.vfs.browser.util;
 
-import org.pushingpixels.trident.Timeline;
+
+import org.pushingpixels.radiance.animation.api.Timeline;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,9 +43,10 @@ public class GuiUtils {
   }
 
   public static void blinkComponent(JComponent component){
-    final Timeline timeline = new Timeline(component);
-    timeline.addPropertyToInterpolate("background", component.getBackground(), GuiUtils.getAverageColor(component.getBackground(), component.getForeground()));
-    timeline.setDuration(150);
-    timeline.playLoop(2, Timeline.RepeatBehavior.REVERSE);
+    Timeline.builder(component)
+      .addPropertyToInterpolate("background", component.getBackground(), GuiUtils.getAverageColor(component.getBackground(), component.getForeground()))
+      .setDuration(150)
+      .build()
+      .playLoop(2, Timeline.RepeatBehavior.REVERSE);
   }
 }

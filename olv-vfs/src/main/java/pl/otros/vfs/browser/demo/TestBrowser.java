@@ -21,8 +21,7 @@ import org.apache.commons.configuration.DataConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
-import org.pushingpixels.substance.api.skin.SubstanceModerateLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceModerateLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.vfs.browser.SelectionMode;
@@ -33,11 +32,7 @@ import pl.otros.vfs.browser.table.FileSize;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class TestBrowser {
@@ -125,7 +120,7 @@ public class TestBrowser {
   private static void tryLoadSubstanceLookAndFeel() {
     if (!StringUtils.isNotBlank(System.getProperty("swing.defaultlaf", ""))) {//NON-NLS
       try {
-        SubstanceLookAndFeel lookAndFeel = new SubstanceModerateLookAndFeel();
+        RadianceModerateLookAndFeel lookAndFeel = new RadianceModerateLookAndFeel();
         UIManager.setLookAndFeel(lookAndFeel);
       } catch (UnsupportedLookAndFeelException e) {
         LOGGER.info("Can't change look and feel: ", e);//NON-NLS
