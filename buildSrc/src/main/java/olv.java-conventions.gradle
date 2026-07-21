@@ -24,6 +24,7 @@ java {
 }
 
 tasks.withType(Test).configureEach {
+    useTestNG()
     jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED',
             '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
 }
@@ -75,4 +76,5 @@ dependencies {
     testImplementation 'uk.co.datumedge:hamcrest-json:0.2'
     testImplementation 'org.awaitility:awaitility:2.0.0'
     testImplementation 'org.assertj:assertj-swing-testng:3.5.0'
+    //testImplementation 'org.assertj:assertj-swing-testng:3.17.1'
 }
