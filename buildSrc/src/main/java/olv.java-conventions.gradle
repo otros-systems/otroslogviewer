@@ -31,10 +31,6 @@ tasks.withType(Test).configureEach {
 
 repositories {
     mavenCentral()
-    maven {
-        //Repo for cjwizard library. https://mvnrepository.com/ not working
-        url = "https://jitpack.io/"
-    }
     flatDir {
         //embedded repo for custom libraries
         dirs = ['../libs']
@@ -42,7 +38,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.cjwizard:cjwizard:cjwizard-1.0.9.1'
     implementation 'org.pushing-pixels:radiance-theming:9.0.0'
     implementation 'org.pushing-pixels:radiance-animation:9.0.0'
     implementation ':OtrosSingleInstance:1.3'

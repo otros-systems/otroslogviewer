@@ -1,7 +1,5 @@
 package pl.otros.logview.gui.firstuse;
 
-import com.github.cjwizard.WizardPage;
-import com.github.cjwizard.WizardSettings;
 import com.google.common.io.Files;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
@@ -23,7 +21,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class LogPatternsPage extends WizardPage {
+class LogPatternsPage extends JPanel implements FirstUsePage {
 
   private final JTextPane loggerConfigTextPane;
   private final DefaultStyledDocument styledDocument;
@@ -32,7 +30,6 @@ class LogPatternsPage extends WizardPage {
   private JFileChooser jFileChooser;
 
   LogPatternsPage() {
-    super("Log patterns", "");
     initFileChooser();
     setLayout(new BorderLayout());
     final JPanel toolbar = new JPanel(new FlowLayout());
@@ -151,14 +148,24 @@ class LogPatternsPage extends WizardPage {
   }
 
   @Override
-  public void rendering(List<WizardPage> path, WizardSettings settings) {
-    super.rendering(path, settings);
+  public String getTitle() {
+    return "Log patterns";
   }
 
   @Override
-  public boolean onNext(WizardSettings settings) {
+  public String getDescription() {
+    return "";
+  }
+
+  @Override
+  public JComponent getView() {
+    return this;
+  }
+
+  @Override
+  public boolean onNext(WizardContext settings) {
     settings.put(Config.LOG_PATTERNS, new LogPatterns(getLogPatterns(loggerConfigTextPane.getText())));
-    return super.onNext(settings);
+    return true;
   }
 
 }

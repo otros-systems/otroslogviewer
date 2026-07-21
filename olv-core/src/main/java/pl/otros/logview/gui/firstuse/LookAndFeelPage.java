@@ -1,7 +1,5 @@
 package pl.otros.logview.gui.firstuse;
 
-import com.github.cjwizard.WizardPage;
-import com.github.cjwizard.WizardSettings;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class LookAndFeelPage extends WizardPage {
+public class LookAndFeelPage extends JPanel implements FirstUsePage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoggerFactory.class);
 
@@ -24,7 +22,6 @@ public class LookAndFeelPage extends WizardPage {
   private final JRadioButton dark;
 
   LookAndFeelPage() {
-    super("Look and Feel", "");
     ImageIcon lightIcon = null;
     ImageIcon darkIcon = null;
     try {
@@ -62,7 +59,23 @@ public class LookAndFeelPage extends WizardPage {
     this.add(darkLabel, "gapx 40");
   }
 
-  public boolean onNext(WizardSettings settings) {
+  @Override
+  public String getTitle() {
+    return "Look and Feel";
+  }
+
+  @Override
+  public String getDescription() {
+    return "";
+  }
+
+  @Override
+  public JComponent getView() {
+    return this;
+  }
+
+  @Override
+  public boolean onNext(WizardContext settings) {
     LookAndFeel lookAndFeel;
     if (light.isSelected()) {
       lookAndFeel = LookAndFeelUtil.getLightLookAndFeel();
