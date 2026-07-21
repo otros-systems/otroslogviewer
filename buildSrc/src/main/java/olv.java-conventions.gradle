@@ -38,7 +38,7 @@ dependencies {
     implementation 'org.pushing-pixels:radiance-animation:9.0.0'
     implementation 'commons-net:commons-net:3.13.0'
     implementation 'org.jcommander:jcommander:3.0'
-    implementation 'com.google.guava:guava:23.0'
+    implementation 'com.google.guava:guava:33.6.0-jre'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.mwiede:jsch:0.2.0'
     implementation 'net.java.dev.jna:jna-jpms:5.10.0'//newer version 5.11.0 exists

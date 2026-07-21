@@ -16,12 +16,6 @@
 
 package pl.otros.logview.api.plugins;
 
-
-import com.google.common.annotations.Beta;
-
-/**
- */
-@Beta
 public interface Plugin {
 
   int PLUGIN_VERSION_1 = 1;
