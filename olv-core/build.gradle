@@ -51,11 +51,12 @@ shadowJar {
 }
 
 
-task runWithJavaExec(type: JavaExec) {
-        group = "Execution"
-        description = "Run the main class with JavaExecTask"
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass.set("pl.otros.logview.gui.LogViewMainFrame")
+tasks.register('runWithJavaExec', JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass.set("pl.otros.logview.gui.LogViewMainFrame")
+    jvmArgs = ['--add-opens', 'java.base/java.util=ALL-UNNAMED', '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED']
 }
 
 //This configuration shares the output from the shadowJar task for other modules to consume it
