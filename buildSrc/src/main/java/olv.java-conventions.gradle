@@ -58,6 +58,9 @@ dependencies {
 //    implementation 'org.apache.commons:commons-compress:1.28.0'
 
     implementation 'org.apache.commons:commons-vfs2:2.10.0'
+    //httpclient5 is needed to load logfiles via vfs2
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+
     implementation 'org.swinglabs.swingx:swingx-all:1.+'
     implementation 'org.swinglabs:jxlayer:3.0.4'
     implementation 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
