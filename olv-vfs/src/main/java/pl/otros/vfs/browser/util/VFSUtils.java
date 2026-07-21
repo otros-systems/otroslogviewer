@@ -18,7 +18,6 @@ package pl.otros.vfs.browser.util;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.jcraft.jsch.JSchException;
-import jcifs.smb.SmbAuthException;
 import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -367,12 +366,8 @@ public final class VFSUtils {
       return checkForWrongCredentials(exception.getCause());
     } else {
       String message = exception.getMessage();
-      return
-        exception instanceof SmbAuthException && message.contains("The specified network password is not correct") ||
-          exception instanceof JSchException && message.contains("Auth fail");
+      return exception instanceof JSchException && message.contains("Auth fail");
     }
-
-
   }
 
   /**
