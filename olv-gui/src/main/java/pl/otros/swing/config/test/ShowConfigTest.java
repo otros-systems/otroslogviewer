@@ -2,7 +2,7 @@ package pl.otros.swing.config.test;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.DataConfiguration;
-import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
 import pl.otros.swing.config.ConfigComponent;
 import pl.otros.swing.config.ConfigView;
 import pl.otros.swing.config.provider.ConfigurationProvider;
@@ -14,7 +14,7 @@ import java.io.File;
 
 public class ShowConfigTest {
   public static void main(String[] args) throws UnsupportedLookAndFeelException {
-    final SubstanceBusinessBlackSteelLookAndFeel newLookAndFeel = new SubstanceBusinessBlackSteelLookAndFeel();
+    final RadianceBusinessLookAndFeel newLookAndFeel = new RadianceBusinessLookAndFeel();
     UIManager.setLookAndFeel(newLookAndFeel);
     DataConfiguration configuration = new DataConfiguration(new BaseConfiguration());
     ConfigurationProvider configurationProvider = new ConfigurationProviderImpl(configuration, new File(System.getProperty("java.io.tmpdir")));

@@ -3,8 +3,8 @@ package pl.otros.logview.gui.firstuse;
 import com.github.cjwizard.WizardPage;
 import com.github.cjwizard.WizardSettings;
 import net.miginfocom.swing.MigLayout;
-import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
-import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +66,9 @@ public class LookAndFeelPage extends WizardPage {
   public boolean onNext(WizardSettings settings) {
     LookAndFeel lookAndFeel;
     if (light.isSelected()) {
-      lookAndFeel = new SubstanceBusinessLookAndFeel();
+      lookAndFeel = new RadianceBusinessLookAndFeel();
     } else if (dark.isSelected()) {
-      lookAndFeel = new SubstanceGraphiteAquaLookAndFeel();
+      lookAndFeel = new RadianceGraphiteAquaLookAndFeel();
     } else {
       return true;
     }

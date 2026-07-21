@@ -15,9 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import org.pushingpixels.trident.Timeline;
-import org.pushingpixels.trident.Timeline.RepeatBehavior;
-import org.pushingpixels.trident.ease.Sine;
+import org.pushingpixels.radiance.animation.api.Timeline;
+import org.pushingpixels.radiance.animation.api.ease.Sine;
 import pl.otros.logview.api.StatusObserver;
 
 import javax.swing.*;
@@ -50,11 +49,12 @@ public class JLabelStatusObserver implements StatusObserver {
       label.setBackground(colorNormal);
     } else {
       Color blinkColor = (level == LEVEL_WARNING) ? colorWarning : colorError;
-      Timeline timeline = new Timeline(label);
-      timeline.setDuration(200);
-      timeline.setEase(new Sine());
-      timeline.addPropertyToInterpolate("background", colorNormal, blinkColor);
-      timeline.playLoop(8, RepeatBehavior.REVERSE);
+      Timeline.builder(label)
+        .setDuration(200)
+        .setEase(new Sine())
+        .addPropertyToInterpolate("background", colorNormal, blinkColor)
+        .build()
+        .playLoop(8, Timeline.RepeatBehavior.REVERSE);
     }
   }
 

@@ -15,9 +15,9 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import org.pushingpixels.trident.Timeline.RepeatBehavior;
-import org.pushingpixels.trident.ease.Sine;
-import org.pushingpixels.trident.swing.SwingRepaintTimeline;
+import org.pushingpixels.radiance.animation.api.Timeline.RepeatBehavior;
+import org.pushingpixels.radiance.animation.api.ease.Sine;
+import org.pushingpixels.radiance.animation.api.swing.SwingRepaintTimeline;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,10 +47,11 @@ public class JAnimatedLogo extends JLabel {
     LogoIcon icon = new LogoIcon();
     this.setIcon(icon);
 
-    timeLine = new SwingRepaintTimeline(this);
-    timeLine.addPropertyToInterpolate("alpha", 0, 45);
-    timeLine.setDuration(800);
-    timeLine.setEase(new Sine());
+    timeLine = SwingRepaintTimeline.repaintBuilder(this)
+      .addPropertyToInterpolate("alpha", 0, 45)
+      .setDuration(800)
+      .setEase(new Sine())
+      .build();
   }
 
   class LogoIcon implements Icon {
