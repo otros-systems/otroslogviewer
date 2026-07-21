@@ -19,7 +19,6 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
-import pl.otros.logview.api.services.EmptyStatsService;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 import pl.otros.logview.importer.UtilLoggingXmlLogImporter;
 import pl.otros.logview.parser.JulSimpleFormatterParser;
@@ -132,7 +131,7 @@ public class LoadingRunnableTest {
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
 
     //when
-    underTest = new LoadingRunnable(vfsSource, getJulLogParser(), collector, 100, Optional.empty(), new EmptyStatsService());
+    underTest = new LoadingRunnable(vfsSource, getJulLogParser(), collector, 100, Optional.empty());
     executorService.submit(underTest);
 
     await().until(() -> collector.getCount() > 0);
@@ -206,7 +205,7 @@ public class LoadingRunnableTest {
 
   @Test(invocationCount = 5)
   public void testLoadingWithFilterSetOnStartWithLogParser() throws IOException {
-    underTest = new LoadingRunnable(vfsSource, getJulLogParser(), collector, SLEEP_TIME, Optional.empty(), Optional.of(acceptCondition99), new EmptyStatsService());
+    underTest = new LoadingRunnable(vfsSource, getJulLogParser(), collector, SLEEP_TIME, Optional.empty(), Optional.of(acceptCondition99));
 
     saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, outputStream);
     executorService.submit(underTest);
@@ -262,7 +261,7 @@ public class LoadingRunnableTest {
       SocketSource socketSource = new SocketSource(readingSocket);
       saveLines(Range.closed(0, julSimpleLogLines.size()), julSimpleLogLines, writingSocket.getOutputStream());
 
-      underTest = new LoadingRunnable(socketSource, getJulLogParser(), collector, SLEEP_TIME, Optional.empty(), Optional.empty(), new EmptyStatsService());
+      underTest = new LoadingRunnable(socketSource, getJulLogParser(), collector, SLEEP_TIME, Optional.empty(), Optional.empty());
 
       executorService.submit(underTest);
 
@@ -320,6 +319,6 @@ public class LoadingRunnableTest {
 
   @Nonnull
   private LoadingRunnable createLoadingRunnable(LogImporter logImporter) {
-    return new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty(), new EmptyStatsService());
+    return new LoadingRunnable(vfsSource, logImporter, collector, SLEEP_TIME, Optional.empty());
   }
 }

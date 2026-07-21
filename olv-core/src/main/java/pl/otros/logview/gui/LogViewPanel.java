@@ -33,7 +33,6 @@ import pl.otros.logview.api.gui.NoteEvent.EventType;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.MenuActionProvider;
-import pl.otros.logview.api.services.StatsService;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
@@ -41,7 +40,6 @@ import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.renderers.*;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
-import pl.otros.logview.gui.util.JumpToCodeSelectionListener;
 import pl.otros.logview.pluginable.PluginableElementNameComparator;
 import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.logview.util.DateUtil;
@@ -272,7 +270,6 @@ public class LogViewPanel extends LogViewPanelI {
     table.getSelectionModel().addListSelectionListener(messageDetailListener);
     dataTableModel.addNoteObserver(messageDetailListener);
 
-    table.getSelectionModel().addListSelectionListener(new JumpToCodeSelectionListener(otrosApplication, dataTableModel, table, 100));
 
     JTextArea notes = new JTextArea();
     notes.setEditable(false);
@@ -455,13 +452,10 @@ public class LogViewPanel extends LogViewPanelI {
     filtersLabel.setFont(f);
     filtersPanel.add(filtersLabel, "wrap, growx, span");
     LogFilterValueChangeListener listenerToWrap = new LogFilterValueChangeListenerImpl(table, sorter, filtersList, statusObserver);
-    final StatsService statsService = getOtrosApplication().getServices().getStatsService();
 
     for (LogFilter filter : filtersList) {
-      final LogFilterValueChangeListenerStatsWrapper listener =
-        new LogFilterValueChangeListenerStatsWrapper(listenerToWrap, statsService, filter.getPluginableId());
       filter.init(new Properties(), dataTableModel, getOtrosApplication().getTheme());
-      FilterPanel filterPanel = new FilterPanel(filter, listener);
+      FilterPanel filterPanel = new FilterPanel(filter, listenerToWrap);
       filtersPanel.add(filterPanel, "wrap, growx");
       if (filter instanceof ThreadFilter) {
         ThreadFilter threadFilter = (ThreadFilter) filter;

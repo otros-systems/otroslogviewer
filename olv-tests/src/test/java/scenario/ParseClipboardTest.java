@@ -1,7 +1,6 @@
 package scenario;
 
 import org.awaitility.Duration;
-import org.fest.util.Files;
 import org.testng.annotations.Test;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
@@ -15,6 +14,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -28,7 +28,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   public void pasteClipboardOnOpen() throws IOException {
     final File file1 = File.createTempFile("otrosTest", "");
     logEvents(file1, 10);
-    final String clipboardContent = Files.contentOf(file1, "UTF-8");
+    final String clipboardContent = Files.readString(file1.toPath());
     setClipboard(clipboardContent);
     final MainFrame mainFrame = new MainFrame(robot());
     final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
@@ -37,42 +37,32 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
   }
 
   @Test(retryAnalyzer = RetryAnalyzer.class)
-  public void processClipboardWithUnixCommand() {
-    setClipboard("line1\nline2\nline3");
-    final MainFrame mainFrame = new MainFrame(robot());
-    final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
-
-    dialog.processingPattern().setText("sed s/line/entry/g | grep 1 | cut -c 5-6");
-
-    await().ignoreExceptions().until(() -> dialog.processedContent().text().equals("y1"));
-
-  }
-
-  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void importLogsFromClipboard() throws Exception {
     final File tempFile = File.createTempFile("olv", "logs");
     logEvents(tempFile, 10, integer -> Level.INFO);
-    final String logsInClipboard = Files.contentOf(tempFile, "UTF-8").trim();
+    final String logsInClipboard = Files.readString(tempFile.toPath()).trim();
 
     final MainFrame mainFrame = new MainFrame(robot());
     final ParseClipboardDialog dialog = mainFrame.welcomeScreen().clickParseClipboard();
 
     setClipboard(logsInClipboard);
-    dialog.refresh().click();
+    dialog.pasteClipboard();
 
-    dialog.waitForProcessedContent(logsInClipboard);
-    assertThat(dialog.processedContent().text()).isEqualTo(logsInClipboard);
+    await("waiting for log importer detection")
+      .atMost(Duration.TEN_SECONDS)
+      .until(() -> dialog.clipboardTextAreaContent().text().equals(logsInClipboard));
 
-    dialog.processingPattern().setText("sed s/Message/XXX/g");
+    await("waiting for import button to be enabled")
+      .atMost(Duration.TEN_SECONDS)
+      .until(dialog::isImportEnabled);
 
-    dialog.waitForProcessedContent(logsInClipboard.replaceAll("Message", "XXX"));
     final LogViewPanel logViewPanel = dialog.importLogs();
 
     await("waiting for 10 events in log table")
       .atMost(Duration.ONE_MINUTE)
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
     IntStream.range(0, 9)
-      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "XXX " + i));
+      .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "Message " + i));
 
   }
 
