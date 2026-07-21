@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.jcommander:jcommander:3.0'
     implementation 'com.google.guava:guava:33.6.0-jre'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.github.mwiede:jsch:0.2.0'
+    implementation 'com.github.mwiede:jsch:2.28.4'
     implementation 'net.java.dev.jna:jna-jpms:5.10.0'//newer version 5.11.0 exists
     implementation 'net.java.dev.jna:jna-platform-jpms:5.10.0'//newer version 5.11.0 exists
     implementation 'com.jcraft:jzlib:1.+'
