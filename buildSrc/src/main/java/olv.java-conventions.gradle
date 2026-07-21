@@ -63,7 +63,7 @@ dependencies {
 
     implementation 'org.swinglabs.swingx:swingx-all:1.+'
     implementation 'org.swinglabs:jxlayer:3.0.4'
-    implementation 'org.ocpsoft.prettytime:prettytime:3.1.0.Final'
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.9.Final'
     implementation 'org.apache.sling:org.apache.sling.commons.json:2.0.10'
     implementation 'ch.qos.logback:logback-core:1.5.38'
     implementation 'ch.qos.logback:logback-classic:1.5.38'
