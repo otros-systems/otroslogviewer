@@ -25,15 +25,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -163,10 +161,12 @@ public class AuthStoreUtils {
 
   public void load(AuthStore authStore, InputStream in) throws IOException {
     try {
-      XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser saxParser = factory.newSAXParser();
+      XMLReader xmlReader = saxParser.getXMLReader();
       xmlReader.setContentHandler(new AuthStoreHandler(authStore));
       xmlReader.parse(new InputSource(in));
-    } catch (SAXException e) {
+    } catch (SAXException | ParserConfigurationException e) {
       throw new IOException(e);
     }
   }

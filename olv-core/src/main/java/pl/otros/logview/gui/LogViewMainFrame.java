@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.otros.logview.updater.VersionUtil;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.InitializationException;
@@ -74,6 +73,7 @@ import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
 import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
 import pl.otros.logview.stats.StatsSender;
+import pl.otros.logview.updater.VersionUtil;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
 import pl.otros.swing.rulerbar.RulerBarHelper;
@@ -90,7 +90,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -484,7 +487,7 @@ public class LogViewMainFrame extends JFrame {
     toolBar = new JToolBar() {
 
     };
-    final JComboBox searchMode = new JComboBox(new String[]{"String contains search: ", "Regex search: ", "Query search: "});
+    final JComboBox<String> searchMode = new JComboBox<>(new String[]{ "String contains search: ", "Regex search: ", "Query search: " });
     searchMode.setName("MainFrame.searchMode");
     searchField = new JTextField();
     searchField.setName("MainFrame.searchField");
@@ -610,7 +613,7 @@ public class LogViewMainFrame extends JFrame {
     searchField.addKeyListener(markAllFoundAction);
     configuration.addConfigurationListener(markAllFoundAction);
     JButton markAllFoundButton = new JButton(markAllFoundAction);
-    final JComboBox markColor = new JComboBox(MarkerColors.values());
+    final JComboBox<MarkerColors> markColor = new JComboBox<>(MarkerColors.values());
     markFound.setSelected(configuration.getBoolean("gui.markFound", true));
     markFound.addChangeListener(e -> {
       boolean selected = markFound.isSelected();

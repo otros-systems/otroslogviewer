@@ -100,7 +100,7 @@ public class StartSocketListener extends OtrosAction {
       names[i] = importers[i].getName();
     }
 
-    JComboBox box = new JComboBox(names);
+    JComboBox<String> box = new JComboBox<>(names);
     box.setName("StartSocketListenerDialog.importer");
     SpinnerNumberModel numberModel = new SpinnerNumberModel(50505, 1025, 65000, 1);
     JSpinner jSpinner = new JSpinner(numberModel);

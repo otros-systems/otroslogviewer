@@ -24,6 +24,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -311,15 +312,15 @@ class SuggestionDocumentListener<T> implements DocumentListener {
       if (textComponent instanceof JTextField) {
         int width = Math.max(textComponent.getWidth(), suggestionWindow.getWidth());
         int screenHeight = suggestionWindow.getGraphicsConfiguration().getDevice().getDisplayMode().getHeight();
-        suggestionWindow.setSize(width, (int) Math.min(suggestionWindow.getHeight(), screenHeight / 2));
+        suggestionWindow.setSize(width, Math.min(suggestionWindow.getHeight(), screenHeight / 2));
         int x = (int) textComponent.getLocationOnScreen().getX();
         int y = (int) (textComponent.getLocationOnScreen().getY() + textComponent.getHeight());
         suggestionWindow.setLocation(x, y);
       } else {
         try {
           final int caretPosition = Math.min(textComponent.getText().length(), textComponent.getCaretPosition());
-          final Rectangle rectangle = textComponent.modelToView(caretPosition);
-          final Point p = new Point(rectangle.x, rectangle.y + rectangle.height);
+          final Rectangle2D rectangle = textComponent.modelToView2D(caretPosition);
+          final Point p = new Point((int) Math.round(rectangle.getX()), (int) Math.round(rectangle.getY() + rectangle.getHeight()));
           SwingUtilities.convertPointToScreen(p, textComponent);
           suggestionWindow.setLocation(p.x, p.y);
         } catch (BadLocationException e) {

@@ -9,6 +9,7 @@ import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.store.MemoryLogDataStore;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Properties;
@@ -46,7 +47,8 @@ public class JsonLogParserTest {
 
     //when
     LogDataCollector ld = new MemoryLogDataStore();
-    importerUsingParser.importLogs(this.getClass().getClass().getResourceAsStream("/jsonLog/" + fileName), ld, parsingContext);
+    InputStream resourceAsStream = this.getClass().getResourceAsStream("/jsonLog/" + fileName);
+    importerUsingParser.importLogs(resourceAsStream, ld, parsingContext);
     //then
     final LogData[] logDatas = ld.getLogData();
     assertEquals(logDatas.length, 5);

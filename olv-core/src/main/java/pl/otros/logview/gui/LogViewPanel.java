@@ -60,8 +60,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 public class LogViewPanel extends LogViewPanelI {
@@ -440,7 +440,7 @@ public class LogViewPanel extends LogViewPanelI {
     filtersList = new ArrayList<>();
     for (LogFilter logFilter : loadedFilters) {
       try {
-        LogFilter filter = logFilter.getClass().newInstance();
+        LogFilter filter = logFilter.getClass().getDeclaredConstructor().newInstance();
         filtersList.add(filter);
       } catch (Exception e) {
         LOGGER.error("Can't initialize filter: " + logFilter.getClass(), e);
@@ -738,9 +738,8 @@ public class LogViewPanel extends LogViewPanelI {
   }
 
   private void showMessageFormatterOrColorizerPopupMenu(MouseEvent e, String menuTitle,
-                                                        PluginableElementsContainer<? extends PluginableElement>
-                                                          selectedPluginableElementsContainer, PluginableElementsContainer<? extends PluginableElement>
-                                                          pluginableElementsContainer) {
+                                                        PluginableElementsContainer<? extends PluginableElement> selectedPluginableElementsContainer,
+                                                        PluginableElementsContainer<? extends PluginableElement> pluginableElementsContainer) {
     final JPopupMenu popupMenu = new JPopupMenu(menuTitle);
     popupMenu.add(new JLabel(menuTitle));
     ArrayList<PluginableElement> elements = new ArrayList<>(pluginableElementsContainer.getElements());

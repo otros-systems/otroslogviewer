@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -551,7 +552,7 @@ public final class VFSUtils {
     result = new FileObject[]{ fileObject };
     if (contentType.equalsIgnoreCase("text/html")) {
       try {
-        String html = IOUtils.toString(content.getInputStream());
+        String html = IOUtils.toString(content.getInputStream(), StandardCharsets.UTF_8);
         if (html.toLowerCase().contains("index of")) {
           LOGGER.info("Page contains \"index of\", resolving children");
           //a href="DSC_0410.JPG">

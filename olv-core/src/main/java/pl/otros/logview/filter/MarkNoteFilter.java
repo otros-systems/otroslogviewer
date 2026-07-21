@@ -26,8 +26,8 @@ public class MarkNoteFilter extends AbstractLogFilter {
 
   private static final String NAME = "Mark/Note filter";
   private static final String DESCRIPTION = "Filtering events based on a mark or a note.";
-  private final JComboBox noteComboBox = new JComboBox(new Object[]{"N/A", "Yes", "No"});
-  private final JComboBox markComboBox = new JComboBox(new Object[]{"N/A", "Yes", "No"});
+  private final JComboBox<String> noteComboBox = new JComboBox<>(new String[]{ "N/A", "Yes", "No" });
+  private final JComboBox<String> markComboBox = new JComboBox<>(new String[]{ "N/A", "Yes", "No" });
   private final JPanel gui;
 
   public MarkNoteFilter() {

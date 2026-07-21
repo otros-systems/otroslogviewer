@@ -3,20 +3,66 @@ package pl.otros.logview.gui.message.stacktracecode;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pl.otros.logview.api.Ide;
 import pl.otros.logview.api.model.LocationInfo;
 import pl.otros.logview.api.services.JumpToCodeService;
+
+import java.io.IOException;
+import java.util.Set;
 
 public class StackTraceFormatterTest {
 
     @Test
     public void testFormat() throws Exception {
         //given
-        final JumpToCodeService mock = Mockito.mock(JumpToCodeService.class);
-        Mockito.when(mock.getContentOptional(Mockito.any(LocationInfo.class))).thenAnswer(invocation -> {
-            LocationInfo li = (LocationInfo) invocation.getArguments()[0];
-            return li.getLineNumber().map(l->l + ": code");
-        });
-        final StackTraceFormatter formatter = new StackTraceFormatter(mock);
+        final JumpToCodeService jumpToCodeService = new JumpToCodeService() {
+            @Override
+            public void clearLocationCaches() {
+
+            }
+
+            @Override
+            public boolean isIdeAvailable() {
+                return false;
+            }
+
+            @Override
+            public boolean isIdeAvailable(String host, int port) {
+                return false;
+            }
+
+            @Override
+            public Ide getIde() {
+                return null;
+            }
+
+            @Override
+            public void jump(LocationInfo locationInfo) throws IOException {
+
+            }
+
+            @Override
+            public boolean isJumpable(LocationInfo locationInfo) throws IOException {
+                return false;
+            }
+
+            @Override
+            public String getContent(LocationInfo locationInfo) throws IOException {
+                return locationInfo.getLineNumber().map(l->l + ": code").get();
+            }
+
+            @Override
+            public Set<Capabilities> capabilities() throws IOException {
+                return Set.of();
+            }
+
+            @Override
+            public Set<String> loggerPatterns() throws IOException {
+                return Set.of();
+            }
+        };
+
+        final StackTraceFormatter formatter = new StackTraceFormatter(jumpToCodeService);
 
         //when
         String message = "java.util.concurrent.ExecutionException: java.io.IOException: Error executing request, connection broken.... :)\n" +

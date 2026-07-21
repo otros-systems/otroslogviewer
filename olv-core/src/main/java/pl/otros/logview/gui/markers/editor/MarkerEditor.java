@@ -52,8 +52,8 @@ public class MarkerEditor extends JPanel {
   private final JTextField groups;
   private final JTextField name;
   private final JTextField description;
-  private final JComboBox type;
-  private final JComboBox colors;
+  private final JComboBox<String> type;
+  private final JComboBox<MarkerColors> colors;
   private final JLabel stringConditionIncludeLabel = new JLabel("Containging string:");
   private final JLabel regexPreConditionLabel = new JLabel("Precondition:");
   private final JLabel regexPreConditionIncludeLabel = new JLabel("Precondition matches:");
@@ -76,7 +76,7 @@ public class MarkerEditor extends JPanel {
     stringMatcherComponents = new ArrayList<>();
     file = new JTextField(20);
     file.setEditable(false);
-    type = new JComboBox(new String[]{"String matcher", "Regex matcher"});
+    type = new JComboBox<>(new String[]{ "String matcher", "Regex matcher" });
     type.addActionListener(arg0 -> disbableUnessasaryComponents());
     type.addActionListener(testAfterChangeActionListener);
 
@@ -87,7 +87,7 @@ public class MarkerEditor extends JPanel {
     regexPreConditionInclude = new JCheckBox();
     regexPreConditionInclude.addActionListener(testAfterChangeActionListener);
     name = new JTextField(20);
-    colors = new JComboBox(MarkerColors.values());
+    colors = new JComboBox<>(MarkerColors.values());
     colors.setRenderer(new MarkerColorsComboBoxRenderer());
 
     stringMatcherConditionM = new JTextField(20);

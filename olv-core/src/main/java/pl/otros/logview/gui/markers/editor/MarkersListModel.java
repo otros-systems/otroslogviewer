@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MarkersListModel extends AbstractListModel implements PluginableElementEventListener<AutomaticMarker> {
+public class MarkersListModel extends AbstractListModel<AutomaticMarker> implements PluginableElementEventListener<AutomaticMarker> {
 
   private final ArrayList<AutomaticMarker> list;
   private final Comparator<AutomaticMarker> makrerComparator;
@@ -46,7 +46,7 @@ public class MarkersListModel extends AbstractListModel implements PluginableEle
   }
 
   @Override
-  public Object getElementAt(int index) {
+  public AutomaticMarker getElementAt(int index) {
     return list.get(index);
   }
 

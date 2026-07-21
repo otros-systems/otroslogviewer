@@ -65,11 +65,11 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   public static final String VIEW_ID = "logDisplay";
   private static final Logger LOGGER = LoggerFactory.getLogger(LogTableFormatConfigView.class.getName());
   private final String[] dateFormats;
-  private final JXRadioGroup radioGroup;
+  private final JXRadioGroup<LevelRenderer.Mode> radioGroup;
   private final JXComboBox dateFormatRadio;
   private final JPanel panel;
   private final RSyntaxTextArea packageAbbreviationTa;
-  private final JList columnLayoutsList;
+  private final JList<ColumnLayout> columnLayoutsList;
   private MutableListModel<ColumnLayout> columnLayoutListModel;
   private final OtrosApplication otrosApplication;
   private JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog;
@@ -94,7 +94,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     addLabel("Format example", 'e', exampleTextField, panel);
     dateFormatRadio.addActionListener(e -> exampleTextField.setText(new SimpleDateFormat(dateFormatRadio.getSelectedItem().toString()).format(new Date())));
     dateFormatRadio.setSelectedIndex(0);
-    radioGroup = new JXRadioGroup(LevelRenderer.Mode.values());
+    radioGroup = new JXRadioGroup<>(LevelRenderer.Mode.values());
     addLabel("Level display", 'l', radioGroup, panel);
 
 
@@ -113,7 +113,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     final JPanel columnLayoutsPanel = new JPanel(new BorderLayout());
     columnLayoutListModel = new MutableListModel<>();
 
-    columnLayoutsList = new JList(columnLayoutListModel);
+    columnLayoutsList = new JList<>(columnLayoutListModel);
     columnLayoutsList.setToolTipText("Click right mouse button to edit or delete");
     columnLayoutsList.setMinimumSize(new Dimension(100, 40));
     columnLayoutsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -274,7 +274,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     final MutableListModel<ColumnLayout> listModel = new MutableListModel<>();
     columnLayouts.forEach(listModel::add);
 
-    final JList jList = new JList(listModel);
+    final JList<ColumnLayout> jList = new JList<>(listModel);
     jList.setCellRenderer(new ColumnLayoutRenderer());
     jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     if (listModel.getSize() > 0) {

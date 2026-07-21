@@ -12,13 +12,13 @@ import java.util.Date;
 
 public class DateFormatView extends AbstractConfigView {
   private final JPanel p;
-  private final JComboBox combobox;
+  private final JComboBox<String> combobox;
 
   public DateFormatView() {
     super("DateFormat", "Date format", "Format of the date");
     p = new JPanel();
     p.setLayout(new MigLayout());
-    combobox = new JComboBox(new String[]{
+    combobox = new JComboBox<>(new String[]{
         "HH:mm:ss", // 
         "HH:mm:ss.SSS",// 
         "dd-MM HH:mm:ss.SSS",// 

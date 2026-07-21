@@ -15,7 +15,6 @@
  ******************************************************************************/
 package pl.otros.logview.api;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +63,7 @@ public class BaseLoader {
 
       for (Class<?> class1 : implementationClasses) {
         try {
-          T classInstance = (T) class1.newInstance();
+          T classInstance = (T) class1.getDeclaredConstructor().newInstance();
           list.add(classInstance);
         } catch (Throwable e) {
           LOGGER.error(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));
@@ -82,7 +81,7 @@ public class BaseLoader {
       List<Class<T>> implementationClasses = getInterfaceImplementations(type, file);
       for (Class<?> class1 : implementationClasses) {
         try {
-          T am = (T) class1.newInstance();
+          T am = (T) class1.getDeclaredConstructor().newInstance();
           list.add(am);
         } catch (Throwable e) {
           LOGGER.error(String.format("Error creating class %s from file %s: %s", class1.getName(), file, e.getMessage()));

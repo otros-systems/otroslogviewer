@@ -337,12 +337,12 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    * @param result
    * @return map
    */
-  private Map processEvent(MatchResult result) {
-    Map map = new HashMap();
+  private Map<String, String> processEvent(MatchResult result) {
+    Map<String, String> map = new HashMap<>();
     // group zero is the entire match - process all other groups
     for (int i = 1; i < result.groupCount() + 1; i++) {
-      Object key = matchingKeywords.get(i - 1);
-      Object value = result.group(i);
+      String key = matchingKeywords.get(i - 1);
+      String value = result.group(i);
       map.put(key, value);
 
     }
@@ -531,7 +531,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    *
    * @return logging event
    */
-  private LoggingEvent convertToEvent(Map fieldMap, String[] exception, DateFormat dateFormat) {
+  private LoggingEvent convertToEvent(Map<String, Object> fieldMap, String[] exception, DateFormat dateFormat) {
     if (fieldMap == null) {
       return null;
     }
@@ -554,7 +554,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     String methodName = null;
     String eventFileName = null;
     String lineNumber = null;
-    Hashtable properties = new Hashtable();
+    Hashtable<String, Object> properties = new Hashtable<>();
 
     logger = StringUtils.trim((String) fieldMap.remove(LOGGER));
 
@@ -657,8 +657,9 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       // This is used by rePattern now, but traditional patterns could be
       // enhanced to support optional fields too.
       // We never write null key
-      ((Set<Map.Entry<String, Object>>)
-        processEvent(eventMatcher.toMatchResult()).entrySet()).stream().filter(entry -> entry.getValue() != null).forEach(entry -> logEventParsingProperties.put(entry.getKey(), entry.getValue()));
+      processEvent(eventMatcher.toMatchResult()).entrySet().stream()
+        .filter(entry -> entry.getValue() != null)
+        .forEach(entry -> logEventParsingProperties.put(entry.getKey(), entry.getValue()));
     } else if (exceptionMatcher.matches()) {
       // an exception line
       if (parsingContext.getUnmatchedLog().length() > 0)
