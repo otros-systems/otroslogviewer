@@ -17,7 +17,6 @@ package pl.otros.logview.gui;
 
 import ch.qos.logback.classic.util.ContextInitializer;
 import com.google.common.base.Throwables;
-import com.negusoft.singleinstance.SingleInstance;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -66,7 +65,7 @@ import pl.otros.logview.loader.LvDynamicLoader;
 import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.logview.pluginsimpl.PluginContextImpl;
 import pl.otros.logview.reader.SocketLogReader;
-import pl.otros.logview.singleinstance.SingleInstanceRequestResponseDelegate;
+import pl.otros.logview.singleinstance.SimpleSingleInstance;
 import pl.otros.logview.updater.VersionUtil;
 import pl.otros.swing.config.OtrosConfiguration;
 import pl.otros.swing.rulerbar.OtrosJTextWithRulerScrollPane;
@@ -85,7 +84,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -183,9 +181,6 @@ public class LogViewMainFrame extends JFrame {
     otrosApplication.setOtrosVfsBrowserDialog(new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener));
     otrosApplication.setServices(new ServicesImpl());
     otrosApplication.setLogLoader(new BasicLogLoader());
-    if (!runningForTests()) {
-      SingleInstanceRequestResponseDelegate.getInstance().setOtrosApplication(otrosApplication);
-    }
     ToolTipManager.sharedInstance().setDismissDelay(5000);
 
     JProgressBar heapBar = new JProgressBar();
@@ -277,10 +272,8 @@ public class LogViewMainFrame extends JFrame {
       return;
     }
     if (!runningForTests()) {
-      SingleInstanceRequestResponseDelegate singleInstanceRequestResponseDelegate = SingleInstanceRequestResponseDelegate.getInstance();
-      SingleInstance singleInstance = SingleInstance.request("OtrosLogViewer", singleInstanceRequestResponseDelegate,
-        singleInstanceRequestResponseDelegate, args);
-      if (singleInstance == null) {
+      boolean isFirstInstance = SimpleSingleInstance.checkIsFirstInstance();
+      if (!isFirstInstance) {
         LOGGER.info("OtrosLogViewer is already running, params send using requestAction");
         System.exit(0);
       }
@@ -324,8 +317,6 @@ public class LogViewMainFrame extends JFrame {
         }
       });
       mf.addWindowListener(mf.exitAction);
-      SingleInstanceRequestResponseDelegate.openFilesFromStartArgs(mf.otrosApplication, Arrays.asList(args),
-        mf.otrosApplication.getAppProperties().getCurrentDir());
     });
   }
 
