@@ -5,20 +5,39 @@ plugins {
 //    id 'idea' // uncomment when using IntelliJ IDEA IDE
 }
 
+// Add compiler option to show more details for deprecations
+/*tasks.withType(JavaCompile).configureEach {
+    doFirst {
+        println "Compiler args: ${options.compilerArgs}"
+    }
+
+    options.compilerArgs.add("-Xlint:deprecation")
+    //options.compilerArgs.add("-Xlint:unchecked")
+}*/
+
 group = 'pl.otros.logviewer'
 version = '1.4.19-SNAPSHOT'
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
+}
+
 
 repositories {
     mavenCentral()
     maven {
         //Repo for cjwizard library. https://mvnrepository.com/ not working
-        url "https://jitpack.io/"
+        url = "https://jitpack.io/"
     }
     flatDir {
         //embedded repo for custom libraries
-        dirs '../libs'
+        dirs = ['../libs']
     }
 }
 

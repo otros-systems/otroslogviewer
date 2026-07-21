@@ -22,6 +22,7 @@ IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
 set MEMORY=-Xmx1024m
+set ADD_OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
 cd "%OLV_HOME%"
 
 if "%1"=="-batch" goto batchMode
@@ -50,7 +51,7 @@ if exist "%JAVA_HOME%\bin\javaw.exe" (
 ) else (
   set LOCAL_JAVA=javaw.exe
 )
-start "OtrosLogViewer" /B %LOCAL_JAVA% -DsingleInstance.startPort= -jar "%OLV_HOME%\olv-exec.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
+start "OtrosLogViewer" /B %LOCAL_JAVA% %ADD_OPENS% -DsingleInstance.startPort= -jar "%OLV_HOME%\olv-exec.jar" %* 1>"%OUT_FILE%" 2>"%ERR_FILE%"
 goto finish
 
 :batchMode
@@ -61,6 +62,6 @@ if exist "%JAVA_HOME%\bin\java.exe" (
 )
 
 echo on
-%LOCAL_JAVA% %MEMORY% %SFTP_KEY% -jar "%OLV_HOME%\olv-exec.jar" %*
+%LOCAL_JAVA% %MEMORY% %ADD_OPENS% %SFTP_KEY% -jar "%OLV_HOME%\olv-exec.jar" %*
 
 :finish

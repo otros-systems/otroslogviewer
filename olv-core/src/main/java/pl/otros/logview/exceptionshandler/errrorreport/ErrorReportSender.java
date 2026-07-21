@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class ErrorReportSender {
@@ -74,7 +75,7 @@ public class ErrorReportSender {
 
     int executeMethod = httpClient.executeMethod(method);
     LOGGER.info("HTTP result of report send POST: " + executeMethod);
-    return IOUtils.toString(method.getResponseBodyAsStream());
+    return IOUtils.toString(method.getResponseBodyAsStream(), StandardCharsets.UTF_8);
   }
 
   protected void addHttpPostParams(Map<String, String> values, PostMethod method) {

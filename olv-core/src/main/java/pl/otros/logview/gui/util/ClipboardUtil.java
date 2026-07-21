@@ -47,7 +47,7 @@ public class ClipboardUtil {
   private static class HtmlTransferable implements Transferable {
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlTransferable.class.getName());
 
-    private static final ArrayList flavors = new ArrayList();
+    private static final ArrayList<DataFlavor> flavors = new ArrayList<>();
 
 
     public static final String TEXT_HTML_CLASS_JAVA_IO_READER = "text/html;class=java.io.Reader";
@@ -79,7 +79,7 @@ public class ClipboardUtil {
 
 
     public DataFlavor[] getTransferDataFlavors() {
-      return (DataFlavor[]) flavors.toArray(new DataFlavor[flavors.size()]);
+      return flavors.toArray(new DataFlavor[0]);
     }
 
 

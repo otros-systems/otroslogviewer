@@ -35,6 +35,7 @@ public class MultilineStringTableCellRenderer<E> implements TableCellRenderer {
     textArea.setBackground(component.getBackground());
     textArea.setForeground(component.getForeground());
     try {
+      @SuppressWarnings("unchecked")
       final String text = mapping.apply((E) value);
       textArea.setText(text);
     } catch (Exception e) {

@@ -39,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class MessageColorizerBrowser extends JPanel {
 
@@ -46,7 +47,7 @@ public class MessageColorizerBrowser extends JPanel {
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageColorizerBrowser.class.getName());
   private final PluginableElementsContainer<MessageColorizer> container;
   private final OtrosApplication otrosApplication;
-  private final JComboBox jList;
+  private final JComboBox<MessageColorizer> jList;
   private final JPanel contentPanel;
   private final CardLayout cardLayout;
   private static final String CARD_LAYOUT_EDITOR = "editor";
@@ -73,7 +74,7 @@ public class MessageColorizerBrowser extends JPanel {
     JLabel nothingSelected = new JLabel("Nothing selected", SwingConstants.CENTER);
 
 //    PluginableElementListModel<MessageColorizer> listModel = new PluginableElementListModel<>(container);
-    jList = new JComboBox(container.getElements().toArray());
+    jList = new JComboBox<>(container.getElements().toArray(new MessageColorizer[0]));
 //    jList.setCellRenderer(new PluginableElementNameListRenderer());
     jList.setRenderer(new PluginableElementNameListRenderer());
     cardLayout = new CardLayout();
@@ -315,7 +316,7 @@ public class MessageColorizerBrowser extends JPanel {
   protected String getDefaultContent() {
     if (defaultContent == null) {
       try {
-        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT));
+        defaultContent = IOUtils.toString(this.getClass().getResourceAsStream(MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT), StandardCharsets.UTF_8);
       } catch (IOException e) {
         LOGGER.error(String.format("Can't load content of %s: %s", MESSAGE_COLORIZER_EDITOR_DEFAULT_CONTENT_TXT, e.getMessage()));
       }

@@ -187,8 +187,7 @@ public class BatchProcessor {
     }
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
-      batchProcessor.setLogDataParsedListener((LogDataParsedListener) cl.loadClass(parserCmdLine.logDataParsedListenerClass).newInstance());
-      // batchProcessor.setLogDataCollector((LogDataParsedListener) cl.loadClass(parserCmdLine.logDataParsedListenerClass).newInstance());
+      batchProcessor.setLogDataParsedListener((LogDataParsedListener) cl.loadClass(parserCmdLine.logDataParsedListenerClass).getDeclaredConstructor().newInstance());
     } catch (Exception e2) {
       System.err.println("Can't load log data collector: " + e2.getMessage());
     }

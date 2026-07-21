@@ -78,7 +78,7 @@ public class PluginableElementsContainer<T extends PluginableElement> {
       elements.remove(element.getPluginableId());
     }
     synchronized (listeners) {
-      for (PluginableElementEventListener l : listeners) {
+      for (PluginableElementEventListener<T> l : listeners) {
         l.elementRemoved(element);
       }
     }
@@ -86,7 +86,7 @@ public class PluginableElementsContainer<T extends PluginableElement> {
 
   public void changeElement(T element) {
     synchronized (listeners) {
-      for (PluginableElementEventListener l : listeners) {
+      for (PluginableElementEventListener<T> l : listeners) {
         l.elementChanged(element);
       }
     }
@@ -94,7 +94,7 @@ public class PluginableElementsContainer<T extends PluginableElement> {
 
   protected void notifyAdd(T element) {
     synchronized (listeners) {
-      for (PluginableElementEventListener l : listeners) {
+      for (PluginableElementEventListener<T> l : listeners) {
         l.elementAdded(element);
       }
     }
@@ -102,7 +102,7 @@ public class PluginableElementsContainer<T extends PluginableElement> {
 
   protected void notifyRemove(T element) {
     synchronized (listeners) {
-      for (PluginableElementEventListener l : listeners) {
+      for (PluginableElementEventListener<T> l : listeners) {
         l.elementRemoved(element);
       }
     }
@@ -110,7 +110,7 @@ public class PluginableElementsContainer<T extends PluginableElement> {
 
   protected void notifyChange(T element) {
     synchronized (listeners) {
-      for (PluginableElementEventListener l : listeners) {
+      for (PluginableElementEventListener<T> l : listeners) {
         l.elementChanged(element);
       }
     }

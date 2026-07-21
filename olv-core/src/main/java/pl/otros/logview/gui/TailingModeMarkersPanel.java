@@ -38,8 +38,8 @@ import java.util.List;
 public class TailingModeMarkersPanel extends JPanel implements PluginableElementEventListener<AutomaticMarker>, TableModelListener {
 
   private final LogDataTableModel dataTableModel;
-  private final JComboBox selectedGroup;
-  private final DefaultComboBoxModel boxModel;
+  private final JComboBox<String> selectedGroup;
+  private final DefaultComboBoxModel<String> boxModel;
   private final JTable table;
   private final SelectedMarkersTableModel defaultTableModel;
   private final PluginableElementsContainer<AutomaticMarker> markersContainser;
@@ -60,8 +60,8 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
     // table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
     table.setDefaultRenderer(Object.class, new AutomaticMarkerRenderer());
 
-    boxModel = new DefaultComboBoxModel();
-    selectedGroup = new JComboBox(boxModel);
+    boxModel = new DefaultComboBoxModel<>();
+    selectedGroup = new JComboBox<>(boxModel);
     selectedGroup.addActionListener(e -> defaultTableModel.fireTableDataChanged());
 
     logDataTableModel.addTableModelListener(this);

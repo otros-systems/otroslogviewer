@@ -39,7 +39,7 @@ public class LogData implements Serializable {
   private String loggerName = "";
   private String message = "";
   private int id;
-  private Map<String, String> properties = Collections.EMPTY_MAP;
+  private Map<String, String> properties = Collections.emptyMap();
   private Note note;
   private boolean marked;
   private MarkerColors markerColors;

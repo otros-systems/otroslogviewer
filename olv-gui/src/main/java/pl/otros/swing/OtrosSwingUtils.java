@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class OtrosSwingUtils {
 
@@ -22,11 +23,11 @@ public class OtrosSwingUtils {
 
   public static <T extends JComponent> T fontSize2(T component) {
     try {
-      final int newSize = component.getClass().newInstance().getFont().getSize() * 2;
+      final int newSize = component.getClass().getDeclaredConstructor().newInstance().getFont().getSize() * 2;
       final Font oldFont = component.getFont();
       final Font newFont = new Font(oldFont.getFontName(), oldFont.getStyle(), newSize);
       component.setFont(newFont);
-    } catch (InstantiationException | IllegalAccessException e) {
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
       LOGGER.warn("Can't create new instance of " + component.getClass() + " to get default font size");
     }
 
