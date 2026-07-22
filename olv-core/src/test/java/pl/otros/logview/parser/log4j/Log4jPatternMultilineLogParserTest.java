@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,9 +17,9 @@ package pl.otros.logview.parser.log4j;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 
@@ -156,7 +156,7 @@ public class Log4jPatternMultilineLogParserTest {
 
   }
 
-   @Test
+  @Test
   public void testThreadWithSpaces() throws IOException, InitializationException {
     Properties p = new Properties();
     p.put("type", "log4j");
@@ -182,7 +182,7 @@ public class Log4jPatternMultilineLogParserTest {
     assertEquals("T4", logDatas[3].getThread());
   }
 
-   @Test
+  @Test
   public void testLoggerWithSpaces() throws IOException, InitializationException {
     Properties p = new Properties();
     p.put("type", "log4j");
@@ -207,7 +207,6 @@ public class Log4jPatternMultilineLogParserTest {
     assertEquals("c1.c", logDatas[2].getLoggerName());
     assertEquals("c1.d", logDatas[3].getLoggerName());
   }
-
 
 
   @Test
@@ -246,6 +245,102 @@ public class Log4jPatternMultilineLogParserTest {
     assertEquals("MyClass", logDatas[1].getClazz());
     assertEquals("(8,617,482)", logDatas[1].getProperties().get("seq"));
     assertEquals("Thrn2", logDatas[1].getProperties().get("thrN"));
+
+  }
+
+  /**
+   * Ticket: #563
+   * <p>
+   * If the message contains square brackets and is also used as a marker for the pattern, it can be a problem:
+   * <pre>
+   *   [2019-06-18 14:46:54,087][TRACE][T-Y][com.company.product.TheClass][ 558]another mesage with output: [MyObject][7714][20190611.0]
+   * </pre>
+   */
+  @Test
+  public void testSquareBrackets() throws IOException, InitializationException, ParseException {
+    Properties p = new Properties();
+    p.put("type", "log4j");
+    p.put("pattern", "[TIMESTAMP][LEVEL][THREAD][LOGGER][LINE]MESSAGE");
+    p.put("dateFormat", "yyyy-MM-dd HH:mm:ss,SSS");
+
+    Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    InputStream in = loadLog("log4j/log4j_square_brackets.txt");
+    LogImporterUsingParser importerUsingParser = new LogImporterUsingParser(logParser);
+    ParsingContext context = new ParsingContext();
+    importerUsingParser.init(p);
+    importerUsingParser.initParsingContext(context);
+
+    // when
+    ProxyLogDataCollector dataCollector = new ProxyLogDataCollector();
+    importerUsingParser.importLogs(in, dataCollector, context);
+
+    // then
+    LogData[] logDatas = dataCollector.getLogData();
+    assertEquals(3, logDatas.length);
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:53,522").getTime(), logDatas[0].getDate().getTime());
+    assertEquals(Level.INFO, logDatas[0].getLevel());
+    assertEquals("T-X", logDatas[0].getThread());
+    assertEquals("com.company.product.TheClass", logDatas[0].getLoggerName());
+    assertEquals(" 257", logDatas[0].getLine());
+    assertEquals("a message", logDatas[0].getMessage());
+
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:54,087").getTime(), logDatas[1].getDate().getTime());
+    assertEquals(Level.FINEST, logDatas[1].getLevel());
+    assertEquals("T-Y", logDatas[1].getThread());
+    assertEquals("com.company.product.TheClass", logDatas[1].getLoggerName());
+    assertEquals(" 558", logDatas[1].getLine());
+    assertEquals("another mesage with output: [MyObject][7714][20190611.0]", logDatas[1].getMessage());
+
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:55,568").getTime(), logDatas[2].getDate().getTime());
+    assertEquals("DEBUG", logDatas[2].getLevel().toString());
+    assertEquals("T-X", logDatas[2].getThread());
+    assertEquals("com.company.product.OtherClass", logDatas[2].getLoggerName());
+    assertEquals("  1", logDatas[2].getLine());
+    assertEquals("a last message", logDatas[2].getMessage());
+
+  }
+
+  @Test
+  public void testNoSquareBrackets() throws IOException, InitializationException, ParseException {
+    Properties p = new Properties();
+    p.put("type", "log4j");
+    p.put("pattern", "(TIMESTAMP)(LEVEL)(THREAD)(LOGGER)(LINE)MESSAGE");
+    p.put("dateFormat", "yyyy-MM-dd HH:mm:ss,SSS");
+
+    Log4jPatternMultilineLogParser logParser = new Log4jPatternMultilineLogParser();
+    InputStream in = loadLog("log4j/log4j_no_square_brackets.txt");
+    LogImporterUsingParser importerUsingParser = new LogImporterUsingParser(logParser);
+    ParsingContext context = new ParsingContext();
+    importerUsingParser.init(p);
+    importerUsingParser.initParsingContext(context);
+
+    // when
+    ProxyLogDataCollector dataCollector = new ProxyLogDataCollector();
+    importerUsingParser.importLogs(in, dataCollector, context);
+
+    // then
+    LogData[] logDatas = dataCollector.getLogData();
+    assertEquals(3, logDatas.length);
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:53,522").getTime(), logDatas[0].getDate().getTime());
+    assertEquals(Level.INFO, logDatas[0].getLevel());
+    assertEquals("T-X[]", logDatas[0].getThread());
+    assertEquals("com.company.product.TheClass", logDatas[0].getLoggerName());
+    assertEquals(" 257", logDatas[0].getLine());
+    assertEquals("a message", logDatas[0].getMessage());
+
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:54,087").getTime(), logDatas[1].getDate().getTime());
+    assertEquals(Level.FINEST, logDatas[1].getLevel());
+    assertEquals("T-Y", logDatas[1].getThread());
+    assertEquals("com.company.product[].TheClass", logDatas[1].getLoggerName());
+    assertEquals(" 558", logDatas[1].getLine());
+    assertEquals("another mesage with output: [MyObject][7714][20190611.0]", logDatas[1].getMessage());
+
+    assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS").parse("2019-06-18 14:46:55,568").getTime(), logDatas[2].getDate().getTime());
+    assertEquals("DEBUG", logDatas[2].getLevel().toString());
+    assertEquals("T-X", logDatas[2].getThread());
+    assertEquals("com.company.product.OtherClass", logDatas[2].getLoggerName());
+    assertEquals("  1", logDatas[2].getLine());
+    assertEquals("a last message with output: (MyObject)", logDatas[2].getMessage());
 
   }
 
