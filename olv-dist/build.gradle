@@ -20,7 +20,7 @@ plugins {
 }
 
 //Enabling the instrumentedClasspath configuration
-configurations  {
+configurations {
     instrumentedClasspath {
         canBeConsumed = false
         canBeResolved = true
@@ -36,9 +36,9 @@ dependencies {
 }
 
 distributions {
-     main{
+    main {
         contents {
-            from{configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it }}
+            from { configurations.instrumentedClasspath.findAll { it.name.equals('olv-exec.jar') }.collect { it } }
             eachFile { details ->
                 if (details.name.endsWith('.sh')) {
                     details.permissions {
@@ -62,8 +62,8 @@ distributions {
     }
 }
 
-tasks.register('prepareLinuxScripts'){
-    doLast{
+tasks.register('prepareLinuxScripts') {
+    doLast {
         foreach
     }
 }
@@ -74,6 +74,7 @@ distTar.enabled = false
 distZip {
     archiveBaseName.set("olv")
     dependsOn(configurations.instrumentedClasspath)
+    preserveFileTimestamps = true
 }
 
 test {
