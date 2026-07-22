@@ -84,6 +84,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -91,11 +92,12 @@ import java.util.logging.Level;
 import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogViewMainFrame extends JFrame {
-  static{
+  static {
     //initializes the logback configuration file location
     File logbackConfigFile = new File(System.getProperty("user.dir"), "logback.xml");
     System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logbackConfigFile.getAbsolutePath());
   }
+
   private static final Logger LOGGER = LoggerFactory.getLogger(LogViewMainFrame.class);
   private static final String CARD_LAYOUT_LOGS_TABLE = "cardLayoutLogsTable";
   private static final String CARD_LAYOUT_EMPTY = "cardLayoutEmpty";
@@ -666,6 +668,9 @@ public class LogViewMainFrame extends JFrame {
     fileMenu.add(labelOpenLog);
     fileMenu.add(new JMenuItem(new TailLogWithComboActionListener(otrosApplication)));
     fileMenu.add(new JMenuItem(new AdvanceOpenAction(otrosApplication)));
+    JMenu openWithMenu = new JMenu("Open with...");
+    fileMenu.add(openWithMenu);
+    addParserActions(openWithMenu);
     fileMenu.add(new JSeparator());
     JLabel labelLogInvestigation = new JLabel("Log investigation", SwingConstants.LEFT);
     labelLogInvestigation.setFont(menuGroupFont);
@@ -719,6 +724,19 @@ public class LogViewMainFrame extends JFrame {
     menuBar.add(pluginsMenu);
     menuBar.add(helpMenu);
   }
+
+  private void addParserActions(JMenu parentMenu) {
+    Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
+    for (LogImporter li : logImporters) {
+      TailLogActionListener action = new TailLogActionListener(otrosApplication, li);
+      JMenuItem menuItem = new JMenuItem(action);
+      String text = li.getName();
+      menuItem.setText(text);
+      menuItem.setToolTipText(li.getDescription());
+      parentMenu.add(menuItem);
+    }
+  }
+
 
   private void initExperimental() {
     JMenu menu = new JMenu("Experimental");
@@ -811,7 +829,6 @@ public class LogViewMainFrame extends JFrame {
     this.setLocation(location);
     this.setExtendedState(state);
   }
-
 
 
 }
