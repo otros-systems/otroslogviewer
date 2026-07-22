@@ -145,7 +145,7 @@ public final class VFSUtils {
   }
 
   // -----------------------------------------------------------------------
-  
+
 
   /**
    * Remove user credentials information
@@ -292,7 +292,7 @@ public final class VFSUtils {
     }
     DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
 
-    return resolveFileObject(filePath, options, null, persistentAuthStore, sessionAuthStore);
+    return resolveFileObject(filePath, options, authenticator, persistentAuthStore, sessionAuthStore);
   }
 
   private static boolean pathContainsCredentials(String filePath) {
