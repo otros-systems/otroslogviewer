@@ -11,9 +11,11 @@ import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.logppattern.LogbackLayoutEncoderConverter;
 import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
-import javax.annotation.Nonnull;
 import java.io.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -22,7 +24,6 @@ public class LoggerConfigUtil {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoggerConfigUtil.class.getName());
 
-  @Nonnull
   public static Set<String> extractLayoutPatterns(String content) {
     final LayoutEncoderConverter logbackLayoutEncoderConverter = new LogbackLayoutEncoderConverter();
 

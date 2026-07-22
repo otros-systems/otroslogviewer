@@ -36,7 +36,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
 
   public LogViewPanel importFiles() {
     LOGGER.info("Clicking import logs");
-    await().ignoreExceptions().until(() -> frame.button("OpenPanel.import").click());
+    await().ignoreExceptions().until(() -> frame.button("OpenPanel.import").click() != null);
     return new LogViewPanel(frame, robot);
   }
 
@@ -81,6 +81,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
             LOGGER.info(" table cell: " + cell.value());
             cell.doubleClick();
           }
+          return true;
         });
       }
     }
@@ -88,7 +89,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
     LOGGER.info(" opening file " + name);
     vfsBrowserDialog.textBox("VfsBrowser.filter").setText(name);
     vfsBrowserDialog.button("VfsBrowser.refresh").click();
-    await().ignoreExceptions().until(() -> table.cell(TableCell.row(1).column(0)).click());
+    await().ignoreExceptions().until(() -> table.cell(TableCell.row(1).column(0)).click() != null);
     vfsBrowserDialog.button("VfsBrowser.open").click();
     LOGGER.info(" file " + file.getAbsolutePath() + " opened");
   }

@@ -17,8 +17,9 @@ package pl.otros.logview.gui.editor.json;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
@@ -102,9 +103,9 @@ public class JsonPatternParserEditor extends LogPatternParserEditorBase {
   private Map<String, String> toMap(StringBuilder sb) {
     final String text = sb.toString();
     try {
-      final JSONObject jsonObject = new JSONObject(text);
+      final JsonObject jsonObject = JsonParser.parseString(text).getAsJsonObject();
       return JsonExtractor.toMap(jsonObject);
-    } catch (JSONException e) {
+    } catch (JsonSyntaxException | IllegalStateException e) {
       return new HashMap<>(0);
     }
   }

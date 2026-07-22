@@ -1,7 +1,6 @@
 package pl.otros.logview.gui.message.json;
 
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
+import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.pluginable.MessageFormatter;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 public class JsonMessageFormatter extends AbstractPluginableElement implements MessageFormatter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonMessageFormatter.class.getName());
+
+  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
   public JsonMessageFormatter() {
     super("Json formatter", "Formats json in message");
@@ -40,10 +41,9 @@ public class JsonMessageFormatter extends AbstractPluginableElement implements M
       final String group = jsonFragment.subString(message);
       String toAppend = group;
       try {
-        JSONObject o = new JSONObject(group);
-        final String jsonFormatted = o.toString(2);
-        toAppend = jsonFormatted;
-      } catch (JSONException e) {
+        JsonElement jsonElement = JsonParser.parseString(group);
+        toAppend = GSON.toJson(jsonElement);
+      } catch (JsonSyntaxException | IllegalStateException e) {
         LOGGER.debug("There is no need to format {}", group);
       }
       if (!sb.toString().endsWith("\n")) {

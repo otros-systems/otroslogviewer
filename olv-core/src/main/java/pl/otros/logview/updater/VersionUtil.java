@@ -15,13 +15,12 @@
  ******************************************************************************/
 package pl.otros.logview.updater;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Proxy;
@@ -34,7 +33,7 @@ import java.util.jar.Manifest;
 public class VersionUtil {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(VersionUtil.class.getName());
-  private static final String IMPLEMENTATION_TITLE="Implementation-Title";
+  private static final String IMPLEMENTATION_TITLE = "Implementation-Title";
   private static final String IMPLEMENTATION_VERSION = "Implementation-Version";
 
   private final String currentVersionPageUrl;
@@ -62,8 +61,8 @@ public class VersionUtil {
     LOGGER.debug("Response from version server is:\n{}", page);
     VersionInformationBean versionInformation = null;
     try {
-      versionInformation = JSON.parseObject(page, VersionInformationBean.class);
-    } catch (JSONException e) {
+      versionInformation = new Gson().fromJson(page, VersionInformationBean.class);
+    } catch (JsonSyntaxException e) {
       LOGGER.error("Cannot parse version info: '" + page + "'");
     }
     String version = Optional.ofNullable(versionInformation).map(VersionInformationBean::getCurrentVersion).map(VersionBean::toString).orElse(null);
@@ -80,7 +79,6 @@ public class VersionUtil {
     }
   }
 
-  @Nonnull
   private String buildRequestUrl() {
     return currentVersionPageUrl;
   }
@@ -102,15 +100,15 @@ public class VersionUtil {
     Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
     while (resources.hasMoreElements()) {
       URL url = resources.nextElement();
-        try (InputStream inputStream = url.openStream()) {
-          Manifest manifest = new Manifest(inputStream);
-          String implementationTitle = manifest.getMainAttributes().getValue(IMPLEMENTATION_TITLE);
-          if(implementationTitle != null && implementationTitle.equals("OtrosLogViewer-app")) {
-            String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
-            LOGGER.debug("Running version is " + result);
-            return Optional.of(result);
-          }
+      try (InputStream inputStream = url.openStream()) {
+        Manifest manifest = new Manifest(inputStream);
+        String implementationTitle = manifest.getMainAttributes().getValue(IMPLEMENTATION_TITLE);
+        if (implementationTitle != null && implementationTitle.equals("OtrosLogViewer-app")) {
+          String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
+          LOGGER.debug("Running version is " + result);
+          return Optional.of(result);
         }
+      }
     }
     return Optional.empty();
   }

@@ -55,7 +55,7 @@ public class OpenLogFileDialog extends TestComponent<DialogFixture, OpenLogFileD
     LOGGER.info(" opening file " + fileName);
     vfsBrowserDialog.textBox("VfsBrowser.filter").setText(fileName);
     vfsBrowserDialog.button("VfsBrowser.refresh").click();
-    await().ignoreExceptions().until(() -> table.cell(TableCell.row(1).column(0)).click());
+    await().ignoreExceptions().until(() -> table.cell(TableCell.row(1).column(0)).click() != null);
     vfsBrowserDialog.button("VfsBrowser.open").click();
     LOGGER.info(" file " + file.getAbsolutePath() + " opened");
 

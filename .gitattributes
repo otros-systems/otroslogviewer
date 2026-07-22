@@ -3,3 +3,8 @@
 # These files are binary and should be left untouched
 *.png binary
 *.gif binary
+
+# Do not manipulate .jar files like gradle-wrapper.jar
+*.jar binary
+# The gradle wrapper files should be generated with CRLF
+gradlew.bat text eol=crlf

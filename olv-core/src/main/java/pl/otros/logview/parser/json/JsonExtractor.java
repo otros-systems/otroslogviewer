@@ -1,10 +1,11 @@
 package pl.otros.logview.parser.json;
 
 import com.google.common.base.Splitter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
-import org.apache.sling.commons.json.util.Validator;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.api.model.MarkerColors;
@@ -109,43 +110,31 @@ public class JsonExtractor {
    */
   protected Optional<LogData> parseJsonLog(String s, DateFormat dateFormat) {
     try {
-      Validator.validate(s);
-      final JSONObject jsonObject = new JSONObject(s);
+      final JsonObject jsonObject = JsonParser.parseString(s).getAsJsonObject();
       final Map<String, String> map = toMap(jsonObject);
       return mapToLogData(map, dateFormat);
-    } catch (JSONException e) {
+    } catch (JsonSyntaxException | IllegalStateException e) {
       return Optional.empty();
-
     }
   }
 
   public List<String> extractFieldValues(String json, String field) {
-    final List<String> lines = Arrays.stream(json.split("\n")).map(String::trim).collect(Collectors.toList());
+    final List<String> lines = Arrays.stream(json.split("\n")).map(String::trim).toList();
     StringBuilder buffer = new StringBuilder();
     List<String> result = new ArrayList<>();
     for (String line : lines) {
       buffer.append(line);
-      if (isJson(buffer.toString())) {
-        try {
-          final JSONObject jsonObject = new JSONObject(buffer.toString());
-          buffer.setLength(0);
-          Optional.ofNullable(toMap(jsonObject).get(field))
-            .ifPresent(result::add);
-        } catch (JSONException ignore) {
-          //;
-        }
+      final String bufferContent = buffer.toString();
+      try {
+        final JsonObject jsonObject = JsonParser.parseString(bufferContent).getAsJsonObject();
+        buffer.setLength(0);
+        Optional.ofNullable(toMap(jsonObject).get(field))
+          .ifPresent(result::add);
+      } catch (JsonSyntaxException | IllegalStateException ignore) {
+        //Do nothing for better performance
       }
     }
     return result;
-  }
-
-  private boolean isJson(String s) {
-    try {
-      Validator.validate(s);
-      return true;
-    } catch (JSONException e) {
-      return false;
-    }
   }
 
   /**
@@ -228,22 +217,22 @@ public class JsonExtractor {
    *
    * @param j Json object t convert
    * @return map representation of json object
-   * @throws JSONException if log can't be parsed into JSON
    */
-  public static Map<String, String> toMap(JSONObject j) throws JSONException {
+  public static Map<String, String> toMap(JsonObject j) {
     return toMap(j, new HashMap<>(), StringUtils.EMPTY);
   }
 
-  private static Map<String, String> toMap(JSONObject j, Map<String, String> map, String prefix) throws JSONException {
-    final Iterator<String> keys = j.keys();
-    while (keys.hasNext()) {
-      final String key = keys.next();
-      final Object o = j.get(key);
-      if (o instanceof JSONObject) {
-        JSONObject jso = (JSONObject) o;
+  private static Map<String, String> toMap(JsonObject j, Map<String, String> map, String prefix) {
+    for (Map.Entry<String, JsonElement> entry : j.entrySet()) {
+      final String key = entry.getKey();
+      final JsonElement o = entry.getValue();
+      if (o.isJsonObject()) {
+        JsonObject jso = o.getAsJsonObject();
         toMap(jso, map, prefix + key + VALUES_SEPARATOR);
-      } else {
-        map.put(prefix + key, j.getString(key));
+      } else if (o.isJsonPrimitive()) {
+        map.put(prefix + key, o.getAsString());
+      } else if (o.isJsonNull()) {
+        map.put(prefix + key, "");
       }
     }
     return map;

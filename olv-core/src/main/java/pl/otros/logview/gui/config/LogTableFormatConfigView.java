@@ -1,6 +1,5 @@
 package pl.otros.logview.gui.config;
 
-import com.google.common.base.Joiner;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -488,7 +487,7 @@ class ColumnLayoutRenderer extends DefaultListCellRenderer {
     JLabel label = (JLabel) super.getListCellRendererComponent(jList, o, i, b, b1);
     if (o instanceof ColumnLayout) {
       ColumnLayout columnLayout = (ColumnLayout) o;
-      label.setText(" " + columnLayout.getName() + " [" + Joiner.on(", ").join(columnLayout.getColumns()) + "]");
+      label.setText(" " + columnLayout.getName() + " [" + String.join(", ", columnLayout.getColumns()) + "]");
     }
     return label;
   }

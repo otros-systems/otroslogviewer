@@ -1,10 +1,9 @@
 package pl.otros.logview.dist;
 
 import org.testng.annotations.Test;
-import org.testng.reporters.Files;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.testng.AssertJUnit.assertFalse;
 
@@ -16,6 +15,6 @@ public class FileNewLineEncodingTest {
   }
 
   private String readFile(String file) throws IOException {
-    return Files.readFile(new File("src/main/dist/" + file));
+    return java.nio.file.Files.readString(Path.of("src/main/dist/" + file));
   }
 }

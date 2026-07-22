@@ -1,8 +1,6 @@
 package pl.otros.logview.gui.session;
 
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
+import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.services.Deserializer;
@@ -20,27 +18,30 @@ public class SessionDeserializer implements Deserializer<List<Session>, String> 
   public Optional<List<Session>> deserialize(String data) {
     final ArrayList<Session> sessions = new ArrayList<>();
     try {
-      final JSONArray array = new JSONArray(data);
-      for (int i = 0; i < array.length(); i++) {
-        final JSONObject jsonObject = array.getJSONObject(i);
-        String name = jsonObject.getString("name");
-        final ArrayList<FileToOpen> fileToOpens = new ArrayList<>();
-        final JSONArray filesArray = jsonObject.optJSONArray("filesToOpen");
-        if (filesArray != null){
-          for (int j = 0; j < filesArray.length(); j++) {
-            final JSONObject filesToOpen = filesArray.getJSONObject(j);
-            String uri = filesToOpen.getString("uri");
-            Level level = Level.parse(filesToOpen.getString("level"));
-            OpenMode openMode = OpenMode.valueOf(filesToOpen.getString("openMode"));
-            String logImporter = filesToOpen.optString("logImporter", null);
-            fileToOpens.add(new FileToOpen(uri, openMode, level, Optional.ofNullable(logImporter)));
+      final JsonElement jsonElement = JsonParser.parseString(data);
+      if (jsonElement.isJsonArray()) {
+        final JsonArray array = jsonElement.getAsJsonArray();
+        for (int i = 0; i < array.size(); i++) {
+          final JsonObject jsonObject = array.get(i).getAsJsonObject();
+          String name = jsonObject.get("name").getAsString();
+          final ArrayList<FileToOpen> fileToOpens = new ArrayList<>();
+          if (jsonObject.has("filesToOpen") && jsonObject.get("filesToOpen").isJsonArray()) {
+            final JsonArray filesArray = jsonObject.getAsJsonArray("filesToOpen");
+            for (int j = 0; j < filesArray.size(); j++) {
+              final JsonObject filesToOpen = filesArray.get(j).getAsJsonObject();
+              String uri = filesToOpen.get("uri").getAsString();
+              Level level = Level.parse(filesToOpen.get("level").getAsString());
+              OpenMode openMode = OpenMode.valueOf(filesToOpen.get("openMode").getAsString());
+              String logImporter = filesToOpen.has("logImporter") ? filesToOpen.get("logImporter").getAsString() : null;
+              fileToOpens.add(new FileToOpen(uri, openMode, level, Optional.ofNullable(logImporter)));
+            }
           }
+          sessions.add(new Session(name, fileToOpens));
         }
-        sessions.add(new Session(name, fileToOpens));
       }
-    } catch (JSONException e) {
+    } catch (JsonSyntaxException | IllegalStateException e) {
       LOGGER.error("Can't deserialize sessions: ", e);
-      Optional.empty();
+      return Optional.empty();
     }
     LOGGER.info("Returning deserialized sessions: " + sessions.size());
     return Optional.of(sessions);

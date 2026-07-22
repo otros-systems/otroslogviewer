@@ -5,8 +5,6 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration.Configuration;
 import org.jdesktop.swingx.JXHyperlink;
-import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
-import org.pushingpixels.radiance.theming.api.skin.RadianceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.ConfKeys;
@@ -23,6 +21,7 @@ import pl.otros.logview.gui.actions.FontSize;
 import pl.otros.logview.gui.actions.search.SearchAction;
 import pl.otros.logview.gui.message.SearchResultColorizer;
 import pl.otros.logview.gui.message.update.FormatMessageDialogWorker;
+import pl.otros.logview.gui.util.LookAndFeelUtil;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;
 import pl.otros.swing.config.ValidationResult;
@@ -206,10 +205,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       .filter(ui -> !ui.getName().toLowerCase().matches("cde/motif|metal|windows classic|nimbus"))
       .toList();
 
-    final List<BasicLookAndFeel> substance = Arrays.asList(
-      new RadianceBusinessLookAndFeel(),
-      new RadianceGraphiteAquaLookAndFeel()
-    );
+    final List<BasicLookAndFeel> substance = LookAndFeelUtil.getSupportedLookAndFeels();
 
     final List<UIManager.LookAndFeelInfo> extraLf =
       substance.stream()
@@ -239,7 +235,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
     fontSize.setEnabled(customFontSize.isSelected());
 
     final String currentLf = UIManager.getLookAndFeel().getClass().getName();
-    final String lookAndFeel = c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, currentLf);
+    final String lookAndFeel = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c.getString(ConfKeys.APPEARANCE_LOOK_AND_FEEL, currentLf));
     for (int i = 0; i < lookAndFeelInfoJComboBox.getItemCount(); i++) {
       if (lookAndFeelInfoJComboBox.getItemAt(i).getClassName().equals(lookAndFeel)) {
         lookAndFeelInfoJComboBox.setSelectedIndex(i);

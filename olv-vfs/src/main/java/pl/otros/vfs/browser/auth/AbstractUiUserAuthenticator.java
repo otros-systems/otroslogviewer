@@ -16,16 +16,15 @@
 
 package pl.otros.vfs.browser.auth;
 
-import com.google.common.base.Throwables;
-import pl.otros.vfs.browser.i18n.Messages;
 import net.sf.vfsjfilechooser.utils.VFSURIParser;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.UserAuthenticationData;
 import org.apache.commons.vfs2.UserAuthenticationData.Type;
+import pl.otros.vfs.browser.i18n.Messages;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ResourceBundle;
 
 public abstract class AbstractUiUserAuthenticator implements OtrosUserAuthenticator {
 
@@ -81,8 +80,9 @@ public abstract class AbstractUiUserAuthenticator implements OtrosUserAuthentica
         SwingUtilities.invokeAndWait(doRun);
       }
     } catch (Exception e) {
-      if (Throwables.getRootCause(e) instanceof AuthorisationCancelledException) {
-        throw (AuthorisationCancelledException) Throwables.getRootCause(e);
+
+      if (ExceptionUtils.getRootCause(e) instanceof AuthorisationCancelledException authorisationCancelledException) {
+        throw authorisationCancelledException;
       }
     }
 

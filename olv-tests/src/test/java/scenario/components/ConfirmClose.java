@@ -39,7 +39,7 @@ public class ConfirmClose {
     await()
       .atMost(30, TimeUnit.SECONDS)
       .ignoreExceptions()
-      .until(confirmDialog::requireNotVisible);
+      .until(() -> confirmDialog.requireNotVisible() != null);
 
     LOGGER.info("Confirmation dialog is closed");
   }

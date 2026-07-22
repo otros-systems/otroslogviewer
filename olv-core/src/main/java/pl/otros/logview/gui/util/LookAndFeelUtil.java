@@ -4,16 +4,26 @@ import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.plaf.AbstractComponentAddon;
 import org.jdesktop.swingx.plaf.DefaultsList;
 import org.jdesktop.swingx.plaf.LookAndFeelAddons;
+import org.pushingpixels.radiance.theming.api.skin.RadianceBusinessLookAndFeel;
+import org.pushingpixels.radiance.theming.api.skin.RadianceGraphiteAquaLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.gui.OtrosSplash;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicLookAndFeel;
+import java.util.List;
+import java.util.Objects;
 
-public class LookAndFeelUtil {
-
+public final class LookAndFeelUtil {
   private static final Logger LOGGER = LoggerFactory.getLogger(LookAndFeelUtil.class.getName());
+  private static final BasicLookAndFeel LIGHT_LOOK_AND_FEEL = new RadianceBusinessLookAndFeel();
+  private static final BasicLookAndFeel DARK_LOOK_AND_FEEL = new RadianceGraphiteAquaLookAndFeel();
+
+  private LookAndFeelUtil() {
+    /* This utility class should not be instantiated */
+  }
 
   public static void initLf(String lookAndFeel) {
     try {
@@ -25,6 +35,32 @@ public class LookAndFeelUtil {
              UnsupportedLookAndFeelException e1) {
       LOGGER.warn("Cannot initialize LookAndFeel: {}", e1.getMessage());
     }
+  }
+
+  public static BasicLookAndFeel getLightLookAndFeel() {
+    return LIGHT_LOOK_AND_FEEL;
+  }
+
+  public static BasicLookAndFeel getDarkLookAndFeel() {
+    return DARK_LOOK_AND_FEEL;
+  }
+
+  public static List<BasicLookAndFeel> getSupportedLookAndFeels() {
+    return List.of(LIGHT_LOOK_AND_FEEL, DARK_LOOK_AND_FEEL);
+  }
+
+  public static String checkSupportedLookAndFeelOrReturnDefault(String lookAndFeelClassname) {
+    if (isSupportedLookAndFeel(lookAndFeelClassname) || Objects.equals(UIManager.getSystemLookAndFeelClassName(), lookAndFeelClassname)) {
+      return lookAndFeelClassname;
+    }
+    return getLightLookAndFeel().getClass().getName();
+  }
+
+  public static boolean isSupportedLookAndFeel(String lookAndFeelClassname) {
+    return getSupportedLookAndFeels().stream()
+      .map(BasicLookAndFeel::getClass)
+      .map(Class::getName)
+      .anyMatch(name -> Objects.equals(name, lookAndFeelClassname));
   }
 
   private static class Addon extends AbstractComponentAddon {

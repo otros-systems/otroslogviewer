@@ -15,14 +15,12 @@
  */
 package pl.otros.vfs.browser.util;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Throwables;
 import com.jcraft.jsch.JSchException;
-import jcifs.smb.SmbAuthException;
 import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.UserAuthenticationData.Type;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
@@ -132,7 +130,8 @@ public final class VFSUtils {
           StandardFileSystemManager fm = new StandardFileSystemManager();
           fm.setCacheStrategy(CacheStrategy.MANUAL);
           fm.init();
-          LOGGER.info("Supported schemes: {} ", Joiner.on(", ").join(fm.getSchemes()));
+
+          LOGGER.info("Supported schemes: {} ", String.join(", ", fm.getSchemes()));
           fileSystemManager = fm;
         } catch (Exception exc) {
           throw new RuntimeException(exc);
@@ -325,7 +324,7 @@ public final class VFSUtils {
       resolveFile.getType();
     } catch (FileSystemException e) {
       LOGGER.error("Error resolving file " + URI_UTILS.getFriendlyURI(filePath), e);
-      Throwable rootCause = Throwables.getRootCause(e);
+      Throwable rootCause = ExceptionUtils.getRootCause(e);
       boolean authorizationFailed = checkForWrongCredentials(rootCause);
       if (authorizationFailed) {
         LOGGER.error("Wrong user name or password for " + filePath);
@@ -367,12 +366,8 @@ public final class VFSUtils {
       return checkForWrongCredentials(exception.getCause());
     } else {
       String message = exception.getMessage();
-      return
-        exception instanceof SmbAuthException && message.contains("The specified network password is not correct") ||
-          exception instanceof JSchException && message.contains("Auth fail");
+      return exception instanceof JSchException && message.contains("Auth fail");
     }
-
-
   }
 
   /**

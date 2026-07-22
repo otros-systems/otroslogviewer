@@ -46,10 +46,8 @@ public class ThreadFilter extends AbstractLogFilter {
     jList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
         selectedThread.clear();
-        Object[] selectedValues = jList.getSelectedValues();
-        for (Object selectedValue : selectedValues) {
-          selectedThread.add((String) selectedValue);
-        }
+        List<String> selectedValues = jList.getSelectedValuesList();
+        selectedThread.addAll(selectedValues);
         listener.ifPresent(LogFilterValueChangeListener::valueChanged);
       }
     });

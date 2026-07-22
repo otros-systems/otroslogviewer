@@ -31,14 +31,14 @@ public class LogsTable extends TestComponent<JTableFixture, LogsTable> {
     }
   }
 
-  public LogsTable waitForSelectedRow(int number){
+  public LogsTable waitForSelectedRow(int number) {
     await()
       .ignoreExceptions()
-      .until(() -> me().requireSelectedRows(number));
+      .until(() -> me().requireSelectedRows(number) != null);
     return this;
   }
 
-  public LogsTable hasValueInRow(int row, String content){
+  public LogsTable hasValueInRow(int row, String content) {
     await()
       .ignoreExceptions()
       .until(() -> Arrays.stream(me().contents()[row]).anyMatch(c -> c.equals(content)));
