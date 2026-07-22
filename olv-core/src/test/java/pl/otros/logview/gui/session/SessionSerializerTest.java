@@ -1,17 +1,19 @@
 package pl.otros.logview.gui.session;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.MatcherAssert;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.StreamSupport;
 
 public class SessionSerializerTest {
 
@@ -28,30 +30,48 @@ public class SessionSerializerTest {
       new Object[]{
         "empty",
         Collections.emptyList(),
-        "empty.json"},
+        "empty.json" },
       new Object[]{
         "1 session with 1 file",
         Collections.singletonList(new Session("session1", singleFilesToOpen)),
-        "serialised1session1file.json"},
+        "serialised1session1file.json" },
       new Object[]{
         "1 session with 2 files",
         Collections.singletonList(new Session("session2", twoFilesToOpen)),
-        "serialised1session2files.json"},
+        "serialised1session2files.json" },
       new Object[]{
         "2 sessions",
         Arrays.asList(
           new Session("session1", singleFilesToOpen),
           new Session("session2", twoFilesToOpen)),
-        "serialised2sessions2files.json"}
+        "serialised2sessions2files.json" }
     };
   }
 
   @Test(dataProvider = "serialize")
   public void testSerialize(String name, List<Session> sessionList, String jsonFileName) throws Exception {
-    String json = IOUtils.toString(this.getClass().getResourceAsStream(jsonFileName), "UTF-8");
-    final String serialize = new SessionSerializer().serialize(sessionList);
-    final SameJSONAs<? super String> sameJSONAs = SameJSONAs.sameJSONAs(json).allowingAnyArrayOrdering();
-    MatcherAssert.assertThat(serialize, sameJSONAs);
+    String json = IOUtils.toString(this.getClass().getResourceAsStream(jsonFileName), StandardCharsets.UTF_8);
+    String serialized = new SessionSerializer().serialize(sessionList);
+
+    // Compare parsed JSON instead of raw strings. Gson ignores formatting and
+    // object attribute order. Arrays are sorted by session name because the
+    // session order is not relevant for this test.
+    Assert.assertEquals(
+      getSortedByName(serialized),
+      getSortedByName(json));
+  }
+
+  /**
+   * Parses the JSON array and sorts the sessions by name to allow
+   * an order-independent comparison.
+   */
+  private List<JsonObject> getSortedByName(String json) {
+    JsonArray array = JsonParser.parseString(json).getAsJsonArray();
+
+    return StreamSupport.stream(array.spliterator(), false)
+      .map(JsonElement::getAsJsonObject)
+      .sorted(Comparator.comparing(o -> o.get("name").getAsString()))
+      .toList();
   }
 
 }
