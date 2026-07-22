@@ -1,6 +1,5 @@
 package scenario;
 
-import org.awaitility.Duration;
 import org.testng.annotations.Test;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
@@ -15,6 +14,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -49,17 +49,17 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
     dialog.pasteClipboard();
 
     await("waiting for log importer detection")
-      .atMost(Duration.TEN_SECONDS)
+      .atMost(Duration.ofSeconds(10L))
       .until(() -> dialog.clipboardTextAreaContent().text().equals(logsInClipboard));
 
     await("waiting for import button to be enabled")
-      .atMost(Duration.TEN_SECONDS)
+      .atMost(Duration.ofSeconds(10L))
       .until(dialog::isImportEnabled);
 
     final LogViewPanel logViewPanel = dialog.importLogs();
 
     await("waiting for 10 events in log table")
-      .atMost(Duration.ONE_MINUTE)
+      .atMost(Duration.ofMinutes(1L))
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 10);
     IntStream.range(0, 9)
       .forEach(i -> logViewPanel.logsTable().hasValueInRow(i, "Message " + i));
@@ -71,7 +71,7 @@ public class ParseClipboardTest extends OtrosLogViewerBaseTest {
     clipboard.setContents(new Transferable() {
       @Override
       public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{DataFlavor.stringFlavor};
+        return new DataFlavor[]{ DataFlavor.stringFlavor };
       }
 
       @Override
