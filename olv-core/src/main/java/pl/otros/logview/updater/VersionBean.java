@@ -1,14 +1,14 @@
 package pl.otros.logview.updater;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.google.gson.annotations.SerializedName;
 
 public class VersionBean {
 
-  @JSONField(name = "major")
+  @SerializedName("major")
   private String major;
-  @JSONField(name = "minor")
+  @SerializedName("minor")
   private String minor;
-  @JSONField(name = "patch")
+  @SerializedName("patch")
   private String patch;
 
   public String getMajor() {

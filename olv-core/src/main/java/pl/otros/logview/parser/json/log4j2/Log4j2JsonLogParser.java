@@ -3,8 +3,6 @@ package pl.otros.logview.parser.json.log4j2;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.util.Validator;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataBuilder;
@@ -79,7 +77,6 @@ public class Log4j2JsonLogParser extends AbstractPluginableElement implements Lo
 
     String s = unmatchedLog.toString();
     try {
-      Validator.validate(s);
       final Gson gson = new GsonBuilder()
 
         .registerTypeAdapter(new TypeToken<Thrown>() {
@@ -113,7 +110,7 @@ public class Log4j2JsonLogParser extends AbstractPluginableElement implements Lo
         .withProperties(log4j2JsonEvent.getContextMap())
         .build();
 
-    } catch (JSONException ignored) {
+    } catch (JsonSyntaxException | IllegalStateException ignored) {
     }
 
     return null;
@@ -122,7 +119,7 @@ public class Log4j2JsonLogParser extends AbstractPluginableElement implements Lo
 
   @Override
   public TableColumns[] getTableColumnsToUse() {
-    return new TableColumns[]{ID, LEVEL, TIME, MESSAGE, THREAD, LOGGER_NAME, CLASS, METHOD, LINE, FILE, NOTE, NDC, MARK, PROPERTIES};
+    return new TableColumns[]{ ID, LEVEL, TIME, MESSAGE, THREAD, LOGGER_NAME, CLASS, METHOD, LINE, FILE, NOTE, NDC, MARK, PROPERTIES };
   }
 
   @Override

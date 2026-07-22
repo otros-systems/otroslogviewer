@@ -17,9 +17,9 @@ public class SearchHistorySerializationTest {
   @DataProvider(name = "toSerializerData")
   public Object[][] dataProvider() {
     return new Object[][]{
-        new Object[]{new SearchHistory(SearchAction.SearchMode.STRING_CONTAINS, "string search"), "[{\"query\":\"string search\",\"searchMode\":\"STRING_CONTAINS\"}]"},
-        new Object[]{new SearchHistory(SearchAction.SearchMode.REGEX, "regex search"), "[{\"query\":\"regex search\",\"searchMode\":\"REGEX\"}]"},
-        new Object[]{new SearchHistory(SearchAction.SearchMode.QUERY, "query search"), "[{\"query\":\"query search\",\"searchMode\":\"QUERY\"}]"}
+      new Object[]{ new SearchHistory(SearchAction.SearchMode.STRING_CONTAINS, "string search"), "[{\"searchMode\":\"STRING_CONTAINS\",\"query\":\"string search\"}]" },
+      new Object[]{ new SearchHistory(SearchAction.SearchMode.REGEX, "regex search"), "[{\"searchMode\":\"REGEX\",\"query\":\"regex search\"}]" },
+      new Object[]{ new SearchHistory(SearchAction.SearchMode.QUERY, "query search"), "[{\"searchMode\":\"QUERY\",\"query\":\"query search\"}]" }
     };
   }
 
@@ -30,25 +30,25 @@ public class SearchHistorySerializationTest {
     final String serialized = new SearchHistorySerialization().serializer().serialize(Collections.singletonList(searchHistory));
 
     //Then
-    assertEquals(serialized,expected);
+    assertEquals(serialized, expected);
   }
 
   @Test
   public void testDeserializer() throws Exception {
     String data = "[\n" +
-        "  {\n" +
-        "    \"query\": \"s+\",\n" +
-        "    \"searchMode\": \"REGEX\"\n" +
-        "  },\n" +
-        "  {\n" +
-        "    \"query\": \"text\",\n" +
-        "    \"searchMode\": \"STRING_CONTAINS\"\n" +
-        "  },\n" +
-        "  {\n" +
-        "    \"query\": \"level>INFO\",\n" +
-        "    \"searchMode\": \"QUERY\"\n" +
-        "  }\n" +
-        "]";
+      "  {\n" +
+      "    \"query\": \"s+\",\n" +
+      "    \"searchMode\": \"REGEX\"\n" +
+      "  },\n" +
+      "  {\n" +
+      "    \"query\": \"text\",\n" +
+      "    \"searchMode\": \"STRING_CONTAINS\"\n" +
+      "  },\n" +
+      "  {\n" +
+      "    \"query\": \"level>INFO\",\n" +
+      "    \"searchMode\": \"QUERY\"\n" +
+      "  }\n" +
+      "]";
     final Optional<ArrayList<SearchHistory>> deserialize = new SearchHistorySerialization().deserializer().deserialize(data);
     assertTrue(deserialize.isPresent());
     deserialize.ifPresent(list -> {
