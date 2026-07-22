@@ -1,0 +1,3 @@
+[2019-06-18 14:46:53,522][ INFO][T-X][com.company.product.TheClass][ 257]a message
+[2019-06-18 14:46:54,087][TRACE][T-Y][com.company.product.TheClass][ 558]another mesage with output: [MyObject][7714][20190611.0]
+[2019-06-18 14:46:55,568][DEBUG][T-X][com.company.product.OtherClass][  1]a last message

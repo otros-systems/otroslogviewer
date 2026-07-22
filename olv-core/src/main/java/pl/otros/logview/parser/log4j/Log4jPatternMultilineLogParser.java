@@ -177,6 +177,10 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   private static final String REGEXP_GREEDY_WILDCARD = ".*";
   private static final String PATTERN_WILDCARD = "*";
   private static final String IN_SPACE_GROUP = "(\\s*?\\S*\\s*?)";
+  /**
+   * All characters (\S) excluding the square brackets "]"
+   */
+  private static final String IN_SPACE_GROUP_SQUARE_BRACKETS = "(\\s*?[^\\r\\n\\t\\f\\v \\]]*\\s*?)";
   private static final String DEFAULT_GROUP = "(" + REGEXP_DEFAULT_WILDCARD + ")";
   private static final String GREEDY_GROUP = "(" + REGEXP_GREEDY_WILDCARD + ")";
   private static final String MULTIPLE_SPACES_REGEXP = "[ ]+";
@@ -356,7 +360,8 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     // some locales (for example, French) generate timestamp text with
     // characters not included in \w -
     // now using \S (all non-whitespace characters) instead of /w
-    String result = timestampFormat.replaceAll(VALID_DATEFORMAT_CHAR_PATTERN + "+", "\\\\S+");
+    // \S also contains "]" whitch is problematic if "[]" is in the message
+    String result = timestampFormat.replaceAll(VALID_DATEFORMAT_CHAR_PATTERN + "+", "[^\\\\r\\\\n\\\\t\\\\f\\\\v \\\\]]+");
     // make sure dots in timestamp are escaped
     result = result.replaceAll(Pattern.quote("."), "\\\\.");
     return result;
@@ -434,6 +439,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     }
 
     newPattern = replaceMetaChars(newPattern);
+    boolean containsSquareBrackets = newPattern.contains("]");
 
     // compress one or more spaces in the pattern into the [ ]+ regexp
     // (supports padding of level in log files)
@@ -448,7 +454,14 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       } else if (TIMESTAMP.equals(keyword)) {
         newPattern = singleReplace(newPattern, String.valueOf(i), "(" + timestampPatternText.replaceAll("'", "") + ")");
       } else if (LOGGER_STRING.equals(keyword) || LEVEL.equals(keyword)) {
-        newPattern = singleReplace(newPattern, String.valueOf(i), IN_SPACE_GROUP);
+        /*
+        Ticket: #563
+        In the case of square brackets "]",
+        we need to use a different regex if the message also contains square brackets.
+        This applies to all characters used as delimiters, but square brackets are frequently used.
+         */
+        String replaceWith = containsSquareBrackets ? IN_SPACE_GROUP_SQUARE_BRACKETS : IN_SPACE_GROUP;
+        newPattern = singleReplace(newPattern, String.valueOf(i), replaceWith);
       } else {
         newPattern = singleReplace(newPattern, String.valueOf(i), DEFAULT_GROUP);
       }
