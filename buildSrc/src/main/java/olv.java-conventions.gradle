@@ -77,6 +77,5 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.6.2'
     testImplementation 'uk.co.datumedge:hamcrest-json:0.2'
     testImplementation 'org.awaitility:awaitility:2.0.0'
-    testImplementation 'org.assertj:assertj-swing-testng:3.5.0'
-    //testImplementation 'org.assertj:assertj-swing-testng:3.17.1'
+    testImplementation 'org.assertj:assertj-swing-testng:3.17.1'
 }
