@@ -15,7 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers.editor;
 
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
@@ -35,6 +36,8 @@ import java.util.Properties;
 
 public class NewMarkerAction extends AbstractAction {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(NewMarkerAction.class);
+
   private final JFileChooser chooser;
   private final File markersFolder = AllPluginables.USER_MARKERS;
 
@@ -45,6 +48,7 @@ public class NewMarkerAction extends AbstractAction {
       markersFolder.mkdirs();
     }
     chooser = new JFileChooser(markersFolder);
+    chooser.setName(MarkerEditor.FILE_CHOOSER);
     chooser.setFileFilter(new FileFilter() {
 
       @Override
@@ -62,7 +66,7 @@ public class NewMarkerAction extends AbstractAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     final JFrame f = new JFrame("Create new marker");
-    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     Container contentPane = f.getContentPane();
     final MarkerEditor editor = new MarkerEditor();
@@ -70,6 +74,7 @@ public class NewMarkerAction extends AbstractAction {
     contentPane.add(editor);
 
     JButton save = new JButton("Save");
+    save.setName(MarkerEditor.SAVE);
     save.addActionListener(new ActionListener() {
 
       private final PluginableElementsContainer<AutomaticMarker> markersContainser = AllPluginables.getInstance().getMarkersContainser();
@@ -86,14 +91,17 @@ public class NewMarkerAction extends AbstractAction {
 
         try {
           saveMarker(saveFile, markerPropertiesFromView);
-        } catch (IOException e) {
-          JOptionPane.showMessageDialog(f, "Error saving marker: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+          LOGGER.error("Error save marker to file {}", saveFile, ex);
+          JOptionPane.showMessageDialog(f, "Error saving marker.", "Error", JOptionPane.ERROR_MESSAGE);
           return;
         }
+
         try {
           AutomaticMarker marker = AutomaticMarkerLoader.loadPropertyBasedMarker(markerPropertiesFromView);
           markersContainser.addElement(marker);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+          LOGGER.error("Error creating marker", e);
           JOptionPane.showMessageDialog(f, "Error creating marker: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           return;
         }
@@ -116,10 +124,7 @@ public class NewMarkerAction extends AbstractAction {
     }
     try (FileOutputStream fout = new FileOutputStream(file)) {
       markerProperties.setProperty(PropertyFileAbstractMarker.FILE, file.getName());
-      markerProperties.store(fout, "Edited at " + new Date().toString());
-    } catch (IOException e) {
-      throw e;
+      markerProperties.store(fout, "Edited at " + new Date());
     }
   }
-
 }

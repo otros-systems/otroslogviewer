@@ -27,6 +27,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.jar.Manifest;
 
@@ -67,7 +68,7 @@ public class VersionUtil {
     }
     String version = Optional.ofNullable(versionInformation).map(VersionInformationBean::getCurrentVersion).map(VersionBean::toString).orElse(null);
     final Optional<String> s = validateResponse(version);
-    LOGGER.info("Current version is: {}", s);
+    LOGGER.info("Current version is: {}", s.orElse(null));
     return s;
   }
 
@@ -90,7 +91,7 @@ public class VersionUtil {
    * @throws IOException
    */
   public String getRunningVersion() throws IOException {
-    if (!runningVersion.isPresent()) {
+    if (runningVersion.isEmpty()) {
       runningVersion = readRunningVersionFromManifest();
     }
     return runningVersion.orElse("");
@@ -103,7 +104,7 @@ public class VersionUtil {
       try (InputStream inputStream = url.openStream()) {
         Manifest manifest = new Manifest(inputStream);
         String implementationTitle = manifest.getMainAttributes().getValue(IMPLEMENTATION_TITLE);
-        if (implementationTitle != null && implementationTitle.equals("OtrosLogViewer-app")) {
+        if (Objects.equals(implementationTitle, "OtrosLogViewer-app")) {
           String result = manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION);
           LOGGER.debug("Running version is " + result);
           return Optional.of(result);

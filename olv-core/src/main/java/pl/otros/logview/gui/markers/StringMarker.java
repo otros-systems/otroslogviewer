@@ -22,7 +22,7 @@ import java.util.Properties;
 
 public class StringMarker extends PropertyFileAbstractMarker implements AutomaticMarker {
 
-  public StringMarker(Properties p) throws Exception {
+  public StringMarker(Properties p) {
     super(p);
   }
 
