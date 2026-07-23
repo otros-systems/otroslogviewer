@@ -30,7 +30,6 @@ configurations {
 dependencies {
     implementation project(':olv-core')
     implementation project(':olv-api')
-    implementation project(':olv-formatter')
     //the dependency below allows this module to access the shadowJar from the olv-core module (see distribution section)
     instrumentedClasspath project(path: ":olv-core", configuration: 'instrumentedJars')
 }
