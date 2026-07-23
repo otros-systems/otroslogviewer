@@ -137,6 +137,7 @@ public class LogViewPanelWrapper extends JPanel {
     LOGGER.info("Log view panel is removed from view. Clearing data table for GC and running onCloseAction action");
     dataTableModel.clear();
     onCloseAction.ifPresent(Runnable::run);
+    logViewPanel.closing();
     timer.ifPresent(Timer::stop);
   }
 
@@ -268,7 +269,7 @@ public class LogViewPanelWrapper extends JPanel {
           s.getPercent(),
           s.getSource().stringForm()))
         .collect(Collectors.joining("<BR/>"))
-        +"</HTML>";
+        + "</HTML>";
       progressBar.setToolTipText(tooltip);
     });
     t.setRepeats(true);

@@ -29,6 +29,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.HierarchyEvent;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -51,6 +52,13 @@ public abstract class LogPatternParserEditorBase extends JPanel implements LogPa
   public LogPatternParserEditorBase(OtrosApplication otrosApplication, String logPatternText) {
     this.otrosApplication = otrosApplication;
     this.logPatternText = logPatternText;
+
+    //If the editor is closed, the LogViewPannel must unregister listeners
+    this.addHierarchyListener(e -> {
+      if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED && e.getChanged().getParent() == null) {
+        logViewPanel.closing();
+      }
+    });
     createGui();
     loadDefaultPropertyEditorContent();
     createActions();
