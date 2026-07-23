@@ -65,7 +65,7 @@ public class ThemeKey {
     "Stacktrace -> class",
     "theme.logDetails.stacktrace.class",
     new Color(11, 143, 61),
-    new Color( 0xFF6666));
+    new Color(0xFF6666));
 
   public static final ThemeKey LOG_DETAILS_STACKTRACE_METHOD = new ThemeKey(
     "Stacktrace -> method",
@@ -153,6 +153,24 @@ public class ThemeKey {
     "theme.textfield.error",
     Color.RED,
     Color.RED
+  );
+  public static final ThemeKey HEAP_BAR_NORMAL = new ThemeKey(
+    "Heap bar -> normal",
+    "theme.heapBar.normal",
+    new Color(0x007a18),
+    new Color(0x00c60a)
+  );
+  public static final ThemeKey HEAP_BAR_WARNING = new ThemeKey(
+    "Heap bar -> warning",
+    "theme.heapBar.warning",
+    new Color(0x9A6000),
+    new Color(0xFFA961)
+  );
+  public static final ThemeKey HEAP_BAR_CRITICAL = new ThemeKey(
+    "Heap bar -> critical",
+    "theme.heapBar.critical",
+    new Color(0xC62828),
+    new Color(0xFF7373)
   );
 
   private String name;

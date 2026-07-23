@@ -18,6 +18,9 @@ package pl.otros.logview.gui;
 
 import org.pushingpixels.radiance.animation.api.Timeline;
 import org.pushingpixels.radiance.animation.api.ease.Sine;
+import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,13 +31,15 @@ import java.text.NumberFormat;
 public class MemoryUsedStatsUpdater implements Runnable {
 
   private final JProgressBar bar;
+  private final OtrosApplication otrosApplication;
   private long refreshTime = 10000;
   private final NumberFormat nf = NumberFormat.getInstance();
 
-  public MemoryUsedStatsUpdater(JProgressBar bar, long refreshTime) {
+  public MemoryUsedStatsUpdater(JProgressBar bar, long refreshTime, OtrosApplication otrosApplication) {
     super();
     this.bar = bar;
     this.refreshTime = refreshTime;
+    this.otrosApplication = otrosApplication;
     bar.setMaximum(100);
     bar.setMinimum(0);
     bar.setStringPainted(true);
@@ -48,6 +53,9 @@ public class MemoryUsedStatsUpdater implements Runnable {
     });
     nf.setMaximumFractionDigits(1);
     nf.setMinimumFractionDigits(1);
+    bar.addPropertyChangeListener("UI", e -> {
+      bar.updateUI();
+    });
   }
 
   @Override
@@ -57,14 +65,13 @@ public class MemoryUsedStatsUpdater implements Runnable {
       long heapSize = Runtime.getRuntime().totalMemory();
       long free = Runtime.getRuntime().freeMemory();
       final float percentUsed = 100 * ((heapSize - free) / (float) heapSize);
-      long percentOfTotalUsed = 100 * (heapSize - free) / heapMaxSize;
-      Color newColor = Color.GREEN;
+      int percentOfTotalUsed = (int) (100d * ((double) heapSize - (double) free) / (double) heapMaxSize);
+      Theme theme = otrosApplication.getTheme();
+      Color newColor = theme.getColor(ThemeKey.HEAP_BAR_NORMAL);
       if (percentOfTotalUsed > 93) {
-        newColor = Color.RED;
+        newColor = theme.getColor(ThemeKey.HEAP_BAR_CRITICAL);
       } else if (percentOfTotalUsed > 83) {
-        newColor = Color.ORANGE;
-      } else if (percentOfTotalUsed > 75) {
-        newColor = Color.YELLOW;
+        newColor = theme.getColor(ThemeKey.HEAP_BAR_WARNING);
       }
       final String message = String.format("Used %sMB of %sMB", nf.format((percentUsed * heapSize / (100 * 1024 * 1024))), nf.format(heapSize / (1024 * 1024)));
       final String toolTip = message
