@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui;
 
-import pl.otros.logview.updater.VersionUtil;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.updater.VersionUtil;
 
 import java.awt.*;
 import java.io.IOException;
@@ -52,9 +52,9 @@ public class OtrosSplash {
     g.fillRect(0, 0, bounds.width, bounds.height);
     g.setPaintMode();
     g.setColor(Color.BLACK);
-    g.setFont(g.getFont().deriveFont(14f));
-    g.drawString(message, 20, 110);
-    g.drawString(version, 20, 130);
+    g.setFont(g.getFont().deriveFont(22f));
+    g.drawString(message, 41, 170);
+    g.drawString(version, 41, 215);
     splashScreen.update();
   }
 

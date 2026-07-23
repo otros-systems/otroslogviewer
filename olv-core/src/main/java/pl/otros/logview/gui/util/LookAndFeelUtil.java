@@ -27,7 +27,12 @@ public final class LookAndFeelUtil {
 
   public static void initLf(String lookAndFeel) {
     try {
-      OtrosSplash.setMessage("Loading L&F " + lookAndFeel);
+      //Do not display the hole class name
+      String shortLookAndFeel = lookAndFeel;
+      if (lookAndFeel.contains(".")) {
+        shortLookAndFeel = lookAndFeel.substring(lookAndFeel.lastIndexOf(".") + 1);
+      }
+      OtrosSplash.setMessage("Loading L&F " + shortLookAndFeel);
       LOGGER.debug("Initializing look and feel: {}", lookAndFeel);
       LookAndFeelAddons.contribute(new Addon());
       UIManager.setLookAndFeel(lookAndFeel);
