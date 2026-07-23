@@ -23,7 +23,6 @@ dependencies {
     implementation project(':olv-gui')
     implementation project(':olv-vfs')
     implementation project(':olv-api')
-    implementation project(':olv-formatter')
     implementation project(':olv-parser')
     testImplementation 'com.github.tomakehurst:wiremock:1.58'
 }
