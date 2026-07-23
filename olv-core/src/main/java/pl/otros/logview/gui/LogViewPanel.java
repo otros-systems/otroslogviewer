@@ -102,6 +102,9 @@ public class LogViewPanel extends LogViewPanelI {
   private List<LogFilter> filtersList;
   private final DataConfiguration configuration;
   private LogData displayedLogData;
+  private final PluginableElementEventListener<AutomaticMarker> markersMenuListener;
+  private final PluginableElementEventListener<MessageColorizer> messageColorListener;
+  private final PluginableElementEventListener<MessageFormatter> messageFormatterListener;
 
   public LogViewPanel(final LogDataTableModel dataTableModel, TableColumns[] visibleColumns, final OtrosApplication otrosApplication) {
     super();
@@ -113,7 +116,8 @@ public class LogViewPanel extends LogViewPanelI {
 
     AllPluginables allPluginable = AllPluginables.getInstance();
     markersContainer = allPluginable.getMarkersContainser();
-    markersContainer.addListener(new MarkersMenuReloader());
+    markersMenuListener = new MarkersMenuReloader();
+    markersContainer.addListener(markersMenuListener);
     logFiltersContainer = allPluginable.getLogFiltersContainer();
     messageColorizersContainer = allPluginable.getMessageColorizers();
     messageFormattersContainer = allPluginable.getMessageFormatters();
@@ -121,8 +125,10 @@ public class LogViewPanel extends LogViewPanelI {
     selectedMessageFormattersContainer = new PluginableElementsContainer<>();
     messageColorizersContainer.getElements().forEach(selectedMessageColorizersContainer::addElement);
     messageFormattersContainer.getElements().forEach(selectedMessageFormattersContainer::addElement);
-    messageColorizersContainer.addListener(new SynchronizePluginableContainerListener<>(selectedMessageColorizersContainer));
-    messageFormattersContainer.addListener(new SynchronizePluginableContainerListener<>(selectedMessageFormattersContainer));
+    messageColorListener = new SynchronizePluginableContainerListener<>(selectedMessageColorizersContainer);
+    messageColorizersContainer.addListener(messageColorListener);
+    messageFormatterListener = new SynchronizePluginableContainerListener<>(selectedMessageFormattersContainer);
+    messageFormattersContainer.addListener(messageFormatterListener);
 
 
     menuLabelFont = new JLabel().getFont().deriveFont(Font.BOLD);
@@ -808,6 +814,13 @@ public class LogViewPanel extends LogViewPanelI {
   @Override
   public JToolBar getMessageDetailToolbar() {
     return messageDetailToolbar;
+  }
+
+  @Override
+  public void closing() {
+    markersContainer.removeListener(markersMenuListener);
+    messageColorizersContainer.removeListener(messageColorListener);
+    messageFormattersContainer.removeListener(messageFormatterListener);
   }
 
   private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {

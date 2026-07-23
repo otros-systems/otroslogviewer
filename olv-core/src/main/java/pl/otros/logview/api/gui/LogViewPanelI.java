@@ -45,4 +45,10 @@ public abstract class LogViewPanelI extends JPanel implements LogDataCollector {
   public abstract PluginableElementsContainer<MessageFormatter> getSelectedMessageFormattersContainer();
 
   public abstract JToolBar getMessageDetailToolbar();
+
+  /**
+   * Will execute when the log view is closing.
+   */
+  public void closing() {
+  }
 }
