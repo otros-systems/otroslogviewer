@@ -15,9 +15,10 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.pattern;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
@@ -66,10 +67,9 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
 
   public void init(InputStream in) throws ConfigurationException {
     propertiesConfiguration = new PropertiesConfiguration();
-    propertiesConfiguration.setDelimiterParsingDisabled(true);
-    propertiesConfiguration.load(in, "UTF-8");
+    FileHandler handler = new FileHandler(propertiesConfiguration);
+    handler.load(in);
     configuration = new DataConfiguration(propertiesConfiguration);
-    configuration.setDelimiterParsingDisabled(true);
     String pa = configuration.getString(PROP_PATTERN);
     int flags = 0;
     flags = flags | (configuration.getBoolean(PROP_PATTERN_CANON_EQ, false) ? Pattern.CANON_EQ : 0);
@@ -90,7 +90,8 @@ public class PropertyPatternMessageColorizer implements MessageColorizer {
   }
 
   public void store(OutputStream out) throws ConfigurationException {
-    propertiesConfiguration.save(out, "UTF-8");
+    FileHandler handler = new FileHandler(propertiesConfiguration);
+    handler.save(out);
   }
 
   @Override

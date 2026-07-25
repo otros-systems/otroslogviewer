@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
             LOGGER.warn(String.format("Current version is %s, running version is %s", current, running));
           }
         });
-        if (!maybeCurrent.isPresent()){
+        if (!maybeCurrent.isPresent()) {
           handleError(new Exception("Unable to check latest version"));
         }
 

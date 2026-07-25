@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message;
 
-import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.testng.AssertJUnit;
 import org.testng.annotations.DataProvider;
@@ -87,10 +87,10 @@ public class StackTraceColorizerTest {
   @DataProvider(name = "exceptionNameAndMessage")
   public Object[][] exceptionNameAndMessageDataProvider() {
     return new Object[][]{
-      new Object[]{"", false},
-      new Object[]{"Caused by: java.io.IOException: Connection reset by peer", true},
-      new Object[]{"Caused by: java.io.IOException: Error executing request, connection broken.... :)", true},
-      new Object[]{"java.lang.RuntimeException: java.util.concurrent.ExecutionException: java.io.IOException: Error executing request, connection broken.... :)", true}
+      new Object[]{ "", false },
+      new Object[]{ "Caused by: java.io.IOException: Connection reset by peer", true },
+      new Object[]{ "Caused by: java.io.IOException: Error executing request, connection broken.... :)", true },
+      new Object[]{ "java.lang.RuntimeException: java.util.concurrent.ExecutionException: java.io.IOException: Error executing request, connection broken.... :)", true }
     };
 
   }
@@ -125,7 +125,7 @@ public class StackTraceColorizerTest {
 //    System.out.println("Substring: \"" + string.substring(145,145+15)+"\"\n\n");
 //    System.out.println("Substring: \"" + string.substring(161,161+6)+"\"\n\n");
 //    System.out.println("Substring: \"" + string.substring(229,229+14)+"\"\n\n");
-    assertEquals(colorize.size(),47);
+    assertEquals(colorize.size(), 47);
 
     assertTrue(colorize.stream().filter(msf -> msf.getOffset() == 137 && msf.getLength() == 7 && msf.getStyle().getName().equals("stylePackage")).findAny().isPresent());
     assertTrue(colorize.stream().filter(msf -> msf.getOffset() == 145 && msf.getLength() == 15 && msf.getStyle().getName().equals("styleClass")).findAny().isPresent());
@@ -135,12 +135,12 @@ public class StackTraceColorizerTest {
     final Optional<MessageFragmentStyle> styleWithLocationOptional = colorize.stream().filter(msf -> msf.getOffset() == 229 && msf.getLength() == 14 && msf.getStyle().getName().startsWith("styleFile-LocationInfo")).findAny();
     assertTrue(styleWithLocationOptional.isPresent());
     final LocationInfo locationInfo = (LocationInfo) styleWithLocationOptional.get().getStyle().getAttribute(StackTraceColorizer.STYLE_ATTRIBUTE_LOCATION_INFO);
-    assertEquals(locationInfo.getPackageName(),Optional.of("A"));
-    assertEquals(locationInfo.getClassName(),Optional.of("A.ExTest"));
-    assertEquals(locationInfo.getMethod(),Optional.of("readMyFile"));
-    assertEquals(locationInfo.getFileName(),Optional.of("ExTest.java"));
-    assertEquals(locationInfo.getLineNumber(),Optional.of(19));
-    assertEquals(locationInfo.getMessage(),Optional.empty());
+    assertEquals(locationInfo.getPackageName(), Optional.of("A"));
+    assertEquals(locationInfo.getClassName(), Optional.of("A.ExTest"));
+    assertEquals(locationInfo.getMethod(), Optional.of("readMyFile"));
+    assertEquals(locationInfo.getFileName(), Optional.of("ExTest.java"));
+    assertEquals(locationInfo.getLineNumber(), Optional.of(19));
+    assertEquals(locationInfo.getMessage(), Optional.empty());
 
 
   }

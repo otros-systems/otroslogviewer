@@ -18,10 +18,14 @@ package pl.otros.logview.gui;
 import ch.qos.logback.classic.util.ContextInitializer;
 import com.google.common.base.Throwables;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +35,7 @@ import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogViewPanelI;
 import pl.otros.logview.api.importer.LogImporter;
+import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;
@@ -286,36 +291,40 @@ public class LogViewMainFrame extends JFrame {
     OtrosSplash.setMessage("Starting application");
     OtrosSplash.setMessage("Loading configuration");
     final XMLConfiguration c = getConfiguration("config.xml");
-    if (!c.containsKey(ConfKeys.UUID)) {
+    if (c != null && !c.containsKey(ConfKeys.UUID)) {
       c.setProperty(ConfKeys.UUID, java.util.UUID.randomUUID().toString());
     }
 
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(() -> {
-      if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
+      if (c != null && c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
         final int fontSize = c.getInt(APPEARANCE_FONT_SIZE, 12);
         FontSize.setDefaultSize(fontSize);
       }
 
-      String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()));
+      String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c != null ? c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()) : LookAndFeelUtil.getLightLookAndFeel().getClass().getName());
       LookAndFeelUtil.initLf(lookAndFeelName);
       final OtrosConfiguration c1 = new OtrosConfiguration(c);
       final LogViewMainFrame mf = new LogViewMainFrame(c1);
       mf.addComponentListener(new ComponentAdapter() {
         @Override
         public void componentResized(ComponentEvent e) {
-          c.setProperty("gui.state", mf.getExtendedState());
-          if (mf.getExtendedState() == Frame.NORMAL) {
-            c.setProperty("gui.width", mf.getWidth());
-            c.setProperty("gui.height", mf.getHeight());
+          if (c != null) {
+            c.setProperty("gui.state", mf.getExtendedState());
+            if (mf.getExtendedState() == Frame.NORMAL) {
+              c.setProperty("gui.width", mf.getWidth());
+              c.setProperty("gui.height", mf.getHeight());
+            }
           }
         }
 
         @Override
         public void componentMoved(ComponentEvent e) {
-          c.setProperty("gui.location.x", mf.getLocation().x);
-          c.setProperty("gui.location.y", mf.getLocation().y);
+          if (c != null) {
+            c.setProperty("gui.location.x", mf.getLocation().x);
+            c.setProperty("gui.location.y", mf.getLocation().y);
+          }
         }
       });
       mf.addWindowListener(mf.exitAction);
@@ -329,7 +338,7 @@ public class LogViewMainFrame extends JFrame {
     if (commonConfigurationFile.exists()) {
       LOGGER.info("Loading common configuration from " + commonConfigurationFile.getAbsolutePath());
       try {
-        commonConfiguration.load(commonConfigurationFile);
+        new FileHandler(commonConfiguration).load(commonConfigurationFile);
       } catch (ConfigurationException e) {
         LOGGER.error("Can't load configuration, creating new " + e.getMessage());
       }
@@ -345,16 +354,19 @@ public class LogViewMainFrame extends JFrame {
       AllPluginables.USER_MARKERS.mkdirs();
       AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS.mkdirs();
     }
-    XMLConfiguration userConfiguration = new XMLConfiguration();
     File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + file);
-    userConfiguration.setFile(userConfigurationFile);
-    if (userConfigurationFile.exists()) {
-      try {
-        userConfiguration.load();
-      } catch (ConfigurationException e) {
-        LOGGER.error(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
-      }
+    FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+      .configure(new Parameters().xml()
+        .setFile(userConfigurationFile));
+    builder.setAutoSave(true);
+    XMLConfiguration userConfiguration;
+    try {
+      userConfiguration = builder.getConfiguration();
+    } catch (ConfigurationException e) {
+      LOGGER.error(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
+      userConfiguration = new XMLConfiguration();
     }
+
     Iterator<?> keys = commonConfiguration.getKeys();
     while (keys.hasNext()) {
       String key = (String) keys.next();
@@ -372,22 +384,25 @@ public class LogViewMainFrame extends JFrame {
       userConfiguration.setProperty(ConfKeys.MESSAGE_FORMATTER_USE_MONOSPACE_FONT_IN_MESSAGE_CHUNK,
         false);
     }
-    userConfiguration.setAutoSave(true);
     return userConfiguration;
   }
 
   private static Configuration getVfsFavoritesConfiguration() {
     File file = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + "vfsFavorites.xml");
-    XMLConfiguration configuration = new XMLConfiguration();
-    configuration.setFile(file);
-    if (file.exists()) {
-      try {
-        configuration.load();
-      } catch (ConfigurationException e) {
-        LOGGER.error(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
+    FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+      .configure(new Parameters().xml()
+        .setFile(file));
+    builder.setAutoSave(true);
+    XMLConfiguration configuration;
+    try {
+      configuration = builder.getConfiguration();
+      if (file.exists()) {
+        Utils.loadConfigIgnoringWhitespace(configuration, file);
       }
+    } catch (ConfigurationException | IOException e) {
+      LOGGER.error(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
+      configuration = new XMLConfiguration();
     }
-    configuration.setAutoSave(true);
     return configuration;
   }
 
@@ -586,7 +601,7 @@ public class LogViewMainFrame extends JFrame {
     markFound.setMnemonic(KeyEvent.VK_M);
     markFound.setName("MainFrame.markFound");
     searchField.addKeyListener(markAllFoundAction);
-    configuration.addConfigurationListener(markAllFoundAction);
+    configuration.addEventListener(ConfigurationEvent.ANY, markAllFoundAction);
     JButton markAllFoundButton = new JButton(markAllFoundAction);
     final JComboBox<MarkerColors> markColor = new JComboBox<>(MarkerColors.values());
     markFound.setSelected(configuration.getBoolean("gui.markFound", true));

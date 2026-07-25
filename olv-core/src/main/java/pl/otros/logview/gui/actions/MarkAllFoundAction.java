@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.actions;
 
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventListener;
 import pl.otros.logview.accept.query.QueryAcceptCondition;
 import pl.otros.logview.accept.query.org.apache.log4j.rule.RuleException;
 import pl.otros.logview.api.OtrosApplication;
@@ -38,7 +38,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class MarkAllFoundAction extends OtrosAction implements ConfigurationListener, KeyListener {
+public class MarkAllFoundAction extends OtrosAction implements EventListener<ConfigurationEvent>, KeyListener {
 
   private MarkerColors markerColors = MarkerColors.Aqua;
   private SearchMode searchMode = SearchMode.STRING_CONTAINS;
@@ -126,14 +126,14 @@ public class MarkAllFoundAction extends OtrosAction implements ConfigurationList
     this.markerColors = markerColors;
   }
 
+
   @Override
-  public void configurationChanged(ConfigurationEvent e) {
-    if (e.getPropertyName() != null && e.getPropertyName().equalsIgnoreCase("gui.markColor")) {
-      final Object propertyValue = e.getPropertyValue();
+  public void onEvent(ConfigurationEvent event) {
+    if (event.getPropertyName() != null && event.getPropertyName().equalsIgnoreCase("gui.markColor")) {
+      final Object propertyValue = event.getPropertyValue();
       if (propertyValue instanceof MarkerColors) {
         markerColors = (MarkerColors) propertyValue;
-      } else if (propertyValue instanceof String) {
-        String value = (String) propertyValue;
+      } else if (propertyValue instanceof String value) {
         markerColors = MarkerColors.fromString(value);
       }
     }

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.tip;
 
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.jdesktop.swingx.JXTipOfTheDay;
 import org.jdesktop.swingx.JXTipOfTheDay.ShowOnStartupChoice;
 import org.jdesktop.swingx.tips.TipLoader;

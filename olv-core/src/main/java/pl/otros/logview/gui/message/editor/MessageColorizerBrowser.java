@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.editor;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ public class MessageColorizerBrowser extends JPanel {
     contentPanel.add(nothingSelected, CARD_LAYOUT_NO_SELECTED);
     cardLayout.show(contentPanel, CARD_LAYOUT_NOT_EDITABLE);
     final JPanel jPanel = new JPanel(new BorderLayout());
-    jPanel.add(jList,BorderLayout.NORTH);
+    jPanel.add(jList, BorderLayout.NORTH);
     jPanel.add(contentPanel);
 
 //    JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jList, contentPanel);

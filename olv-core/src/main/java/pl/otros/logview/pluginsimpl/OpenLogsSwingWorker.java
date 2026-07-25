@@ -16,7 +16,7 @@
 
 package pl.otros.logview.pluginsimpl;
 
-import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,6 @@ import pl.otros.logview.gui.actions.read.ReadingStopperForRemove;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
 
 import javax.swing.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ *
  */
 class OpenLogsSwingWorker extends SwingWorker<Void, String> {
 
@@ -70,7 +70,7 @@ class OpenLogsSwingWorker extends SwingWorker<Void, String> {
       names[i] = importers[i].getName();
     }
 
-    TableColumns[] visibleColumns = {TableColumns.ID,//
+    TableColumns[] visibleColumns = { TableColumns.ID,//
       TableColumns.TIME,//
       TableColumns.LEVEL,//
       TableColumns.MESSAGE,//

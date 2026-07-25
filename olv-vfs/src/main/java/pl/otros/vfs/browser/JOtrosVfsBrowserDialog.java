@@ -16,28 +16,22 @@
 
 package pl.otros.vfs.browser;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.HeadlessException;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import pl.otros.vfs.browser.i18n.Messages;
+import pl.otros.vfs.browser.listener.SelectionListener;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
-
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-
-import pl.otros.vfs.browser.i18n.Messages;
-import pl.otros.vfs.browser.listener.SelectionListener;
-
 /**
+ *
  */
 public class JOtrosVfsBrowserDialog {
 
@@ -54,11 +48,11 @@ public class JOtrosVfsBrowserDialog {
     this(new DataConfiguration(new BaseConfiguration()), initialPath, listeners);
   }
 
-  public JOtrosVfsBrowserDialog( SelectionListener... listeners) {
+  public JOtrosVfsBrowserDialog(SelectionListener... listeners) {
     this(new DataConfiguration(new BaseConfiguration()), listeners);
   }
 
-  public JOtrosVfsBrowserDialog(Configuration configuration,  SelectionListener... listeners) {
+  public JOtrosVfsBrowserDialog(Configuration configuration, SelectionListener... listeners) {
     this(configuration, null, listeners);
   }
 
@@ -151,14 +145,14 @@ public class JOtrosVfsBrowserDialog {
   public static void main(String[] args) throws FileSystemException {
     if (args.length > 1) {
       throw new IllegalArgumentException("SYNTAX:  java... "
-          + JOtrosVfsBrowserDialog.class.getName() + " [initialPath]");
+        + JOtrosVfsBrowserDialog.class.getName() + " [initialPath]");
     }
     JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog =
-        new JOtrosVfsBrowserDialog((args.length < 1) ? null : args[0]);
+      new JOtrosVfsBrowserDialog((args.length < 1) ? null : args[0]);
     jOtrosVfsBrowserDialog.setMultiSelectionEnabled(true);
     jOtrosVfsBrowserDialog.vfsBrowser.setSelectionMode(SelectionMode.DIRS_AND_FILES);
     ReturnValue rv
-        = jOtrosVfsBrowserDialog.showOpenDialog(null, "title");
+      = jOtrosVfsBrowserDialog.showOpenDialog(null, "title");
     System.out.println(rv);
     FileObject[] selectedFiles = jOtrosVfsBrowserDialog.getSelectedFiles();
     System.out.println("Selected files count " + selectedFiles.length);

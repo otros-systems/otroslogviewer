@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.markers.editor;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;

@@ -1,6 +1,8 @@
 package pl.otros.logview.gui.renderers;
 
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.api.OtrosApplication;
 
@@ -24,24 +26,23 @@ public class Renderers {
     levelRenderer = new LevelRenderer(configuration.get(LevelRenderer.Mode.class, LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly));
     dateRenderer = new DateRenderer(configuration.getString(LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"));
     stringRenderer = new StringRenderer();
-    configuration.addConfigurationListener(event -> {
-      if (event.isBeforeUpdate()) {
-        return;
-      }
-      final String property = event.getPropertyName();
-      final String value = event.getPropertyValue() != null ? event.getPropertyValue().toString() : "";
-      switch (property) {
-        case LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS:
-          classWrapperRenderer.reloadConfiguration(value);
-          break;
-        case LOG_TABLE_FORMAT_LEVEL_RENDERER:
-          final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
-          levelRenderer.setMode(mode);
-          break;
-        case LOG_TABLE_FORMAT_DATE_FORMAT:
-          dateRenderer.setDateFormatter(new SimpleDateFormat(value));
-          break;
-        default:
+    ((EventSource) configuration.getConfiguration()).addEventListener(ConfigurationEvent.ANY, event -> {
+      if (event.getEventType().equals(ConfigurationEvent.SET_PROPERTY) && !event.isBeforeUpdate()) {
+        final String property = event.getPropertyName();
+        final String value = event.getPropertyValue() != null ? event.getPropertyValue().toString() : "";
+        switch (property) {
+          case LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS:
+            classWrapperRenderer.reloadConfiguration(value);
+            break;
+          case LOG_TABLE_FORMAT_LEVEL_RENDERER:
+            final LevelRenderer.Mode mode = configuration.get(LevelRenderer.Mode.class, LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly);
+            levelRenderer.setMode(mode);
+            break;
+          case LOG_TABLE_FORMAT_DATE_FORMAT:
+            dateRenderer.setDateFormatter(new SimpleDateFormat(value));
+            break;
+          default:
+        }
       }
     });
   }

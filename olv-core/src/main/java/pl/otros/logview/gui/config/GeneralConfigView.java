@@ -1,7 +1,7 @@
 package pl.otros.logview.gui.config;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration2.Configuration;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.swing.config.AbstractConfigView;
 import pl.otros.swing.config.InMainConfig;

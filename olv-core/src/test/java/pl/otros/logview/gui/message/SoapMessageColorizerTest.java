@@ -16,10 +16,10 @@
 
 package pl.otros.logview.gui.message;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.io.IOUtils;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.theme.ThemeConfig;
 
@@ -30,27 +30,27 @@ import java.util.HashMap;
 
 public class SoapMessageColorizerTest {
 
-	private final SoapMessageColorizer colorizer = new SoapMessageColorizer(new ThemeConfig(new BaseConfiguration()));
+  private final SoapMessageColorizer colorizer = new SoapMessageColorizer(new ThemeConfig(new BaseConfiguration()));
 
-	protected String loadResources(String resources) throws IOException {
-		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources);
-		return IOUtils.toString(resourceAsStream);
-	}
+  protected String loadResources(String resources) throws IOException {
+    InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(resources);
+    return IOUtils.toString(resourceAsStream);
+  }
 
 
-	@Test
-	public void testColorize() throws Exception {
-		String message = loadResources("soap/soap.1.request.xml");
-		Collection<MessageFragmentStyle> colorize = colorizer.colorize(message);
-		HashMap<Integer, MessageFragmentStyle> map = new HashMap<>(colorize.size());
-		for (MessageFragmentStyle messageFragmentStyle : colorize) {
-			map.put(Integer.valueOf(messageFragmentStyle.getOffset()), messageFragmentStyle);
-		}
+  @Test
+  public void testColorize() throws Exception {
+    String message = loadResources("soap/soap.1.request.xml");
+    Collection<MessageFragmentStyle> colorize = colorizer.colorize(message);
+    HashMap<Integer, MessageFragmentStyle> map = new HashMap<>(colorize.size());
+    for (MessageFragmentStyle messageFragmentStyle : colorize) {
+      map.put(Integer.valueOf(messageFragmentStyle.getOffset()), messageFragmentStyle);
+    }
 
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(88)).getStyle(), colorizer.styleOperator);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(89)).getStyle(), colorizer.styleElementName);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttributeName);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttributeValue);
-		AssertJUnit.assertEquals(map.get(Integer.valueOf(180)).getStyle(), colorizer.styleContent);
-	}
+    AssertJUnit.assertEquals(map.get(Integer.valueOf(88)).getStyle(), colorizer.styleOperator);
+    AssertJUnit.assertEquals(map.get(Integer.valueOf(89)).getStyle(), colorizer.styleElementName);
+    AssertJUnit.assertEquals(map.get(Integer.valueOf(121)).getStyle(), colorizer.styleAttributeName);
+    AssertJUnit.assertEquals(map.get(Integer.valueOf(129)).getStyle(), colorizer.styleAttributeValue);
+    AssertJUnit.assertEquals(map.get(Integer.valueOf(180)).getStyle(), colorizer.styleContent);
+  }
 }

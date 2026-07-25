@@ -3,7 +3,7 @@ package pl.otros.logview.gui.config;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration2.Configuration;
 import org.jdesktop.swingx.JXHyperlink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

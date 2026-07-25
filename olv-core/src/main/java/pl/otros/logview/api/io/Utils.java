@@ -16,6 +16,10 @@
 
 package pl.otros.logview.api.io;
 
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -27,14 +31,11 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
 import pl.otros.vfs.browser.util.VFSUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -137,5 +138,23 @@ public class Utils {
     IOUtils.write(content, out, Charset.forName("UTF-8"));
     IOUtils.closeQuietly(out);
     return VFSUtils.resolveFileObject(tempFile.toURI());
+  }
+
+  public static void loadConfigIgnoringWhitespace(XMLConfiguration config, File file) throws ConfigurationException, IOException {
+    if (file.exists()) {
+      String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+      loadConfigIgnoringWhitespace(config, content);
+    }
+  }
+
+  public static void loadConfigIgnoringWhitespace(XMLConfiguration config, java.io.InputStream inputStream) throws ConfigurationException, IOException {
+    String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    loadConfigIgnoringWhitespace(config, content);
+  }
+
+  private static void loadConfigIgnoringWhitespace(XMLConfiguration config, String content) throws ConfigurationException, IOException {
+    content = content.replaceAll(">\\s+<", "><");
+    FileHandler handler = new FileHandler(config);
+    handler.load(new java.io.StringReader(content));
   }
 }

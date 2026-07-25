@@ -1,12 +1,11 @@
 package pl.otros.swing.config;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.event.EventSource;
-
-import java.util.Collection;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.event.Event;
+import org.apache.commons.configuration2.event.EventListener;
+import org.apache.commons.configuration2.event.EventSource;
+import org.apache.commons.configuration2.event.EventType;
 
 public class OtrosConfiguration extends DataConfiguration {
   private final EventSource eventSource;
@@ -28,42 +27,12 @@ public class OtrosConfiguration extends DataConfiguration {
   }
 
   @Override
-  public void addConfigurationListener(ConfigurationListener l) {
-    eventSource.addConfigurationListener(l);
+  public <T extends Event> void addEventListener(EventType<T> eventType, EventListener<? super T> listener) {
+    eventSource.addEventListener(eventType, listener);
   }
 
   @Override
-  public boolean removeConfigurationListener(ConfigurationListener l) {
-    return eventSource.removeConfigurationListener(l);
-  }
-
-  @Override
-  public void addErrorListener(ConfigurationErrorListener l) {
-    eventSource.addErrorListener(l);
-  }
-
-  @Override
-  public void clearErrorListeners() {
-    eventSource.clearErrorListeners();
-  }
-
-  @Override
-  public boolean removeErrorListener(ConfigurationErrorListener l) {
-    return eventSource.removeErrorListener(l);
-  }
-
-  @Override
-  public Collection<ConfigurationErrorListener> getErrorListeners() {
-    return eventSource.getErrorListeners();
-  }
-
-  @Override
-  public void clearConfigurationListeners() {
-    eventSource.clearConfigurationListeners();
-  }
-
-  @Override
-  public Collection<ConfigurationListener> getConfigurationListeners() {
-    return eventSource.getConfigurationListeners();
+  public <T extends Event> boolean removeEventListener(EventType<T> eventType, EventListener<? super T> listener) {
+    return eventSource.removeEventListener(eventType, listener);
   }
 }

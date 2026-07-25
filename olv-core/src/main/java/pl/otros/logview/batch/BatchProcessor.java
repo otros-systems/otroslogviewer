@@ -16,9 +16,11 @@
 package pl.otros.logview.batch;
 
 import com.google.common.base.Throwables;
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -176,7 +178,7 @@ public class BatchProcessor {
           urls[i] = listFiles[i].toURI().toURL();
         }
       } else if (f.getName().endsWith("jar")) {
-        urls = new URL[]{f.toURI().toURL()};
+        urls = new URL[]{ f.toURI().toURL() };
       }
       if (urls == null) {
         System.err.println("Dir with additional jars or single jars do not point to dir with jars or single jar");
@@ -197,8 +199,9 @@ public class BatchProcessor {
     // load processing configuration
     if (parserCmdLine.batchConfigurationFile != null) {
       PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
-      propertiesConfiguration.load(parserCmdLine.batchConfigurationFile);
-      batchProcessor.batchProcessingContext.getConfiguration().append(propertiesConfiguration);
+      FileHandler handler = new FileHandler(propertiesConfiguration);
+      handler.load(parserCmdLine.batchConfigurationFile);
+      ConfigurationUtils.append(propertiesConfiguration, batchProcessor.batchProcessingContext.getConfiguration());
     }
 
     batchProcessor.batchProcessingContext.printIfVerbose("Processing started");

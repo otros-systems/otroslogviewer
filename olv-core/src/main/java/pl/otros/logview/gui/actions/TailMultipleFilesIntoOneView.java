@@ -17,7 +17,7 @@
 package pl.otros.logview.gui.actions;
 
 
-import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,7 +140,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
       .map(loadingInfo -> logLoader.startLoading(new VfsSource(loadingInfo.getFileObject()), importer, logDataCollector, 3000, Optional.of(2000L)))
       .collect(Collectors.toList());
 
-     LOGGER.info("Have sessions: {}" , collect.stream().map(LogLoadingSession::getId).collect(Collectors.joining(", ")));
+    LOGGER.info("Have sessions: {}", collect.stream().map(LogLoadingSession::getId).collect(Collectors.joining(", ")));
     logViewPanelWrapper.onClose(() -> logLoader.close(logDataCollector));
 
     SwingUtilities.invokeLater(logViewPanelWrapper::switchToContentView);
