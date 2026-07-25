@@ -16,12 +16,12 @@
 
 package pl.otros.vfs.browser.favorit;
 
-import pl.otros.vfs.browser.favorit.Favorite.Type;
 import net.sf.vfsjfilechooser.accessories.bookmarks.BookmarksReader;
 import net.sf.vfsjfilechooser.accessories.bookmarks.TitledURLEntry;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.vfs.browser.favorit.Favorite.Type;
 
 import java.io.File;
 import java.util.ArrayList;

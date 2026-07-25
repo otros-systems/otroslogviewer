@@ -1,7 +1,7 @@
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventListener;
 import pl.otros.swing.config.OtrosConfiguration;
 
 import java.io.IOException;
@@ -10,23 +10,23 @@ public class ConfTest {
 
   public static void main(String[] args) throws IOException {
 
-    System.getProperties().store(System.out,"");
+    System.getProperties().store(System.out, "");
     BaseConfiguration bc = new BaseConfiguration();
     DataConfiguration dc = new DataConfiguration(bc);
     DataConfiguration oc = new OtrosConfiguration(bc);
-    bc.addConfigurationListener(new ConfigurationLogListener("Base"));
-    dc.addConfigurationListener(new ConfigurationLogListener("Data"));
-    oc.addConfigurationListener(new ConfigurationLogListener("Otros"));
+    bc.addEventListener(ConfigurationEvent.ANY, new ConfigurationLogListener("Base"));
+    dc.addEventListener(ConfigurationEvent.ANY, new ConfigurationLogListener("Data"));
+    oc.addEventListener(ConfigurationEvent.ANY, new ConfigurationLogListener("Otros"));
 
     dc.setProperty("A", "B");
 
-    System.out.println("Base size: " + bc.getConfigurationListeners().size());
-    System.out.println("Data size: " + dc.getConfigurationListeners().size());
-    System.out.println("Otros size: " + oc.getConfigurationListeners().size());
+    System.out.println("Base size: " + bc.getEventListeners(ConfigurationEvent.ANY).size());
+    System.out.println("Data size: " + dc.getEventListeners(ConfigurationEvent.ANY).size());
+    System.out.println("Otros size: " + oc.getEventListeners(ConfigurationEvent.ANY).size());
 
   }
 
-  public static class ConfigurationLogListener implements ConfigurationListener {
+  public static class ConfigurationLogListener implements EventListener<ConfigurationEvent> {
 
     private final String name;
 
@@ -34,11 +34,12 @@ public class ConfTest {
       this.name = name;
     }
 
-    public void configurationChanged(ConfigurationEvent event) {
+    @Override
+    public void onEvent(ConfigurationEvent event) {
       if (!event.isBeforeUpdate()) {
         // only display events after the modification was done
         System.out.println(name + " Received event!");
-        System.out.println(name + " Type = " + event.getType());
+        System.out.println(name + " Type = " + event.getEventType());
         if (event.getPropertyName() != null) {
           System.out.println(name + " Property name = " + event.getPropertyName());
         }

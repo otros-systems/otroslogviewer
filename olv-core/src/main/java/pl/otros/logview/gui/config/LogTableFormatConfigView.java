@@ -1,11 +1,11 @@
 package pl.otros.logview.gui.config;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -231,7 +231,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
 
   public JOtrosVfsBrowserDialog getjOtrosVfsBrowserDialog(OtrosApplication otrosApplication, SelectionListener... selectionListeners) {
     if (jOtrosVfsBrowserDialog == null) {
-      jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(otrosApplication.getConfiguration(),selectionListeners);
+      jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(otrosApplication.getConfiguration(), selectionListeners);
     }
     return jOtrosVfsBrowserDialog;
   }
@@ -239,7 +239,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   private void importFromFile(FileObject file) throws ConfigurationException, IOException {
     try (InputStream is = file.getContent().getInputStream()) {
       final XMLConfiguration xmlConfiguration = new XMLConfiguration();
-      xmlConfiguration.load(is);
+      FileHandler handler = new FileHandler(xmlConfiguration);
+      handler.load(is);
       final List<ColumnLayout> columnLayouts = loadColumnLayouts(xmlConfiguration);
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus(String.format("Column layouts have been imported from %s", file.getName().getFriendlyURI()));
@@ -254,7 +255,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
       String data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
       StringReader stringReader = new StringReader(data);
       xmlConfiguration = new XMLConfiguration();
-      xmlConfiguration.load(stringReader);
+      FileHandler handler = new FileHandler(xmlConfiguration);
+      handler.load(stringReader);
       final List<ColumnLayout> columnLayouts = loadColumnLayouts(xmlConfiguration);
       importColumnLayouts(columnLayouts);
       otrosApplication.getStatusObserver().updateStatus("Column layouts have been imported");
@@ -295,15 +297,14 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
   }
 
   private void exportToFile(File file, List<ColumnLayout> columnLayouts) throws ConfigurationException, FileNotFoundException {
-    FileOutputStream out = null;
-    try {
+    try (FileOutputStream out = new FileOutputStream(file)) {
       final XMLConfiguration xmlConfiguration = new XMLConfiguration();
       saveColumnLayouts(columnLayouts, xmlConfiguration);
-      out = new FileOutputStream(file);
-      xmlConfiguration.save(out);
+      FileHandler handler = new FileHandler(xmlConfiguration);
+      handler.save(out);
       otrosApplication.getStatusObserver().updateStatus(String.format("Column layouts have been exported to %s", file.getAbsolutePath()));
-    } finally {
-      IOUtils.closeQuietly(out);
+    } catch (IOException e) {
+      throw new ConfigurationException(e);
     }
   }
 
@@ -311,7 +312,8 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     final XMLConfiguration xmlConfiguration = new XMLConfiguration();
     saveColumnLayouts(columnLayouts, xmlConfiguration);
     final StringWriter writer = new StringWriter();
-    xmlConfiguration.save(writer);
+    FileHandler handler = new FileHandler(xmlConfiguration);
+    handler.save(writer);
     StringSelection stringSelection = new StringSelection(writer.getBuffer().toString());
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     clipboard.setContents(stringSelection, null);
@@ -456,7 +458,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       final LogParsableListener logParsableListener = new LogParsableListener(otrosApplication.getAllPluginables().getLogImportersContainer());
-      final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication,logParsableListener);
+      final JOtrosVfsBrowserDialog dialog = getjOtrosVfsBrowserDialog(otrosApplication, logParsableListener);
       dialog.setMultiSelectionEnabled(false);
       dialog.setSelectionMode(SelectionMode.FILES_ONLY);
 

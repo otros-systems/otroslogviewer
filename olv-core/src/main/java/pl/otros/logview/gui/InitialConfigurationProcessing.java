@@ -1,7 +1,7 @@
 package pl.otros.logview.gui;
 
 import com.google.common.base.Function;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.gui.firstuse.InitialConfiguration;

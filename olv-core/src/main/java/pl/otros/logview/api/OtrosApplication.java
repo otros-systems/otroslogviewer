@@ -15,7 +15,7 @@
  */
 package pl.otros.logview.api;
 
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.jdesktop.swingx.JXTable;
 import pl.otros.logview.api.gui.*;
 import pl.otros.logview.api.loading.LogLoader;
@@ -133,7 +133,7 @@ public class OtrosApplication {
     }
   }
 
-  public void closeTab(JComponent component){
+  public void closeTab(JComponent component) {
     jTabbedPane.remove(component);
   }
 
@@ -205,9 +205,10 @@ public class OtrosApplication {
     this.menuActionProviders.add(menuActionProviders);
   }
 
-  public Theme getTheme(){
+  public Theme getTheme() {
     return new ThemeConfig(getConfiguration());
   }
+
   /**
    * Return menu action providers
    *

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api.batch;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import pl.otros.logview.api.gui.LogDataTableModel.Memento;

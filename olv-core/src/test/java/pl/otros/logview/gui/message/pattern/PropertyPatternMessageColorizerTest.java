@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.gui.message.pattern;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;

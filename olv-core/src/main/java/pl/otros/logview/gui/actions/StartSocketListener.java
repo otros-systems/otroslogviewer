@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
@@ -69,7 +69,7 @@ public class StartSocketListener extends OtrosAction {
       BaseConfiguration configuration = new BaseConfiguration();
       configuration.addProperty(ConfKeys.TAILING_PANEL_PLAY, true);
       configuration.addProperty(ConfKeys.TAILING_PANEL_FOLLOW, true);
-      long sleepTime = this.getOtrosApplication().getConfiguration().getLong(ConfKeys.READER_SOCKET_BUFFER_TIME,4000L);
+      long sleepTime = this.getOtrosApplication().getConfiguration().getLong(ConfKeys.READER_SOCKET_BUFFER_TIME, 4000L);
       logDataCollector = new BufferingLogDataCollectorProxy(logViewPanelWrapper.getDataTableModel(), sleepTime, configuration);
     }
 

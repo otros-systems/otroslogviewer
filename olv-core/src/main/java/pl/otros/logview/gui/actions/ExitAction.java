@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.actions;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.OtrosAction;
@@ -61,7 +61,7 @@ public class ExitAction extends OtrosAction implements WindowListener {
       try {
         frame.setVisible(false);
         frame.dispose();
-      } catch (Exception ignore){
+      } catch (Exception ignore) {
         //sometimes get java.lang.NullPointerException
         //	at org.pushingpixels.substance.internal.ui.SubstanceProgressBarUI.stopAnimationTimer(SubstanceProgressBarUI.java:593)
       }

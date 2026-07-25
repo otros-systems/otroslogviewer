@@ -18,7 +18,7 @@ package pl.otros.logview.logging;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.lang.StringUtils;
 import pl.otros.logview.BufferingLogDataCollectorProxy;
 import pl.otros.logview.api.model.LogDataBuilder;

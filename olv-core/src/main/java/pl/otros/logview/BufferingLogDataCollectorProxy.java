@@ -15,8 +15,8 @@
  */
 package pl.otros.logview;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DataConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
 import pl.otros.logview.api.ConfKeys;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.model.LogData;

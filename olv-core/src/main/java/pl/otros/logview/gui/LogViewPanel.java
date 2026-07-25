@@ -17,9 +17,9 @@
 package pl.otros.logview.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventSource;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -246,8 +246,8 @@ public class LogViewPanel extends LogViewPanelI {
     });
     table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
-    ((EventSource) configuration.getConfiguration()).addConfigurationListener(ce -> {
-      if (ce.getType() == AbstractConfiguration.EVENT_SET_PROPERTY && !ce.isBeforeUpdate()) {
+    ((EventSource) configuration.getConfiguration()).addEventListener(ConfigurationEvent.ANY, ce -> {
+      if (ce.getEventType().equals(ConfigurationEvent.SET_PROPERTY) && !ce.isBeforeUpdate()) {
         if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT)) {
           table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
           updateTimeColumnSize();

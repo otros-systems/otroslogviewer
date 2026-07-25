@@ -1,7 +1,8 @@
 package pl.otros.logview.api.theme;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DataConfiguration;
+
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.DataConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class ThemeConfig implements Theme {
   public void setColor(ThemeKey themeKey, Color c) {
     String k = themeKey.getKey(themeType());
     String color = String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
-    configuration.setProperty(k,color);
+    configuration.setProperty(k, color);
   }
 
   @Override

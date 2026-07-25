@@ -1,10 +1,8 @@
 package pl.otros.swing.config;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.FileConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.jdesktop.swingx.JXList;
 import pl.otros.swing.config.provider.ConfigurationProvider;
 
@@ -86,22 +84,8 @@ public class ConfigComponent extends JPanel {
 
       try {
         configurationForView = configurationProvider.getConfigurationForView(configView);
-        if (configurationForView instanceof DataConfiguration) {
-          DataConfiguration dc = (DataConfiguration) configurationForView;
-          configurationForView = dc.getConfiguration();
-        }
-        if (configurationForView instanceof FileConfiguration) {
-          FileConfiguration fc = (FileConfiguration) configurationForView;
-          if (configView instanceof InMainConfig) {
-            if (!mainConfigLoaded) {
-              fc.reload();
-              mainConfigLoaded = true;
-            }
-          } else {
-            fc.reload();
-          }
-          configView.loadConfiguration(fc);
-        }
+        configurationProvider.reload(configView);
+        configView.loadConfiguration(configurationForView);
       } catch (ConfigurationException e1) {
         //TODO ??
         e1.printStackTrace();
@@ -129,38 +113,17 @@ public class ConfigComponent extends JPanel {
       JOptionPane.showMessageDialog(this, texPane, "Validation Error", JOptionPane.ERROR_MESSAGE);
       return;
     }
-    FileConfiguration mainConfig = null;
     for (ConfigView configView : configViews) {
       Configuration configurationForView;
       try {
         configurationForView = configurationProvider.getConfigurationForView(configView);
         configView.saveConfiguration(configurationForView);
-
-        if (configurationForView instanceof OtrosConfiguration) {
-          configurationForView = ((OtrosConfiguration) configurationForView).getConfiguration();
-        }
-
-        if (configurationForView instanceof FileConfiguration) {
-          FileConfiguration fc = (FileConfiguration) configurationForView;
-          if (configView instanceof InMainConfig) {
-            mainConfig = fc;
-          } else {
-            fc.save();
-          }
-        }
+        configurationProvider.save(configView, configurationForView);
       } catch (ConfigurationException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     }
-    try {
-      if (mainConfig != null) {
-        mainConfig.save();
-      }
-    } catch (ConfigurationException e) {
-      //TODO what to do?
-      e.printStackTrace();
-    }
-    actionAfterSave.ifPresent(a->a.actionPerformed(null));
+    actionAfterSave.ifPresent(a -> a.actionPerformed(null));
   }
 }

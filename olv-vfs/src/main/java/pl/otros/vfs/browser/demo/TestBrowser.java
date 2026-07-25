@@ -16,9 +16,11 @@
 
 package pl.otros.vfs.browser.demo;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.DataConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.DataConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.pushingpixels.radiance.theming.api.skin.RadianceModerateLookAndFeel;
@@ -42,7 +44,7 @@ public class TestBrowser {
   public static void main(final String[] args) throws InterruptedException, InvocationTargetException, SecurityException, IOException {
     if (args.length > 1)
       throw new IllegalArgumentException("SYNTAX:  java... "
-          + TestBrowser.class.getName() + " [initialPath]");
+        + TestBrowser.class.getName() + " [initialPath]");
 
     SwingUtilities.invokeAndWait(new Runnable() {
 
@@ -53,20 +55,20 @@ public class TestBrowser {
         Container contentPane = f.getContentPane();
         contentPane.setLayout(new BorderLayout());
         DataConfiguration dc = null;
-        final PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
         File favoritesFile = new File("favorites.properties");
-        propertiesConfiguration.setFile(favoritesFile);
-        if (favoritesFile.exists()) {
-          try {
-            propertiesConfiguration.load();
-          } catch (ConfigurationException e) {
-            e.printStackTrace();
-          }
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+          new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+            .configure(new Parameters().properties()
+              .setFile(favoritesFile));
+        builder.setAutoSave(true);
+
+        try {
+          dc = new DataConfiguration(builder.getConfiguration());
+        } catch (ConfigurationException e) {
+          e.printStackTrace();
         }
-        dc = new DataConfiguration(propertiesConfiguration);
-        propertiesConfiguration.setAutoSave(true);
         final VfsBrowser comp =
-            new VfsBrowser(dc, (args.length > 0) ? args[0] : null, new ExampleListener());
+          new VfsBrowser(dc, (args.length > 0) ? args[0] : null, new ExampleListener());
         comp.setSelectionMode(SelectionMode.FILES_ONLY);
         comp.setMultiSelectionEnabled(true);
         comp.setApproveAction(new AbstractAction(Messages.getMessage("demo.showContentButton")) {
@@ -87,9 +89,9 @@ public class TestBrowser {
                 d.setVisible(true);
               } catch (Exception e1) {
                 LOGGER.error("Failed to read file", e1);
-                JOptionPane.showMessageDialog(f, (e1.getMessage() == null )
-                        ? e1.toString() : e1.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(f, (e1.getMessage() == null)
+                    ? e1.toString() : e1.getMessage(),
+                  "Error", JOptionPane.ERROR_MESSAGE);
               }
             }
           }
@@ -100,7 +102,7 @@ public class TestBrowser {
           public void actionPerformed(ActionEvent e) {
             f.dispose();
             try {
-              propertiesConfiguration.save();
+              builder.save();
             } catch (ConfigurationException e1) {
               e1.printStackTrace();
             }
