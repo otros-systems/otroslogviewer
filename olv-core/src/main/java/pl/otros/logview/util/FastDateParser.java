@@ -25,7 +25,11 @@ public final class FastDateParser {
   }
 
 
-  record Field(FieldType type, int start, int length) {
+  record Field(FieldType type, int start, int end, int length) {
+  }
+
+  record StringCache(String stringToCache, long hourKey, int year, int month, int day, int hour) {
+
   }
 
   private static final Map<String, Integer> monthWordCache = new HashMap<>();
@@ -33,7 +37,7 @@ public final class FastDateParser {
     'G', 'Y', 'L', 'w', 'W', 'D', 'F', 'E', 'u', 'a', 'k', 'K', 'h', 'z', 'Z', 'X'
   );
 
-  private int currentYear = Year.now().getValue();
+  private final int currentYear = Year.now().getValue();
   private final String originalPattern;
   private final Locale locale;
   private final ZoneRules rules;
@@ -52,6 +56,7 @@ public final class FastDateParser {
   private long cachedHourKey = Long.MIN_VALUE;
   private long cachedHourMillis;
   private SimpleDateFormat alternativeDateFormat = null;
+  private StringCache stringCache = null;
 
   public FastDateParser(String pattern, Locale locale) {
     this.originalPattern = pattern;
@@ -60,9 +65,59 @@ public final class FastDateParser {
 
     compilePattern(pattern);
 
-
     if (!isParsable(pattern)) {
       alternativeDateFormat = new SimpleDateFormat(pattern, locale);
+    }
+  }
+
+
+  public long parseMillis(String text) throws ParseException {
+    if (alternativeDateFormat != null) {
+      return alternativeDateFormat.parse(text).getTime();
+    }
+    try {
+      final int parsedYear;
+      final int parsedMonth;
+      final int parsedDay;
+      final int parsedHour;
+      final long hourKey;
+      if (stringCache != null && text.startsWith(stringCache.stringToCache())) {
+        parsedYear = stringCache.year();
+        parsedMonth = stringCache.month();
+        parsedDay = stringCache.day();
+        parsedHour = stringCache.hour();
+        hourKey = stringCache.hourKey();
+      } else {
+        parsedYear = parse(yearField, text);
+        parsedMonth = parse(monthField, text);
+        parsedDay = parse(dayField, text);
+        parsedHour = parse(hourField, text);
+        hourKey = parsedYear * 1_000_000L
+          + parsedMonth * 10_000L
+          + parsedDay * 100L
+          + parsedHour;
+        if (stringCache != null) {
+          stringCache = new StringCache(text.substring(yearField.start(), hourField.end()), hourKey, parsedYear, parsedMonth, parsedDay, parsedHour);
+        }
+      }
+
+      if (hourKey == cachedHourKey) {
+        return cachedHourMillis
+          + parseMinuteOffset(text)
+          + parseSecondOffset(text)
+          + parseMillisOffset(text);
+      }
+
+      cachedHourMillis = buildHourBase(parsedYear, parsedMonth, parsedDay, parsedHour);
+      cachedHourKey = hourKey;
+
+      return cachedHourMillis
+        + parseMinuteOffset(text)
+        + parseSecondOffset(text)
+        + parseMillisOffset(text);
+
+    } catch (RuntimeException e) {
+      throw new IllegalArgumentException("Cannot parse date: " + text + " with patter: " + originalPattern, e);
     }
   }
 
@@ -84,41 +139,6 @@ public final class FastDateParser {
       pos++;
     }
     return true;
-  }
-
-  public long parseMillis(String text) throws ParseException {
-    if (alternativeDateFormat != null) {
-      return alternativeDateFormat.parse(text).getTime();
-    }
-    try {
-      int parsedYear = parse(yearField, text);
-      int parsedMonth = parse(monthField, text);
-      int parsedDay = parse(dayField, text);
-      int parsedHour = parse(hourField, text);
-
-      long hourKey = parsedYear * 1_000_000L
-        + parsedMonth * 10_000L
-        + parsedDay * 100L
-        + parsedHour;
-
-      if (hourKey == cachedHourKey) {
-        return cachedHourMillis
-          + parseMinuteOffset(text)
-          + parseSecondOffset(text)
-          + parseMillisOffset(text);
-      }
-
-      cachedHourMillis = buildHourBase(parsedYear, parsedMonth, parsedDay, parsedHour);
-      cachedHourKey = hourKey;
-
-      return cachedHourMillis
-        + parseMinuteOffset(text)
-        + parseSecondOffset(text)
-        + parseMillisOffset(text);
-
-    } catch (RuntimeException e) {
-      throw new IllegalArgumentException("Cannot parse date: " + text + " with patter: " + originalPattern, e);
-    }
   }
 
   private long buildHourBase(int parsedYear, int parsedMonth, int parsedDay, int parsedHour) {
@@ -180,7 +200,7 @@ public final class FastDateParser {
       fieldLength = field.start() + 3 > text.length() ? text.length() - field.start() : 3;
     }
 
-    if (field.type() == FieldType.MONTH && field.length() > 2) {
+    if (field.type() == FieldType.MONTH && fieldLength > 2) {
       String value = text.substring(field.start(), field.start() + fieldLength);
       return monthWordCache.computeIfAbsent(value, k ->
         Month.from(
@@ -192,25 +212,48 @@ public final class FastDateParser {
           .getValue());
     }
 
-
     return parseInt(text, field.start(), fieldLength);
   }
 
   private int parseInt(String text, int start, int len) {
     int result = 0;
-    for (int i = 0; i < len; i++) {
-      result = result * 10 + (text.charAt(start + i) - '0');
+    int end = start + len;
+
+    if (len == 2) {
+      return parse2(text, start);
+    }
+    if (len == 4) {
+      return parse4(text, start);
+    }
+
+    for (int i = start; i < end; i++) {
+      result = result * 10 + text.charAt(i) - '0';
     }
     return result;
   }
 
-  private void compilePattern(String patter) {
+  private int parse2(String text, int start) {
+    return (text.charAt(start) - '0') * 10 +
+      (text.charAt(start + 1) - '0');
+  }
+
+  private int parse4(String text, int start) {
+    return (text.charAt(start) - '0') * 1000 +
+      (text.charAt(start + 1) - '0') * 100 +
+      (text.charAt(start + 2) - '0') * 10 +
+      (text.charAt(start + 3) - '0');
+  }
+
+  private void compilePattern(String pattern) {
     int pos = 0;
     int quotesCount = 0;
     boolean quoteStart = false;
+    boolean cachedPartInterrupted = false;
+    boolean cachePossible = false;
+    int patternLength = pattern.length();
 
-    while (pos < patter.length()) {
-      char ch = patter.charAt(pos);
+    while (pos < patternLength) {
+      char ch = pattern.charAt(pos);
 
       if (!Character.isLetter(ch) || quoteStart) {
         if (ch == '\'') {
@@ -223,36 +266,64 @@ public final class FastDateParser {
 
       int start = pos;
 
-      while (pos < patter.length()
-        && patter.charAt(pos) == ch) {
+      while (pos < patternLength
+        && pattern.charAt(pos) == ch) {
         pos++;
       }
 
       int len = pos - start;
       int startInDateString = start - quotesCount;
+      int end = patternLength - startInDateString + len - 1;
+      boolean cachedPartFilled = yearField != null && monthField != null && dayField != null && hourField != null;
 
       switch (ch) {
         case 'y' -> yearField =
-          new Field(FieldType.YEAR, startInDateString, len);
+          new Field(FieldType.YEAR, startInDateString, end, len);
 
         case 'M' -> monthField =
-          new Field(FieldType.MONTH, startInDateString, len);
+          new Field(FieldType.MONTH, startInDateString, end, len);
 
         case 'd' -> dayField =
-          new Field(FieldType.DAY, startInDateString, len);
+          new Field(FieldType.DAY, startInDateString, end, len);
 
         case 'H' -> hourField =
-          new Field(FieldType.HOUR, startInDateString, len);
+          new Field(FieldType.HOUR, startInDateString, end, len);
 
-        case 'm' -> minuteField =
-          new Field(FieldType.MINUTE, startInDateString, len);
+        case 'm' -> {
+          minuteField = new Field(FieldType.MINUTE, startInDateString, end, len);
+          if (!cachedPartInterrupted && cachedPartFilled) {
+            cachePossible = true;
+          } else {
+            cachedPartInterrupted = true;
+          }
+        }
 
-        case 's' -> secondField =
-          new Field(FieldType.SECOND, startInDateString, len);
+        case 's' -> {
+          secondField = new Field(FieldType.SECOND, startInDateString, end, len);
+          if (!cachedPartInterrupted && cachedPartFilled) {
+            cachePossible = true;
+          } else {
+            cachedPartInterrupted = true;
+          }
+        }
 
-        case 'S' -> millisField =
-          new Field(FieldType.MILLIS, startInDateString, len);
+        case 'S' -> {
+          millisField = new Field(FieldType.MILLIS, startInDateString, end, len);
+          if (!cachedPartInterrupted && cachedPartFilled) {
+            cachePossible = true;
+          } else {
+            cachedPartInterrupted = true;
+          }
+        }
       }
     }
+    boolean cacheDateAtStart = isAtStart(yearField) || isAtStart(monthField) || isAtStart(dayField) || isAtStart(hourField);
+    if (cachePossible && yearField != null && hourField != null && cacheDateAtStart) {
+      stringCache = new StringCache("NOCACHE", -1L, -1, -1, -1, -1);
+    }
+  }
+
+  private boolean isAtStart(Field field) {
+    return field != null && field.start() == 0;
   }
 }

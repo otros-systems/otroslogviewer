@@ -16,7 +16,7 @@ public class DateParserTest {
   public static final long NUMBER_OF_DATES_PER_RUN = 100000000L;
   public static final long INCREMENT_PER_DATE = 831L;
 
-  private List<Long> differences = new ArrayList<>();
+  private final List<Long> differences = new ArrayList<>();
 
   @Test(dataProvider = "millisecondsPatterns")
   public void testPatternParser(String pattern) throws ParseException {
@@ -40,6 +40,11 @@ public class DateParserTest {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
     List<String> dates = createDates(pattern);
 
+    //Warmup
+    for (String date : dates) {
+      Assert.assertTrue(simpleDateFormat.parse(date).getTime() > Long.MIN_VALUE);
+    }
+
     long start = System.nanoTime();
     for (String date : dates) {
       Assert.assertTrue(fastDateParser.parseMillis(date) > Long.MIN_VALUE);
@@ -52,6 +57,12 @@ public class DateParserTest {
     }
     long tookSimpleParser = System.nanoTime() - start;
 
+    if (tookFastParser < tookSimpleParser) {
+      System.out.printf("FastParser is %.3fms faster for %s%n", ((double) tookSimpleParser - tookFastParser) / 10000000L, pattern);
+    } else {
+      System.err.printf("FastParser is %.3fms slower%n", ((double) tookFastParser - tookSimpleParser) / 10000000L);
+    }
+
     differences.add(tookSimpleParser - tookFastParser);
     if (differences.size() == 100) {
       differences.stream()
@@ -61,11 +72,7 @@ public class DateParserTest {
         .ifPresent(d -> System.out.printf("FastParser is in average %.3fms faster%n", d));
     }
 
-//    if (tookFastParser < tookSimpleParser) {
-//      System.out.printf("FastParser is %.3fms faster%n", ((double) tookSimpleParser - tookFastParser) / 10000000L);
-//    } else {
-//      System.out.printf("FastParser is %.3fms slower%n", ((double) tookFastParser - tookSimpleParser) / 10000000L);
-//    }
+
   }
 
   @DataProvider(name = "millisecondsPatterns")
