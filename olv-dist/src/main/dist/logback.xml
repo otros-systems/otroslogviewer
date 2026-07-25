@@ -1,6 +1,5 @@
 <configuration>
-
-    <property scope="context" name="logdir" value="${user.home}/.otroslogviewer/logs" />
+    <property scope="context" name="logdir" value="${user.home}/.otroslogviewer/logs"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logdir}/olv.log</file>
@@ -14,13 +13,33 @@
             <maxFileSize>35 MB</maxFileSize>
         </triggeringPolicy>
         <encoder>
-            <pattern>%-5level %date{dd MMM yyyy;HH:mm:ss.SSS} [%thread] %logger %msg%n</pattern>
+            <pattern>%date{yyyy-MM-dd;HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
+        <!-- reduce the number of disk writes -->
+        <immediateFlush>false</immediateFlush>
+    </appender>
+
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>8192</queueSize>
+        <!-- discardingThreshold=0 do not drop debug events if the queue is full       -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- neverBlock=false do not drop logfiles also the queue is full       -->
+        <neverBlock>false</neverBlock>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <appender name="ASYNC_GUI" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>8192</queueSize>
+        <!-- discardingThreshold=0 do not drop debug events if the queue is full       -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- neverBlock=false do not drop logfiles also the queue is full       -->
+        <neverBlock>false</neverBlock>
+        <appender-ref ref="GUI"/>
     </appender>
 
     <appender name="GUI" class="pl.otros.logview.logging.GuiAppender"/>
     <root level="debug">
-        <appender-ref ref="FILE" />
-        <appender-ref ref="GUI" />
+        <appender-ref ref="ASYNC_FILE"/>
+        <appender-ref ref="ASYNC_GUI"/>
     </root>
 </configuration>
