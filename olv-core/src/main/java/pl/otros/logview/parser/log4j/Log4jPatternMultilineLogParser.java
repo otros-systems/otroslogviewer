@@ -43,6 +43,7 @@ import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.parser.CustomLevelsParser;
+import pl.otros.logview.util.FastDateParser;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -319,7 +320,8 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       logEventParsingProperitesMap.put(MESSAGE, buildMessage((String) logEventParsingProperitesMap.get(MESSAGE), exceptionLine, ctx));
     }
     DateFormat dateFormat = ctx.getDateFormat();
-    LoggingEvent event = convertToEvent(logEventParsingProperitesMap, exception, dateFormat);
+    FastDateParser fastDateParser = ctx.getFastDateParser();
+    LoggingEvent event = convertToEvent(logEventParsingProperitesMap, exception, dateFormat, fastDateParser);
 
     logEventParsingProperitesMap.clear();
     ctx.getUnmatchedLog().setLength(0);
@@ -540,7 +542,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    * @param exception
    * @return logging event
    */
-  private LoggingEvent convertToEvent(Map<String, Object> fieldMap, String[] exception, DateFormat dateFormat) {
+  private LoggingEvent convertToEvent(Map<String, Object> fieldMap, String[] exception, DateFormat dateFormat, FastDateParser fastDateParser) {
     if (fieldMap == null) {
       return null;
     }
@@ -570,8 +572,12 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     if ((dateFormat != null) && fieldMap.containsKey(TIMESTAMP)) {
       String dateString = (String) fieldMap.remove(TIMESTAMP);
       try {
-        timeStamp = dateFormat.parse(dateString).getTime();
-      } catch (ParseException e) {
+        if (fastDateParser != null) {
+          timeStamp = fastDateParser.parseMillis(dateString);
+        } else {
+          timeStamp = dateFormat.parse(dateString).getTime();
+        }
+      } catch (ParseException | IllegalArgumentException e) {
         //Try to parse date string in local Date formate
         //This is only a hack. Better is to specify the locale in the parser
         if (dateFormat instanceof SimpleDateFormat simpleDateFormat
@@ -665,7 +671,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
 
     LogData logData = null;
-    if (line.trim().equals("")) {
+    if (line.trim().isEmpty()) {
       parsingContext.getUnmatchedLog().append('\n');
       parsingContext.getUnmatchedLog().append(line);
       return null;
@@ -828,6 +834,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   public void initParsingContext(ParsingContext parsingContext) {
     if (timestampFormat != null) {
       parsingContext.setDateFormat(new SimpleDateFormat(timestampFormat, Locale.ENGLISH));
+      parsingContext.setFastDateParser(new FastDateParser(timestampFormat, Locale.ENGLISH));
     }
     parsingContext.getCustomConextProperties().put(PROPERTY_LOG_EVENT_PROPERTIES, new HashMap<String, Object>());
 

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api.parser;
 
+import pl.otros.logview.util.FastDateParser;
+
 import java.text.DateFormat;
 import java.util.HashMap;
 
@@ -28,6 +30,7 @@ public class ParsingContext {
   private String logSource;
   private HashMap<String, Object> customConextProperties;
   private DateFormat dateFormat;
+  private FastDateParser fastDateParser;
 
   public ParsingContext() {
     this("?");
@@ -110,5 +113,13 @@ public class ParsingContext {
 
   public void setDateFormat(DateFormat dateFormat) {
     this.dateFormat = dateFormat;
+  }
+
+  public void setFastDateParser(FastDateParser fastDateParser) {
+    this.fastDateParser = fastDateParser;
+  }
+
+  public FastDateParser getFastDateParser() {
+    return fastDateParser;
   }
 }
