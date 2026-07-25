@@ -666,8 +666,6 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
 
     LogData logData = null;
     if (line.trim().equals("")) {
-      parsingContext.getUnmatchedLog().append('\n');
-      parsingContext.getUnmatchedLog().append(line);
       return null;
     }
 
