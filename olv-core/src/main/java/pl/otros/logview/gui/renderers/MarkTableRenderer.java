@@ -23,24 +23,26 @@ import java.awt.*;
 
 public class MarkTableRenderer extends DefaultTableCellRenderer {
 
-  private final JCheckBox checkBox;
+  private final JCheckBox checkBox = new JCheckBox();
+  private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
   public MarkTableRenderer() {
-    super();
-    checkBox = new JCheckBox();
-    checkBox.setOpaque(true);
+    //show the background of the JPannel
+    checkBox.setOpaque(false);
+    checkBox.setSize(5, 5);
+    checkBox.setVerticalAlignment(SwingConstants.CENTER);
   }
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    // super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    checkBox.setSelected(value instanceof MarkerColors);
 
-    if (value instanceof MarkerColors) {
-      checkBox.setSelected(true);
-    } else {
-      checkBox.setSelected(false);
-    }
-    return checkBox;
+    //If the checkbox is returned, then setBackground set the color of the checkbox.
+    panel.add(checkBox);
+    panel.setSize(checkBox.getSize());
+
+    return panel;
   }
 
 }

@@ -17,42 +17,15 @@ package pl.otros.logview.gui.table;
 
 import org.jdesktop.swingx.JXTable;
 
-import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.Vector;
 
 public class JTableWith2RowHighliting extends JXTable {
 
-  public JTableWith2RowHighliting() {
-    super();
-  }
-
-  public JTableWith2RowHighliting(int numRows, int numColumns) {
-    super(numRows, numColumns);
-  }
-
-  public JTableWith2RowHighliting(Object[][] rowData, Object[] columnNames) {
-    super(rowData, columnNames);
-  }
-
-  public JTableWith2RowHighliting(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
-    super(dm, cm, sm);
-  }
-
-  public JTableWith2RowHighliting(TableModel dm, TableColumnModel cm) {
-    super(dm, cm);
-  }
 
   public JTableWith2RowHighliting(TableModel dm) {
     super(dm);
-  }
-
-  @SuppressWarnings("rawtypes")
-  public JTableWith2RowHighliting(Vector rowData, Vector columnNames) {
-    super(rowData, columnNames);
   }
 
   @Override
