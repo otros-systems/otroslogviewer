@@ -161,6 +161,16 @@ public class LogViewPanel extends LogViewPanelI {
     // Set the row height manually, because in windows theme the automatic calculation not working
     table.setRowHeight(new JCheckBox().getPreferredSize().height + 1);
 
+//     Use a slightly more subtle border.
+    if (getOtrosApplication().getTheme().themeType() == Theme.Type.Dark) {
+      table.setGridColor(Color.DARK_GRAY);
+    } else {
+      table.setGridColor(Color.LIGHT_GRAY);
+    }
+
+    // Set the row height manually, because in windows theme the automatic calculation not working
+    table.setRowHeight(new JCheckBox().getPreferredSize().height + 1);
+
     // Initialize default column visible before creating context menu
     table.setColumnControlVisible(true);
     final ColumnControlButton columnControlButton =

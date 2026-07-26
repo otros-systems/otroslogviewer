@@ -29,7 +29,6 @@ public class MarkTableRenderer extends DefaultTableCellRenderer {
   public MarkTableRenderer() {
     //show the background of the JPannel
     checkBox.setOpaque(false);
-    checkBox.setSize(5, 5);
     checkBox.setVerticalAlignment(SwingConstants.CENTER);
   }
 

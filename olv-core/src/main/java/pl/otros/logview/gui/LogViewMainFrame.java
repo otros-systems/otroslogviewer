@@ -612,6 +612,11 @@ public class LogViewMainFrame extends JFrame {
       configuration.setProperty("gui.markFound", markFound.isSelected());
     });
     markColor.setRenderer(new MarkerColorsComboBoxRenderer());
+
+    //In a first step deselect all items.
+    // After ItemLister registered the first run of setSelectedItem() will trigger the ItemLister.
+    //This is needed if the first item is already selected
+    markColor.getModel().setSelectedItem(null);
     markColor.addItemListener(e -> {
       MarkerColors markerColors = (MarkerColors) markColor.getSelectedItem();
       searchActionForward.setMarkerColors(markerColors);
@@ -621,6 +626,7 @@ public class LogViewMainFrame extends JFrame {
       otrosApplication.setSelectedMarkColors(markerColors);
     });
     markColor.getModel().setSelectedItem(configuration.get(MarkerColors.class, "gui.markColor", MarkerColors.Aqua));
+
     JButton buttonSearch = new JButton(searchActionForward);
     buttonSearch.setName("MainFrame.searchNext");
     buttonSearch.setMnemonic(KeyEvent.VK_N);
