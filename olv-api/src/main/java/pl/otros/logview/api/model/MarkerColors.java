@@ -19,9 +19,19 @@ import java.awt.*;
 
 public enum MarkerColors {
 
-  Red(Color.WHITE, new Color(0xff, 0x2b, 0x2b)), Yellow(Color.BLACK, Color.YELLOW), Black(Color.WHITE, Color.BLACK), White(Color.BLACK, Color.WHITE), Green(
-    Color.WHITE, new Color(0x11, 0x66, 0)), Lime(Color.BLACK, new Color(0x22, 255, 0)), Aqua(Color.BLACK, new Color(0, 255, 255)), Pink(Color.BLACK,
-    Color.PINK), Purple(Color.WHITE, new Color(0x80, 0, 0x80)), Brown(Color.WHITE, new Color(150, 75, 0)), Orange(Color.BLACK, Color.ORANGE);
+  Red(Color.BLACK, new Color(0xF2, 0x8B, 0x82)),
+  Yellow(Color.BLACK, new Color(0xF7, 0xE3, 0x82)),
+  Black(Color.WHITE, Color.BLACK),
+  White(Color.BLACK, Color.WHITE),
+
+  Green(Color.BLACK, new Color(0x81, 0xC9, 0x95)),
+  Lime(Color.BLACK, new Color(0xC5, 0xE4, 0x78)),
+  Aqua(Color.BLACK, new Color(0x7D, 0xD9, 0xD2)),
+  Pink(Color.BLACK, new Color(0xF3, 0xA6, 0xC8)),
+
+  Purple(Color.BLACK, new Color(0xB3, 0x9D, 0xDB)),
+  Brown(Color.BLACK, new Color(0xC8, 0x97, 0x6B)),
+  Orange(Color.BLACK, new Color(0xFF, 0xB7, 0x4D));
 
   private final Color background;
   private final Color foreground;
