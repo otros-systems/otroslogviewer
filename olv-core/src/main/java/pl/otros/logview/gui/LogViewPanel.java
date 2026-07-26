@@ -33,6 +33,7 @@ import pl.otros.logview.api.gui.NoteEvent.EventType;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.MenuActionProvider;
+import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
@@ -149,6 +150,16 @@ public class LogViewPanel extends LogViewPanelI {
     FontResize.addFontResizeOnScroll(logDetailWithRulerScrollPane.getjScrollPane());
     table = new JTableWith2RowHighliting(dataTableModel);
     table.setName("LogViewPanel.log table");
+
+    // Use a slightly more subtle border.
+    if (getOtrosApplication().getTheme().themeType() == Theme.Type.Dark) {
+      table.setGridColor(Color.DARK_GRAY);
+    } else {
+      table.setGridColor(Color.LIGHT_GRAY);
+    }
+
+    // Set the row height manually, because in windows theme the automatic calculation not working
+    table.setRowHeight(new JCheckBox().getPreferredSize().height + 1);
 
     // Initialize default column visible before creating context menu
     table.setColumnControlVisible(true);
