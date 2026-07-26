@@ -40,6 +40,7 @@ import pl.otros.logview.gui.config.LogTableFormatConfigView;
 import pl.otros.logview.gui.message.update.MessageDetailListener;
 import pl.otros.logview.gui.renderers.*;
 import pl.otros.logview.gui.table.JTableWith2RowHighliting;
+import pl.otros.logview.gui.util.JTableUtil;
 import pl.otros.logview.pluginable.PluginableElementNameComparator;
 import pl.otros.logview.pluginable.SynchronizePluginableContainerListener;
 import pl.otros.logview.util.DateUtil;
@@ -214,9 +215,12 @@ public class LogViewPanel extends LogViewPanelI {
       table.getColumnExt(tableColumns).setVisible(true);
     }
 
+    // Temporarily disable auto-resizing so calculated column widths can be
+    // applied without JTable automatically redistributing space to other columns.
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     updateColumnsSize();
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+
     final Renderers renderers = Renderers.getInstance(otrosApplication);
     table.setDefaultRenderer(String.class, new TableMarkDecoratorRenderer(renderers.getStringRenderer()));
     table.setDefaultRenderer(Object.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Object.class)));
@@ -359,17 +363,15 @@ public class LogViewPanel extends LogViewPanelI {
     updateColumnSizeIfVisible(TableColumns.NOTE, 100, 1500);
   }
 
-
   private void updateTimeColumnSize() {
-    //The time column is bold and bold fond is wider
-    String dateExample = new SimpleDateFormat(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")).format(new Date());
-    int dateWidth = calculateTextWidth(dateExample, table);
-    updateColumnSizeIfVisible(TableColumns.TIME, dateWidth + 1, dateWidth + 1);
+    String dateExample = JTableUtil.getWidestDateString((configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS")));
+    int textWidth = JTableUtil.calculateTextWidth(TableColumns.TIME, dateExample, table);
+    updateColumnSizeIfVisible(TableColumns.TIME, textWidth, textWidth + 10);
   }
 
   private void updateMarkColumnSize() {
     String tableHeader = TableColumns.MARK.getName() + "  ";//Space before and after will be rendered
-    int headerWidth = calculateTextWidth(tableHeader, table);
+    int headerWidth = JTableUtil.calculateTextWidth(TableColumns.MARK, tableHeader, table);
     int maxHeaderOrContentWidth = Math.max(headerWidth, CHECK_BOX_WIDTH);
     updateColumnSizeIfVisible(TableColumns.MARK, maxHeaderOrContentWidth + 1, maxHeaderOrContentWidth + 1);
   }
@@ -379,9 +381,9 @@ public class LogViewPanel extends LogViewPanelI {
    * If the header is wider than contend, the width of header will be used.
    */
   private void updateLevelColumnSize() {
-    int levelWidth = calculateTextWidth(Level.WARNING.getName(), table);
+    int levelWidth = JTableUtil.calculateTextWidth(TableColumns.LEVEL, Level.WARNING.getName(), table);
     String tableHeader = TableColumns.LEVEL.getName() + "  ";//Space before and after will be rendered
-    int headerWidth = calculateTextWidth(tableHeader, table);
+    int headerWidth = JTableUtil.calculateTextWidth(TableColumns.LEVEL, tableHeader, table);
     int maxIconOrHeaderWidth = Math.max(headerWidth, LEVEL_ICON_WIDTH);
 
     switch (configuration.get(LevelRenderer.Mode.class, ConfKeys.LOG_TABLE_FORMAT_LEVEL_RENDERER, LevelRenderer.Mode.IconsOnly)) {
@@ -403,10 +405,6 @@ public class LogViewPanel extends LogViewPanelI {
     table.getColumns(true).get(column.getColumn()).setPreferredWidth(width);
   }
 
-  private int calculateTextWidth(String text, JComponent component) {
-    FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
-    return fontMetrics.stringWidth(text);
-  }
 
   @Override
   public JTextPane getLogDetailTextArea() {
