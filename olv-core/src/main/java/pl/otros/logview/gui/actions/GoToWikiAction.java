@@ -28,16 +28,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class GettingStartedAction extends OtrosAction {
+public class GoToWikiAction extends OtrosAction {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GettingStartedAction.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(GoToWikiAction.class.getName());
 
-  private static final String URL = "https://github.com/otros-systems/otroslogviewer/wiki/Introduction?tm=6";
+  private static final String URL = "https://github.com/otros-systems/otroslogviewer/wiki";
 
-  public GettingStartedAction(OtrosApplication otrosApplication) {
+  public GoToWikiAction(OtrosApplication otrosApplication) {
     super(otrosApplication);
     this.putValue(SMALL_ICON, Icons.HELP);
-    this.putValue(NAME, "Go to Wiki -> Getting started");
+    this.putValue(NAME, "Go to Wiki");
   }
 
   @Override

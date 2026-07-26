@@ -735,7 +735,7 @@ public class LogViewMainFrame extends JFrame {
     helpMenu.add(new GoToDonatePageAction(otrosApplication));
     JMenuItem checkForNewVersion = new JMenuItem(new CheckForNewVersionAction(otrosApplication));
     helpMenu.add(checkForNewVersion);
-    helpMenu.add(new GettingStartedAction(otrosApplication));
+    helpMenu.add(new GoToWikiAction(otrosApplication));
     helpMenu.add(new FontSize(otrosApplication, 12));
     menuBar.add(fileMenu);
     menuBar.add(toolsMenu);
