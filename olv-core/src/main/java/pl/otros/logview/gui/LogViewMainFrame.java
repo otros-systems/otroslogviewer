@@ -288,17 +288,18 @@ public class LogViewMainFrame extends JFrame {
     OtrosSplash.setMessage("Starting application");
     OtrosSplash.setMessage("Loading configuration");
     final XMLConfiguration c = getConfiguration("config.xml");
-    if (c != null && !c.containsKey(ConfKeys.UUID)) {
+    if (!c.containsKey(ConfKeys.UUID)) {
       c.setProperty(ConfKeys.UUID, java.util.UUID.randomUUID().toString());
     }
 
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(() -> {
-      if (c != null && c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
-        final int fontSize = c.getInt(APPEARANCE_FONT_SIZE, 12);
-        FontSize.setDefaultSize(fontSize);
+      int fontSize = FontSize.DEFAULT_FONT_SIZE;
+      if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
+        fontSize = c.getInt(APPEARANCE_FONT_SIZE, FontSize.DEFAULT_FONT_SIZE);
       }
+      FontSize.setDefaultSize(fontSize);
 
       String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c != null ? c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()) : LookAndFeelUtil.getLightLookAndFeel().getClass().getName());
       LookAndFeelUtil.initLf(lookAndFeelName);
@@ -307,21 +308,17 @@ public class LogViewMainFrame extends JFrame {
       mf.addComponentListener(new ComponentAdapter() {
         @Override
         public void componentResized(ComponentEvent e) {
-          if (c != null) {
-            c.setProperty("gui.state", mf.getExtendedState());
-            if (mf.getExtendedState() == Frame.NORMAL) {
-              c.setProperty("gui.width", mf.getWidth());
-              c.setProperty("gui.height", mf.getHeight());
-            }
+          c.setProperty("gui.state", mf.getExtendedState());
+          if (mf.getExtendedState() == Frame.NORMAL) {
+            c.setProperty("gui.width", mf.getWidth());
+            c.setProperty("gui.height", mf.getHeight());
           }
         }
 
         @Override
         public void componentMoved(ComponentEvent e) {
-          if (c != null) {
-            c.setProperty("gui.location.x", mf.getLocation().x);
-            c.setProperty("gui.location.y", mf.getLocation().y);
-          }
+          c.setProperty("gui.location.x", mf.getLocation().x);
+          c.setProperty("gui.location.y", mf.getLocation().y);
         }
       });
       mf.addWindowListener(mf.exitAction);
@@ -736,7 +733,7 @@ public class LogViewMainFrame extends JFrame {
     JMenuItem checkForNewVersion = new JMenuItem(new CheckForNewVersionAction(otrosApplication));
     helpMenu.add(checkForNewVersion);
     helpMenu.add(new GoToWikiAction(otrosApplication));
-    helpMenu.add(new FontSize(otrosApplication, 12));
+    helpMenu.add(new FontSize(otrosApplication, FontSize.DEFAULT_FONT_SIZE));
     menuBar.add(fileMenu);
     menuBar.add(toolsMenu);
     menuBar.add(pluginsMenu);

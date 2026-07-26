@@ -53,9 +53,6 @@ public class MemoryUsedStatsUpdater implements Runnable {
     });
     nf.setMaximumFractionDigits(1);
     nf.setMinimumFractionDigits(1);
-    bar.addPropertyChangeListener("UI", e -> {
-      bar.updateUI();
-    });
   }
 
   @Override
