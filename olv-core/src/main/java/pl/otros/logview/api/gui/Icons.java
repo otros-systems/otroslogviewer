@@ -262,4 +262,10 @@ public class Icons {
   @Path(path = "/img/fugue/document-hf-select-footer.png")
   public static Icon FROM_END;
 
+  @Path(path = "/img/theme-thumb-light.png")
+  public static ImageIcon THEME_THUMB_LIGHT;
+
+  @Path(path = "/img/theme-thumb-dark.png")
+  public static ImageIcon THEME_THUMB_DARK;
+
 }
