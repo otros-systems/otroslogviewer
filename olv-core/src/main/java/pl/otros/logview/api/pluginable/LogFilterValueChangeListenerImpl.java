@@ -10,7 +10,6 @@ import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LogFilterValueChangeListenerImpl implements LogFilterValueChangeListener {
 
@@ -20,13 +19,15 @@ public class LogFilterValueChangeListenerImpl implements LogFilterValueChangeLis
   private final StatusObserver observer;
   private final JTable table;
   private int lastKnownSelectedRowInModel = -1;
+  private final LogDataTableModel dataTableModel;
 
-  public LogFilterValueChangeListenerImpl(JTable table, TableRowSorter<LogDataTableModel> rowSorter, Collection<LogFilter> logFilters, StatusObserver statusObserver) {
+  public LogFilterValueChangeListenerImpl(JTable table, TableRowSorter<LogDataTableModel> rowSorter, Collection<LogFilter> logFilters, StatusObserver statusObserver, LogDataTableModel dataTableModel) {
     super();
     this.table = table;
     this.rowSorter = rowSorter;
     this.logFilters = logFilters;
     this.observer = statusObserver;
+    this.dataTableModel = dataTableModel;
   }
 
   @Override
@@ -39,8 +40,18 @@ public class LogFilterValueChangeListenerImpl implements LogFilterValueChangeLis
 
     LOGGER.trace("Last selected row is {}", selectedRow);
 
-    List<LogFilter> enabledFiltersList = logFilters.stream().filter(LogFilter::isEnable).collect(Collectors.toList());
-    enabledFiltersList.forEach(logFilter -> LOGGER.trace("Filter \"{}\" is in use", logFilter.getName()));
+    List<LogFilter> enabledFiltersList = logFilters.stream().filter(LogFilter::isEnable).toList();
+    if (LOGGER.isTraceEnabled()) {
+      enabledFiltersList.forEach(logFilter -> LOGGER.trace("Filter \"{}\" is in use", logFilter.getName()));
+    }
+    int rowCount = dataTableModel.getRowCount();
+    if (rowCount > 0) {
+      enabledFiltersList.forEach(logFilter -> {
+        logFilter.setFirstRow(dataTableModel.getLogData(0));
+        logFilter.setLastRow(dataTableModel.getLogData(rowCount - 1));
+      });
+    }
+
 
     LogFilter[] enabledFilters = new LogFilter[enabledFiltersList.size()];
     enabledFilters = enabledFiltersList.toArray(enabledFilters);

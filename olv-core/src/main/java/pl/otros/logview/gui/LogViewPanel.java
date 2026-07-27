@@ -479,7 +479,7 @@ public class LogViewPanel extends LogViewPanelI {
     Font f = filtersLabel.getFont().deriveFont(Font.BOLD);
     filtersLabel.setFont(f);
     filtersPanel.add(filtersLabel, "wrap, growx, span");
-    LogFilterValueChangeListener listenerToWrap = new LogFilterValueChangeListenerImpl(table, sorter, filtersList, statusObserver);
+    LogFilterValueChangeListener listenerToWrap = new LogFilterValueChangeListenerImpl(table, sorter, filtersList, statusObserver, dataTableModel);
 
     for (LogFilter filter : filtersList) {
       filter.init(new Properties(), dataTableModel, getOtrosApplication().getTheme());

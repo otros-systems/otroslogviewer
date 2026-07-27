@@ -41,4 +41,17 @@ public interface LogFilter extends PluginableElement {
 
   void setValueChangeListener(LogFilterValueChangeListener listener);
 
+  /**
+   * Every time a filter will be activated the first row of the log table will be set. This can be multiple times.
+   */
+  default void setFirstRow(LogData firstRow) {
+  }
+
+  /**
+   * Every time a filter will be activated the last row of the log table will be set. This can be multiple times.
+   * It will be not set each time a new row will be set.
+   */
+  default void setLastRow(LogData lastRow) {
+  }
+
 }
