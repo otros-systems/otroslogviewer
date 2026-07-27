@@ -36,10 +36,9 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
   private static final Logger LOGGER = LoggerFactory.getLogger(CheckForNewVersionAbstract.class.getName());
   private final VersionUtil versionUtil = new VersionUtil();
 
-  private SwingWorker<Optional<String>, Void> versionChecker = new SwingWorker<Optional<String>, Void>() {
+  private final SwingWorker<Optional<String>, Void> versionChecker = new SwingWorker<>() {
     @Override
     protected Optional<String> doInBackground() {
-      String running;
       Optional<String> current = Optional.empty();
       final DataConfiguration c = getOtrosApplication().getConfiguration();
 
@@ -55,7 +54,7 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
       } catch (FileNotFoundException e) {
         LOGGER.error("No version Info added to release page! Cannot check version.");
       } catch (Exception e) {
-        LOGGER.error("Error checking version: " + e.getMessage());
+        LOGGER.error("Error checking version.", e);
       }
       return current;
     }
@@ -73,10 +72,10 @@ public abstract class CheckForNewVersionAbstract extends OtrosAction {
               handleVersionIsUpToDate(current);
             }
           } else {
-            LOGGER.warn(String.format("Current version is %s, running version is %s", current, running));
+            LOGGER.warn("Current version is {}, running version is unknown: '{}'", current, running);
           }
         });
-        if (!maybeCurrent.isPresent()) {
+        if (maybeCurrent.isEmpty()) {
           handleError(new Exception("Unable to check latest version"));
         }
 

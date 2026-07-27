@@ -62,7 +62,7 @@ import java.util.regex.PatternSyntaxException;
  * <p>
  * <b>Features:</b><br>
  * - specify the URL of the log file to be processed<br>
- * - specify the timestamp format in the file (if one exists, using patterns from {@link java.text.SimpleDateFormat})<br>
+ * - specify the timestamp format in the file (if one exists, using patterns from {@link SimpleDateFormat})<br>
  * - specify the pattern (logFormat) used in the log file using keywords, a wildcard character (*) and fixed text<br>
  * - 'tail' the file (allows the contents of the file to be continually read and new events processed)<br>
  * - specify custom charset (default UTF-8) - supports the parsing of multi-line messages and exceptions - 'hostname' property set to URL host (or 'file' if not
@@ -133,7 +133,7 @@ import java.util.regex.PatternSyntaxException;
  * at Generator2.run(Generator2.java:102)<br>
  *
  * @author Code highly based on
- * http://svn.apache.org/repos/asf/logging/log4j/companions/receivers/trunk/src/main/java/org/apache/log4j/varia/LogFilePatternReceiver.java
+ * <a href="http://svn.apache.org/repos/asf/logging/log4j/companions/receivers/trunk/src/main/java/org/apache/log4j/varia/LogFilePatternReceiver.java">LogFilePatternReceiver.java</a>
  */
 public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
 
@@ -148,11 +148,8 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   public static final String PROPERTY_CHARSET = "charset";
   public static final String PROPERTY_TRIM_UNMATCHED_LINES = "trimUnmatchedLines";
 
-  private final List<String> keywords = new ArrayList<>();
-  // private SimpleDateFormat dateFormat;
-  // private Rule expressionRule;
+  private final Set<String> keywords = new HashSet<>();
   private final String[] emptyException = { "" };
-  private boolean appendNonMatches;
   private final List<String> matchingKeywords = new ArrayList<>();
 
   private static final String PROP_START = "PROP(";
@@ -184,7 +181,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   private static final String DEFAULT_GROUP = "(" + REGEXP_DEFAULT_WILDCARD + ")";
   private static final String GREEDY_GROUP = "(" + REGEXP_GREEDY_WILDCARD + ")";
   private static final String MULTIPLE_SPACES_REGEXP = "[ ]+";
-  private final String newLine = System.getProperty("line.separator");
+  private final String newLine = System.lineSeparator();
 
   private static final String VALID_DATEFORMAT_CHARS = "GyMwWDdFEaHkKhmsSzZX";
   private static final String VALID_DATEFORMAT_CHAR_PATTERN = "[" + VALID_DATEFORMAT_CHARS + "]";
@@ -258,10 +255,10 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    * @return message
    */
   private String buildMessage(String firstMessageLine, int exceptionLine, ParsingContext ctx) {
-    if (ctx.getUnmatchedLog().length() == 0) {
+    if (ctx.getUnmatchedLog().isEmpty()) {
       return firstMessageLine;
     }
-    StringBuffer message = new StringBuffer();
+    StringBuilder message = new StringBuilder();
     if (firstMessageLine != null) {
       message.append(firstMessageLine);
     }
@@ -301,11 +298,14 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    * @return event
    */
   private LoggingEvent buildEvent(ParsingContext ctx) {
+    @SuppressWarnings("unchecked")
     HashMap<String, Object> logEventParsingProperitesMap = (HashMap<String, Object>) ctx.getCustomConextProperties().get(PROPERTY_LOG_EVENT_PROPERTIES);
-    if (logEventParsingProperitesMap.size() == 0) {
+    if (logEventParsingProperitesMap.isEmpty()) {
       String[] additionalLines = ctx.getUnmatchedLog().toString().split("\n");
       for (String line : additionalLines) {
-        LOGGER.debug("found non-matching (file {}) line: \"{}\"", ctx.getLogSource(), line);
+        if (!line.isBlank()) {
+          LOGGER.debug("found non-matching (file {}) line: \"{}\"", ctx.getLogSource(), line);
+        }
       }
       ctx.getUnmatchedLog().setLength(0);
       return null;
@@ -335,9 +335,6 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
    * Convert the match into a map.
    * <p>
    * Relies on the fact that the matchingKeywords list is in the same order as the groups in the regular expression
-   *
-   * @param result
-   * @return map
    */
   private Map<String, String> processEvent(MatchResult result) {
     Map<String, String> map = new HashMap<>();
@@ -386,14 +383,12 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     // with an empty string,
     // we'll rebuild the pattern later
     // ?  The propertyNames list is never used.
-    List<String> propertyNames = new ArrayList<>();
     while (index > -1) {
-      if (current.contains(PROP_START) && current.indexOf(PROP_END) > -1) {
+      if (current.contains(PROP_START) && current.contains(PROP_END)) {
         index = current.indexOf(PROP_START);
         String longPropertyName = current.substring(current.indexOf(PROP_START), current.indexOf(PROP_END) + 1);
         String shortProp = getShortPropertyName(longPropertyName);
         buildingKeywords.add(shortProp);
-        propertyNames.add(longPropertyName);
         current = current.substring(longPropertyName.length() + 1 + index);
         newPattern = singleReplace(newPattern, longPropertyName, Integer.toString(buildingKeywords.size() - 1));
       } else {
@@ -408,9 +403,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
      * examine pattern, adding keywords to an index-based map patterns can contain only one of these per entry...properties are the only 'keyword' that can
      * occur multiple times in an entry
      */
-    Iterator iter = keywords.iterator();
-    while (iter.hasNext()) {
-      String keyword = (String) iter.next();
+    for (String keyword : keywords) {
       int index2 = newPattern.indexOf(keyword);
       if (index2 > -1) {
         buildingKeywords.add(keyword);
@@ -418,24 +411,24 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       }
     }
 
-    String buildingInt = "";
+    StringBuilder buildingInt = new StringBuilder();
 
     for (int i = 0; i < newPattern.length(); i++) {
-      String thisValue = String.valueOf(newPattern.substring(i, i + 1));
+      String thisValue = newPattern.substring(i, i + 1);
       if (isInteger(thisValue)) {
-        buildingInt = buildingInt + thisValue;
+        buildingInt.append(thisValue);
       } else {
-        if (isInteger(buildingInt)) {
-          matchingKeywords.add(buildingKeywords.get(Integer.parseInt(buildingInt)));
+        if (isInteger(buildingInt.toString())) {
+          matchingKeywords.add(buildingKeywords.get(Integer.parseInt(buildingInt.toString())));
         }
         // reset
-        buildingInt = "";
+        buildingInt = new StringBuilder();
       }
     }
 
     // if the very last value is an int, make sure to add it
-    if (isInteger(buildingInt)) {
-      matchingKeywords.add(buildingKeywords.get(Integer.parseInt(buildingInt)));
+    if (isInteger(buildingInt.toString())) {
+      matchingKeywords.add(buildingKeywords.get(Integer.parseInt(buildingInt.toString())));
     }
 
     newPattern = replaceMetaChars(newPattern);
@@ -485,7 +478,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     int propLength = oldString.length();
     int startPos = result.indexOf(oldString);
     if (startPos == -1) {
-      LOGGER.info("string: " + oldString + " not found in input: " + result + " - returning input");
+      LOGGER.info("string: {} not found in input: {} - returning input", oldString, result);
       return result;
     }
     if (startPos == 0) {
@@ -500,15 +493,11 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   private String getShortPropertyName(String longPropertyName) {
     String currentProp = longPropertyName.substring(longPropertyName.indexOf(PROP_START));
     String prop = currentProp.substring(0, currentProp.indexOf(PROP_END) + 1);
-    String shortProp = prop.substring(PROP_START.length(), prop.length() - 1);
-    return shortProp;
+    return prop.substring(PROP_START.length(), prop.length() - 1);
   }
 
   /**
    * Some perl5 characters may occur in the log file format. Escape these characters to prevent parsing errors.
-   *
-   * @param input
-   * @return string
    */
   private String replaceMetaChars(String input) {
     // escape backslash first since that character is used to escape the
@@ -536,8 +525,6 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   /**
    * Convert a keyword-to-values map to a LoggingEvent
    *
-   * @param fieldMap
-   * @param exception
    * @return logging event
    */
   private LoggingEvent convertToEvent(Map<String, Object> fieldMap, String[] exception, DateFormat dateFormat) {
@@ -553,17 +540,17 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       exception = emptyException;
     }
 
-    String logger = "";
+    String logger;
     long timeStamp = 0L;
-    String level = null;
-    String threadName = null;
-    Object message = null;
-    String ndc = null;
-    String className = null;
-    String methodName = null;
-    String eventFileName = null;
-    String lineNumber = null;
-    Hashtable<String, Object> properties = new Hashtable<>();
+    String level;
+    String threadName;
+    Object message;
+    String ndc;
+    String className;
+    String methodName;
+    String eventFileName;
+    String lineNumber;
+
 
     logger = StringUtils.trim((String) fieldMap.remove(LOGGER_STRING));
 
@@ -620,7 +607,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
         if (!level.equals(levelImpl.toString())) {
           // check custom level map
           levelImpl = Level.DEBUG;
-          LOGGER.debug("found unexpected level: " + level + ", logger: " + logger + ", msg: " + message);
+          LOGGER.debug("found unexpected level: {}, logger: {}, msg: {}", level, logger, message);
           // make sure the text that couldn't match a level is
           // added to the message
           message = level + " " + message;
@@ -643,34 +630,30 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
 
     lineNumber = (String) fieldMap.remove(LINE);
 
-    // properties.put(Constants.HOSTNAME_KEY, host);
-    // properties.put(Constants.APPLICATION_KEY, path);
-    // properties.put(Constants.RECEIVER_NAME_KEY, getName());
+    // all remaining entries in fieldmap are localProperties
+    Hashtable<String, Object> localProperties = new Hashtable<>(fieldMap);
 
-    // all remaining entries in fieldmap are properties
-    properties.putAll(fieldMap);
-
-    LocationInfo info = null;
+    LocationInfo info;
 
     if ((eventFileName != null) || (className != null) || (methodName != null) || (lineNumber != null)) {
       info = new LocationInfo(eventFileName, className, methodName, lineNumber);
     } else {
       info = LocationInfo.NA_LOCATION_INFO;
     }
-    LoggingEvent event = new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, exception, ndc, info, properties);
-    return event;
+    return new LoggingEvent(null, logger, timeStamp, levelImpl, message, threadName, exception, ndc, info, localProperties);
   }
 
   @Override
   public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
 
     LogData logData = null;
-    if (line.trim().equals("")) {
+    if (line.isBlank()) {
       return null;
     }
 
     Matcher eventMatcher = regexpPattern.matcher(line);
     Matcher exceptionMatcher = exceptionPattern.matcher(line);
+    @SuppressWarnings("unchecked")
     HashMap<String, Object> logEventParsingProperties = (HashMap<String, Object>) parsingContext.getCustomConextProperties().get(PROPERTY_LOG_EVENT_PROPERTIES);
     if (eventMatcher.matches()) {
       // build an event from the previous match (held in current map)
@@ -688,42 +671,17 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
         .forEach(entry -> logEventParsingProperties.put(entry.getKey(), entry.getValue()));
     } else if (exceptionMatcher.matches()) {
       // an exception line
-      if (parsingContext.getUnmatchedLog().length() > 0)
+      if (!parsingContext.getUnmatchedLog().isEmpty())
         parsingContext.getUnmatchedLog().append('\n');
       parsingContext.getUnmatchedLog().append(line);
     } else {
-      // neither...either post an event with the line or append as
-      // additional lines
-      // if this was a logging event with multiple lines, each line
-      // will show up as its own event instead of being
-      // appended as multiple lines on the same event..
-      // choice is to have each non-matching line show up as its own
-      // line, or append them all to a previous event
-      if (appendNonMatches) {
-        // hold on to the previous time, so we can do our best to
-        // preserve time-based ordering if the event is a non-match
-        String lastTime = (String) logEventParsingProperties.get(TIMESTAMP);
-        // build an event from the previous match (held in current
-        // map)
-        if (logEventParsingProperties.size() > 0) {
-          LoggingEvent event = buildEvent(parsingContext);
-          if (event != null) {
-            logData = Log4jUtil.translateLog4j(event);
-          }
-        }
-        if (lastTime != null) {
-          logEventParsingProperties.put(TIMESTAMP, lastTime);
-        }
-        logEventParsingProperties.put(MESSAGE, line);
-      } else {
-        if (parsingContext.getUnmatchedLog().length() > 0) {
-          parsingContext.getUnmatchedLog().append('\n');
-        }
-        if (trimUnmatchedLines)
-          parsingContext.getUnmatchedLog().append(line.trim());
-        else
-          parsingContext.getUnmatchedLog().append(line);
+      if (!parsingContext.getUnmatchedLog().isEmpty()) {
+        parsingContext.getUnmatchedLog().append('\n');
       }
+      if (trimUnmatchedLines)
+        parsingContext.getUnmatchedLog().append(line.trim());
+      else
+        parsingContext.getUnmatchedLog().append(line);
     }
 
     return logData;
@@ -735,7 +693,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   }
 
   @Override
-  public LogData parseBuffer(ParsingContext parsingContext) throws ParseException {
+  public LogData parseBuffer(ParsingContext parsingContext) {
     LogData logData = null;
     // build an event from the previous match (held in current map)
     LoggingEvent event = buildEvent(parsingContext);
@@ -786,6 +744,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
       customLevelsParser = new CustomLevelsParser(customLevelDefinitions);
 
       Map<Integer, String> groupMap = new HashMap<>();
+      @SuppressWarnings("unchecked")
       Enumeration<String> e = (Enumeration<String>) properties.propertyNames();
       String key = null, val = null;
       int keyLen;
@@ -802,19 +761,19 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
           "Group property '%s.group' set to non-integer: %s",
           key, val));
       }
-      if (groupMap.size() < 1)
+      if (groupMap.isEmpty())
         throw new InitializationException(
           PROPERTY_REPATTERN + " set but no group properties set.  "
             + "Set group indexes like 'TIMESTAMP.group=1', "
             + "starting with index 1");
       for (int i = 1; i <= groupMap.size(); i++) {
-        if (!groupMap.containsKey(Integer.valueOf(i)))
+        if (!groupMap.containsKey(i))
           throw new InitializationException(
             "Group property numbers not consecutive starting at 1");
-        matchingKeywords.add(groupMap.get(Integer.valueOf(i)));
+        matchingKeywords.add(groupMap.get(i));
       }
       if (matchingKeywords.contains(Log4jPatternMultilineLogParser.MESSAGE)
-        && !matchingKeywords.get(matchingKeywords.size() - 1).equals(
+        && !matchingKeywords.getLast().equals(
         Log4jPatternMultilineLogParser.MESSAGE))
         throw new InitializationException(
           "If MESSAGE group is present, it must be last");
@@ -875,7 +834,7 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
     if (!keywords.containsAll(matchingKeywords))
       list.add(TableColumns.PROPERTIES);
 
-    return list.toArray(new TableColumns[list.size()]);
+    return list.toArray(new TableColumns[0]);
   }
 
   public Properties getProperties() {

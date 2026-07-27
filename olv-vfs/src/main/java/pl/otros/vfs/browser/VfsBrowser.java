@@ -786,7 +786,7 @@ public class VfsBrowser extends JPanel {
   }
 
   private void selectionChanged() throws FileSystemException {
-    LOGGER.debug("Updating selection");
+    LOGGER.trace("Updating selection");
     boolean acceptEnabled = false;
     if (getSelectedFiles().length == 0) {
       acceptEnabled = false;

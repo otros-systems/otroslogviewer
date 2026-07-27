@@ -20,13 +20,12 @@ import java.util.HashMap;
 
 public class ParsingContext {
 
-  private StringBuilder unmatchedLog;
-  private long lastParsed = 0;
+  private final StringBuilder unmatchedLog;
   private int generatedId = 0;
   private volatile boolean parsingInProgress = true;
   private String name;
   private String logSource;
-  private HashMap<String, Object> customConextProperties;
+  private final HashMap<String, Object> customConextProperties;
   private DateFormat dateFormat;
 
   public ParsingContext() {
@@ -48,10 +47,6 @@ public class ParsingContext {
     return customConextProperties;
   }
 
-  public void setCustomConextProperties(HashMap<String, Object> customConextProperties) {
-    this.customConextProperties = customConextProperties;
-  }
-
   public String getName() {
     return name;
   }
@@ -68,32 +63,12 @@ public class ParsingContext {
     this.parsingInProgress = parsingInProgress;
   }
 
-  public int getGeneratedId() {
-    return generatedId;
-  }
-
   public int getGeneratedIdAndIncrease() {
     return generatedId++;
   }
 
-  public void setGeneratedId(int generatedId) {
-    this.generatedId = generatedId;
-  }
-
-  public long getLastParsed() {
-    return lastParsed;
-  }
-
-  public void setLastParsed(long lastParsed) {
-    this.lastParsed = lastParsed;
-  }
-
   public StringBuilder getUnmatchedLog() {
     return unmatchedLog;
-  }
-
-  public void setUnmatchedLog(StringBuilder unmatchedLog) {
-    this.unmatchedLog = unmatchedLog;
   }
 
   public String getLogSource() {

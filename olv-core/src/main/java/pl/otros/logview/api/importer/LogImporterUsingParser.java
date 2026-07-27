@@ -22,7 +22,10 @@ import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
-import pl.otros.logview.api.parser.*;
+import pl.otros.logview.api.parser.LogParser;
+import pl.otros.logview.api.parser.MultiLineLogParser;
+import pl.otros.logview.api.parser.ParserDescription;
+import pl.otros.logview.api.parser.ParsingContext;
 
 import javax.swing.*;
 import java.io.*;
@@ -69,8 +72,8 @@ public class LogImporterUsingParser implements LogImporter {
 
     }
     while (true) {
-      synchronized (parsingContext){
-        if (!parsingContext.isParsingInProgress()){
+      synchronized (parsingContext) {
+        if (!parsingContext.isParsingInProgress()) {
           break;
         }
       }
@@ -92,7 +95,6 @@ public class LogImporterUsingParser implements LogImporter {
           logData.setId(parsingContext.getGeneratedIdAndIncrease());
           logData.setLogSource(parsingContext.getLogSource());
           dataCollector.add(logData);
-          parsingContext.setLastParsed(System.currentTimeMillis());
         }
 
       } catch (IOException e) {
@@ -121,7 +123,6 @@ public class LogImporterUsingParser implements LogImporter {
           synchronized (parsingContext) {
             dataCollector.add(logData);
           }
-          parsingContext.setLastParsed(System.currentTimeMillis());
         }
       }
     } catch (Exception e) {
