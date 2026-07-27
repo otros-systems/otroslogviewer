@@ -285,7 +285,6 @@ public class LogViewMainFrame extends JFrame {
 
 
     LOGGER.info("Starting application");
-    OtrosSplash.setMessage("Starting application");
     OtrosSplash.setMessage("Loading configuration");
     final XMLConfiguration c = getConfiguration("config.xml");
     if (!c.containsKey(ConfKeys.UUID)) {
@@ -295,14 +294,16 @@ public class LogViewMainFrame extends JFrame {
     IconsLoader.loadIcons();
     OtrosSplash.setMessage("Loading icons");
     SwingUtilities.invokeAndWait(() -> {
+      //The LookAndFeel must be set before setting the font size. Otherwise, some dialogs reset fontsize to default
+      String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c != null ? c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()) : LookAndFeelUtil.getLightLookAndFeel().getClass().getName());
+      LookAndFeelUtil.initLf(lookAndFeelName);
+
       int fontSize = FontSize.DEFAULT_FONT_SIZE;
       if (c.getBoolean(APPEARANCE_CUSTOM_FONT_SIZE, false)) {
         fontSize = c.getInt(APPEARANCE_FONT_SIZE, FontSize.DEFAULT_FONT_SIZE);
       }
       FontSize.setDefaultSize(fontSize);
 
-      String lookAndFeelName = LookAndFeelUtil.checkSupportedLookAndFeelOrReturnDefault(c != null ? c.getString(APPEARANCE_LOOK_AND_FEEL, LookAndFeelUtil.getLightLookAndFeel().getClass().getName()) : LookAndFeelUtil.getLightLookAndFeel().getClass().getName());
-      LookAndFeelUtil.initLf(lookAndFeelName);
       final OtrosConfiguration c1 = new OtrosConfiguration(c);
       final LogViewMainFrame mf = new LogViewMainFrame(c1);
       mf.addComponentListener(new ComponentAdapter() {
@@ -423,7 +424,9 @@ public class LogViewMainFrame extends JFrame {
 
       @Override
       public void componentAdded(ContainerEvent e) {
-        setCard();
+        // Defer card switching to avoid race condition during tab setup
+        //This can happen if you open a tag, close it, change font size and open a tab
+        SwingUtilities.invokeLater(this::setCard);
       }
 
       public void setCard() {
