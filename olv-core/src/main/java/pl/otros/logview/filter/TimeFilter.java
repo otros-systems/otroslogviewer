@@ -35,6 +35,7 @@ public class TimeFilter extends AbstractLogFilter {
   private final JPanel gui;
   private final JCheckBox startEnable;
   private final JCheckBox endEnable;
+  private boolean firstRowSet = false;
 
   public TimeFilter() {
     super(NAME, DESCRIPTION);
@@ -53,11 +54,37 @@ public class TimeFilter extends AbstractLogFilter {
     endEnable.addActionListener(e -> listener.ifPresent(LogFilterValueChangeListener::valueChanged));
     gui = new JPanel(new GridLayout(4, 1));
     JSpinner startSpinner = new JSpinner(startM);
+    JSpinner.DateEditor editorStart = new JSpinner.DateEditor(startSpinner, "dd.MM.yyyy HH:mm:ss");
+    editorStart.getTextField().setHorizontalAlignment(JTextField.RIGHT);
+    startSpinner.setEditor(editorStart);
     JSpinner endSpinner = new JSpinner(endM);
+    JSpinner.DateEditor editorEnd = new JSpinner.DateEditor(endSpinner, "dd.MM.yyyy HH:mm:ss");
+    editorEnd.getTextField().setHorizontalAlignment(JTextField.RIGHT);
+    endSpinner.setEditor(editorEnd);
     gui.add(startEnable);
     gui.add(startSpinner);
     gui.add(endEnable);
     gui.add(endSpinner);
+  }
+
+  @Override
+  public void setFirstRow(LogData firstRow) {
+    //Sets the start date only once
+    if (!firstRowSet) {
+      Date date = firstRow.getDate();
+      startM.setValue(date);
+      start = date;
+      firstRowSet = true;
+    }
+  }
+
+  @Override
+  public void setLastRow(LogData lastRow) {
+    Date date = lastRow.getDate();
+    if (!endEnable.isSelected()) {
+      endM.setValue(date);
+      end = date;
+    }
   }
 
   @Override
