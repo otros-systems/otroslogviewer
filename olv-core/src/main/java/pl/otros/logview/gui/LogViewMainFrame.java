@@ -78,13 +78,11 @@ import pl.otros.swing.rulerbar.RulerBarHelper;
 import pl.otros.swing.suggest.SuggestDecorator;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -140,9 +138,7 @@ public class LogViewMainFrame extends JFrame {
     title += ' ' + runningVersion;
     this.setTitle(title);
     try {
-      String iconPath = "img/otros/logo256.png";
-      BufferedImage icon = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(iconPath));
-      this.setIconImage(icon);
+      this.setIconImage(Icons.LOGO_OTROS_256.getImage());
     } catch (Exception e1) {
       LOGGER.warn("Can't load icon: " + e1.getMessage());
     }

@@ -3,14 +3,13 @@ package pl.otros.logview.gui.firstuse;
 import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.gui.util.LookAndFeelUtil;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class LookAndFeelPage extends JPanel implements FirstUsePage {
@@ -22,16 +21,8 @@ public class LookAndFeelPage extends JPanel implements FirstUsePage {
   private final JRadioButton dark;
 
   LookAndFeelPage() {
-    ImageIcon lightIcon = null;
-    ImageIcon darkIcon = null;
-    try {
-      lightIcon = new ImageIcon(ImageIO.read(FirstTimeUseWizard.class.getResourceAsStream("/theme-thumb-light.png")));
-      darkIcon = new ImageIcon(ImageIO.read(FirstTimeUseWizard.class.getResourceAsStream("/theme-thumb-dark.png")));
-    } catch (IOException ignore) {
-      //
-    }
     light = new JRadioButton("Light");
-    final JLabel lightLabel = new JLabel(lightIcon);
+    final JLabel lightLabel = new JLabel(Icons.THEME_THUMB_LIGHT);
     lightLabel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -40,7 +31,7 @@ public class LookAndFeelPage extends JPanel implements FirstUsePage {
     });
 
     dark = new JRadioButton("Dark");
-    final JLabel darkLabel = new JLabel(darkIcon);
+    final JLabel darkLabel = new JLabel(Icons.THEME_THUMB_DARK);
     darkLabel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {

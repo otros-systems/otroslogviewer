@@ -1,6 +1,5 @@
 package pl.otros.logview.gui.firstuse;
 
-import pl.otros.logview.gui.GuiUtils;
 import pl.otros.logview.gui.util.LookAndFeelUtil;
 
 import javax.swing.*;
@@ -13,13 +12,13 @@ import java.util.function.Function;
 public class FirstTimeUseWizard {
 
 
-  public void show(Window parent, Function<InitialConfiguration, Void> callback) {
+  public void show(JFrame parent, Function<InitialConfiguration, Void> callback) {
 
-    final JDialog wizard = new JDialog(parent, "OtrosLogViewer first use configuration");
+    final JDialog wizard = new JDialog(parent, "OtrosLogViewer first use configuration", true);
 
     final WizardContext settings = new WizardContext();
     final List<FirstUsePage> pages = List.of(new LookAndFeelPage(), new LogPatternsPage());
-    final int[] currentPage = {0};
+    final int[] currentPage = { 0 };
 
     final JLabel title = new JLabel();
     Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -95,7 +94,7 @@ public class FirstTimeUseWizard {
 
     updateUi.run();
     wizard.setSize(800, 600);
-    GuiUtils.centerOnScreen(wizard);
+    wizard.setLocationRelativeTo(parent);
     wizard.setVisible(true);
   }
 

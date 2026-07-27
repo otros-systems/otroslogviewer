@@ -19,17 +19,11 @@ import javax.swing.*;
 
 public class Icons {
 
-  @Path(path = "/img/icon.png")
-  public static Icon LOGO_SMALL;
-
   @Path(path = "/img/otros/logo16.png")
   public static Icon LOGO_OTROS_16;
 
-  @Path(path = "/img/otros/logo32.png")
-  public static Icon LOGO_OTROS_32;
-
-  @Path(path = "/img/otros/logo64.png")
-  public static Icon LOGO_OTROS_64;
+  @Path(path = "/img/otros/logo256.png")
+  public static ImageIcon LOGO_OTROS_256;
 
   @Path(path = "/img/fugue/control-double-270.png")
   public static Icon FOLLOW_ON;
@@ -58,9 +52,6 @@ public class Icons {
   @Path(path = "/img/package_closed.png")
   public static Icon PACKAGE_CLOSE;
 
-  @Path(path = "/img/package_closed_ignore.png")
-  public static Icon PACKAGE_CLOSE_IGNORED;
-
   @Path(path = "/img/note_empty.png")
   public static Icon NOTE_EMPTY;
 
@@ -87,9 +78,6 @@ public class Icons {
 
   @Path(path = "/img/fugue/arrow-turn-270.png")
   public static Icon ARROW_TURN_270;
-
-  @Path(path = "/img/fugue/arrow-branch-270-left.png")
-  public static Icon ARROW_BRANCH_270;
 
   @Path(path = "/img/fugue/arrow-join.png")
   public static Icon ARROW_JOIN;
@@ -130,9 +118,6 @@ public class Icons {
   @Path(path = "/img/fugue/clipboard.png")
   public static Icon MARKINGS_CLEAR;
 
-  @Path(path = "/img/fugue24/wand-hat.png")
-  public static Icon WIZARD;
-
   @Path(path = "/img/fugue/application-export.png")
   public static Icon EXPORT;
 
@@ -145,17 +130,11 @@ public class Icons {
   @Path(path = "/img/fugue/funnel--arrow.png")
   public static Icon FILTER;
 
-  @Path(path = "/img/fugue/table-insert-column.png")
-  public static Icon TABLE_COLUMN;
-
   @Path(path = "/img/fugue/layer-resize-replicate.png")
   public static Icon TABLE_RESIZE;
 
   @Path(path = "/img/fugue/control-power.png")
   public static Icon TURN_OFF;
-
-  @Path(path = "/img/fugue/arrow-continue-180.png")
-  public static Icon TAIL;
 
   @Path(path = "/img/fugue/minus-white.png")
   public static Icon TAB_HEADER_NORMAL;
@@ -235,12 +214,6 @@ public class Icons {
   @Path(path = "/img/fugue/credit-cards.png")
   public static Icon CREDIT_CARDS;
 
-  @Path(path = "/img/btn_donateCC_LG.gif")
-  public static Icon DONATE;
-
-  @Path(path = "/img/fugue24/megaphone.png")
-  public static Icon MEGAPHONE_24;
-
   @Path(path = "/img/fugue/bin.png")
   public static Icon BIN;
 
@@ -249,18 +222,6 @@ public class Icons {
 
   @Path(path = "/img/fugue/document-code.png")
   public static Icon DOCUMENT_CODE;
-
-  @Path(path = "/img/ide/eclipse-disconnected.png")
-  public static Icon ICE_ECLIPSE_DISCONNECTED;
-
-  @Path(path = "/img/ide/idea-disconnected.png")
-  public static Icon IDE_IDEA_DISCONNCTED;
-
-  @Path(path = "/img/ide/eclipse.gif")
-  public static Icon IDE_ECLIPSE;
-
-  @Path(path = "/img/ide/idea.png")
-  public static Icon IDE_IDEA;
 
   @Path(path = "/img/fugue/tick-button.png")
   public static Icon STATUS_OK;
@@ -273,12 +234,6 @@ public class Icons {
 
   @Path(path = "/img/fugue/gear.png")
   public static Icon GEAR;
-
-  @Path(path = "/img/fugue/arrow-step-over.png")
-  public static Icon ARROW_STEP_OVER;
-
-  @Path(path = "/img/fugue/arrow-step-over.png", gray = true)
-  public static Icon ARROW_STEP_OVER_GRAY;
 
   @Path(path = "/img/fugue/table-export.png")
   public static Icon TABLE_EXPORT;
@@ -301,20 +256,16 @@ public class Icons {
   @Path(path = "/img/fugue/json.png")
   public static Icon JSON;
 
-  @Path(path = "/img/fugue/control-stop-square.png")
-  public static Icon CONTROL_STOP;
-
-  @Path(path = "/img/fugue/control-pause.png")
-  public static Icon CONTROL_PAUSE;
-
   @Path(path = "/img/fugue/document-hf-select.png")
   public static Icon FROM_START;
 
   @Path(path = "/img/fugue/document-hf-select-footer.png")
   public static Icon FROM_END;
 
-  @Path(path = "/img/fugue/document-number.png")
-  public static Icon DOCUMENT_NUMBER;
+  @Path(path = "/img/theme-thumb-light.png")
+  public static ImageIcon THEME_THUMB_LIGHT;
 
+  @Path(path = "/img/theme-thumb-dark.png")
+  public static ImageIcon THEME_THUMB_DARK;
 
 }
