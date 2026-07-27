@@ -52,9 +52,6 @@ public class Icons {
   @Path(path = "/img/package_closed.png")
   public static Icon PACKAGE_CLOSE;
 
-  @Path(path = "/img/package_closed_ignore.png")
-  public static Icon PACKAGE_CLOSE_IGNORED;
-
   @Path(path = "/img/note_empty.png")
   public static Icon NOTE_EMPTY;
 
@@ -81,9 +78,6 @@ public class Icons {
 
   @Path(path = "/img/fugue/arrow-turn-270.png")
   public static Icon ARROW_TURN_270;
-
-  @Path(path = "/img/fugue/arrow-branch-270-left.png")
-  public static Icon ARROW_BRANCH_270;
 
   @Path(path = "/img/fugue/arrow-join.png")
   public static Icon ARROW_JOIN;
@@ -124,9 +118,6 @@ public class Icons {
   @Path(path = "/img/fugue/clipboard.png")
   public static Icon MARKINGS_CLEAR;
 
-  @Path(path = "/img/fugue24/wand-hat.png")
-  public static Icon WIZARD;
-
   @Path(path = "/img/fugue/application-export.png")
   public static Icon EXPORT;
 
@@ -139,17 +130,11 @@ public class Icons {
   @Path(path = "/img/fugue/funnel--arrow.png")
   public static Icon FILTER;
 
-  @Path(path = "/img/fugue/table-insert-column.png")
-  public static Icon TABLE_COLUMN;
-
   @Path(path = "/img/fugue/layer-resize-replicate.png")
   public static Icon TABLE_RESIZE;
 
   @Path(path = "/img/fugue/control-power.png")
   public static Icon TURN_OFF;
-
-  @Path(path = "/img/fugue/arrow-continue-180.png")
-  public static Icon TAIL;
 
   @Path(path = "/img/fugue/minus-white.png")
   public static Icon TAB_HEADER_NORMAL;
@@ -250,12 +235,6 @@ public class Icons {
   @Path(path = "/img/fugue/gear.png")
   public static Icon GEAR;
 
-  @Path(path = "/img/fugue/arrow-step-over.png")
-  public static Icon ARROW_STEP_OVER;
-
-  @Path(path = "/img/fugue/arrow-step-over.png", gray = true)
-  public static Icon ARROW_STEP_OVER_GRAY;
-
   @Path(path = "/img/fugue/table-export.png")
   public static Icon TABLE_EXPORT;
 
@@ -277,20 +256,10 @@ public class Icons {
   @Path(path = "/img/fugue/json.png")
   public static Icon JSON;
 
-  @Path(path = "/img/fugue/control-stop-square.png")
-  public static Icon CONTROL_STOP;
-
-  @Path(path = "/img/fugue/control-pause.png")
-  public static Icon CONTROL_PAUSE;
-
   @Path(path = "/img/fugue/document-hf-select.png")
   public static Icon FROM_START;
 
   @Path(path = "/img/fugue/document-hf-select-footer.png")
   public static Icon FROM_END;
-
-  @Path(path = "/img/fugue/document-number.png")
-  public static Icon DOCUMENT_NUMBER;
-
 
 }
