@@ -19,17 +19,11 @@ import javax.swing.*;
 
 public class Icons {
 
-  @Path(path = "/img/icon.png")
-  public static Icon LOGO_SMALL;
-
   @Path(path = "/img/otros/logo16.png")
   public static Icon LOGO_OTROS_16;
 
-  @Path(path = "/img/otros/logo32.png")
-  public static Icon LOGO_OTROS_32;
-
-  @Path(path = "/img/otros/logo64.png")
-  public static Icon LOGO_OTROS_64;
+  @Path(path = "/img/otros/logo256.png")
+  public static ImageIcon LOGO_OTROS_256;
 
   @Path(path = "/img/fugue/control-double-270.png")
   public static Icon FOLLOW_ON;
@@ -235,12 +229,6 @@ public class Icons {
   @Path(path = "/img/fugue/credit-cards.png")
   public static Icon CREDIT_CARDS;
 
-  @Path(path = "/img/btn_donateCC_LG.gif")
-  public static Icon DONATE;
-
-  @Path(path = "/img/fugue24/megaphone.png")
-  public static Icon MEGAPHONE_24;
-
   @Path(path = "/img/fugue/bin.png")
   public static Icon BIN;
 
@@ -249,18 +237,6 @@ public class Icons {
 
   @Path(path = "/img/fugue/document-code.png")
   public static Icon DOCUMENT_CODE;
-
-  @Path(path = "/img/ide/eclipse-disconnected.png")
-  public static Icon ICE_ECLIPSE_DISCONNECTED;
-
-  @Path(path = "/img/ide/idea-disconnected.png")
-  public static Icon IDE_IDEA_DISCONNCTED;
-
-  @Path(path = "/img/ide/eclipse.gif")
-  public static Icon IDE_ECLIPSE;
-
-  @Path(path = "/img/ide/idea.png")
-  public static Icon IDE_IDEA;
 
   @Path(path = "/img/fugue/tick-button.png")
   public static Icon STATUS_OK;
