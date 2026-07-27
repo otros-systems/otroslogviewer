@@ -55,7 +55,4 @@ public class EnableDisableComponetsForTabs implements ChangeListener {
     return component;
   }
 
-  public boolean removeComponent(Component component) {
-    return componets.remove(component);
-  }
 }

@@ -19,6 +19,7 @@ package pl.otros.logview.gui;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTable;
@@ -97,6 +98,7 @@ public class LogViewPanel extends LogViewPanelI {
   private final PluginableElementsContainer<MessageFormatter> messageFormattersContainer;
   private final PluginableElementsContainer<MessageColorizer> selectedMessageColorizersContainer;
   private final PluginableElementsContainer<MessageFormatter> selectedMessageFormattersContainer;
+  private final EventListener<ConfigurationEvent> configurationEventListener;
   private final JToolBar messageDetailToolbar;
   private List<AcceptCondition> acceptConditionList;
   private PropertyFilter propertyFilter;
@@ -271,7 +273,7 @@ public class LogViewPanel extends LogViewPanelI {
     });
     table.setDefaultRenderer(TimeDelta.class, new TableMarkDecoratorRenderer(timeDeltaRenderer));
 
-    ((EventSource) configuration.getConfiguration()).addEventListener(ConfigurationEvent.ANY, ce -> {
+    configurationEventListener = ce -> {
       if (ce.getEventType().equals(ConfigurationEvent.SET_PROPERTY) && !ce.isBeforeUpdate()) {
         if (ce.getPropertyName().equals(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT)) {
           table.setDefaultRenderer(Date.class, new TableMarkDecoratorRenderer(new DateRenderer(configuration.getString(ConfKeys.LOG_TABLE_FORMAT_DATE_FORMAT, "HH:mm:ss.SSS"))));
@@ -281,7 +283,8 @@ public class LogViewPanel extends LogViewPanelI {
           updateLevelColumnSize();
         }
       }
-    });
+    };
+    ((EventSource) configuration.getConfiguration()).addEventListener(ConfigurationEvent.ANY, configurationEventListener);
 
     table.setDefaultRenderer(Boolean.class, new TableMarkDecoratorRenderer(table.getDefaultRenderer(Boolean.class)));
     table.setDefaultRenderer(Note.class, new TableMarkDecoratorRenderer(new NoteRenderer()));
@@ -840,6 +843,7 @@ public class LogViewPanel extends LogViewPanelI {
     markersContainer.removeListener(markersMenuListener);
     messageColorizersContainer.removeListener(messageColorListener);
     messageFormattersContainer.removeListener(messageFormatterListener);
+    ((EventSource) configuration.getConfiguration()).removeEventListener(ConfigurationEvent.ANY, configurationEventListener);
   }
 
   private class MarkersMenuReloader implements PluginableElementEventListener<AutomaticMarker> {

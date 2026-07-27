@@ -44,7 +44,10 @@ public final class JTableUtil {
       false,
       0,
       viewColumnIndex);
-    return component.getPreferredSize().width;
+
+    //The Windows theme does not calculate the correct size. +6 is also not correct, but not too small.
+    int correctionFactor = "Windows".equals(UIManager.getLookAndFeel().getName()) ? 6 : 0;
+    return component.getPreferredSize().width + correctionFactor;
   }
 
   /**

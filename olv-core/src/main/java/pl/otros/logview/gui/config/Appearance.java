@@ -273,7 +273,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
         final LookAndFeel lf = (LookAndFeel) Class.forName(feelInfo.getClassName()).getDeclaredConstructor().newInstance();
         component.setBackground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionBackground" : "Label.background"));
         component.setForeground(lf.getDefaults().getColor(isSelected ? "ComboBox.selectionForeground" : "Label.foreground"));
-        component.setFont(lf.getDefaults().getFont("Label.font"));
+        component.setFont(UIManager.getDefaults().getFont("Label.font"));
       } catch (Throwable e) {
         LOGGER.error("Can't get look and feel properties for " + feelInfo.getName() + "/" + feelInfo.getClassName(), e);
       }
