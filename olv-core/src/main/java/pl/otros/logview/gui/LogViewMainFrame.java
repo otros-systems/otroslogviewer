@@ -380,21 +380,7 @@ public class LogViewMainFrame extends JFrame {
 
   private static Configuration getVfsFavoritesConfiguration() {
     File file = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + "vfsFavorites.xml");
-    FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-      .configure(new Parameters().xml()
-        .setFile(file));
-    builder.setAutoSave(true);
-    XMLConfiguration configuration;
-    try {
-      configuration = builder.getConfiguration();
-      if (file.exists()) {
-        Utils.loadConfigIgnoringWhitespace(configuration, file);
-      }
-    } catch (ConfigurationException | IOException e) {
-      LOGGER.error(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
-      configuration = new XMLConfiguration();
-    }
-    return configuration;
+    return Utils.loadXmlConfiguration(file);
   }
 
   private void initPlugins() {
