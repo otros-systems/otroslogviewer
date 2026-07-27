@@ -17,10 +17,9 @@
 package pl.otros.logview.api.io;
 
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.io.FileHandler;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
@@ -29,13 +28,14 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.importer.PossibleLogImporters;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
-import pl.otros.vfs.browser.util.VFSUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -43,6 +43,10 @@ import java.util.regex.Pattern;
 public class Utils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getName());
+  private static final String EMPTY_XML_CONFIG = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration/>
+    """;
 
   public static Optional<LogImporter> detectLogImporter(Collection<LogImporter> importers, byte[] buff) {
     return detectPossibleLogImporter(importers, buff).getLogImporter();
@@ -125,36 +129,24 @@ public class Utils {
     return sb.toString();
   }
 
-  /**
-   * Create temporary FileObject with content. Implementation will create file in temprary directory
-   *
-   * @param content File content
-   * @return FileObject
-   * @throws IOException in case of IO problems
-   */
-  public static FileObject createFileObjectWithContent(String content) throws IOException {
-    final File tempFile = File.createTempFile("olv_temp", "");
-    OutputStream out = new FileOutputStream(tempFile);
-    IOUtils.write(content, out, Charset.forName("UTF-8"));
-    IOUtils.closeQuietly(out);
-    return VFSUtils.resolveFileObject(tempFile.toURI());
-  }
-
-  public static void loadConfigIgnoringWhitespace(XMLConfiguration config, File file) throws ConfigurationException, IOException {
-    if (file.exists()) {
-      String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-      loadConfigIgnoringWhitespace(config, content);
+  public static XMLConfiguration loadXmlConfiguration(File file) {
+    FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+      .configure(new Parameters().xml()
+        .setFile(file));
+    builder.setAutoSave(true);
+    XMLConfiguration configuration = new XMLConfiguration();
+    try {
+      Path filePath = file.toPath();
+      if (Files.notExists(filePath)) {
+        LOGGER.info("Creating new configuration file {}", filePath);
+        Files.createDirectories(filePath.getParent());
+        Files.writeString(filePath, EMPTY_XML_CONFIG);
+      }
+      configuration = builder.getConfiguration();
+    } catch (ConfigurationException | IOException e) {
+      LOGGER.error(String.format("Can't load user configuration from %s: %s", file.getAbsolutePath(), e.getMessage()));
     }
+    return configuration;
   }
 
-  public static void loadConfigIgnoringWhitespace(XMLConfiguration config, java.io.InputStream inputStream) throws ConfigurationException, IOException {
-    String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-    loadConfigIgnoringWhitespace(config, content);
-  }
-
-  private static void loadConfigIgnoringWhitespace(XMLConfiguration config, String content) throws ConfigurationException, IOException {
-    content = content.replaceAll(">\\s+<", "><");
-    FileHandler handler = new FileHandler(config);
-    handler.load(new java.io.StringReader(content));
-  }
 }
