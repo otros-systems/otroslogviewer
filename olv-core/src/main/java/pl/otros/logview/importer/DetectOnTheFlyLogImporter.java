@@ -42,8 +42,7 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
   private static final Logger LOGGER = LoggerFactory.getLogger(DetectOnTheFlyLogImporter.class.getName());
 
   protected static final String PROPERTY_BYTE_BUFFER = "DetectInTheFlyLogImporter.byteBuffer";
-  protected static final String PROPERTY_LOG_IMPORTER = "DetectInTheFlyLogImporter.logImporter";
-  private int detectTryMinimum = 128;
+  private final int detectTryMinimum = 128;
   protected int detectTryMaximum = 200 * 1024;
   private final Collection<LogImporter> logImporters;
 
@@ -71,11 +70,10 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
   @Override
   public void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext) {
     HashMap<String, Object> customContextProperties = parsingContext.getCustomConextProperties();
-    if (customContextProperties.containsKey(PROPERTY_LOG_IMPORTER)) {
+    Optional<LogImporter> logImporter = parsingContext.getLogImporter();
+    if (logImporter.isPresent()) {
       // Log importer detected, use it;
-      LogImporter logImporter = (LogImporter) customContextProperties.get(PROPERTY_LOG_IMPORTER);
-      LOGGER.debug(String.format("Have log importer detected (%s), will use it", logImporter.getName()));
-      logImporter.importLogs(in, dataCollector, parsingContext);
+      logImporter.get().importLogs(in, dataCollector, parsingContext);
     } else {
       try {
         byte[] buff = new byte[16 * 1024];
@@ -102,9 +100,9 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
                 final LogImporter detectLogImporter = maybeLogImporter.get();
                 LOGGER.debug(String.format("Log importer detected (%s),this log importer will be used", detectLogImporter.getName()));
                 detectLogImporter.initParsingContext(parsingContext);
-                customContextProperties.put(PROPERTY_LOG_IMPORTER, detectLogImporter);
+                parsingContext.setLogImporter(detectLogImporter);
                 byte[] buf = byteArrayOutputStream.toByteArray();
-                
+
                 PushbackInputStream pushbackWrapper = new PushbackInputStream(in, buf.length);
                 pushbackWrapper.unread(buf);
                 detectLogImporter.importLogs(pushbackWrapper, dataCollector, parsingContext);
@@ -123,8 +121,8 @@ public class DetectOnTheFlyLogImporter extends AbstractPluginableElement impleme
 
   @Override
   public TableColumns[] getTableColumnsToUse() {
-    return new TableColumns[] { ID, TIME, LEVEL, MESSAGE, CLASS, METHOD, THREAD, MARK, FILE, LINE, NDC, PROPERTIES, LOGGER_NAME,
-        LOG_SOURCE };
+    return new TableColumns[]{ ID, TIME, LEVEL, MESSAGE, CLASS, METHOD, THREAD, MARK, FILE, LINE, NDC, PROPERTIES, LOGGER_NAME,
+      LOG_SOURCE };
   }
 
   @Override

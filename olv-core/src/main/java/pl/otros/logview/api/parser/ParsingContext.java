@@ -15,10 +15,16 @@
  ******************************************************************************/
 package pl.otros.logview.api.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.importer.LogImporter;
+
 import java.text.DateFormat;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class ParsingContext {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ParsingContext.class.getName());
 
   private final StringBuilder unmatchedLog;
   private int generatedId = 0;
@@ -27,6 +33,7 @@ public class ParsingContext {
   private String logSource;
   private final HashMap<String, Object> customConextProperties;
   private DateFormat dateFormat;
+  private LogImporter logImporter;
 
   public ParsingContext() {
     this("?");
@@ -85,5 +92,14 @@ public class ParsingContext {
 
   public void setDateFormat(DateFormat dateFormat) {
     this.dateFormat = dateFormat;
+  }
+
+  public Optional<LogImporter> getLogImporter() {
+    return logImporter == null ? Optional.empty() : Optional.of(logImporter);
+  }
+
+  public void setLogImporter(LogImporter logImporter) {
+    LOGGER.debug("Have log importer detected ({}), will use it", logImporter.getName());
+    this.logImporter = logImporter;
   }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2012 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,20 @@
  ******************************************************************************/
 package pl.otros.logview.importer;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import pl.otros.logview.api.InitializationException;
-import pl.otros.logview.api.model.LogDataCollector;
-import pl.otros.logview.api.importer.LogImporterUsingParser;
 import pl.otros.logview.api.importer.LogImporter;
-import pl.otros.logview.parser.JulSimpleFormatterParser;
+import pl.otros.logview.api.importer.LogImporterUsingParser;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 import pl.otros.logview.api.reader.ProxyLogDataCollector;
+import pl.otros.logview.parser.JulSimpleFormatterParser;
+import pl.otros.logview.parser.log4j.Log4jPatternMultilineLogParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -39,7 +38,7 @@ public class DetectOnTheFlyLogImporterTest {
   private ArrayList<LogImporter> logImporters;
 
   @BeforeMethod
-public void initialize() throws InitializationException {
+  public void initialize() throws InitializationException {
     logImporters = new ArrayList<>();
     logImporters.add(new LogImporterUsingParser(new JulSimpleFormatterParser()));
     logImporters.add(new UtilLoggingXmlLogImporter());
@@ -72,11 +71,11 @@ public void initialize() throws InitializationException {
 
     byte[] buff = new byte[importer.detectTryMaximum];
 
-      // when
+    // when
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     importer.importLogs(new ByteArrayInputStream(buff), collector, context);
     // then
-    AssertJUnit.assertFalse(context.getCustomConextProperties().containsKey(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertFalse(context.getLogImporter().isPresent());
     ByteArrayOutputStream bout = (ByteArrayOutputStream) context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_BYTE_BUFFER);
     System.out.println("DetectInTheFlyLogImporterTest.testImportLogsStopAddingIfMaxSizeIsReached() " + bout.size());
     AssertJUnit.assertTrue(importer.detectTryMaximum >= bout.size());
@@ -112,12 +111,12 @@ public void initialize() throws InitializationException {
     importer.importLogs(inputStream, collector, context);
 
     // then
-    AssertJUnit.assertNull("Log importer detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertNull("Log importer detected", context.getLogImporter().orElse(null));
     AssertJUnit.assertEquals(0, collector.getLogData().length);
   }
 
 
- public void testImport(String resourceName, int logDataCount) {
+  public void testImport(String resourceName, int logDataCount) {
     // given
     InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
     DetectOnTheFlyLogImporter importer = new DetectOnTheFlyLogImporter(logImporters);
@@ -130,7 +129,7 @@ public void initialize() throws InitializationException {
     importer.importLogs(inputStream, collector, context);
 
     // then
-    AssertJUnit.assertNotNull("Log importer not detected", context.getCustomConextProperties().get(DetectOnTheFlyLogImporter.PROPERTY_LOG_IMPORTER));
+    AssertJUnit.assertNotNull("Log importer not detected", context.getLogImporter().orElse(null));
     AssertJUnit.assertEquals(logDataCount, collector.getLogData().length);
 
   }
