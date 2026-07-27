@@ -35,10 +35,6 @@ public class TabHeader extends JPanel {
   private int len;
   private Dimension dim;
 
-  public TabHeader(JTabbedPane pane, String name, String tooltip) {
-    this(pane, name, null, tooltip);
-  }
-
   public TabHeader(JTabbedPane pane, String name, Icon icon, String tooltip) {
     super(new FlowLayout(FlowLayout.LEFT, 3, 0));
     this.jTabbedPane = pane;
@@ -130,6 +126,7 @@ public class TabHeader extends JPanel {
         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
       if (showConfirmDialog == JOptionPane.OK_OPTION) {
         jTabbedPane.remove(tabNumber);
+        System.err.println(jTabbedPane.getTabCount());
       }
     }
 
