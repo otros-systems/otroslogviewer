@@ -19,13 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.MultiLineLogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,8 +38,6 @@ public class JulSimpleFormatterParser implements MultiLineLogParser {
   private static final String DATE_PATTERNS = "DATE_PATTERNS";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JulSimpleFormatterParser.class.getName());
-
-  private static final String ICON_PATH = "img/java.png";
 
   private final ParserDescription pd;
 
@@ -58,13 +55,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser {
     pd.setKeyStrokeAccelelator("control j");
     pd.setMenmonic(KeyEvent.VK_J);
     pd.setFile(this.getClass().getName());
-    try {
-      Icon icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(ICON_PATH)));
-      pd.setIcon(icon);
-      LOGGER.info("icon loaded");
-    } catch (Exception e) {
-      LOGGER.warn("Error loading icon: " + e.getMessage());
-    }
+    pd.setIcon(Icons.JAVA);
   }
 
   @Override
@@ -113,8 +104,8 @@ public class JulSimpleFormatterParser implements MultiLineLogParser {
   }
 
   private LogData tryToParseStringBuilder(StringBuilder sb, SimpleDateFormat[] datePatterns) {
-    String dateString = sb.substring(0, (sb.length() >= 25 ? 25 : sb.length()));
-    if (dateString.length() == 0) {
+    String dateString = sb.substring(0, (Math.min(sb.length(), 25)));
+    if (dateString.isEmpty()) {
       return null;
     }
     // 2010-02-11 16:08:06 d.bf.g.A main
@@ -160,7 +151,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser {
   }
 
   @Override
-  public LogData parseBuffer(ParsingContext parsingContext) throws ParseException {
+  public LogData parseBuffer(ParsingContext parsingContext) {
     LogData ld = tryToParseStringBuilder(parsingContext.getUnmatchedLog(), (SimpleDateFormat[]) parsingContext.getCustomConextProperties().get(DATE_PATTERNS));
     if (ld != null) {
       parsingContext.getUnmatchedLog().setLength(0);
@@ -180,7 +171,7 @@ public class JulSimpleFormatterParser implements MultiLineLogParser {
 
   @Override
   public void initParsingContext(ParsingContext parsingContext) {
-    SimpleDateFormat[] datePatterns = {new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
+    SimpleDateFormat[] datePatterns = { new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
       new SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH), new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN),
       new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("en")), new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", new Locale("en")),
       new SimpleDateFormat("dd MMM yyyy HH:mm:ss", new Locale("fr"))

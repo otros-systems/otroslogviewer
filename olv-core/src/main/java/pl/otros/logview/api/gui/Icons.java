@@ -61,6 +61,9 @@ public class Icons {
   @Path(path = "/img/magnifier.png")
   public static Icon MAGNIFIER;
 
+  @Path(path = "/img/java.png")
+  public static ImageIcon JAVA;
+
   @Path(path = "/img/fugue/arrow-270-medium.png")
   public static Icon ARROW_DOWN;
 

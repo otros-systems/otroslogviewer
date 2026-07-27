@@ -25,13 +25,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.logview.pluginable.AbstractPluginableElement;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,7 +39,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -51,7 +50,6 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
   private static final Logger LOGGER = LoggerFactory.getLogger(UtilLoggingXmlLogImporter.class.getName());
   private static final String NAME = "Improved XMLFormatter";
   private Icon icon;
-  private static final String ICON_PATH = "img/java.png";
 
   public UtilLoggingXmlLogImporter() {
     super(NAME, NAME);
@@ -67,10 +65,6 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
    * Document close.
    */
   private static final String END_PART = "</log>";
-  /**
-   * Document builder.
-   */
-  // private DocumentBuilder docBuilder;
 
   /**
    * Record end.
@@ -81,13 +75,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
   @Override
   public void init(Properties properties) throws InitializationException {
-    try {
-      icon = new ImageIcon(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(ICON_PATH))));
-      LOGGER.info("icon loaded");
-    } catch (Exception e) {
-      LOGGER.warn("Error loading icon: " + e.getMessage());
-    }
-
+    icon = Icons.JAVA;
   }
 
   @Override
@@ -134,7 +122,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
       // causes Crimson to barf. The Log4jEntityResolver only cares
       // about the "log4j.dtd" ending.
 
-      /**
+      /*
        * resetting the length of the StringBuffer is dangerous, particularly on some JDK 1.4 impls, there's a known Bug that causes a memory leak
        */
       StringBuilder buf = new StringBuilder(1024);
@@ -169,7 +157,7 @@ public class UtilLoggingXmlLogImporter extends AbstractPluginableElement impleme
 
     if (document != null) {
 
-      if (document.trim().equals("")) {
+      if (document.trim().isEmpty()) {
         return;
       }
 
