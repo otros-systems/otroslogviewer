@@ -19,6 +19,7 @@ package pl.otros.logview.filter;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.PopupListener;
@@ -57,14 +58,13 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     String clazz = extractValueFunction().apply(logData);
     boolean result = true;
     if (mode == Mode.IGNORE_MODE) {
-      result = true;
       for (String c : ignoreList) {
         if (clazz.startsWith(c)) {
           result = false;
           break;
         }
       }
-    } else if (mode == Mode.FOCUS_MODE && focusList.size() > 0) {
+    } else if (mode == Mode.FOCUS_MODE && !focusList.isEmpty()) {
       result = false;
       for (String c : focusList) {
         if (clazz.startsWith(c)) {
@@ -112,6 +112,9 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     rootNode = new DefaultMutableTreeNode(new Clazz("root"));
     tree = new JTree(rootNode);
     tree.setCellRenderer(new TreeRenderer());
+    //Resize label if the font ("bold") is larger
+    tree.setLargeModel(true);
+    tree.setBackground(null);
 
     clazzNodeMap = new HashMap<>();
     clazzNodeMap.put(new Clazz("root"), rootNode);
@@ -174,9 +177,9 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
       Clazz packetClazz = new Clazz(clazz.pack);
       if (map.containsKey(packetClazz)) {
         parentNode = map.get(packetClazz);
-      } else if (clazz.pack.length() == 0) {
+      } else if (clazz.pack.isEmpty()) {
         parentNode = root;
-      }  else {
+      } else {
         parentNode = new DefaultMutableTreeNode(packetClazz);
         root.add(parentNode);
         map.put(packetClazz, parentNode);
@@ -191,11 +194,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
       Clazz clazz = new Clazz(string);
       DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(clazz);
       DefaultMutableTreeNode parentNode;
-      if (map.containsKey(new Clazz(clazz.pack))) {
-        parentNode = map.get(new Clazz(clazz.pack));
-      } else {
-        parentNode = root;
-      }
+      parentNode = map.getOrDefault(new Clazz(clazz.pack), root);
       map.put(clazz, newNode);
       parentNode.add(newNode);
     }
@@ -221,13 +220,13 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
   }
 
 
-  static class Clazz implements Comparable<Clazz> {
+  protected static class Clazz implements Comparable<Clazz> {
 
     private final String pack;
     private final String clazz;
 
     public Clazz(String packageClazz) {
-      if (packageClazz.length() == 0) {
+      if (packageClazz.isEmpty()) {
         pack = "";
         clazz = "";
         return;
@@ -246,9 +245,8 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
 
     @Override
     public boolean equals(Object obj) {
-      if (obj instanceof Clazz) {
-        Clazz clazz2 = (Clazz) obj;
-        return pack.equals(clazz2.pack) && this.clazz.equals(clazz2.clazz);
+      if (obj instanceof Clazz clazzToCompere) {
+        return pack.equals(clazzToCompere.pack) && this.clazz.equals(clazzToCompere.clazz);
       }
       return false;
     }
@@ -273,7 +271,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     }
 
     public String toFullString() {
-      if (pack != null && pack.length() > 0) {
+      if (pack != null && !pack.isEmpty()) {
         return pack + '.' + clazz;
       } else {
         return clazz;
@@ -329,18 +327,19 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
 
   public class ClearListAction extends AbstractAction {
 
-    private final HashSet<String>[] lists;
+    private final Set<String> ignoreLists;
+    private final Set<String> focusLists;
 
-    public ClearListAction(HashSet<String>... lists) {
-      this.lists = lists;
+    public ClearListAction(Set<String> ignoreLists, Set<String> focusLists) {
+      this.ignoreLists = ignoreLists;
+      this.focusLists = focusLists;
       this.putValue(NAME, "Clear settings");
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      for (HashSet<String> l : lists) {
-        l.clear();
-      }
+      ignoreLists.clear();
+      focusLists.clear();
       listener.ifPresent(LogFilterValueChangeListener::valueChanged);
       tree.repaint();
     }
@@ -355,7 +354,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     private final Icon packageOpenIgnoreIcon;
     private final Icon packageClosedIcon;
     private final Icon packageClosedIgnoredIcon;
-    private final Color background;
+    private final Color defaultSelectionColor;
 
     public TreeRenderer() {
       clazzIcon = Icons.CLASS;
@@ -364,21 +363,23 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
       packageOpenIgnoreIcon = Icons.PACKAGE_OPEN_IGNORED;
       packageClosedIcon = Icons.PACKAGE_CLOSE;
       packageClosedIgnoredIcon = Icons.PACKAGE_OPEN_IGNORED;
-      background = getBackground();
+      defaultSelectionColor = getBackgroundSelectionColor();
     }
 
-    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean focus) {
-      Component parent = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, focus);
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean mouseFocus) {
+      Component parent = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, mouseFocus);
       Clazz clazz = (Clazz) ((DefaultMutableTreeNode) value).getUserObject();
       Font font = getFont();
-      JLabel l = (JLabel) parent;
-      Icon icon = l.getIcon();
+      DefaultTreeCellRenderer parentRenderer = (DefaultTreeCellRenderer) parent;
+      Icon icon;
       int style = Font.PLAIN;
       boolean ignore = mode.equals(Mode.IGNORE_MODE) && ignoreList.contains(clazz.toFullString());
       boolean focused = mode.equals(Mode.FOCUS_MODE) && focusList.contains(clazz.toFullString());
 
-      l.setBackground(background);
-      l.setOpaque(false);
+      //If not set color, the focused color will be copied to all other labels
+      parentRenderer.setBackgroundNonSelectionColor(null);
+      parentRenderer.setBackgroundSelectionColor(defaultSelectionColor);
+      parentRenderer.setOpaque(false);
 
       if (ignore) {
         style = Font.ITALIC;
@@ -386,9 +387,9 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         style = Font.BOLD;
       }
 
-      if (!focus && focused) {
-        l.setBackground(Color.YELLOW);
-        l.setOpaque(true);
+      if (focused) {
+        parentRenderer.setBackgroundNonSelectionColor(MarkerColors.Yellow.getBackground());
+        parentRenderer.setBackgroundSelectionColor(new Color(152, 144, 106));
       }
 
       if (leaf && ignore) {
@@ -405,9 +406,11 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         icon = packageClosedIcon;
       }
       Font newFont = font.deriveFont(style);
-      parent.setFont(newFont);
-      l.setIcon(icon);
-      return parent;
+      parentRenderer.setFont(newFont);
+      parentRenderer.setIcon(icon);
+      //Resize the label if the font ("bold") is larger
+      parentRenderer.setSize(parentRenderer.getPreferredSize());
+      return parentRenderer;
     }
   }
 }
