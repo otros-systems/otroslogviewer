@@ -33,7 +33,7 @@ public class FilteredAcceptCondition extends AbstractAcceptContidion {
   @Override
   public boolean accept(LogData data) {
     for (LogFilter logFilter : filtersList) {
-      if (logFilter.isEnable() && !logFilter.accept(data, 0)) {
+      if (logFilter.isFilterIsActive() && logFilter.isEnable() && !logFilter.accept(data, 0)) {
         return true;
       }
     }

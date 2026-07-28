@@ -31,7 +31,7 @@ public class StringContainsFilter extends AbstractStringBasedFilter {
   @Override
   public boolean accept(LogData logData, int row) {
     String message = isIgnoreCase() ? logData.getMessage().toLowerCase() : logData.getMessage();
-    return condition.length() == 0 || message.contains(condition);
+    return condition.isEmpty() || message.contains(condition);
   }
 
   @Override

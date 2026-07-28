@@ -95,6 +95,11 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     }
   }
 
+  @Override
+  public boolean isFilterIsActive() {
+    return !ignoreList.isEmpty() || !focusList.isEmpty();
+  }
+
 
   public void ignoreClass(String... classes) {
     Collections.addAll(ignoreList, classes);

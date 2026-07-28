@@ -43,7 +43,7 @@ public class LogDataRowFilter extends RowFilter<LogDataTableModel, Integer> {
     LogData logData = model.getLogData(entry.getIdentifier());
     boolean result = true;
     for (LogFilter filter : filters) {
-      if (filter.isEnable()) {
+      if (filter.isFilterIsActive() && filter.isEnable()) {
         result = filter.accept(logData, entry.getIdentifier());
       }
       if (!result) {

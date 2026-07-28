@@ -88,6 +88,11 @@ public class TimeFilter extends AbstractLogFilter {
   }
 
   @Override
+  public boolean isFilterIsActive() {
+    return !startEnable.isSelected() || !endEnable.isSelected();
+  }
+
+  @Override
   public boolean accept(LogData logData, int row) {
     Date d = logData.getDate();
     boolean accept = true;
