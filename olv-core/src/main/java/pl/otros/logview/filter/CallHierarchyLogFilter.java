@@ -38,7 +38,7 @@ public class CallHierarchyLogFilter extends AbstractLogFilter {
 
   @Override
   public boolean accept(LogData logData, int row) {
-    Integer logDataId = Integer.valueOf(logData.getId());
+    Integer logDataId = logData.getId();
     if (showOnlyEntryExits.isSelected()) {
       return entryIds.contains(logDataId);
     } else {

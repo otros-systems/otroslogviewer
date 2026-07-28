@@ -59,10 +59,10 @@ public class RegexFilter extends AbstractStringBasedFilter {
 
   @Override
   public boolean accept(LogData logData, int row) {
-    if (patternOk && condition.length() > 0) {
+    if (patternOk && !condition.isEmpty()) {
       return pattern.matcher(logData.getMessage()).find();
     }
-    return condition.length() == 0 || !patternOk;
+    return true;
   }
 
 }

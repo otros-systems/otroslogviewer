@@ -37,6 +37,14 @@ public interface LogFilter extends PluginableElement {
 
   boolean isEnable();
 
+  /**
+   * If the filter is enabled and has something to filter.
+   * This is needed to run the filter only if a condition is set
+   */
+  default boolean isFilterIsActive() {
+    return true;
+  }
+
   Component getGUI();
 
   void setValueChangeListener(LogFilterValueChangeListener listener);

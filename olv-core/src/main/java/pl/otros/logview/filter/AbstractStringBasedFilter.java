@@ -110,6 +110,11 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
 
   }
 
+  @Override
+  public boolean isFilterIsActive() {
+    return !filteringText.isEmpty();
+  }
+
   protected abstract void performPreFiltering();
 
   @Override

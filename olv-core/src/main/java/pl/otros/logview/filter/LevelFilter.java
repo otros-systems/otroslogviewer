@@ -29,8 +29,7 @@ import java.util.logging.Level;
 
 public class LevelFilter extends AbstractLogFilter {
   public static final String NAME_LEVEL_FILTER_LEVEL_COMBO = "Level Filter Level Combo";
-  private int passLevel = Level.ALL.intValue();
-  //  private final JComboBox levelJCombo;
+  private int passLevel = Level.FINEST.intValue();
   private static final String NAME = "Level filter";
   private static final String DESCRIPTION = "Filtering events based on a level. It passes events with selected level or higher.";
   private static final LevelRenderer renderer = new LevelRenderer();
@@ -80,7 +79,7 @@ public class LevelFilter extends AbstractLogFilter {
         if (levelJCombo.getSelectedItem() != null) {
           passLevel = ((Level) levelJCombo.getSelectedItem()).intValue();
         } else {
-          passLevel = Level.ALL.intValue();
+          passLevel = Level.FINEST.intValue();
         }
         filterMode = (FilterMode) modeJCombo.getSelectedItem();
         listener.ifPresent(LogFilterValueChangeListener::valueChanged);
@@ -108,6 +107,11 @@ public class LevelFilter extends AbstractLogFilter {
   public void setPassLevel(int passLevel) {
     this.passLevel = passLevel;
     listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+  }
+
+  @Override
+  public boolean isFilterIsActive() {
+    return !(FilterMode.HIGHER_OR_EQUAL == filterMode && passLevel == Level.FINEST.intValue());
   }
 
   @Override

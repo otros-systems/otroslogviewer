@@ -73,4 +73,8 @@ public class MarkNoteFilter extends AbstractLogFilter {
     noteComboBox.setEnabled(enable);
   }
 
+  @Override
+  public boolean isFilterIsActive() {
+    return noteComboBox.getSelectedIndex() != 0 || markComboBox.getSelectedIndex() != 0;
+  }
 }

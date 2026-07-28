@@ -102,8 +102,13 @@ public class ThreadFilter extends AbstractLogFilter {
   }
 
   @Override
+  public boolean isFilterIsActive() {
+    return !selectedThread.isEmpty();
+  }
+
+  @Override
   public boolean accept(LogData logData, int row) {
-    return (selectedThread.size() == 0 || selectedThread.contains(logData.getThread()));
+    return selectedThread.contains(logData.getThread());
   }
 
   @Override
