@@ -148,7 +148,8 @@ public class Log4jPatternMultilineLogParser implements MultiLineLogParser {
   public static final String PROPERTY_CHARSET = "charset";
   public static final String PROPERTY_TRIM_UNMATCHED_LINES = "trimUnmatchedLines";
 
-  private final Set<String> keywords = new HashSet<>();
+  //LinkedHashSet is needed because the insert order is important
+  private final Set<String> keywords = new LinkedHashSet<>();
   private final String[] emptyException = { "" };
   private final List<String> matchingKeywords = new ArrayList<>();
 
