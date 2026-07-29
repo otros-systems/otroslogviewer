@@ -84,7 +84,17 @@ JAVA_MAJOR=$(${JAVA} -XshowSettings:properties -version 2>&1 \
 # (Makes for easier process troubleshooting).
 [  "-batch" = "$1" ] &&
 exec $JAVA $MEMORY $ADD_OPENS $SFTP_KEY -jar "$OLV_HOME/olv-exec.jar" $@
-# we need to be sure we are writing to a directory where we have write access, /tmp is one of them but app directory is clearly not
-# If we want more than one user on a shared system to be able to run OLV, then make log file user-specific (at least)
-exec $JAVA $MEMORY $ADD_OPENS $SFTP_KEY  -DsingleInstance.startPort= -jar "$OLV_HOME/olv-exec.jar" $@ &
 
+# Directory for console.log
+mkdir -p logs
+
+# Start OLV detached from the terminal and redirect all console output
+# to a log file.
+nohup $JAVA $MEMORY $ADD_OPENS $SFTP_KEY \
+    -DsingleInstance.startPort= \
+    -jar "$OLV_HOME/olv-exec.jar" $@ \
+    > logs/console.log 2>&1 < /dev/null &
+
+# GNOME may terminate background processes when the launcher script exits
+# immediately. Wait a few seconds to allow the Java application to fully start.
+sleep 3
