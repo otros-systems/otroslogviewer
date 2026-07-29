@@ -31,7 +31,6 @@ public abstract class TestComponent<T extends AbstractComponentFixture, U extend
         .until(this::isVisible);
     } catch (Exception e) {
       LOGGER.error("Component is not visible: ", e);
-      LOGGER.error("Component is not visible, cause:", e.getCause());
       throw e;
     }
     return (U) this;

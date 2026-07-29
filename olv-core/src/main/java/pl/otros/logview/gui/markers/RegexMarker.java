@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.gui.markers;
 
+import pl.otros.logview.api.exception.OtrosException;
 import pl.otros.logview.api.model.LogData;
 
 import java.util.Properties;
@@ -27,10 +28,10 @@ public class RegexMarker extends PropertyFileAbstractMarker {
 
   private final boolean preconditionInclude = true;
 
-  public RegexMarker(Properties p) throws Exception {
+  public RegexMarker(Properties p) {
     super(p);
     if (!p.containsKey(PRECONDITION) || !p.containsKey(CONDITION) || !p.containsKey(PRECONDITION_INCLUDE)) {
-      throw new Exception("Not enought parameters");
+      throw new OtrosException("Not enough parameters in marker: " + p + ". Must contains one of: " + PRECONDITION + ", " + CONDITION + ", " + PRECONDITION_INCLUDE);
     }
 
     if (ignoreCase) {

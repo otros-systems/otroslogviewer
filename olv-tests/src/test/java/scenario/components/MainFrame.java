@@ -33,6 +33,14 @@ public class MainFrame extends TestComponent<FrameFixture, MainFrame> {
     return new TabBar(me(), robot);
   }
 
+  public MarkerListDialog markerListDialog() {
+    return new MarkerListDialog(me(), robot);
+  }
+
+  public NewMarkerDialog newMarkerDialog() {
+    return new NewMarkerDialog(robot);
+  }
+
   public MainFrame setSearchModeByString() {
     LOGGER.info("Setting search method by string");
     me().comboBox("MainFrame.searchMode").selectItem(".*contains.*");

@@ -16,6 +16,7 @@
 package pl.otros.logview.gui.markers;
 
 import org.apache.commons.lang.StringUtils;
+import pl.otros.logview.api.exception.OtrosException;
 import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.Properties;
@@ -49,10 +50,10 @@ public abstract class PropertyFileAbstractMarker extends AbstractAutomaticMarker
   private String test2 = "";
   private String test3 = "";
 
-  public PropertyFileAbstractMarker(Properties p) throws Exception {
+  public PropertyFileAbstractMarker(Properties p) {
     super("", "", MarkerColors.Aqua);
     if (!p.containsKey(CONDITION) || !p.containsKey(DESCRIPTION) || !p.containsKey(GROUPS) || !p.containsKey(NAME) || !p.containsKey(IGNORE_CASE)) {
-      throw new Exception("Not enought parameters");
+      throw new OtrosException("Not enough parameters in marker: " + p + ". Must contains one of: " + CONDITION + ", " + DESCRIPTION + ", " + GROUPS + ", " + NAME + ", " + IGNORE_CASE);
     }
     this.ignoreCase = Boolean.parseBoolean(p.getProperty(IGNORE_CASE));
 

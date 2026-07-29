@@ -40,7 +40,22 @@ import java.util.Properties;
 
 public class MarkerEditor extends JPanel {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MarkerEditor.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(MarkerEditor.class);
+
+  public static final String NAME = "MarkerEditor.name";
+  public static final String DESCRIPTION = "MarkerEditor.description";
+  public static final String GROUPS = "MarkerEditor.groups";
+  public static final String TYPE = "MarkerEditor.type";
+  public static final String IGNORE_CASE = "MarkerEditor.ignoreCase";
+  public static final String STRING_MATCHER_CONDITION = "MarkerEditor.stringMatcherCondition";
+  public static final String REGEX_MATCHER_CONDITION = "MarkerEditor.regexMatcherCondition";
+  public static final String STRING_CONDITION_INCLUDE = "MarkerEditor.stringConditionInclude";
+  public static final String REGEX_PRECONDITION = "MarkerEditor.regexPreCondition";
+  public static final String REGEX_PRECONDITION_INCLUDE = "MarkerEditor.regexPreConditionInclude";
+  public static final String COLORS = "MarkerEditor.colors";
+
+  public static final String SAVE = "NewMarkerAction.save";
+  public static final String FILE_CHOOSER = "NewMarkerAction.fileChooser";
 
   private boolean changed = false;
   private final JTextField stringMatcherConditionM;
@@ -77,28 +92,39 @@ public class MarkerEditor extends JPanel {
     file = new JTextField(20);
     file.setEditable(false);
     type = new JComboBox<>(new String[]{ "String matcher", "Regex matcher" });
+    type.setName(TYPE);
     type.addActionListener(arg0 -> disbableUnessasaryComponents());
     type.addActionListener(testAfterChangeActionListener);
 
     ignoreCase = new JCheckBox();
+    ignoreCase.setName(IGNORE_CASE);
     ignoreCase.addActionListener(testAfterChangeActionListener);
     stringConditionInclude = new JCheckBox();
+    stringConditionInclude.setName(STRING_CONDITION_INCLUDE);
     stringConditionInclude.addActionListener(testAfterChangeActionListener);
     regexPreConditionInclude = new JCheckBox();
+    regexPreConditionInclude.setName(REGEX_PRECONDITION_INCLUDE);
     regexPreConditionInclude.addActionListener(testAfterChangeActionListener);
     name = new JTextField(20);
+    name.setName(NAME);
     colors = new JComboBox<>(MarkerColors.values());
+    colors.setName(COLORS);
     colors.setRenderer(new MarkerColorsComboBoxRenderer());
 
     stringMatcherConditionM = new JTextField(20);
+    stringMatcherConditionM.setName(STRING_MATCHER_CONDITION);
     stringMatcherConditionM.getDocument().addDocumentListener(testAfterChangeActionListener);
 
     regexPreCondition = new JTextField(20);
+    regexPreCondition.setName(REGEX_PRECONDITION);
     regexPreCondition.getDocument().addDocumentListener(testAfterChangeActionListener);
     regexMatcherCondition = new JTextField(20);
+    regexMatcherCondition.setName(REGEX_MATCHER_CONDITION);
     regexMatcherCondition.getDocument().addDocumentListener(testAfterChangeActionListener);
     groups = new JTextField(20);
+    groups.setName(GROUPS);
     description = new JTextField(20);
+    description.setName(DESCRIPTION);
 
     testStringTextArea = new JTextArea[3];
     testResults = new JLabel[3];

@@ -37,6 +37,8 @@ import java.util.List;
 
 public class TailingModeMarkersPanel extends JPanel implements PluginableElementEventListener<AutomaticMarker>, TableModelListener {
 
+  public static final String TAILING_MODE_MARKERS_PANEL_SELECTED_GROUP = "TailingModeMarkersPanel.selectedGroup";
+  public static final String TAILING_MODE_MARKERS_PANEL_TABLE = "TailingModeMarkersPanel.table";
   private final LogDataTableModel dataTableModel;
   private final JComboBox<String> selectedGroup;
   private final DefaultComboBoxModel<String> boxModel;
@@ -50,6 +52,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
     defaultTableModel = new SelectedMarkersTableModel();
     table = new JTable(defaultTableModel);
+    table.setName(TAILING_MODE_MARKERS_PANEL_TABLE);
     table.getColumnModel().getColumn(0).setMaxWidth(16);
 
     TableRowSorter<SelectedMarkersTableModel> rowSorter = new TableRowSorter<>(defaultTableModel);
@@ -62,6 +65,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
     boxModel = new DefaultComboBoxModel<>();
     selectedGroup = new JComboBox<>(boxModel);
+    selectedGroup.setName(TAILING_MODE_MARKERS_PANEL_SELECTED_GROUP);
     selectedGroup.addActionListener(e -> defaultTableModel.fireTableDataChanged());
 
     logDataTableModel.addTableModelListener(this);
@@ -213,7 +217,7 @@ public class TailingModeMarkersPanel extends JPanel implements PluginableElement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
      */
     @Override

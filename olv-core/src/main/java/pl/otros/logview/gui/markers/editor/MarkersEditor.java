@@ -39,6 +39,7 @@ public class MarkersEditor extends JPanel {
   private static final String CARD_LAYOUT_JAVA_BASED = "JAVA_BASED";
   private static final String CARD_LAYOUT_PROPERTIES_BASED = "PROP_BASED";
   private static final String CARD_LAYOUT_NO_SELECTION = "EMPTY";
+  public static final String NAME_MARKER_NEW = "Marker.new";
 
   private final JList<AutomaticMarker> markersList;
   private final MarkerEditor editor;
@@ -95,6 +96,7 @@ public class MarkersEditor extends JPanel {
     splitPane.add(markersList);
     splitPane.add(new JScrollPane(editorPanel));
     this.setLayout(new BorderLayout());
+    this.setName(MarkersEditor.class.getSimpleName());
     this.add(splitPane);
     this.add(southPanel, BorderLayout.SOUTH);
 
@@ -103,6 +105,7 @@ public class MarkersEditor extends JPanel {
   private void initSouthPanel() {
     southPanel = new JPanel(new MigLayout("", "[right]", ""));
     JButton buttonNew = new JButton(new NewMarkerAction());
+    buttonNew.setName(NAME_MARKER_NEW);
 
     southPanel.add(buttonNew, "right");
     buttonSave = new JButton(new SaveMarkerAction(editor));

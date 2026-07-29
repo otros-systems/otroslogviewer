@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Properties;
 
 public class AutomaticMarkerLoader {
@@ -122,7 +123,7 @@ public class AutomaticMarkerLoader {
     return marker;
   }
 
-  public static AutomaticMarker loadPropertyBasedMarker(Properties p) throws Exception {
+  public static AutomaticMarker loadPropertyBasedMarker(Properties p) {
     String type = p.getProperty(PropertyFileAbstractMarker.TYPE, "");
     AutomaticMarker marker = null;
     if (type.equalsIgnoreCase(PropertyFileAbstractMarker.TYPE_STRING)) {
@@ -130,9 +131,7 @@ public class AutomaticMarkerLoader {
     } else if (type.equalsIgnoreCase(PropertyFileAbstractMarker.TYPE_REGEX)) {
       marker = new RegexMarker(p);
     }
-    if (marker == null) {
-      throw new Exception("Unknown type of marker: " + type);
-    }
+    Objects.requireNonNull(marker, "Unknown type of marker: " + type);
     return marker;
   }
 

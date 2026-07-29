@@ -1,0 +1,14 @@
+#Edited at Thu Jul 23 18:06:18 CEST 2026
+#Thu Jul 23 18:06:18 CEST 2026
+color=Red
+condition=some pattern
+description=Description of my marker
+file=MarkerTest-useStringMatcherMarker.marker
+groups=OtherGroup
+ignoreCase=true
+include=true
+name=My Custom Marker
+test1=
+test2=
+test3=
+type=string
