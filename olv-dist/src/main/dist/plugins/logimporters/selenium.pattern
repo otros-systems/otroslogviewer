@@ -1,4 +1,0 @@
-type=log4j
-pattern=TIMESTAMP LEVEL [THREAD] CLASS - MESSAGE
-dateFormat=HH:mm:ss.SSS
-name=Selenium server logs (log4j)

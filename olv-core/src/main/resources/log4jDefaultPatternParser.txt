@@ -1,10 +1,10 @@
 #check wiki on https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout
 
 type=log4j
-pattern=TIMESTAMP LEVEL [THREAD]  MESSAGE
-dateFormat=yyyy-MM-dd HH:mm:ss,SSS
-name=Lo4j-pattern: %d{ISO8601} %-5p [%t] %m%n [windows-1252]
-charset=windows-1252
+pattern=TIMESTAMP [THREAD] LEVEL CLASS - MESSAGE
+dateFormat=yyyy-MM-dd HH:mm:ss
+name="Default Log4j2"
+charset=UTF-8
 
 #    Specify the description (used as tooltip) by adding the 'description ' property.
 #    Specify the log pattern by adding the 'pattern' property. The supplied keywords in value field are:

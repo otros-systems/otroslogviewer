@@ -1,5 +1,0 @@
-type=log4j
-pattern=TIMESTAMP LEVEL [THREAD]  MESSAGE
-dateFormat=yyyy-MM-dd HH:mm:ss,SSS
-name="Lo4j-pattern: "%d{ISO8601} %-5p [%t] %m%n [UTF-8]"
-charset=UTF-8

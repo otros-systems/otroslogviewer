@@ -1,0 +1,7 @@
+#check wiki on https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout
+
+type=log4j
+pattern=TIMESTAMP [THREAD] LEVEL CLASS - MESSAGE
+dateFormat=yyyy-MM-dd;HH:mm:ss.SSS
+name=Otros Log Viewer Pattern
+charset=UTF-8

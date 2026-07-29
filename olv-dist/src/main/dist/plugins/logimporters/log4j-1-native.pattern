@@ -1,4 +1,0 @@
-type=log4j-native
-conversionPattern=%d{ISO8601} %-5p [%t] %m%n
-name="Log4j-native-pattern: "%d{ISO8601} %-5p [%t] %m%n [UTF-8]"
-charset=UTF-8
