@@ -25,8 +25,7 @@ java {
 
 tasks.withType(Test).configureEach {
     useTestNG()
-    jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-            '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
+    jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED'
 }
 
 

@@ -22,7 +22,7 @@ IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
 set MEMORY=-Xmx1024m
-set ADD_OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
+set ADD_OPENS=--add-opens java.base/java.util=ALL-UNNAMED
 cd "%OLV_HOME%"
 
 if "%1"=="-batch" goto batchMode

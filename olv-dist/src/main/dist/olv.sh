@@ -35,7 +35,7 @@ cd "$OLV_HOME"
 [ -n "$TMPDIR" ] || TMPDIR=/tmp
 
 MEMORY=-Xmx1024m
-ADD_OPENS="--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED"
+ADD_OPENS="--add-opens java.base/java.util=ALL-UNNAMED"
 #SFTP_KEY=-Dvfs.Identities=
 
 if [ -n "$JAVA_HOME" ]
