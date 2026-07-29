@@ -21,8 +21,6 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -95,6 +93,8 @@ import java.util.logging.Level;
 import static pl.otros.logview.api.ConfKeys.*;
 
 public class LogViewMainFrame extends JFrame {
+  private static XMLConfiguration commonConfiguration;
+
   static {
     //initializes the logback configuration file location
     File logbackConfigFile = new File(System.getProperty("user.dir"), "logback.xml");
@@ -345,18 +345,8 @@ public class LogViewMainFrame extends JFrame {
       AllPluginables.USER_MARKERS.mkdirs();
       AllPluginables.USER_MESSAGE_FORMATTER_COLORZIERS.mkdirs();
     }
-    File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY + File.separator + file);
-    FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-      .configure(new Parameters().xml()
-        .setFile(userConfigurationFile));
-    builder.setAutoSave(true);
-    XMLConfiguration userConfiguration;
-    try {
-      userConfiguration = builder.getConfiguration();
-    } catch (ConfigurationException e) {
-      LOGGER.error(String.format("Can't load user configuration from %s: %s", userConfigurationFile.getAbsolutePath(), e.getMessage()));
-      userConfiguration = new XMLConfiguration();
-    }
+    File userConfigurationFile = new File(AllPluginables.USER_CONFIGURATION_DIRECTORY, file);
+    XMLConfiguration userConfiguration = Utils.loadXmlConfiguration(userConfigurationFile);
 
     Iterator<?> keys = commonConfiguration.getKeys();
     while (keys.hasNext()) {
