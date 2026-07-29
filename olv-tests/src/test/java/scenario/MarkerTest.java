@@ -75,7 +75,8 @@ public class MarkerTest extends OtrosLogViewerBaseTest {
   }
 
 
-  @Test(retryAnalyzer = RetryAnalyzer.class)
+  //  @Test(retryAnalyzer = RetryAnalyzer.class)
+  @Test
   public void useStringMatcherMarker() throws Exception {
     final MainFrame mainFrame = new MainFrame(robot());
 
@@ -108,12 +109,17 @@ public class MarkerTest extends OtrosLogViewerBaseTest {
       .atMost(10, TimeUnit.SECONDS)
       .until(() -> logViewPanel.logsTable().visibleLogsCount() == 3);
 
-    Color line1 = logViewPanel.logsTable().me().backgroundAt(TableCell.row(0).column(2)).target();
-    Color line3 = logViewPanel.logsTable().me().backgroundAt(TableCell.row(2).column(2)).target();
-    Color line2 = logViewPanel.logsTable().me().backgroundAt(TableCell.row(1).column(2)).target();
-    Assert.assertEquals(Color.decode("0xE4EAF0"), line1);//Not marked
-    Assert.assertEquals(Color.decode("0xE61212"), line2);//red
-    Assert.assertEquals(Color.decode("0xFF2B2B"), line3);//red and selected
+    //Selection take some time
+    Awaitility.await()
+      .atMost(5, TimeUnit.SECONDS)
+      .until(() -> new Color(149, 107, 104).equals(logViewPanel.logsTable().me().backgroundAt(TableCell.row(2).column(3)).target()));
+
+    logViewPanel.logsTable().me().backgroundAt(TableCell.row(0).column(3))
+      .requireEqualTo(new Color(228, 234, 240));//red and selected
+    logViewPanel.logsTable().me().backgroundAt(TableCell.row(1).column(3))
+      .requireEqualTo(new Color(217, 114, 105));//Not marked
+    logViewPanel.logsTable().me().backgroundAt(TableCell.row(2).column(3))
+      .requireEqualTo(new Color(149, 107, 104)); //red and selected
   }
 
 
