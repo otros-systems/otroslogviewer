@@ -15,41 +15,86 @@
  # limitations under the License.
  ###############################################################################
 
-CURRENT_DIR=`pwd`
-# based on http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+# If you use yery big logfiles you must increase the Xmx value
+MEMORY=-Xmx1024m
 
-# This is Bash-specific.  We should support all UNIXes.
-#SOURCE="${BASH_SOURCE[0]}"
-#while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
-#OLV_HOME="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-#cd $OLV_HOME
-
-OLV_HOME="$0"
-while [ -h "$OLV_HOME" ] ; do OLV_HOME="$(readlink "$OLV_HOME")"; done
-case "$OLV_HOME" in
-/*) OLV_HOME="${OLV_HOME%/*}";; */*) OLV_HOME="$PWD/${OLV_HOME%/*}";; *) OLV_HOME="$PWD";;
-esac
-case "$OLV_HOME" in *?/.) OLV_HOME="${OLV_HOME%/.}"; esac
+# Resolve the script location (including symbolic links)
+OLV_HOME="$(dirname "$(readlink -f "$0")")"
 
 cd "$OLV_HOME"
 [ -n "$TMPDIR" ] || TMPDIR=/tmp
 
-MEMORY=-Xmx1024m
-ADD_OPENS="--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED"
+JAVA_VERSION=21
+ADD_OPENS="--add-opens java.base/java.util=ALL-UNNAMED"
 #SFTP_KEY=-Dvfs.Identities=
 
-if [ -n "$JAVA_HOME" ]
+
+# check in subdirectory jre, JAVA_HOME and PATH the java version
+# if no correct java version found download java
+if [ -x "./jre/bin/java" ] && [ $(./jre/bin/java -XshowSettings:properties -version 2>&1 | awk -F'= ' '/java.specification.version/ {print $2}') -ge ${JAVA_VERSION} ]
 then
- JAVA="$JAVA_HOME/bin/java"
+    JAVA="./jre/bin/java"
+elif [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ] && [ $($JAVA_HOME/bin/java -XshowSettings:properties -version 2>&1 | awk -F'= ' '/java.specification.version/ {print $2}') -ge ${JAVA_VERSION} ]
+then
+    JAVA="$JAVA_HOME/bin/java"
+elif command -v java >/dev/null 2>&1 && [ $(java -XshowSettings:properties -version 2>&1 | awk -F'= ' '/java.specification.version/ {print $2}') -ge ${JAVA_VERSION} ]
+then
+    JAVA="java"
+elif [ "$(uname -s)" = "Linux" ]
+then
+  # Automatic installation of jre
+
+  TARGET_DIR="jre"
+  ARCHIVE="Openjdk-${JAVA_VERSION}.tar.gz"
+
+  echo "Download JDK from adoptium.net"
+  curl -L -o "${ARCHIVE}" "https://api.adoptium.net/v3/binary/latest/${JAVA_VERSION}/ga/linux/x64/jre/hotspot/normal/eclipse"
+
+  rm -rf "${TARGET_DIR}"
+  mkdir -p "${TARGET_DIR}"
+
+  echo "Extracting archive..."
+  tar -xzf "${ARCHIVE}" --strip-components=1 -C "${TARGET_DIR}"
+
+  rm -f "${ARCHIVE}"
+
+  echo "Installation completed successfully."
+  JAVA="./jre/bin/java"
 else
- JAVA=java
+  JAVA="java"
 fi
+
+# Check whether Java is installed and available in PATH
+command -v ${JAVA} >/dev/null 2>&1 || {
+    echo "ERROR: No Java installation found. Please install Java ${JAVA_VERSION}"
+    exit 1
+}
+
+# Read the Java specification version
+JAVA_MAJOR=$(${JAVA} -XshowSettings:properties -version 2>&1 \
+    | awk -F'= ' '/java.specification.version/ {print $2}')
+
+# Validate the detected version
+[ -n "$JAVA_MAJOR" ] && [ "$JAVA_MAJOR" -ge ${JAVA_VERSION} ] || {
+    echo "ERROR: Java ${JAVA_VERSION} or higher is required. Found: ${JAVA_MAJOR:-unknown}"
+    exit 1
+}
 
 # Exec is simpler as it eliminates the intervening, useless shell.
 # (Makes for easier process troubleshooting).
 [  "-batch" = "$1" ] &&
 exec $JAVA $MEMORY $ADD_OPENS $SFTP_KEY -jar "$OLV_HOME/olv-exec.jar" $@
-# we need to be sure we are writing to a directory where we have write access, /tmp is one of them but app directory is clearly not
-# If we want more than one user on a shared system to be able to run OLV, then make log file user-specific (at least)
-exec $JAVA $MEMORY $ADD_OPENS $SFTP_KEY  -DsingleInstance.startPort= -jar "$OLV_HOME/olv-exec.jar" $@ > "${TMPDIR}/olv-${LOGNAME}.log" 2>&1 &
 
+# Directory for console.log
+mkdir -p logs
+
+# Start OLV detached from the terminal and redirect all console output
+# to a log file.
+nohup $JAVA $MEMORY $ADD_OPENS $SFTP_KEY \
+    -DsingleInstance.startPort= \
+    -jar "$OLV_HOME/olv-exec.jar" $@ \
+    > logs/console.log 2>&1 < /dev/null &
+
+# GNOME may terminate background processes when the launcher script exits
+# immediately. Wait a few seconds to allow the Java application to fully start.
+sleep 3
