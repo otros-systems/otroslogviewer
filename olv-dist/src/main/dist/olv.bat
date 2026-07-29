@@ -15,13 +15,16 @@ REM  See the License for the specific language governing permissions and
 REM  limitations under the License.
 REM ******************************************************************************
 
+:: If you use yery big logfiles you must increase the Xmx value
+set MEMORY=-Xmx1024m
+
 :: Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 set OLV_HOME=%~dp0
 IF %OLV_HOME:~-1%==\ SET OLV_HOME=%OLV_HOME:~0,-1%
 if "%OLV_HOME%" == "" set OLV_HOME=.
 set CURRENT_DIR=%CD%
-set MEMORY=-Xmx1024m
+
 set ADD_OPENS=--add-opens java.base/java.util=ALL-UNNAMED
 cd "%OLV_HOME%"
 
@@ -46,7 +49,9 @@ if "%1"=="-batch" goto batchMode
   set ERR_FILE=%TEMP%\olv.err.%random%.txt
 ::)
 
-if exist "%JAVA_HOME%\bin\javaw.exe" (
+if exist "%CURRENT_DIR%\jre\bin\javaw.exe" (
+  set LOCAL_JAVA="%CURRENT_DIR%\jre\bin\javaw.exe"
+) else if exist "%JAVA_HOME%\bin\javaw.exe" (
   set LOCAL_JAVA="%JAVA_HOME%\bin\javaw.exe"
 ) else (
   set LOCAL_JAVA=javaw.exe
@@ -55,7 +60,9 @@ start "OtrosLogViewer" /B %LOCAL_JAVA% %MEMORY% %ADD_OPENS% -DsingleInstance.sta
 goto finish
 
 :batchMode
-if exist "%JAVA_HOME%\bin\java.exe" (
+if exist "%CURRENT_DIR%\jre\bin\java.exe" (
+  set LOCAL_JAVA="%CURRENT_DIR%\jre\bin\java.exe"
+) else if exist "%JAVA_HOME%\bin\java.exe" (
   set LOCAL_JAVA="%JAVA_HOME%\bin\java.exe"
 ) else (
   set LOCAL_JAVA=java.exe
