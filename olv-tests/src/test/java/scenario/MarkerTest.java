@@ -126,6 +126,7 @@ public class MarkerTest extends OtrosLogViewerBaseTest {
   private static void copyResourceFile(String fileName, File target) {
     try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
       Assert.assertNotNull(inputStream, "cannot find file in resource folder: " + fileName);
+      new File(target.getParent()).mkdirs();
       java.nio.file.Files.copy(inputStream, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       throw new RuntimeException(e);
