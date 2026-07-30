@@ -84,10 +84,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 import static pl.otros.logview.api.ConfKeys.*;
@@ -718,7 +716,12 @@ public class LogViewMainFrame extends JFrame {
   private void addParserActions(JMenu parentMenu) {
     Collection<LogImporter> logImporters = otrosApplication.getAllPluginables().getLogImportersContainer().getElements();
     for (LogImporter li : logImporters) {
-      TailLogActionListener action = new TailLogActionListener(otrosApplication, li);
+
+      //Create a file chooser without autodetection. Use only the one selected parser.
+      LogParsableListener logParsableListener = new LogParsableListener(new PluginableElementsContainer<>(List.of(li)));
+      JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(getVfsFavoritesConfiguration(), logParsableListener);
+      TailLogActionListener action = new TailLogActionListener(otrosApplication, li, jOtrosVfsBrowserDialog);
+
       JMenuItem menuItem = new JMenuItem(action);
       String text = li.getName();
       menuItem.setText(text);
