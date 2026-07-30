@@ -49,13 +49,13 @@ shadowJar {
     archiveVersion.set('')
 }
 
-
+//--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED is olny needed for windows
 tasks.register('runWithJavaExec', JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
     mainClass.set("pl.otros.logview.gui.LogViewMainFrame")
-    jvmArgs = ['-splash:src/main/resources/img/otros/splash.png', '--add-opens', 'java.base/java.util=ALL-UNNAMED']
+    jvmArgs = ['-splash:src/main/resources/img/otros/splash.png', '--add-opens', 'java.base/java.util=ALL-UNNAMED', '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED']
 }
 
 //This configuration shares the output from the shadowJar task for other modules to consume it
