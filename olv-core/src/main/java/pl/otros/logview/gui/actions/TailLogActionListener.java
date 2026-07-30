@@ -16,23 +16,9 @@
 
 package pl.otros.logview.gui.actions;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.Stoppable;
 import pl.otros.logview.api.TableColumns;
@@ -49,15 +35,34 @@ import pl.otros.logview.api.parser.ParsingContext;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class TailLogActionListener extends OtrosAction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailLogActionListener.class.getName());
   private LogImporter importer;
+  /**
+   * This dialog is set if only one parser is selected. It is used to open log files without autodetection.
+   */
+  private final JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog;
 
   public TailLogActionListener(OtrosApplication otrosApplication, LogImporter importer) {
+    this(otrosApplication, importer, null);
+  }
+
+  public TailLogActionListener(OtrosApplication otrosApplication, LogImporter importer, JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog) {
     super("Open log files", Icons.FOLDER_OPEN, otrosApplication);
     this.putValue(Action.LONG_DESCRIPTION, "Open log files from local or remote file systems");
     this.importer = importer;
+    this.jOtrosVfsBrowserDialog = jOtrosVfsBrowserDialog;
   }
 
   @Override
@@ -66,7 +71,7 @@ public class TailLogActionListener extends OtrosAction {
   }
 
   private void doOpenChooseFileDialog(Component parent, FileObject initialFile) {
-    JOtrosVfsBrowserDialog chooser = getOtrosApplication().getOtrosVfsBrowserDialog();
+    JOtrosVfsBrowserDialog chooser = jOtrosVfsBrowserDialog != null ? jOtrosVfsBrowserDialog : getOtrosApplication().getOtrosVfsBrowserDialog();
     initFileChooser(chooser, initialFile);
 
     JOtrosVfsBrowserDialog.ReturnValue result = chooser.showOpenDialog(parent, "Tail " + importer.getName() + " log");
@@ -112,7 +117,7 @@ public class TailLogActionListener extends OtrosAction {
       3000,
       Optional.of(2000L)
     );
-    panel.onClose(()-> {
+    panel.onClose(() -> {
       logLoader.close(session);
       loadingInfo.close();
     });
