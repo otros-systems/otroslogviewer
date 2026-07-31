@@ -15,4 +15,5 @@
  */
 plugins {
     id 'olv.java-conventions'
+    id 'olv.publishing'
 }
