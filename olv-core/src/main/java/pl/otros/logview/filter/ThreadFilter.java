@@ -138,7 +138,7 @@ public class ThreadFilter extends AbstractLogFilter {
     sortedThreads.stream()
       .filter(sortedThread -> !listModel.contains(sortedThread))
       .forEach(sortedThread -> listModel.add(listModel.getSize(), sortedThread));
-    setThreadToFilter(selectedThread.toArray(new String[selectedThread.size()]));
+    setThreadToFilter(selectedThread.toArray(new String[0]));
   }
 
   public void setThreadToFilter(String... thread) {

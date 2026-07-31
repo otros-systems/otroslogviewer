@@ -22,6 +22,7 @@ import pl.otros.logview.filter.ThreadFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class FocusOnThisThreadAction extends FocusOnThisAbstractAction<ThreadFilter> {
 
@@ -38,8 +39,9 @@ public class FocusOnThisThreadAction extends FocusOnThisAbstractAction<ThreadFil
 
   @Override
   public void action(ActionEvent e, ThreadFilter filter, LogData... selectedLogData) {
-    String thread = selectedLogData[0].getThread();
-    filter.setThreadToFilter(thread);
+    //Get all selected Threads
+    String[] threads = Arrays.stream(selectedLogData).map(LogData::getThread).toArray(String[]::new);
+    filter.setThreadToFilter(threads);
   }
 
 }
