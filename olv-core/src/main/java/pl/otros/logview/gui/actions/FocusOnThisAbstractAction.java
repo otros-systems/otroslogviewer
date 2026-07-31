@@ -58,9 +58,10 @@ public abstract class FocusOnThisAbstractAction<T extends LogFilter> extends Otr
         selectedLogData[i] = tableModel.getLogData(jxTable.convertRowIndexToModel(selectedRows[i]));
       }
       try {
-        action(e, filter, selectedLogData);
+        //Enable filter before action, because some filter initiates data on setEnable()
         filterEnableCheckBox.setSelected(true);
         filter.setEnable(true);
+        action(e, filter, selectedLogData);
       } catch (Exception e1) {
         LOGGER.error("Error occurred when focusing on events ", e1);
         JOptionPane.showMessageDialog(getOtrosApplication().getApplicationJFrame(), e1.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
