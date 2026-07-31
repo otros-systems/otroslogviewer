@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+// Add compiler option to show more details for deprecations
+/*tasks.withType(JavaCompile).configureEach {
+    doFirst {
+        println "Compiler args: ${options.compilerArgs}"
+    }
+
+    options.compilerArgs.add("-Xlint:deprecation")
+    //options.compilerArgs.add("-Xlint:unchecked")
+}*/
+
+
+//--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED is only needed for windows
+tasks.withType(Test).configureEach {
+    useTestNG()
+    jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
+}

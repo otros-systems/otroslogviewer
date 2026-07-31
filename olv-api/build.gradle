@@ -16,3 +16,7 @@
 plugins {
     id 'olv.java-conventions'
 }
+
+dependencies {
+    implementation(libs.commonsLang)
+}

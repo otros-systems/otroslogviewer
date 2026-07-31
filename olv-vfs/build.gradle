@@ -18,5 +18,22 @@ plugins {
 }
 
 dependencies {
-   implementation 'com.intellij:annotations:9.0.4'
+    implementation(libs.intellijannotations)
+    implementation(libs.slf4jApi)
+    implementation(libs.commonsLang)
+    implementation(libs.commonsCodec)
+    implementation(libs.commonsIo)
+    implementation(libs.commonsConfiguration2)
+    implementation(libs.commonsVfs2)
+    //httpclient5 is needed to load logfiles via vfs2
+    implementation(libs.httpclient5)
+    implementation(libs.miglayout)
+    implementation(libs.swingx)
+    implementation(libs.prettytime)
+    implementation(libs.radianceAnimation)
+    implementation(libs.jsch)
+
+    testImplementation(libs.testng)
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.radiancetheming)
 }

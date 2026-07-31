@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.otros.vfs.browser.demo;
+package playground;
 
 import org.apache.commons.configuration2.DataConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;

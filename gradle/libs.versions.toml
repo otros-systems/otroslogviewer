@@ -1,0 +1,71 @@
+[versions]
+radiance = "9.0.0"
+commons-net = "3.13.0"
+jcommander = "3.0"
+guava = "33.6.0-jre"
+gson = "2.14.0"
+jsch = "2.28.4"
+jzlib = "1.+"
+miglayout = "4.2"
+rsyntaxtextarea = "2.6.1"
+commons-codec = "1.+"
+commons-configuration2 = "2.15.1"
+commons-beanutils = "1.11.0"
+commons-io = "2.+"
+commons-lang = "2.+"
+commons-collections = "3.2.2"
+log4j = "2.26.1"
+jna = "5.19.1"
+commons-vfs2 = "2.10.0"
+httpclient5 = "5.3.1"
+swingx = "1.+"
+jxlayer = "3.0.4"
+prettytime = "5.0.9.Final"
+logback = "1.5.38"
+slf4j = "2.0.18"
+testng = "7.12.0"
+mockito = "5.23.0"
+assertj = "3.6.2"
+awaitility = "4.3.0"
+assertj-swing = "3.17.1"
+wiremock = "1.58"
+intellij-annotations = "9.0.4"
+
+[libraries]
+radiancetheming = { module = "org.pushing-pixels:radiance-theming", version.ref = "radiance" }
+radianceAnimation = { module = "org.pushing-pixels:radiance-animation", version.ref = "radiance" }
+commonsNet = { module = "commons-net:commons-net", version.ref = "commons-net" }
+jcommander = { module = "org.jcommander:jcommander", version.ref = "jcommander" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+jsch = { module = "com.github.mwiede:jsch", version.ref = "jsch" }
+jzlib = { module = "com.jcraft:jzlib", version.ref = "jzlib" }
+miglayout = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
+rsyntaxtextarea = { module = "com.fifesoft:rsyntaxtextarea", version.ref = "rsyntaxtextarea" }
+commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
+commonsConfiguration2 = { module = "org.apache.commons:commons-configuration2", version.ref = "commons-configuration2" }
+commonsBeanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commons-beanutils" }
+commonsIo = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commonsLang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
+commonsCollections = { module = "commons-collections:commons-collections", version.ref = "commons-collections" }
+log4jApi = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4jCore = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+jnaJpms = { module = "net.java.dev.jna:jna-jpms", version.ref = "jna" }
+jnaPlatformJpms = { module = "net.java.dev.jna:jna-platform-jpms", version.ref = "jna" }
+commonsVfs2 = { module = "org.apache.commons:commons-vfs2", version.ref = "commons-vfs2" }
+httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpclient5" }
+swingx = { module = "org.swinglabs.swingx:swingx-all", version.ref = "swingx" }
+jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
+prettytime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettytime" }
+logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+
+# Test libraries
+testng = { module = "org.testng:testng", version.ref = "testng" }
+mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+assertjCore = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
+assertjSwing = { module = "org.assertj:assertj-swing-testng", version.ref = "assertj-swing" }
+wiremock = { module = "com.github.tomakehurst:wiremock", version.ref = "wiremock" }
+intellijannotations = { module = "com.intellij:annotations", version.ref = "intellij-annotations" }
