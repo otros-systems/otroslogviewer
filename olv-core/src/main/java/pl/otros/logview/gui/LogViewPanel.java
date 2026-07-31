@@ -187,30 +187,66 @@ public class LogViewPanel extends LogViewPanelI {
         @Override
         protected List<Action> getAdditionalActions() {
           final List<Action> additionalActions = super.getAdditionalActions();
-          final AbstractAction saveLayout = new AbstractAction("Save current to new column layout", Icons.DISK) {
+          final AbstractAction resetLayout = new AbstractAction("Reset to default layout", Icons.ARROW_REPEAT) {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-              String newLayoutName = JOptionPane.showInputDialog(table, "New Layout name");
-              if (newLayoutName == null) {
+              List<TableColumn> columns = table.getColumns(true);
+              for (TableColumn tableColumn : columns) {
+                table.getColumnExt(tableColumn.getIdentifier()).setVisible(false);
+              }
+              for (TableColumns tableColumns : visibleColumns) {
+                table.getColumnExt(tableColumns).setVisible(true);
+              }
+              // Reset order to default
+              int visiblePosition = 0;
+              for (int i = 0; i < TableColumns.values().length; i++) {
+                TableColumns column = TableColumns.getColumnById(i);
+                try {
+                  int viewIndex = table.convertColumnIndexToView(column.getColumn());
+                  if (viewIndex != -1) {
+                    table.moveColumn(viewIndex, visiblePosition);
+                    visiblePosition++;
+                  }
+                } catch (Exception e) {
+                  LOGGER.warn("Can't move column " + column.getName() + " to " + i, e);
+                }
+              }
+
+              configuration.clearProperty(ConfKeys.LOG_TABLE_COLUMN_LAYOUT);
+              populatePopup();
+            }
+          };
+          additionalActions.add(resetLayout);
+
+          final AbstractAction saveLayout = new AbstractAction("Save current column layout", Icons.DISK) {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+              String currentLayoutName = configuration.getString(ConfKeys.LOG_TABLE_COLUMN_LAYOUT, "");
+              String newLayoutNameInput = JOptionPane.showInputDialog(table, "New Layout name", currentLayoutName);
+              if (newLayoutNameInput == null) {
                 return;
               }
-              newLayoutName = newLayoutName.trim();
-              LOGGER.info(String.format("Saving New column layout '%s'", newLayoutName));
+              final String newLayoutName = newLayoutNameInput.trim();
+              if (newLayoutName.isEmpty()) {
+                return;
+              }
+              LOGGER.info("Saving column layout '{}'", newLayoutName);
               ArrayList<String> visibleColNames = new ArrayList<>();
               for (TableColumn tc : table.getColumns()) {
                 Object o = tc.getIdentifier();
-                if (!(o instanceof TableColumns)) {
-                  LOGGER.error("TableColumn identifier of unexpected type: " + tc.getIdentifier().getClass().getName());
+                if (!(o instanceof TableColumns tcs)) {
+                  LOGGER.error("TableColumn identifier of unexpected type: {}", tc.getIdentifier().getClass().getName());
                   LOGGER.warn("Throw up a pop-up");
                   return;
                 }
-                TableColumns tcs = (TableColumns) o;
                 visibleColNames.add(tcs.getName());
               }
               ColumnLayout columnLayout = new ColumnLayout(newLayoutName, visibleColNames);
               final List<ColumnLayout> columnLayouts = LogTableFormatConfigView.loadColumnLayouts(configuration);
+              columnLayouts.removeIf(layout -> layout.getName().equals(newLayoutName));
               columnLayouts.add(columnLayout);
               LogTableFormatConfigView.saveColumnLayouts(columnLayouts, configuration);
+              configuration.setProperty(ConfKeys.LOG_TABLE_COLUMN_LAYOUT, newLayoutName);
               populatePopup();
             }
           };
@@ -219,18 +255,24 @@ public class LogViewPanel extends LogViewPanelI {
           final List<ColumnLayout> columnLayoutNames = LogTableFormatConfigView.loadColumnLayouts(configuration);
           for (final ColumnLayout columnLayout : columnLayoutNames) {
             final String name = columnLayout.getName();
-            final AbstractAction applyColumnLayout = new ApplyColumnLayoutAction(name, Icons.EDIT_COLUMNS, columnLayout, table);
+            final AbstractAction applyColumnLayout = new ApplyColumnLayoutAction(name, Icons.EDIT_COLUMNS, columnLayout, table, configuration);
             additionalActions.add(applyColumnLayout);
           }
           return additionalActions;
         }
       };
+    columnControlButton.setName("LogViewPanel.columnControlButton");
     table.setColumnControl(columnControlButton);
 
     List<TableColumn> columns = table.getColumns(true);
     for (int i = 0; i < columns.size(); i++) {
       columns.get(i).setIdentifier(TableColumns.getColumnById(i));
     }
+    // Temporarily disable auto-resizing so calculated column widths can be
+    // applied without JTable automatically redistributing space to other columns.
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    updateColumnsSize();
+
     for (TableColumn tableColumn : columns) {
       table.getColumnExt(tableColumn.getIdentifier()).setVisible(false);
     }
@@ -238,10 +280,16 @@ public class LogViewPanel extends LogViewPanelI {
       table.getColumnExt(tableColumns).setVisible(true);
     }
 
-    // Temporarily disable auto-resizing so calculated column widths can be
-    // applied without JTable automatically redistributing space to other columns.
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    updateColumnsSize();
+    String defaultLayout = configuration.getString(ConfKeys.LOG_TABLE_COLUMN_LAYOUT);
+    if (defaultLayout != null) {
+      LogTableFormatConfigView.loadColumnLayouts(configuration).stream()
+        .filter(layout -> layout.getName().equals(defaultLayout))
+        .findFirst()
+        .ifPresent(layout -> {
+          new ApplyColumnLayoutAction(layout.getName(), null, layout, table, configuration).actionPerformed(null);
+        });
+    }
+
     table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 
     final Renderers renderers = Renderers.getInstance(otrosApplication);

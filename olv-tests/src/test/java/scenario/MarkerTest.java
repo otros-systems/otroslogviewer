@@ -11,7 +11,6 @@ import pl.otros.logview.api.pluginable.AllPluginables;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
 import scenario.components.NewMarkerDialog;
-import scenario.components.OpenPanel;
 import scenario.testng.RetryAnalyzer;
 
 import java.awt.*;
@@ -75,8 +74,7 @@ public class MarkerTest extends OtrosLogViewerBaseTest {
   }
 
 
-  //  @Test(retryAnalyzer = RetryAnalyzer.class)
-  @Test
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void useStringMatcherMarker() throws Exception {
     final MainFrame mainFrame = new MainFrame(robot());
 
@@ -84,11 +82,10 @@ public class MarkerTest extends OtrosLogViewerBaseTest {
     file.deleteOnExit();
     Logger logger = logEvents(file, 1);
 
-    final OpenPanel openPanel = mainFrame.welcomeScreen().clickMergeLogs();
-
-    final LogViewPanel logViewPanel = openPanel
-      .addFile(file)
-      .importFiles();
+    final LogViewPanel logViewPanel = mainFrame
+      .welcomeScreen()
+      .clickOpenFile()
+      .openFile(file);
 
     Awaitility.await()
       .atMost(10, TimeUnit.SECONDS)
