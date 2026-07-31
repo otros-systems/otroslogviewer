@@ -89,7 +89,7 @@ public class TimeFilter extends AbstractLogFilter {
 
   @Override
   public boolean isFilterIsActive() {
-    return !startEnable.isSelected() || !endEnable.isSelected();
+    return startEnable.isSelected() || endEnable.isSelected();
   }
 
   @Override

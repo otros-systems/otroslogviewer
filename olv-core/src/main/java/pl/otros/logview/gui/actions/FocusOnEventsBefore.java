@@ -33,7 +33,7 @@ public class FocusOnEventsBefore extends FocusOnThisAbstractAction<TimeFilter> {
 
   @Override
   public void action(ActionEvent e, TimeFilter filter, LogData... selectedLogData) {
-    filter.setEnd(selectedLogData[0].getDate());
     filter.setFilteringEndEnabled(true);
+    filter.setEnd(selectedLogData[0].getDate());
   }
 }
