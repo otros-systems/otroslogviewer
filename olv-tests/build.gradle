@@ -18,13 +18,23 @@ plugins {
 }
 
 dependencies {
-    implementation project(':olv-core')
+    testImplementation project(':olv-core')
+
+    testImplementation(libs.assertjSwing)
+    testImplementation(libs.log4jApi)
+    testImplementation(libs.log4jCore)
+    testImplementation(libs.slf4jApi)
+    testImplementation(libs.awaitility)
+    testImplementation(libs.logbackCore)
+    testImplementation(libs.logbackClassic)
+    testImplementation(libs.guava)
 }
 
-test {
+tasks.named('test', Test).configure {
+    useTestNG()
+    maxParallelForks = 1
     forkEvery = 1
     maxHeapSize = "300m"
     testLogging.showStandardStreams = true
-    useTestNG()
-    options.listeners << 'scenario.testng.ScenarioTestListener'
+    options.listeners.add('scenario.testng.ScenarioTestListener')
 }

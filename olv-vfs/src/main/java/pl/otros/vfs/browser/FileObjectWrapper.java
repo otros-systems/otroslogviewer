@@ -18,7 +18,6 @@ package pl.otros.vfs.browser;
 
 import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.operations.FileOperations;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -189,11 +188,10 @@ public class FileObjectWrapper implements FileObject {
   }
 
   @Override
-  public int compareTo(@NotNull FileObject o) {
+  public int compareTo(FileObject o) {
     return parent.compareTo(o);
   }
 
-  @NotNull
   @Override
   public Iterator<FileObject> iterator() {
     return parent.iterator();

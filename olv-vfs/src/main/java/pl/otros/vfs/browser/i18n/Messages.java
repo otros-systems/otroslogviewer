@@ -16,7 +16,6 @@
 
 package pl.otros.vfs.browser.i18n;
 
-import org.jetbrains.annotations.PropertyKey;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -28,7 +27,7 @@ public class Messages {
   private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(Messages.BUNDLE_BASE_NAME);
 
 
-  public static String getMessage(@PropertyKey(resourceBundle = "i18n.messages")String key, Object... args) {
+  public static String getMessage(String key, Object... args) {
     String string = BUNDLE.getString(key);
     return MessageFormat.format(string, args);
 

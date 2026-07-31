@@ -17,10 +17,8 @@ plugins {
     id 'olv.java-conventions'
 }
 
-test {
-    useTestNG()
-}
-
 dependencies {
     implementation project(':olv-api')
+
+    testImplementation(libs.testng)
 }

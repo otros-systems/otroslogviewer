@@ -1,0 +1,64 @@
+plugins {
+    id 'maven-publish'
+    id 'signing'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+// .\gradlew.bat :olv-api:generatePomFileForMavenJavaPublication
+//.\gradlew.bat :olv-api:tasks --group publishing
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = 'OtrosLogViewer API'
+                description = 'API for OtrosLogViewer plugins and integrations'
+                url = 'https://github.com/otros-systems/otroslogviewer'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'svennissel'
+                        name = 'Sven Nissel'
+                        email = 'otros@nissel.it'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/otros-systems/otroslogviewer.git'
+                    developerConnection = 'scm:git:ssh://github.com/otros-systems/otroslogviewer.git'
+                    url = 'https://github.com/otros-systems/otroslogviewer'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = project.findProperty('ossrhUsername') ?: System.getenv('OSSRH_USERNAME')
+                password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD')
+            }
+        }
+    }
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("publish") }
+    def signingKey = project.findProperty('signingKey') ?: System.getenv('SIGNING_KEY')
+    def signingPassword = project.findProperty('signingPassword') ?: System.getenv('SIGNING_PASSWORD')
+    if (signingKey && signingPassword) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+    sign publishing.publications.mavenJava
+}
