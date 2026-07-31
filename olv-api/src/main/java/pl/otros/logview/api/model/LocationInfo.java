@@ -17,8 +17,6 @@
  */
 package pl.otros.logview.api.model;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Optional;
 
 /**
@@ -165,7 +163,7 @@ public class LocationInfo {
     }
     fullInfo = removeLambdas(fullInfo);
     fullInfo = fullInfo.trim();
-    fullInfo = StringUtils.removeStart(fullInfo, "at ");
+    fullInfo = fullInfo.startsWith("at ") ? fullInfo.substring(3) : fullInfo;
     int lastClosingBrace = fullInfo.indexOf(')');
     int lastColon = fullInfo.lastIndexOf(':', lastClosingBrace);
     int lastOpeningBrace = fullInfo.lastIndexOf('(', lastColon);
