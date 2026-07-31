@@ -28,7 +28,7 @@ mockito = "5.23.0"
 assertj = "3.6.2"
 awaitility = "4.3.0"
 assertj-swing = "3.17.1"
-wiremock = "1.58"
+wiremock = "3.13.2"
 intellij-annotations = "9.0.4"
 
 [libraries]
@@ -67,5 +67,5 @@ mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 assertjCore = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 assertjSwing = { module = "org.assertj:assertj-swing-testng", version.ref = "assertj-swing" }
-wiremock = { module = "com.github.tomakehurst:wiremock", version.ref = "wiremock" }
+wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
 intellijannotations = { module = "com.intellij:annotations", version.ref = "intellij-annotations" }
