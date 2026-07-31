@@ -29,7 +29,6 @@ assertj = "3.6.2"
 awaitility = "4.3.0"
 assertj-swing = "3.17.1"
 wiremock = "3.13.2"
-intellij-annotations = "9.0.4"
 
 [libraries]
 radiancetheming = { module = "org.pushing-pixels:radiance-theming", version.ref = "radiance" }
@@ -68,4 +67,3 @@ assertjCore = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 assertjSwing = { module = "org.assertj:assertj-swing-testng", version.ref = "assertj-swing" }
 wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
-intellijannotations = { module = "com.intellij:annotations", version.ref = "intellij-annotations" }
