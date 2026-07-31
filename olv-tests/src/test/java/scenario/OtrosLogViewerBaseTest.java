@@ -1,10 +1,7 @@
 package scenario;
 
-import com.google.common.io.MoreFiles;
-import com.google.common.io.RecursiveDeleteOption;
 import org.assertj.swing.launcher.ApplicationLauncher;
 import org.assertj.swing.testng.testcase.AssertJSwingTestngTestCase;
-import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.gui.LogViewMainFrame;
 
 import java.io.File;
@@ -20,16 +17,6 @@ public class OtrosLogViewerBaseTest extends AssertJSwingTestngTestCase {
   @Override
   protected void onSetUp() {
     System.setProperty(LogViewMainFrame.RUN_FOR_SCENARIO_TEST, "true");
-
-    //Delete configuration to have a clean start
-    try {
-      MoreFiles.deleteRecursively(
-        AllPluginables.USER_CONFIGURATION_DIRECTORY.toPath(),
-        RecursiveDeleteOption.ALLOW_INSECURE
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
 
     ApplicationLauncher.application(LogViewMainFrame.class).start();
   }

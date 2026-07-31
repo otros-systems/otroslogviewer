@@ -1,14 +1,19 @@
 package scenario;
 
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JPopupMenuFixture;
 import org.assertj.swing.fixture.JTableFixture;
 import org.awaitility.Awaitility;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pl.otros.logview.api.TableColumns;
+import pl.otros.logview.api.pluginable.AllPluginables;
 import scenario.components.LogViewPanel;
 import scenario.components.MainFrame;
+import scenario.testng.RetryAnalyzer;
 
 import javax.swing.*;
 import java.io.File;
@@ -17,8 +22,20 @@ import java.util.concurrent.TimeUnit;
 
 public class ColumnLayoutTest extends OtrosLogViewerBaseTest {
 
-  //  @Test(retryAnalyzer = RetryAnalyzer.class)
-  @Test
+  @BeforeTest
+  public static void beforeTest() {
+    //Delete configuration to have a clean start
+    try {
+      MoreFiles.deleteRecursively(
+        AllPluginables.USER_CONFIGURATION_DIRECTORY.toPath(),
+        RecursiveDeleteOption.ALLOW_INSECURE
+      );
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test(retryAnalyzer = RetryAnalyzer.class)
   public void testSaveAndReloadColumnLayout() throws IOException {
     final MainFrame mainFrame = new MainFrame(robot());
 
