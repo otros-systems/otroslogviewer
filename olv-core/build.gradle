@@ -15,7 +15,7 @@
  */
 plugins {
     id 'olv.java-conventions'
-    id 'com.gradleup.shadow' version '8.3.6'
+    id 'com.gradleup.shadow'
 }
 
 def today = new Date().format("yyyy-MM-dd")
@@ -24,7 +24,42 @@ dependencies {
     implementation project(':olv-vfs')
     implementation project(':olv-api')
     implementation project(':olv-parser')
-    testImplementation 'com.github.tomakehurst:wiremock:1.58'
+
+    implementation(libs.radiancetheming)
+    implementation(libs.radianceAnimation)
+    implementation(libs.swingx)
+    implementation(libs.miglayout)
+    implementation(libs.jcommander)
+    implementation(libs.guava)
+    implementation(libs.gson)
+
+    implementation(libs.jzlib)
+
+    implementation(libs.rsyntaxtextarea)
+
+    implementation(libs.commonsLang)
+    implementation(libs.commonsNet)
+    implementation(libs.commonsConfiguration2)
+    implementation(libs.commonsCollections)
+    implementation(libs.commonsVfs2)
+    implementation(libs.log4jApi)
+    implementation(libs.log4jCore)
+    //jna is needed for the PageantConnector to use the Pageant with sftp connections
+    implementation(libs.jnaJpms)
+    implementation(libs.jnaPlatformJpms)
+
+
+    implementation(libs.jxlayer)
+
+    implementation(libs.logbackCore)
+    implementation(libs.logbackClassic)
+
+
+    testImplementation(libs.testng)
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.assertjCore)
+    testImplementation(libs.awaitility)
+    testImplementation(libs.wiremock)
 }
 
 jar {

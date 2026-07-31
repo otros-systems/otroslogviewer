@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.otros.vfs.browser.demo;
+package playground;
 
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 
@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ *
  */
 public class TestDialog extends JFrame {
 
@@ -33,14 +34,14 @@ public class TestDialog extends JFrame {
     SwingUtilities.invokeAndWait(TestDialog::new);
   }
 
-  private TestDialog(){
+  private TestDialog() {
     final JOtrosVfsBrowserDialog jOtrosVfsBrowserDialog = new JOtrosVfsBrowserDialog(new ExampleListener());
     Action a = new AbstractAction("Select file") {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
 
-        if (JOtrosVfsBrowserDialog.ReturnValue.Approve.equals(jOtrosVfsBrowserDialog.showOpenDialog(TestDialog.this,"title"))){
-            textField.setText(jOtrosVfsBrowserDialog.getSelectedFile().getName().getFriendlyURI());
+        if (JOtrosVfsBrowserDialog.ReturnValue.Approve.equals(jOtrosVfsBrowserDialog.showOpenDialog(TestDialog.this, "title"))) {
+          textField.setText(jOtrosVfsBrowserDialog.getSelectedFile().getName().getFriendlyURI());
         }
       }
     };

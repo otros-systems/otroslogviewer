@@ -16,3 +16,13 @@
 plugins {
     id 'olv.java-conventions'
 }
+
+dependencies {
+    implementation(libs.commonsLang)
+    implementation(libs.commonsConfiguration2)
+    //commons-configuration2 needs commons-beanutils
+    implementation(libs.commonsBeanutils)
+    implementation(libs.miglayout)
+    implementation(libs.swingx)
+    implementation(libs.slf4jApi)
+}

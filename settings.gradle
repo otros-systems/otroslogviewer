@@ -1,8 +1,16 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+    }
+}
+
 rootProject.name = 'olv'
-include 'olv-api'
-include 'olv-core'
-include 'olv-dist'
-include 'olv-gui'
-include 'olv-vfs'
-include 'olv-parser'
-include 'olv-tests'
+include 'olv-api', 'olv-core', 'olv-dist', 'olv-gui', 'olv-vfs', 'olv-parser', 'olv-tests'
