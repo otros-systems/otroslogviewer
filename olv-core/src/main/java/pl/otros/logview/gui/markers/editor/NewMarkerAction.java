@@ -40,9 +40,11 @@ public class NewMarkerAction extends AbstractAction {
 
   private final JFileChooser chooser;
   private final File markersFolder = AllPluginables.USER_MARKERS;
+  private final JFrame parent;
 
-  public NewMarkerAction() {
+  public NewMarkerAction(JFrame parent) {
     super();
+    this.parent = parent;
     putValue(NAME, "New marker");
     if (!markersFolder.exists()) {
       markersFolder.mkdirs();
@@ -69,7 +71,7 @@ public class NewMarkerAction extends AbstractAction {
     f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     Container contentPane = f.getContentPane();
-    final MarkerEditor editor = new MarkerEditor();
+    final MarkerEditor editor = new MarkerEditor(f);
     contentPane.setLayout(new BorderLayout());
     contentPane.add(editor);
 
@@ -82,7 +84,7 @@ public class NewMarkerAction extends AbstractAction {
       @Override
       public void actionPerformed(ActionEvent arg0) {
 
-        int showSaveDialog = chooser.showSaveDialog((Component) arg0.getSource());
+        int showSaveDialog = chooser.showSaveDialog(parent);
         if (showSaveDialog != JFileChooser.APPROVE_OPTION) {
           return;
         }
@@ -111,7 +113,7 @@ public class NewMarkerAction extends AbstractAction {
     contentPane.add(save, BorderLayout.SOUTH);
 
     f.pack();
-
+    f.setLocationRelativeTo(parent);
     f.setVisible(true);
   }
 

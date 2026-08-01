@@ -25,7 +25,7 @@ public class PropertyFilter extends AbstractStringBasedFilter {
 
   private static final String NAME = "Property filter";
   private static final String DESCRIPTION = "Filtering based on property";
-  private static final String LABEL_TEXT = "Enter a string, PROP=VALUE or PROP~=VALUE";
+  private static final String LABEL_TEXT = "<html>Enter a string,<br>PROP=VALUE or PROP~=VALUE</html>";
   private String condition = "";
   private String property;
   private String value;
@@ -55,7 +55,7 @@ public class PropertyFilter extends AbstractStringBasedFilter {
         }
       }
     } else if (mode.equals(Mode.SinglePropertyEquals)) {
-      if (value.length() == 0) {
+      if (value.isEmpty()) {
         return properties.containsKey(property);
       } else {
         String propValue = properties.getOrDefault(property, "");

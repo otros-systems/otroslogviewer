@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
+import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.Note;
@@ -32,15 +33,21 @@ public class MarkNoteFilter extends AbstractLogFilter {
 
   public MarkNoteFilter() {
     super(NAME, DESCRIPTION);
-    noteComboBox.setBorder(BorderFactory.createTitledBorder("With note:"));
     noteComboBox.addActionListener(e -> performValueChangedListener());
 
-    markComboBox.setBorder(BorderFactory.createTitledBorder("Marked:"));
     markComboBox.addActionListener(e -> performValueChangedListener());
 
-    gui = new JPanel(new GridLayout(2, 1));
-    gui.add(noteComboBox);
-    gui.add(markComboBox);
+    JLabel noteLabel = new JLabel("With note:");
+    noteLabel.setLabelFor(noteComboBox);
+
+    JLabel markedLabel = new JLabel("Marked:");
+    markedLabel.setLabelFor(markComboBox);
+
+    gui = new JPanel(new MigLayout("insets 0, gapy 2"));
+    gui.add(noteLabel, "growx");
+    gui.add(noteComboBox, "right, wrap, growx");
+    gui.add(markedLabel, "growx");
+    gui.add(markComboBox, "right, wrap, growx");
   }
 
   @Override
@@ -49,9 +56,9 @@ public class MarkNoteFilter extends AbstractLogFilter {
     boolean marked = logData.isMarked();
     Note n = logData.getNote();
     if (noteComboBox.getSelectedIndex() == 1) {
-      accept = n != null && n.getNote().length() > 0;
+      accept = n != null && !n.getNote().isEmpty();
     } else if (noteComboBox.getSelectedIndex() == 2) {
-      accept = n == null || n.getNote().length() == 0;
+      accept = n == null || n.getNote().isEmpty();
     }
     if (markComboBox.getSelectedIndex() == 1) {
       accept = accept && marked;

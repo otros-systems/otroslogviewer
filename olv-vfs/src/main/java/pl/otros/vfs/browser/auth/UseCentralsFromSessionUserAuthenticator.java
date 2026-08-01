@@ -25,14 +25,14 @@ import javax.swing.*;
 import java.util.Collection;
 
 
-public class UseCentralsFromSessionUserAuthenticator extends  AbstractUiUserAuthenticator {
+public class UseCentralsFromSessionUserAuthenticator extends AbstractUiUserAuthenticator {
 
   private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UseCentralsFromSessionUserAuthenticator.class);
 
   private final AuthStore sessionAuthStore;
   private final AbstractUiUserAuthenticator otrosUserAuthenticator;
 
-  public UseCentralsFromSessionUserAuthenticator(AuthStore authStore,AuthStore sessionAuthStore, String url,
+  public UseCentralsFromSessionUserAuthenticator(AuthStore authStore, AuthStore sessionAuthStore, String url,
                                                  FileSystemOptions fileSystemOptions, AbstractUiUserAuthenticator otrosUserAuthenticator) {
     super(authStore, url, fileSystemOptions);
     this.sessionAuthStore = sessionAuthStore;
@@ -41,10 +41,10 @@ public class UseCentralsFromSessionUserAuthenticator extends  AbstractUiUserAuth
 
   @Override
   public UserAuthenticationDataWrapper getLastUserAuthenticationData() {
-    if (otrosUserAuthenticator!=null){
-    return otrosUserAuthenticator.getLastUserAuthenticationData();
+    if (otrosUserAuthenticator != null) {
+      return otrosUserAuthenticator.getLastUserAuthenticationData();
     }
-      return null;
+    return null;
 
   }
 
@@ -55,7 +55,7 @@ public class UseCentralsFromSessionUserAuthenticator extends  AbstractUiUserAuth
 
   @Override
   protected void getAuthenticationData(UserAuthenticationData authenticationData) {
-      otrosUserAuthenticator.getAuthenticationData(authenticationData);
+    otrosUserAuthenticator.getAuthenticationData(authenticationData);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class UseCentralsFromSessionUserAuthenticator extends  AbstractUiUserAuth
   @Override
   public UserAuthenticationData requestAuthentication(UserAuthenticationData.Type[] types) {
     UserAuthenticationData userAuthenticationData = getStaticWorkingUserAuthForSmb(sessionAuthStore, getUrl());
-    if (userAuthenticationData ==null){
+    if (userAuthenticationData == null && otrosUserAuthenticator != null) {
       userAuthenticationData = otrosUserAuthenticator.requestAuthentication(types);
     }
     return userAuthenticationData;
@@ -77,7 +77,7 @@ public class UseCentralsFromSessionUserAuthenticator extends  AbstractUiUserAuth
     VFSURIParser parser = new VFSURIParser(url);
     if (parser.getHostname() != null) {
       Collection<UserAuthenticationDataWrapper> userAuthenticationDatas = authStore.getUserAuthenticationDatas(parser.getProtocol().toString(),
-          parser.getHostname());
+        parser.getHostname());
       LOGGER.debug("Credentials count: {}", userAuthenticationDatas.size());
       if (userAuthenticationDatas.size() > 0) {
         UserAuthenticationData authenticationDataFromStore = userAuthenticationDatas.iterator().next();

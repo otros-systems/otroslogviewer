@@ -142,7 +142,7 @@ public class LogViewPanel extends LogViewPanelI {
     filtersPanel.setName(NAME_SEARCH_FILTER_PANEL);
     JPanel logsTablePanel = new JPanel();
     logsMarkersPanel = new JPanel();
-    JPanel leftPanel = new JPanel(new MigLayout());
+    JPanel leftPanel = new JPanel(new MigLayout("insets 0, gapy 2"));
     logDetailTextArea = new FullWidthJTextPane();
     logDetailTextArea.setFont(new Font("Courier New", Font.PLAIN, logDetailTextArea.getFont().getSize()));
     logDetailTextArea.setEditable(false);
@@ -361,6 +361,7 @@ public class LogViewPanel extends LogViewPanelI {
     dataTableModel.addNoteObserver(allNotesObserver);
 
     addFiltersGUIsToPanel(filtersPanel);
+    logsTablePanel.setMinimumSize(new Dimension(300, 100));
     logsTablePanel.setLayout(new BorderLayout());
     logsTablePanel.add(new JScrollPane(table));
     JPanel messageDetailsPanel = new JPanel(new BorderLayout());

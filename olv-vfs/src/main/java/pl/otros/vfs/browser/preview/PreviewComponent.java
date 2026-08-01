@@ -44,7 +44,7 @@ public class PreviewComponent extends JPanel {
   private JScrollPane contentScrollPane;
 
   public PreviewComponent() {
-    super(new MigLayout());
+    super(new MigLayout("insets 0, gapy 2"));
     titleLabel = new JLabel(Messages.getMessage("preview.label"));
     nameLabel = new JLabel();
     contentArea = new JTextArea();

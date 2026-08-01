@@ -16,11 +16,11 @@
 
 package pl.otros.vfs.browser.actions;
 
+import net.miginfocom.swing.MigLayout;
 import pl.otros.vfs.browser.Icons;
 import pl.otros.vfs.browser.favorit.Favorite;
 import pl.otros.vfs.browser.i18n.Messages;
 import pl.otros.vfs.browser.list.MutableListModel;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import static pl.otros.vfs.browser.i18n.Messages.getMessage;
 
 /**
+ *
  */
 public class EditFavorite extends AbstractAction {
 
@@ -48,7 +49,7 @@ public class EditFavorite extends AbstractAction {
   public void actionPerformed(ActionEvent actionEvent) {
     if (favoriteList.getSelectedValue() != null && favoriteList.getSelectedValue() instanceof Favorite) {
       Favorite favorite = (Favorite) favoriteList.getSelectedValue();
-      JPanel panel = new JPanel(new MigLayout());
+      JPanel panel = new JPanel(new MigLayout("insets 0, gapy 2"));
       panel.add(new JLabel(Messages.getMessage("editFavorites.name")));
 
       final JTextField textFieldName = new JTextField(favorite.getName());

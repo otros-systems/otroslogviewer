@@ -83,8 +83,8 @@ public class MarkerEditor extends JPanel {
   private final TestAfterChangeActionListener testAfterChangeActionListener = new TestAfterChangeActionListener();
   private final HashSet<ChangeListener> changeListeners;
 
-  public MarkerEditor() {
-    super(new MigLayout("wrap 2", "[20%] [grow]", ""));
+  public MarkerEditor(JFrame parent) {
+    super(new MigLayout("wrap 2, insets 5, gap 2", "[20%] [grow]", ""));
     changeListeners = new HashSet<>();
 
     regexMatcherComponents = new ArrayList<>();
@@ -127,8 +127,8 @@ public class MarkerEditor extends JPanel {
     description.setName(DESCRIPTION);
 
     testStringTextArea = new JTextArea[3];
-    testResults = new JLabel[3];
-    for (int i = 0; i < 3; i++) {
+    testResults = new JLabel[testStringTextArea.length];
+    for (int i = 0; i < testStringTextArea.length; i++) {
       testStringTextArea[i] = new JTextArea(4, 20);
       testStringTextArea[i].getDocument().addDocumentListener(testAfterChangeActionListener);
       testResults[i] = new JLabel("");
@@ -323,9 +323,9 @@ public class MarkerEditor extends JPanel {
     regexPreConditionInclude.setSelected(true);
     type.setSelectedIndex(0);
 
-    testStringTextArea[0].setText("");
-    testStringTextArea[1].setText("");
-    testStringTextArea[2].setText("");
+    for (JTextArea jTextArea : testStringTextArea) {
+      jTextArea.setText("");
+    }
     setChanged(false);
   }
 

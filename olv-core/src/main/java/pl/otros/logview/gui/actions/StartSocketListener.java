@@ -105,7 +105,7 @@ public class StartSocketListener extends OtrosAction {
     SpinnerNumberModel numberModel = new SpinnerNumberModel(50505, 1025, 65000, 1);
     JSpinner jSpinner = new JSpinner(numberModel);
     jSpinner.setName("StartSocketListenerDialog.port");
-    MigLayout migLayout = new MigLayout();
+    MigLayout migLayout = new MigLayout("insets 0, gapy 2");
     JPanel panel = new JPanel(migLayout);
     panel.add(new JLabel("Select log importer"));
     panel.add(box, "wrap");

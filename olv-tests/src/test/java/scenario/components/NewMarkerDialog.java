@@ -12,13 +12,16 @@ import javax.swing.*;
 
 public class NewMarkerDialog extends TestComponent<FrameFixture, NewMarkerDialog> {
 
-  public NewMarkerDialog(Robot robot) {
+  private final MainFrame mainFrame;
+
+  public NewMarkerDialog(Robot robot, MainFrame mainFrame) {
     super(robot);
+    this.mainFrame = mainFrame;
   }
 
   @Override
   public FrameFixture me() {
-    return WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class) {
+    return WindowFinder.findFrame(new GenericTypeMatcher<>(JFrame.class) {
       @Override
       protected boolean isMatching(JFrame component) {
         final String title = component.getTitle();
@@ -70,6 +73,6 @@ public class NewMarkerDialog extends TestComponent<FrameFixture, NewMarkerDialog
   }
 
   public JFileChooserFixture fileChooser() {
-    return me().fileChooser(MarkerEditor.FILE_CHOOSER);
+    return mainFrame.me().fileChooser(MarkerEditor.FILE_CHOOSER);
   }
 }

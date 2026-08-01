@@ -38,7 +38,7 @@ public class MainFrame extends TestComponent<FrameFixture, MainFrame> {
   }
 
   public NewMarkerDialog newMarkerDialog() {
-    return new NewMarkerDialog(robot);
+    return new NewMarkerDialog(robot, this);
   }
 
   public MainFrame setSearchModeByString() {

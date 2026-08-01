@@ -150,7 +150,7 @@ public class Appearance extends AbstractConfigView implements InMainConfig {
       final Color color = otrosApplication.getTheme().getColor(selectedValue);
       colorChooser.setColor(color);
     });
-    final JPanel colorsPanel = new JPanel(new MigLayout());
+    final JPanel colorsPanel = new JPanel(new MigLayout("insets 0, gapy 2"));
     logDetailsTextPane = RulerBarHelper.wrapTextComponent(new JTextPane());
     logDetailsTextPane.setBorder(BorderFactory.createTitledBorder("Example log event"));
     logDetailsTextPane.getjTextComponent().setEditable(false);
