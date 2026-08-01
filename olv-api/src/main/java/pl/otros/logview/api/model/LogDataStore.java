@@ -15,7 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.model;
 
-import pl.otros.logview.api.gui.MarkableTableModel;
+import pl.otros.logview.api.gui.markers.MarkableTableModel;
 
 import java.util.TreeMap;
 

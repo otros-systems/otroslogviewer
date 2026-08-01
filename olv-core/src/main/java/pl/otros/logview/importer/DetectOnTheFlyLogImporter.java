@@ -23,7 +23,7 @@ import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.io.Utils;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.pluginable.AbstractPluginableElement;
+import pl.otros.logview.api.pluginable.AbstractPluginableElement;
 
 import javax.swing.*;
 import java.io.ByteArrayOutputStream;

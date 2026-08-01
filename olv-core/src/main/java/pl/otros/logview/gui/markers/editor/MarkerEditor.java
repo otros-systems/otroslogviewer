@@ -182,7 +182,7 @@ public class MarkerEditor extends JPanel {
 
     add(new JLabel("File"));
     add(file);
-    add(new JLabel("Type:"));
+    add(new JLabel("ThemeType:"));
     add(type, "growx");
     add(new JLabel("Name:"));
     add(name);

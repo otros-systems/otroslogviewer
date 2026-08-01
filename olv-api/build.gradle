@@ -17,3 +17,7 @@ plugins {
     id 'olv.java-conventions'
     id 'olv.publishing'
 }
+
+dependencies {
+    implementation(libs.slf4jApi)
+}

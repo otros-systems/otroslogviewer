@@ -23,6 +23,7 @@ import pl.otros.logview.api.AcceptCondition;
 import pl.otros.logview.api.NoteObserver;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.gui.NoteEvent.EventType;
+import pl.otros.logview.api.gui.markers.MarkableTableModel;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.store.CachedLogStore;
 import pl.otros.logview.api.store.MemoryLogDataStore;
@@ -175,7 +176,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.gui.LogDataCollector#add(pl.otros.logview.LogData[])
    */
   public void add(LogData... logDatas) {
@@ -190,7 +191,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.gui.LogDataCollector#add(pl.otros.logview.LogData)
    */
   public void add(LogData logData) {
@@ -281,6 +282,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     return logDataStore.getLogData(row);
   }
 
+  @Override
   public LogData[] getLogData() {
     return logDataStore.getLogData();
   }

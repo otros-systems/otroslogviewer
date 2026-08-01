@@ -5,7 +5,7 @@ import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
-import pl.otros.logview.pluginable.AbstractPluginableElement;
+import pl.otros.logview.api.pluginable.AbstractPluginableElement;
 
 import java.util.Optional;
 import java.util.Properties;
@@ -29,11 +29,11 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
     parserDescription.setDescription(description);
     jsonExtractor = new JsonExtractor();
   }
-  
+
   public JsonLogParser(LogParser parser) {
-	  super("Json parser", "Json log parser");
-	  parserDescription = parser.getParserDescription();
-	  jsonExtractor = new JsonExtractor();
+    super("Json parser", "Json log parser");
+    parserDescription = parser.getParserDescription();
+    jsonExtractor = new JsonExtractor();
   }
 
   @Override
@@ -68,7 +68,7 @@ public class JsonLogParser extends AbstractPluginableElement implements LogParse
 
   @Override
   public TableColumns[] getTableColumnsToUse() {
-    return new TableColumns[] { ID, LEVEL, TIME, MESSAGE, THREAD, LOGGER_NAME, CLASS, METHOD, LINE, FILE, NOTE, NDC, MARK, PROPERTIES };
+    return new TableColumns[]{ ID, LEVEL, TIME, MESSAGE, THREAD, LOGGER_NAME, CLASS, METHOD, LINE, FILE, NOTE, NDC, MARK, PROPERTIES };
   }
 
   @Override

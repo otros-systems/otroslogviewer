@@ -13,10 +13,11 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package pl.otros.logview.api.pluginable;
+package pl.otros.logview.api.filter;
 
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
+import pl.otros.logview.api.pluginable.PluginableElement;
 import pl.otros.logview.api.theme.Theme;
 
 import java.awt.*;
@@ -28,7 +29,7 @@ public interface LogFilter extends PluginableElement {
 
   String getName();
 
-  default void init(Properties properties, LogDataTableModel logDataTableModel, Theme theme) {
+  default void init(Properties properties, LogDataCollector logDataCollector, Theme theme) {
   }
 
   boolean accept(LogData logData, int row);
@@ -49,6 +50,8 @@ public interface LogFilter extends PluginableElement {
 
   void setValueChangeListener(LogFilterValueChangeListener listener);
 
+  void performValueChangedListener();
+
   /**
    * Every time a filter will be activated the first row of the log table will be set. This can be multiple times.
    */
@@ -62,4 +65,8 @@ public interface LogFilter extends PluginableElement {
   default void setLastRow(LogData lastRow) {
   }
 
+  @Override
+  default int getApiVersion() {
+    return LOG_FILTER_VERSION_1;
+  }
 }

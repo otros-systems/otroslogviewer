@@ -1,6 +1,6 @@
 plugins {
+    id 'org.jreleaser'
     id 'maven-publish'
-    id 'signing'
 }
 
 java {
@@ -8,9 +8,8 @@ java {
     withSourcesJar()
 }
 
-// .\gradlew.bat :olv-api:generatePomFileForMavenJavaPublication
-//.\gradlew.bat :olv-api:tasks --group publishing
-
+//Create artefacts under build/staging-deploy
+//run ./gradlew.bat publish
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -29,7 +28,7 @@ publishing {
                     developer {
                         id = 'svennissel'
                         name = 'Sven Nissel'
-                        email = 'otros@nissel.it'
+                        email = 'sven@nissel.it'
                     }
                 }
                 scm {
@@ -42,23 +41,52 @@ publishing {
     }
     repositories {
         maven {
-            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = project.findProperty('ossrhUsername') ?: System.getenv('OSSRH_USERNAME')
-                password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD')
-            }
+            name = 'staging'
+            url = layout.buildDirectory.dir('staging-deploy')
         }
     }
 }
 
-signing {
-    required { gradle.taskGraph.hasTask("publish") }
-    def signingKey = project.findProperty('signingKey') ?: System.getenv('SIGNING_KEY')
-    def signingPassword = project.findProperty('signingPassword') ?: System.getenv('SIGNING_PASSWORD')
-    if (signingKey && signingPassword) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
+//Test with: ./gradlew.bat :olv-api:jreleaserConfig --no-configuration-cache
+//Deploy on sonartype.com: ./gradlew.bat :olv-api:jreleaserDeploy --no-configuration-cache
+
+// Generate token on sonartype and set environment variables:
+//$env:JRELEASER_MAVENCENTRAL_PASSWORD = ""
+//$env:JRELEASER_MAVENCENTRAL_USERNAME = "TOKEN_KEY"
+
+//Generate GPG Key publish it
+//gpg --full-generate-key
+//gpg --list-secret-keys --keyid-format LONG
+//gpg --armor --export-secret-keys 1234567890ABCDEF > private-key.asc
+//gpg --keyserver keyserver.ubuntu.com --send-keys 1234567890ABCDEF
+//gpg --armor --export 1234567890ABCDEF > public-key.asc
+//$env:JRELEASER_GPG_SECRET_KEY = Get-Content private-key.asc -Raw
+//$env:JRELEASER_GPG_PASSPHRASE = "PASSWORD"
+
+//GITHUB_TOKEN is not needed, but environment variable must be set
+//$env:JRELEASER_GITHUB_TOKEN = "dummy"
+jreleaser {
+    //Search .git directory in multi module project
+    gitRootSearch = true
+    signing {
+        active = 'ALWAYS'
     }
-    sign publishing.publications.mavenJava
+    //Do not want any automatic release on github
+    release {
+        github {
+            enabled = true
+            skipRelease = true
+        }
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+        }
+    }
 }

@@ -20,10 +20,10 @@ import org.jdesktop.swingx.JXTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.OtrosApplication;
+import pl.otros.logview.api.filter.LogFilter;
 import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.gui.OtrosAction;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

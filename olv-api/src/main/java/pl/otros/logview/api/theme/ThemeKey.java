@@ -195,8 +195,8 @@ public class ThemeKey {
     return baseKey;
   }
 
-  public String getKey(Theme.Type type) {
-    return baseKey + (type == Theme.Type.Light ? ".light" : ".dark");
+  public String getKey(ThemeType type) {
+    return baseKey + (type == ThemeType.Light ? ".light" : ".dark");
   }
 
   public Color getDefaultLightColor() {

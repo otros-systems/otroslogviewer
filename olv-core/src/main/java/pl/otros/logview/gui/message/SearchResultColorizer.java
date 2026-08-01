@@ -16,12 +16,12 @@
 package pl.otros.logview.gui.message;
 
 import org.apache.commons.lang.StringUtils;
+import pl.otros.logview.api.pluginable.AbstractPluginableElement;
 import pl.otros.logview.api.pluginable.MessageColorizer;
 import pl.otros.logview.api.pluginable.MessageFragmentStyle;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.api.theme.ThemeKey;
 import pl.otros.logview.gui.actions.search.SearchAction.SearchMode;
-import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;

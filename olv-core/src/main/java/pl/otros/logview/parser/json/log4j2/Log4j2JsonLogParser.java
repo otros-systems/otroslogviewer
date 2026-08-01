@@ -9,8 +9,8 @@ import pl.otros.logview.api.model.LogDataBuilder;
 import pl.otros.logview.api.parser.LogParser;
 import pl.otros.logview.api.parser.ParserDescription;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.api.pluginable.AbstractPluginableElement;
 import pl.otros.logview.parser.json.JsonExtractor;
-import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.lang.reflect.Type;
 import java.util.Date;

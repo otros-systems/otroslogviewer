@@ -18,11 +18,11 @@ package pl.otros.logview.gui.markers;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.MarkerColors;
 
-public class NullMarker extends AbstractAutomaticMarker {
+public class NullMarker extends pl.otros.logview.api.gui.markers.AbstractAutomaticMarker {
 
   private static final String NAME = "'Null' in message";
   private static final String DESCRIPTION = "Marks/unmakrs logs with 'null' in message";
-  private static final String[] GROUPS = {"", "Errors"};
+  private static final String[] GROUPS = { "", "Errors" };
 
   public NullMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

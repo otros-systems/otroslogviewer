@@ -13,19 +13,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package pl.otros.logview.filter;
-
-import pl.otros.logview.api.gui.LogDataTableModel;
-import pl.otros.logview.api.pluginable.LogFilter;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
-
-import java.util.Optional;
+package pl.otros.logview.api.filter;
 
 public abstract class AbstractLogFilter implements LogFilter {
 
   protected boolean enable;
-  protected LogDataTableModel collector;
-  protected Optional<LogFilterValueChangeListener> listener = Optional.empty();
+  private LogFilterValueChangeListener listener = null;
   protected String name;
   protected String description;
 
@@ -61,12 +54,13 @@ public abstract class AbstractLogFilter implements LogFilter {
 
   @Override
   public void setValueChangeListener(LogFilterValueChangeListener listener) {
-    this.listener = Optional.ofNullable(listener);
+    this.listener = listener;
   }
 
   @Override
-  public int getApiVersion() {
-    return LOG_FILTER_VERSION_1;
+  public void performValueChangedListener() {
+    if (listener != null) {
+      listener.valueChanged();
+    }
   }
-
 }

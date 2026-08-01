@@ -4,16 +4,16 @@ import pl.otros.logview.api.model.LogData;
 
 import java.util.function.Function;
 
-public class ClassPackageFilter extends ClassLikeFilter {
+public class ClassPackageFilter extends AbstractClassLikeFilter {
 
-  private Function<LogData,String> function = logData -> logData.getClazz();
+  private Function<LogData, String> function = logData -> logData.getClazz();
 
   public ClassPackageFilter() {
     super("Class Filter", "Filtering events based on class/package. It supports \"ignore\" and \"focus on\" mode.");
   }
 
   @Override
-  public Function<LogData,String> extractValueFunction() {
+  public Function<LogData, String> extractValueFunction() {
     return function;
   }
 

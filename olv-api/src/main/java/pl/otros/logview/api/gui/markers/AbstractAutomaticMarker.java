@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package pl.otros.logview.gui.markers;
+package pl.otros.logview.api.gui.markers;
 
 import pl.otros.logview.api.model.MarkerColors;
 import pl.otros.logview.api.pluginable.AutomaticMarker;

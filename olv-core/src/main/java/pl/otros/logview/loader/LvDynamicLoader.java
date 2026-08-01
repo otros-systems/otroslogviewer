@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.BaseLoader;
 import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.filter.LogFilter;
 import pl.otros.logview.api.importer.LogImporter;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.Plugin;

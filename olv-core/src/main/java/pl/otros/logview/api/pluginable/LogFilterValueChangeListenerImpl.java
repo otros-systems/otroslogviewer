@@ -3,6 +3,8 @@ package pl.otros.logview.api.pluginable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.api.StatusObserver;
+import pl.otros.logview.api.filter.LogFilter;
+import pl.otros.logview.api.filter.LogFilterValueChangeListener;
 import pl.otros.logview.api.gui.LogDataRowFilter;
 import pl.otros.logview.api.gui.LogDataTableModel;
 

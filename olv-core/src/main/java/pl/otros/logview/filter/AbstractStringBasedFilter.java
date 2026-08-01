@@ -16,7 +16,7 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.swing.OtrosSwingUtils;
 
@@ -106,7 +106,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
     setFilteringText(textField.getText());
     setIgnoreCase(caseInsensetiveCheckBox.isSelected());
     performPreFiltering();
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
 
   }
 

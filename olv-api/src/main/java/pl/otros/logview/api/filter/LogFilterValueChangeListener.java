@@ -1,4 +1,4 @@
-package pl.otros.logview.api.pluginable;
+package pl.otros.logview.api.filter;
 
 public interface LogFilterValueChangeListener {
   void valueChanged();

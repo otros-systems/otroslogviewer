@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class CallHierarchyLogFilter extends AbstractLogFilter {
   public CallHierarchyLogFilter() {
     super("Call hierarchy", "Call hierarchy log filter");
     showOnlyEntryExits = new JCheckBox("Show only entry/exits");
-    showOnlyEntryExits.addChangeListener(e -> CallHierarchyLogFilter.this.listener.ifPresent(LogFilterValueChangeListener::valueChanged));
+    showOnlyEntryExits.addChangeListener(e -> performValueChangedListener());
   }
 
   @Override
@@ -56,7 +56,7 @@ public class CallHierarchyLogFilter extends AbstractLogFilter {
     entryIds.addAll(listOfEntryIds);
     ids.clear();
     ids.addAll(listOfIds);
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 
 }

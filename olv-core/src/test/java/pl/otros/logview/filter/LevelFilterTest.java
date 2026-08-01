@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Krzysztof Otrebski
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,17 +16,16 @@
 package pl.otros.logview.filter;
 
 import org.testng.annotations.Test;
-import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.theme.Theme;
-import pl.otros.logview.api.theme.ThemeConfig;
 import pl.otros.logview.api.theme.ThemeKey;
+import pl.otros.logview.api.theme.ThemeType;
 
 import java.awt.*;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static org.mockito.Mockito.mock;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -40,7 +39,7 @@ public class LevelFilterTest {
     LevelFilter filter = new LevelFilter();
     filter.init(new Properties(), new LogDataTableModel(), new Theme() {
       @Override
-      public Type themeType() {
+      public ThemeType themeType() {
         return null;
       }
 

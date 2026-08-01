@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -49,9 +49,9 @@ public class TimeFilter extends AbstractLogFilter {
     endM.setValue(end);
     endM.addChangeListener(changeListner);
     startEnable = new JCheckBox("Show after date:");
-    startEnable.addActionListener(e -> listener.ifPresent(LogFilterValueChangeListener::valueChanged));
+    startEnable.addActionListener(e -> performValueChangedListener());
     endEnable = new JCheckBox("Show before date:");
-    endEnable.addActionListener(e -> listener.ifPresent(LogFilterValueChangeListener::valueChanged));
+    endEnable.addActionListener(e -> performValueChangedListener());
     gui = new JPanel(new GridLayout(4, 1));
     JSpinner startSpinner = new JSpinner(startM);
     JSpinner.DateEditor editorStart = new JSpinner.DateEditor(startSpinner, "dd.MM.yyyy HH:mm:ss");
@@ -118,7 +118,7 @@ public class TimeFilter extends AbstractLogFilter {
     public void stateChanged(ChangeEvent e) {
       start = startM.getDate();
       end = endM.getDate();
-      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+      performValueChangedListener();
 
     }
 
@@ -134,11 +134,11 @@ public class TimeFilter extends AbstractLogFilter {
 
   public void setStartFilteringEnabled(boolean b) {
     startEnable.setSelected(b);
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 
   public void setFilteringEndEnabled(boolean b) {
     endEnable.setSelected(b);
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 }

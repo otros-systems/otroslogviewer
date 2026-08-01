@@ -18,16 +18,16 @@ package pl.otros.logview.gui.actions;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.filter.ClassLikeFilter;
+import pl.otros.logview.filter.AbstractClassLikeFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 
-public class FocusOnSelectedClassesLikeAction extends FocusOnThisAbstractAction<ClassLikeFilter> {
+public class FocusOnSelectedClassesLikeAction extends FocusOnThisAbstractAction<AbstractClassLikeFilter> {
 
   public FocusOnSelectedClassesLikeAction(
-    ClassLikeFilter filter,
+    AbstractClassLikeFilter filter,
     String name,
     JCheckBox filterEnableCheckBox,
     OtrosApplication otrosApplication) {
@@ -37,7 +37,7 @@ public class FocusOnSelectedClassesLikeAction extends FocusOnThisAbstractAction<
   }
 
   @Override
-  public void action(ActionEvent e, ClassLikeFilter filter, LogData... selectedLogData) {
+  public void action(ActionEvent e, AbstractClassLikeFilter filter, LogData... selectedLogData) {
     HashSet<String> classes = new HashSet<>();
     for (LogData logData : selectedLogData) {
       classes.add(filter.extractValueFunction().apply(logData));

@@ -16,7 +16,7 @@
 package pl.otros.logview.gui.message.pattern;
 
 import org.apache.commons.configuration2.DataConfiguration;
-import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeType;
 
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -49,11 +49,11 @@ public class StyleProperties {
 
   }
 
-  public static Style getStyle(Theme.Type themeType, StyleContext styleContext, DataConfiguration styleConfig, String styleName) {
+  public static Style getStyle(ThemeType themeType, StyleContext styleContext, DataConfiguration styleConfig, String styleName) {
     return getStyle(themeType, styleContext, styleConfig, styleName, -1);
   }
 
-  public static Style getStyle(Theme.Type themeType, StyleContext styleContext, DataConfiguration styleConfig, String styleName, int group) {
+  public static Style getStyle(ThemeType themeType, StyleContext styleContext, DataConfiguration styleConfig, String styleName, int group) {
     Style style = styleContext.addStyle(styleName, styleContext.getStyle(StyleContext.DEFAULT_STYLE));
 
     final String groupSuffix;
@@ -85,7 +85,7 @@ public class StyleProperties {
     }
 
     String theme;
-    if (themeType.equals(Theme.Type.Light)) {
+    if (themeType.equals(ThemeType.Light)) {
       theme = "light";
     } else {
       theme = "dark";

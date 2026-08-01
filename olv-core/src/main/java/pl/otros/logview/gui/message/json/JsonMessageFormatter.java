@@ -3,9 +3,9 @@ package pl.otros.logview.gui.message.json;
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.otros.logview.api.pluginable.AbstractPluginableElement;
 import pl.otros.logview.api.pluginable.MessageFormatter;
 import pl.otros.logview.gui.message.SubText;
-import pl.otros.logview.pluginable.AbstractPluginableElement;
 
 import java.util.ArrayList;
 

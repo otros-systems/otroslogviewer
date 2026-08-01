@@ -140,7 +140,7 @@ public class StringRegexMarkerEditor extends JPanel {
     this.add(loadButton, c);
     c.gridy++;
 
-    this.addFormLabelsLeftLong(new JLabel("Type:"), type, c);
+    this.addFormLabelsLeftLong(new JLabel("ThemeType:"), type, c);
     c.gridy++;
     this.addFormLabelsLeftLong(new JLabel("File:"), file, c);
     c.gridy++;
