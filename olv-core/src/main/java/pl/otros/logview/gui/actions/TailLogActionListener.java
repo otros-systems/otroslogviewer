@@ -32,6 +32,7 @@ import pl.otros.logview.api.loading.LogLoader;
 import pl.otros.logview.api.loading.LogLoadingSession;
 import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.parser.ParsingContext;
+import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -114,7 +115,7 @@ public class TailLogActionListener extends OtrosAction {
       source,
       logImporter,
       panel.getDataTableModel(),
-      3000,
+      BasicLogLoader.DEFAULT_SLEEP_TIME,
       Optional.of(2000L)
     );
     panel.onClose(() -> {

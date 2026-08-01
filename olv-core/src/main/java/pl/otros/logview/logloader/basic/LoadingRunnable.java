@@ -150,10 +150,10 @@ public class LoadingRunnable implements Runnable {
             }
           }
 
-          Thread.sleep(sleepTime);
           loadingInfo.reloadIfFileSizeChanged();
           updateStats(loadingInfo);
           loadingInfo.reloadIfFileSizeChanged();
+          Thread.sleep(sleepTime);
 
         } catch (Exception e) {
           LOGGER.warn("Exception in tailing loop: " + e.getMessage());

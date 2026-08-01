@@ -35,6 +35,7 @@ import pl.otros.logview.gui.renderers.PossibleLogImportersRenderer;
 import pl.otros.logview.gui.session.*;
 import pl.otros.logview.gui.util.DocumentInsertUpdateHandler;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
+import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.swing.OtrosSwingUtils;
 import pl.otros.swing.Progress;
 import pl.otros.swing.renderer.NamedTableRenderer;
@@ -761,7 +762,7 @@ public class AdvanceOpenPanel extends JPanel {
           ),
           l.fileObjectToImport.getPossibleLogImporters().getLogImporter().orElse(detectLaterImporter),
           logDataCollector,
-          3000,
+          BasicLogLoader.DEFAULT_SLEEP_TIME,
           Optional.of(2000L));
         logLoader.changeFilters(session, new LevelHigherOrEqualAcceptCondition(l.fileObjectToImport.getLevel()));
       });

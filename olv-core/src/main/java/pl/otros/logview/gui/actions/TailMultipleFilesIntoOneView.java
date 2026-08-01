@@ -36,6 +36,7 @@ import pl.otros.logview.api.loading.VfsSource;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.importer.DetectOnTheFlyLogImporter;
+import pl.otros.logview.logloader.basic.BasicLogLoader;
 import pl.otros.vfs.browser.JOtrosVfsBrowserDialog;
 import pl.otros.vfs.browser.SelectionMode;
 
@@ -137,7 +138,7 @@ public class TailMultipleFilesIntoOneView extends OtrosAction {
 
     final java.util.List<LogLoadingSession> collect = Arrays.asList(loadingInfos)
       .stream()
-      .map(loadingInfo -> logLoader.startLoading(new VfsSource(loadingInfo.getFileObject()), importer, logDataCollector, 3000, Optional.of(2000L)))
+      .map(loadingInfo -> logLoader.startLoading(new VfsSource(loadingInfo.getFileObject()), importer, logDataCollector, BasicLogLoader.DEFAULT_SLEEP_TIME, Optional.of(2000L)))
       .collect(Collectors.toList());
 
     LOGGER.info("Have sessions: {}", collect.stream().map(LogLoadingSession::getId).collect(Collectors.joining(", ")));

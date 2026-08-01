@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class BasicLogLoader implements LogLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
-  public static final int DEFAULT_SLEEP_TIME = 3000;
+  public static final long DEFAULT_SLEEP_TIME = 100L;
 
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new HashMap<>();
   private final Map<LogDataCollector, FilteringLogDataCollector> ldCollectorsMap = new HashMap<>();
@@ -125,8 +125,8 @@ public class BasicLogLoader implements LogLoader {
   public LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession) {
     final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
     return Optional.ofNullable(loadingRunnable)
-      .map(l->l.getLoadStatistic())
-      .orElse(new LoadStatistic(source,0,1));
+      .map(l -> l.getLoadStatistic())
+      .orElse(new LoadStatistic(source, 0, 1));
   }
 
   @Override
