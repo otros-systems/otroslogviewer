@@ -42,9 +42,10 @@ public abstract class AbstractConfigView implements ConfigView {
     panelToAdd.add(jComponent, "wrap");
   }
 
-  protected void addLabel(String string, JComponent jComponent, JPanel panelToAdd) {
+  protected JLabel addLabel(String string, JComponent jComponent, JPanel panelToAdd) {
     JLabel label = new JLabel(string);
     panelToAdd.add(label);
     panelToAdd.add(jComponent, "growx, wrap");
+    return label;
   }
 }

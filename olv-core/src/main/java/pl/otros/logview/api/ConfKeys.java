@@ -36,6 +36,7 @@ public class ConfKeys {
   public static final String LOG_TABLE_FORMAT_DATE_FORMAT = "gui.LogTableFormat.dateFormat";
   public static final String LOG_TABLE_FORMAT_PACKAGE_ABBREVIATIONS = "gui.LogTableFormat.packageAbbreviations";
   public static final String LOG_TABLE_COLUMN_LAYOUT = "gui.LogTableFormat.columnLayout";
+  public static final String LOG_TABLE_COLUMN_HIDDEN_FILTERS = "gui.LogTableFormat.filters.hidden";
   public static final String MESSAGE_DETAIL_SCROLL_HORIZONTAL = "gui.messageDetail.scrollHorizontal";
   public static final String CONFIRM_QUIT = "generalBehavior.confirmExit";
   public static final String APPEARANCE_FONT_SIZE = "appearance.fontSize";
