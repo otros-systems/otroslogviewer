@@ -59,7 +59,7 @@ public class UserPassUserAuthenticator extends AbstractUiUserAuthenticator {
       i++;
     }
 
-    JPanel panel = new JPanel(new MigLayout());
+    JPanel panel = new JPanel(new MigLayout("insets 0, gapy 2"));
     String header = Messages.getMessage("authenticator.enterCredentialsForUrl", getUrl());
     panel.add(new JLabel(header), "growx,span");
     panel.add(new JLabel(Messages.getMessage("authenticator.username")));

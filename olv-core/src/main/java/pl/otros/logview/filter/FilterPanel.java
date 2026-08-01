@@ -34,7 +34,9 @@ public class FilterPanel extends JPanel {
     this.setMinimumSize(new Dimension(200, 20));
     this.logFilter = logFilter;
     this.listener = listener;
-    this.setLayout(new MigLayout("", "[][grow]", ""));
+    this.setLayout(new MigLayout("insets 0, gap 3",
+      "[][grow]",
+      ""));
     this.setOpaque(true);
     logFilter.setValueChangeListener(listener);
     box = new JCheckBox(logFilter.getName());
@@ -48,7 +50,7 @@ public class FilterPanel extends JPanel {
       }
     });
 
-    this.add(box);
+    this.add(box, "gapbottom 0");
     this.add(new JSeparator(SwingConstants.HORIZONTAL), "growx, wrap, span");
     box.setSelected(logFilter.isEnable());
 

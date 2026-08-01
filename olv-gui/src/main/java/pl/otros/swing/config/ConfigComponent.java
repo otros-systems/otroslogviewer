@@ -4,6 +4,8 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.jdesktop.swingx.JXList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.otros.swing.config.provider.ConfigurationProvider;
 
 import javax.swing.*;
@@ -14,23 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class ConfigComponent extends JPanel {
+  private final static Logger LOGGER = LoggerFactory.getLogger(ConfigComponent.class.getName());
   private final ConfigView[] configViews;
   private final ConfigurationProvider configurationProvider;
   private final Optional<Action> actionAfterSave;
 
-  public ConfigComponent(final ConfigurationProvider configurationProvider, final ConfigView... configViews) {
-    this(configurationProvider, null, configViews);
-  }
-
-  @SuppressWarnings("serial")
   public ConfigComponent(final ConfigurationProvider configurationProvider, Action actionAfterSave, final ConfigView... configViews) {
     super();
     this.configurationProvider = configurationProvider;
     this.actionAfterSave = Optional.ofNullable(actionAfterSave);
     this.configViews = configViews;
-    this.setLayout(new MigLayout());
-    JPanel leftPanel = new JPanel(new BorderLayout());
-    JXList list = new JXList(this.configViews);
+    this.setLayout(new MigLayout("insets 0, gapy 2"));
+    JPanel leftPanel = new JPanel(new MigLayout("insets 5, gapy 2"));
+    JXList<ConfigView> list = new JXList<>(this.configViews);
     list.setCellRenderer(new ConfigViewListRenderer());
     leftPanel.add(list);
     JLabel upLabel = new JLabel(" ");
@@ -78,7 +76,6 @@ public class ConfigComponent extends JPanel {
   }
 
   public void reload() {
-    boolean mainConfigLoaded = false;
     for (ConfigView configView : configViews) {
       Configuration configurationForView;
 
@@ -87,8 +84,7 @@ public class ConfigComponent extends JPanel {
         configurationProvider.reload(configView);
         configView.loadConfiguration(configurationForView);
       } catch (ConfigurationException e1) {
-        //TODO ??
-        e1.printStackTrace();
+        LOGGER.error("Can't load configuration for {} on reload", configView, e1);
       }
     }
   }
@@ -120,8 +116,7 @@ public class ConfigComponent extends JPanel {
         configView.saveConfiguration(configurationForView);
         configurationProvider.save(configView, configurationForView);
       } catch (ConfigurationException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
+        LOGGER.error("Can't load configuration for {}", configView, e1);
       }
     }
     actionAfterSave.ifPresent(a -> a.actionPerformed(null));

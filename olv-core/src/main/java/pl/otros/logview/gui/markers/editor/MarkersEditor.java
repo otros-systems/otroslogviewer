@@ -16,15 +16,11 @@
 package pl.otros.logview.gui.markers.editor;
 
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.configuration2.BaseConfiguration;
-import pl.otros.logview.api.InitializationException;
 import pl.otros.logview.api.pluginable.AllPluginables;
 import pl.otros.logview.api.pluginable.AutomaticMarker;
 import pl.otros.logview.api.pluginable.PluginableElementsContainer;
-import pl.otros.logview.api.theme.ThemeConfig;
 import pl.otros.logview.gui.markers.PropertyFileAbstractMarker;
 import pl.otros.logview.gui.renderers.AutomaticMarkerRenderer;
-import pl.otros.logview.loader.LvDynamicLoader;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -32,7 +28,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.io.IOException;
 
 public class MarkersEditor extends JPanel {
 
@@ -47,8 +42,10 @@ public class MarkersEditor extends JPanel {
   private JPanel southPanel;
   private JButton buttonSave;
   private final MarkersListModel markersListModel;
+  private final JFrame parent;
 
-  public MarkersEditor() {
+  public MarkersEditor(JFrame parent) {
+    this.parent = parent;
     final JPanel editorPanel = new JPanel();
     cardLayout = new CardLayout();
     editorPanel.setLayout(cardLayout);
@@ -82,7 +79,7 @@ public class MarkersEditor extends JPanel {
     markersContainser.addListener(markersListModel);
     JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-    editor = new MarkerEditor();
+    editor = new MarkerEditor(parent);
     editorPanel.add(editor, CARD_LAYOUT_PROPERTIES_BASED);
     editorPanel.add(new JLabel("This marker is code based, you can't edit it", SwingConstants.CENTER), CARD_LAYOUT_JAVA_BASED);
     editorPanel.add(new JLabel("No marker selcted. Select marker from list", SwingConstants.CENTER), CARD_LAYOUT_NO_SELECTION);
@@ -104,7 +101,7 @@ public class MarkersEditor extends JPanel {
 
   private void initSouthPanel() {
     southPanel = new JPanel(new MigLayout("", "[right]", ""));
-    JButton buttonNew = new JButton(new NewMarkerAction());
+    JButton buttonNew = new JButton(new NewMarkerAction(parent));
     buttonNew.setName(NAME_MARKER_NEW);
 
     southPanel.add(buttonNew, "right");
@@ -131,18 +128,5 @@ public class MarkersEditor extends JPanel {
     public void stateChanged(ChangeEvent e) {
       setSaveButtonEnable();
     }
-  }
-
-  public static void main(String[] args) throws IOException, InitializationException {
-    LvDynamicLoader.getInstance().loadAll(new ThemeConfig(new BaseConfiguration()));
-
-    JFrame frame = new JFrame("Markers editor");
-    frame.getContentPane().setLayout(new BorderLayout());
-    frame.getContentPane().add(new MarkersEditor());
-    // frame.setSize(600, 500);
-    frame.pack();
-    frame.setVisible(true);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
   }
 }

@@ -37,7 +37,7 @@ public class ShowMarkersEditor extends OtrosAction {
   @Override
   protected void actionPerformedHook(ActionEvent e) {
     if (markersEditor == null) {
-      markersEditor = new MarkersEditor();
+      markersEditor = new MarkersEditor(getOtrosApplication().getApplicationJFrame());
     }
     getOtrosApplication().addClosableTab("Markers editor", "Markers editor", Icons.MARKER, markersEditor, true);
   }

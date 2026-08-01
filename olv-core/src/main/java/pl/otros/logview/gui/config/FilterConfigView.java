@@ -21,7 +21,7 @@ public class FilterConfigView extends AbstractConfigView implements InMainConfig
 
   public FilterConfigView() {
     super("filter", "Filter", "Configure Filters");
-    panel = new JPanel(new MigLayout("left"));
+    panel = new JPanel(new MigLayout("insets 5, gapy 2"));
 //    addLabel("Check for new version on startup", 'c', checkCombo, panel);
   }
 

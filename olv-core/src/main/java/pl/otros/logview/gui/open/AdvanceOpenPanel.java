@@ -383,7 +383,7 @@ public class AdvanceOpenPanel extends JPanel {
 
         JDialog dialog = new JDialog(otrosApplication.getApplicationJFrame(), true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        final JPanel contentPane = new JPanel(new MigLayout());
+        final JPanel contentPane = new JPanel(new MigLayout("insets 0, gapy 2"));
 
         contentPane.add(selectSessionLabel);
         contentPane.add(new JScrollPane(jTextArea), "wrap, span 1 2");

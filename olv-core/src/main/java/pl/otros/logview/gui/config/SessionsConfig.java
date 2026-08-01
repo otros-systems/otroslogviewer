@@ -42,7 +42,7 @@ public class SessionsConfig extends AbstractConfigView implements InMainConfig {
   public SessionsConfig(OtrosApplication otrosApplication) {
     super("sessions", "Sessions", "Manage sessions");
     persistService = otrosApplication.getServices().getPersistService();
-    panel = new JPanel(new MigLayout());
+    panel = new JPanel(new MigLayout("insets 0, gapy 2"));
     listModel = new MutableListModel<>();
     list = new JXList(listModel);
     list.setCellRenderer(new StringListCellRenderer<>(Session::getName));

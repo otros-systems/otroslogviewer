@@ -93,7 +93,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
   protected void createGui(String labelText) {
     label = new JLabel(labelText);
     textField = new JTextField();
-    layout = new MigLayout();
+    layout = new MigLayout("insets 0, gapy 2", "[grow]");
     caseInsensetiveCheckBox = new JCheckBox("Case insensitive", ignoreCase);
     gui = new JPanel(layout);
     gui.add(label, "wrap");

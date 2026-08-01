@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.filter;
 
+import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
 
@@ -52,7 +53,7 @@ public class TimeFilter extends AbstractLogFilter {
     startEnable.addActionListener(e -> performValueChangedListener());
     endEnable = new JCheckBox("Show before date:");
     endEnable.addActionListener(e -> performValueChangedListener());
-    gui = new JPanel(new GridLayout(4, 1));
+    gui = new JPanel(new MigLayout("insets 0, gapy 2", "[grow]"));
     JSpinner startSpinner = new JSpinner(startM);
     JSpinner.DateEditor editorStart = new JSpinner.DateEditor(startSpinner, "dd.MM.yyyy HH:mm:ss");
     editorStart.getTextField().setHorizontalAlignment(JTextField.RIGHT);
@@ -61,9 +62,9 @@ public class TimeFilter extends AbstractLogFilter {
     JSpinner.DateEditor editorEnd = new JSpinner.DateEditor(endSpinner, "dd.MM.yyyy HH:mm:ss");
     editorEnd.getTextField().setHorizontalAlignment(JTextField.RIGHT);
     endSpinner.setEditor(editorEnd);
-    gui.add(startEnable);
-    gui.add(startSpinner);
-    gui.add(endEnable);
+    gui.add(startEnable, "wrap");
+    gui.add(startSpinner, "wrap");
+    gui.add(endEnable, "wrap");
     gui.add(endSpinner);
   }
 

@@ -96,7 +96,7 @@ public class LevelFilter extends AbstractLogFilter {
     modeLabel.setDisplayedMnemonic('m');
     modeLabel.setLabelFor(modeJCombo);
 
-    gui = new JPanel(new MigLayout());
+    gui = new JPanel(new MigLayout("insets 0, gapy 2"));
     gui.add(levelLabel, "wrap, growx");
     gui.add(levelJCombo, "right, wrap, growx");
     gui.add(modeLabel, "wrap, growx");

@@ -77,7 +77,7 @@ public class LogTableFormatConfigView extends AbstractConfigView implements InMa
     super(VIEW_ID, "Log event display", "This configuration provides allow user to change how log events are displayed");
     this.otrosApplication = otrosApplication;
     panel = new JPanel();
-    panel.setLayout(new MigLayout());
+    panel.setLayout(new MigLayout("insets 0, gapy 2"));
     dateFormats = new String[]{
       "HH:mm:ss", //
       "HH:mm:ss.SSS",//

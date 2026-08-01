@@ -665,7 +665,7 @@ public class VfsBrowser extends JPanel {
     tableWithPreviewPane.setOneTouchExpandable(true);
 
 
-    JPanel loadingPanel = new JPanel(new MigLayout());
+    JPanel loadingPanel = new JPanel(new MigLayout("insets 0, gapy 2"));
     loadingPanel.add(loadingIconLabel, "right");
     loadingPanel.add(loadingProgressBar, "left, w 420:420:500,wrap");
     loadingPanel.add(skipCheckingLinksButton, "span, right");

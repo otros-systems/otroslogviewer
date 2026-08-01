@@ -55,7 +55,7 @@ public class ThreadFilter extends AbstractLogFilter {
     JLabel jLabel = new JLabel("Threads:");
     jLabel.setLabelFor(jList);
     jLabel.setDisplayedMnemonic('t');
-    panel = new JPanel(new MigLayout());
+    panel = new JPanel(new MigLayout("insets 0, gapy 2"));
     panel.add(jLabel, "wrap");
     panel.add(new JScrollPane(jList), "wrap, right, growx");
     panel.add(new JLabel("Use CTRL for multi selection"), "wrap");

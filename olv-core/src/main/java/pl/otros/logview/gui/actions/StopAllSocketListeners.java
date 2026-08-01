@@ -51,7 +51,7 @@ public class StopAllSocketListeners extends OtrosAction {
       return;
     }
 
-    JPanel panel = new JPanel(new MigLayout());
+    JPanel panel = new JPanel(new MigLayout("insets 0, gapy 2"));
     panel.add(new JLabel("Are you sure, that you want to close following sockets?"), "wrap");
     panel.add(new JLabel("Opened sockets"), "wrap, growx");
     JTable jTable = new JTable(logReaders.size(), 2);

@@ -6,8 +6,8 @@ guava = "33.6.0-jre"
 gson = "2.14.0"
 jsch = "2.28.4"
 jzlib = "1.+"
-miglayout = "4.2"
-rsyntaxtextarea = "2.6.1"
+miglayout = "11.4.3"
+rsyntaxtextarea = "4.0.1"
 commons-codec = "1.+"
 commons-configuration2 = "2.15.1"
 commons-beanutils = "1.11.0"
@@ -17,15 +17,15 @@ commons-collections = "3.2.2"
 log4j = "2.26.1"
 jna = "5.19.1"
 commons-vfs2 = "2.10.0"
-httpclient5 = "5.3.1"
-swingx = "1.+"
+httpclient5 = "5.6.3"
+swingx = "2.1"
 jxlayer = "3.0.4"
 prettytime = "5.0.9.Final"
 logback = "1.5.38"
 slf4j = "2.0.18"
 testng = "7.12.0"
 mockito = "5.23.0"
-assertj = "3.6.2"
+assertj = "3.27.7"
 awaitility = "4.3.0"
 assertj-swing = "3.17.1"
 wiremock = "3.13.2"
@@ -53,7 +53,7 @@ jnaJpms = { module = "net.java.dev.jna:jna-jpms", version.ref = "jna" }
 jnaPlatformJpms = { module = "net.java.dev.jna:jna-platform-jpms", version.ref = "jna" }
 commonsVfs2 = { module = "org.apache.commons:commons-vfs2", version.ref = "commons-vfs2" }
 httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpclient5" }
-swingx = { module = "org.swinglabs.swingx:swingx-all", version.ref = "swingx" }
+swingx = { module = "com.github.wumpz.swingx:swingx-core", version.ref = "swingx" }
 jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
 prettytime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettytime" }
 logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
