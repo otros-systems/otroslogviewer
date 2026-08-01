@@ -224,7 +224,7 @@ public class LogViewPanel extends LogViewPanelI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
               String currentLayoutName = configuration.getString(ConfKeys.LOG_TABLE_COLUMN_LAYOUT, "");
-              String newLayoutNameInput = JOptionPane.showInputDialog(table, "New Layout name", currentLayoutName);
+              String newLayoutNameInput = JOptionPane.showInputDialog(otrosApplication.getApplicationJFrame(), "New Layout name", currentLayoutName);
               if (newLayoutNameInput == null) {
                 return;
               }
