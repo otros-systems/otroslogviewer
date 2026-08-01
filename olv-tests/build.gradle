@@ -18,6 +18,7 @@ plugins {
 }
 
 dependencies {
+    testImplementation project(':olv-api')
     testImplementation project(':olv-core')
 
     testImplementation(libs.assertjSwing)
