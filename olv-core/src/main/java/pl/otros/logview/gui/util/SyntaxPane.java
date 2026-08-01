@@ -6,6 +6,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
 import org.fife.ui.rsyntaxtextarea.Token;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.api.theme.ThemeKey;
+import pl.otros.logview.api.theme.ThemeType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class SyntaxPane {
     editorPane.setBackground(new JTextArea().getBackground());
 
     Color highlightColor;
-    if (theme.themeType().equals(Theme.Type.Light)){
+    if (theme.themeType().equals(ThemeType.Light)) {
       highlightColor = editorPane.getBackground().darker();
     } else {
       highlightColor = editorPane.getBackground().brighter();

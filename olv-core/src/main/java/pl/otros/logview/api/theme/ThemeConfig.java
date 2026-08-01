@@ -19,8 +19,8 @@ public class ThemeConfig implements Theme {
 
   @Override
   public Color getColor(ThemeKey themeKey) {
-    final Type type = themeType();
-    final Color defaultValue = type == Type.Light ? themeKey.getDefaultLightColor() : themeKey.getDefaultDarkColor();
+    final ThemeType type = themeType();
+    final Color defaultValue = type == ThemeType.Light ? themeKey.getDefaultLightColor() : themeKey.getDefaultDarkColor();
     return configuration.getColor(themeKey.getKey(type), defaultValue);
   }
 
@@ -37,12 +37,12 @@ public class ThemeConfig implements Theme {
   }
 
   @Override
-  public Theme.Type themeType() {
+  public ThemeType themeType() {
     final Color color = lookAndFeelDefaults.getColor("Label.background");
     if (Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3])[2] > 0.5f) {
-      return Type.Light;
+      return ThemeType.Light;
     } else {
-      return Type.Dark;
+      return ThemeType.Dark;
     }
   }
 

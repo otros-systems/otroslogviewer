@@ -17,8 +17,8 @@ package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
 import pl.otros.logview.RenamedLevel;
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 import pl.otros.logview.gui.renderers.LevelRenderer;
 
 import javax.swing.*;
@@ -82,7 +82,7 @@ public class LevelFilter extends AbstractLogFilter {
           passLevel = Level.FINEST.intValue();
         }
         filterMode = (FilterMode) modeJCombo.getSelectedItem();
-        listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+        performValueChangedListener();
       }
     };
 
@@ -106,7 +106,7 @@ public class LevelFilter extends AbstractLogFilter {
 
   public void setPassLevel(int passLevel) {
     this.passLevel = passLevel;
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 
   @Override

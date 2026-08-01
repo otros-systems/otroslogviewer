@@ -15,8 +15,8 @@
  ******************************************************************************/
 package pl.otros.logview.api.gui;
 
+import pl.otros.logview.api.filter.LogFilter;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilter;
 
 import javax.swing.*;
 

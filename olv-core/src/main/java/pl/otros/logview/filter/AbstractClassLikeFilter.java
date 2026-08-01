@@ -16,11 +16,11 @@
 
 package pl.otros.logview.filter;
 
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.gui.Icons;
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.model.MarkerColors;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.gui.PopupListener;
 
@@ -34,7 +34,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.function.Function;
 
-public abstract class ClassLikeFilter extends AbstractLogFilter {
+public abstract class AbstractClassLikeFilter extends AbstractLogFilter {
 
   private JTree tree;
   private DefaultMutableTreeNode rootNode;
@@ -42,12 +42,13 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
   private final HashSet<String> ignoreList = new HashSet<>();
   private final HashSet<String> focusList = new HashSet<>();
   private Mode mode = Mode.IGNORE_MODE;
+  protected LogDataCollector collector;
 
   private enum Mode {
     IGNORE_MODE, FOCUS_MODE
   }
 
-  public ClassLikeFilter(String name, String description) {
+  public AbstractClassLikeFilter(String name, String description) {
     super(name, description);
   }
 
@@ -82,7 +83,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
   }
 
   @Override
-  public void init(Properties properties, LogDataTableModel collector, Theme theme) {
+  public void init(Properties properties, LogDataCollector collector, Theme theme) {
     this.collector = collector;
     initTree();
   }
@@ -104,13 +105,13 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
   public void ignoreClass(String... classes) {
     Collections.addAll(ignoreList, classes);
     mode = Mode.IGNORE_MODE;
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 
   public void focusOn(String... classes) {
     Collections.addAll(focusList, classes);
     mode = Mode.FOCUS_MODE;
-    listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+    performValueChangedListener();
   }
 
   private void initTree() {
@@ -302,8 +303,8 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         Clazz userObject = (Clazz) node.getUserObject();
         list.add(userObject.toFullString());
       }
-      ClassLikeFilter.this.mode = mode;
-      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+      AbstractClassLikeFilter.this.mode = mode;
+      performValueChangedListener();
     }
 
   }
@@ -325,7 +326,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
         Clazz userObject = (Clazz) node.getUserObject();
         list.remove(userObject.toFullString());
       }
-      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+      performValueChangedListener();
     }
 
   }
@@ -345,7 +346,7 @@ public abstract class ClassLikeFilter extends AbstractLogFilter {
     public void actionPerformed(ActionEvent arg0) {
       ignoreLists.clear();
       focusLists.clear();
-      listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+      performValueChangedListener();
       tree.repaint();
     }
 

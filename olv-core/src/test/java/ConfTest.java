@@ -39,7 +39,7 @@ public class ConfTest {
       if (!event.isBeforeUpdate()) {
         // only display events after the modification was done
         System.out.println(name + " Received event!");
-        System.out.println(name + " Type = " + event.getEventType());
+        System.out.println(name + " ThemeType = " + event.getEventType());
         if (event.getPropertyName() != null) {
           System.out.println(name + " Property name = " + event.getPropertyName());
         }

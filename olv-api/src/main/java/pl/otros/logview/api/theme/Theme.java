@@ -4,11 +4,7 @@ import java.awt.*;
 
 public interface Theme {
 
-  Type themeType();
-
-  enum Type {
-    Dark, Light
-  }
+  ThemeType themeType();
 
   Color getColor(ThemeKey themeKey);
 

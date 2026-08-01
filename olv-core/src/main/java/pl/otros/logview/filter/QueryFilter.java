@@ -16,8 +16,8 @@
 package pl.otros.logview.filter;
 
 import pl.otros.logview.accept.query.QueryAcceptCondition;
-import pl.otros.logview.api.gui.LogDataTableModel;
 import pl.otros.logview.api.model.LogData;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.theme.Theme;
 import pl.otros.logview.api.theme.ThemeKey;
 
@@ -38,7 +38,7 @@ public class QueryFilter extends AbstractStringBasedFilter {
   }
 
   @Override
-  public void init(Properties properties, LogDataTableModel logDataTableModel, Theme theme) {
+  public void init(Properties properties, LogDataCollector logDataCollector, Theme theme) {
     this.theme = theme;
   }
 

@@ -18,22 +18,22 @@ package pl.otros.logview.gui.actions;
 import pl.otros.logview.api.OtrosApplication;
 import pl.otros.logview.api.gui.Icons;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.filter.ClassLikeFilter;
+import pl.otros.logview.filter.AbstractClassLikeFilter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 
-public class IgnoreSelectedEventsClasses extends FocusOnThisAbstractAction<ClassLikeFilter> {
+public class IgnoreSelectedEventsClasses extends FocusOnThisAbstractAction<AbstractClassLikeFilter> {
 
-  public IgnoreSelectedEventsClasses(ClassLikeFilter filter, JCheckBox filterEnableCheckBox, OtrosApplication otrosApplication) {
+  public IgnoreSelectedEventsClasses(AbstractClassLikeFilter filter, JCheckBox filterEnableCheckBox, OtrosApplication otrosApplication) {
     super(filter, filterEnableCheckBox, otrosApplication);
     this.putValue(NAME, "Ignore selected classes");
     this.putValue(SMALL_ICON, Icons.CLASS_IGNORED);
   }
 
   @Override
-  public void action(ActionEvent e, ClassLikeFilter filter, LogData... selectedLogData) {
+  public void action(ActionEvent e, AbstractClassLikeFilter filter, LogData... selectedLogData) {
     HashSet<String> classes = new HashSet<>();
     for (LogData logData : selectedLogData) {
       classes.add(logData.getClazz());

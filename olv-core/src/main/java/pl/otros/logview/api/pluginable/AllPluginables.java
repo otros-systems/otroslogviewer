@@ -15,6 +15,7 @@
  ******************************************************************************/
 package pl.otros.logview.api.pluginable;
 
+import pl.otros.logview.api.filter.LogFilter;
 import pl.otros.logview.api.importer.LogImporter;
 
 import java.io.File;

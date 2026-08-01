@@ -18,9 +18,9 @@ package pl.otros.logview.filter;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang.ArrayUtils;
 import org.jdesktop.swingx.JXHyperlink;
-import pl.otros.logview.api.gui.LogDataTableModel;
+import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.api.model.LogData;
-import pl.otros.logview.api.pluginable.LogFilterValueChangeListener;
+import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.theme.Theme;
 
 import javax.swing.*;
@@ -36,6 +36,7 @@ public class ThreadFilter extends AbstractLogFilter {
   private final Set<String> selectedThread;
   private final JPanel panel;
   private final DefaultListModel<String> listModel;
+  private LogDataCollector collector;
 
   public ThreadFilter() {
     super(NAME, DESCRIPTION);
@@ -48,7 +49,7 @@ public class ThreadFilter extends AbstractLogFilter {
         selectedThread.clear();
         List<String> selectedValues = jList.getSelectedValuesList();
         selectedThread.addAll(selectedValues);
-        listener.ifPresent(LogFilterValueChangeListener::valueChanged);
+        performValueChangedListener();
       }
     });
     JLabel jLabel = new JLabel("Threads:");
@@ -117,7 +118,7 @@ public class ThreadFilter extends AbstractLogFilter {
   }
 
   @Override
-  public void init(Properties properties, LogDataTableModel collector, Theme theme) {
+  public void init(Properties properties, LogDataCollector collector, Theme theme) {
     this.collector = collector;
   }
 

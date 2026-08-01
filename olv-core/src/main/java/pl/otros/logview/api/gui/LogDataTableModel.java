@@ -175,7 +175,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.gui.LogDataCollector#add(pl.otros.logview.LogData[])
    */
   public void add(LogData... logDatas) {
@@ -190,7 +190,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see pl.otros.logview.gui.LogDataCollector#add(pl.otros.logview.LogData)
    */
   public void add(LogData logData) {
@@ -281,6 +281,7 @@ public class LogDataTableModel extends AbstractTableModel implements LogDataColl
     return logDataStore.getLogData(row);
   }
 
+  @Override
   public LogData[] getLogData() {
     return logDataStore.getLogData();
   }

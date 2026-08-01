@@ -29,12 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.otros.logview.accept.*;
 import pl.otros.logview.api.*;
+import pl.otros.logview.api.filter.LogFilter;
+import pl.otros.logview.api.filter.LogFilterValueChangeListener;
 import pl.otros.logview.api.gui.*;
 import pl.otros.logview.api.gui.NoteEvent.EventType;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.pluginable.*;
 import pl.otros.logview.api.plugins.MenuActionProvider;
-import pl.otros.logview.api.theme.Theme;
+import pl.otros.logview.api.theme.ThemeType;
 import pl.otros.logview.filter.*;
 import pl.otros.logview.gui.actions.*;
 import pl.otros.logview.gui.actions.table.MarkRowBySpaceKeyListener;
@@ -154,7 +156,7 @@ public class LogViewPanel extends LogViewPanelI {
     table.setName("LogViewPanel.log table");
 
     // Use a slightly more subtle border.
-    if (getOtrosApplication().getTheme().themeType() == Theme.Type.Dark) {
+    if (getOtrosApplication().getTheme().themeType() == ThemeType.Dark) {
       table.setGridColor(Color.DARK_GRAY);
     } else {
       table.setGridColor(Color.LIGHT_GRAY);
@@ -164,7 +166,7 @@ public class LogViewPanel extends LogViewPanelI {
     table.setRowHeight(new JCheckBox().getPreferredSize().height + 1);
 
 //     Use a slightly more subtle border.
-    if (getOtrosApplication().getTheme().themeType() == Theme.Type.Dark) {
+    if (getOtrosApplication().getTheme().themeType() == ThemeType.Dark) {
       table.setGridColor(Color.DARK_GRAY);
     } else {
       table.setGridColor(Color.LIGHT_GRAY);
@@ -540,11 +542,11 @@ public class LogViewPanel extends LogViewPanelI {
         focusOnEventsAfter = new FocusOnEventsAfter((TimeFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
         focusOnEventsBefore = new FocusOnEventsBefore((TimeFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof ClassPackageFilter) {
-        final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
+        final AbstractClassLikeFilter classLikeFilter = (AbstractClassLikeFilter) filter;
         focusOnSelectedClassesAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected classes", filterPanel.getEnableCheckBox(), otrosApplication);
         ignoreSelectedEventsClasses = new IgnoreSelectedEventsClasses(classLikeFilter, filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof LoggerHierarchyFilter) {
-        final ClassLikeFilter classLikeFilter = (ClassLikeFilter) filter;
+        final AbstractClassLikeFilter classLikeFilter = (AbstractClassLikeFilter) filter;
         focusOnSelectedLoggerNameAction = new FocusOnSelectedClassesLikeAction(classLikeFilter, "Focus on selected loggers", filterPanel.getEnableCheckBox(), otrosApplication);
       } else if (filter instanceof CallHierarchyLogFilter) {
         showCallHierarchyAction = new ShowCallHierarchyAction((CallHierarchyLogFilter) filter, filterPanel.getEnableCheckBox(), otrosApplication);
