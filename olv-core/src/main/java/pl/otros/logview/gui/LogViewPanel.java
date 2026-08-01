@@ -513,7 +513,11 @@ public class LogViewPanel extends LogViewPanelI {
 
     // Reload filters, every instance of filter is connected to listeners, data table etc.
     filtersList = new ArrayList<>();
+    List<String> hiddenFilters = configuration.getList(String.class, ConfKeys.LOG_TABLE_COLUMN_HIDDEN_FILTERS, List.of());
     for (LogFilter logFilter : loadedFilters) {
+      if (hiddenFilters.contains(logFilter.getClass().getName())) {
+        continue;
+      }
       try {
         LogFilter filter = logFilter.getClass().getDeclaredConstructor().newInstance();
         filtersList.add(filter);
