@@ -3,6 +3,8 @@ plugins {
     id 'jacoco'
 }
 
+group = 'io.github.svennissel'
+
 // Add compiler option to show more details for deprecations
 /*tasks.withType(JavaCompile).configureEach {
     doFirst {

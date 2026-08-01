@@ -1,8 +1,9 @@
 plugins {
     id 'com.gradleup.shadow' version '9.6.1' apply false
+    id 'org.jreleaser' version '1.25.0' apply false
 }
 
-group = 'pl.otros.logviewer'
+//group = 'pl.otros.logviewer'
 version = findProperty('version')
 
 subprojects {
