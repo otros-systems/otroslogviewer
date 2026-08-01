@@ -16,6 +16,7 @@
 package pl.otros.logview.filter;
 
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 import pl.otros.logview.api.filter.AbstractLogFilter;
 import pl.otros.logview.gui.util.DelayedSwingInvoke;
 import pl.otros.swing.OtrosSwingUtils;
@@ -112,7 +113,7 @@ public abstract class AbstractStringBasedFilter extends AbstractLogFilter {
 
   @Override
   public boolean isFilterIsActive() {
-    return !filteringText.isEmpty();
+    return !StringUtils.isEmpty(filteringText);
   }
 
   protected abstract void performPreFiltering();
