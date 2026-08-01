@@ -18,11 +18,11 @@ package pl.otros.logview.gui.markers;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.MarkerColors;
 
-public class FailMarker extends AbstractAutomaticMarker {
+public class FailMarker extends pl.otros.logview.api.gui.markers.AbstractAutomaticMarker {
 
   private static final String NAME = "'Fail' in message";
   private static final String DESCRIPTION = "Marks/unmakrs logs with 'fail' in message";
-  private static final String[] GROUPS = {"", "Errors"};
+  private static final String[] GROUPS = { "", "Errors" };
 
   public FailMarker() {
     super(NAME, DESCRIPTION, MarkerColors.Red, GROUPS);

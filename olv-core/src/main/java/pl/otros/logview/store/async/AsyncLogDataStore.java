@@ -16,7 +16,7 @@
 package pl.otros.logview.store.async;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import pl.otros.logview.api.gui.MarkableTableModel;
+import pl.otros.logview.api.gui.markers.MarkableTableModel;
 import pl.otros.logview.api.model.LogData;
 import pl.otros.logview.api.model.LogDataCollector;
 import pl.otros.logview.api.model.Note;

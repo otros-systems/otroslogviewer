@@ -23,6 +23,7 @@ import pl.otros.logview.api.AcceptCondition;
 import pl.otros.logview.api.NoteObserver;
 import pl.otros.logview.api.TableColumns;
 import pl.otros.logview.api.gui.NoteEvent.EventType;
+import pl.otros.logview.api.gui.markers.MarkableTableModel;
 import pl.otros.logview.api.model.*;
 import pl.otros.logview.api.store.CachedLogStore;
 import pl.otros.logview.api.store.MemoryLogDataStore;

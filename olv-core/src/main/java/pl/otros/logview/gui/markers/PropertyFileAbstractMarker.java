@@ -21,7 +21,7 @@ import pl.otros.logview.api.model.MarkerColors;
 
 import java.util.Properties;
 
-public abstract class PropertyFileAbstractMarker extends AbstractAutomaticMarker {
+public abstract class PropertyFileAbstractMarker extends pl.otros.logview.api.gui.markers.AbstractAutomaticMarker {
 
   public static final String FILE = "file";
   public static final String TYPE = "type";
