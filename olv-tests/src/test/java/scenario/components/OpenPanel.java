@@ -27,6 +27,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
   }
 
   public OpenPanel addFile(File file) {
+    await().ignoreExceptions().until(() -> me().button("OpenPanel.add more files").isEnabled());
     me().button("OpenPanel.add more files").click();
     final DialogFixture vfsBrowserDialog = WindowFinder.findDialog("VfsBrowserDialog").using(robot);
     openFile(file, vfsBrowserDialog);
@@ -36,6 +37,7 @@ public class OpenPanel extends TestComponent<JPanelFixture, OpenPanel> {
 
   public LogViewPanel importFiles() {
     LOGGER.info("Clicking import logs");
+    await().ignoreExceptions().until(() -> frame.button("OpenPanel.import").isEnabled());
     await().ignoreExceptions().until(() -> frame.button("OpenPanel.import").click() != null);
     return new LogViewPanel(frame, robot);
   }

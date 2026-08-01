@@ -17,7 +17,9 @@ public class OtrosLogViewerBaseTest extends AssertJSwingTestngTestCase {
   @Override
   protected void onSetUp() {
     System.setProperty(LogViewMainFrame.RUN_FOR_SCENARIO_TEST, "true");
-
+    //Faster Typing and general faster actions
+    robot().settings().delayBetweenEvents(5);
+    robot().settings().eventPostingDelay(10);
     ApplicationLauncher.application(LogViewMainFrame.class).start();
   }
 
